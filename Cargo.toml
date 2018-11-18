@@ -1,0 +1,9 @@
+[package]
+name = "mathru"
+version = "0.0.1"
+authors = ["Matthias Eiholzer <matthias.eiholzer@gmail.com>"]
+exclude = ["literature/*", "tests/*"]
+
+[dependencies]
+#gnuplot = { git = "https://github.com/SiegeLord/RustGnuplot", version="0.0.26" }
+rand = "0.5"
