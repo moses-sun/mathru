@@ -8,7 +8,19 @@
 A simple mathematics library written in Rust
 
 ## Features
-
+    - special functions
+        - gamma functions
+        - beta functions
+    - statistics
+        - distributions
+            - normal distribution
+            - gamma distribution
+            - binomial distribution
+            - poisson distribution
+            - exponential distribution
+            - chi squared distribution
+            - beta distribution
+            - bernoulli distribution
 ## Usage
 -----
 
@@ -16,7 +28,7 @@ Add this to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-mathru = "0.0.1"
+mathru = "0.0.2"
 ```
 
 and this to your crate root:
