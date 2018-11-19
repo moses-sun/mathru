@@ -1,15 +1,14 @@
 [package]
 name = "mathru"
-version = "0.0.1"
+version = "0.0.2"
 description = "Simple matthematics library written in Rust"
 authors = ["Matthias Eiholzer <matthias.eiholzer@gmail.com>"]
 exclude = ["literature/*", "tests/*"]
 keywords = ["math", "mathematics", "statistics"]
 categories = ["science"]
 readme = "README.md"
-license = "MIT"
 license-file = "LICENCE"
-gitlab = { repository = "git@gitlab.com:matthiaseiholzer/mathru.git", branch = "master" }
+repository = "https://gitlab.com/matthiaseiholzer/mathru"
 
 [dependencies]
 #gnuplot = { git = "https://github.com/SiegeLord/RustGnuplot", version="0.0.26" }

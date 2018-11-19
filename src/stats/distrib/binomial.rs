@@ -47,7 +47,6 @@ impl Discrete<u32, f64> for Binomial
 {
     /// Probability mass function
     ///
-    ///
     /// # Arguments
     ///
     /// * `x` Random variable x &isin &#2115;

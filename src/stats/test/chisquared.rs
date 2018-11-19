@@ -2,6 +2,11 @@ use stats::distrib::ChiSquared as ChiSquaredDistrib;
 use stats::distrib::Continuous;
 use stats::test::Test;
 
+/// Chi-Squared Ttest
+///
+/// Fore more information:
+/// <a href="https://en.wikipedia.org/wiki/Chi-squared_test">https://en.wikipedia.org/wiki/Chi-squared_test</a>
+///
 pub struct ChiSquared
 {
 	df: u32,
@@ -12,7 +17,7 @@ pub struct ChiSquared
 impl ChiSquared
 {
 	///
-		/// alpha: significance level
+	/// alpha: significance level
 	pub fn test_vector(x: &Vec<f64>, y: &Vec<f64>) -> ChiSquared
 	{
 		if x.len() != y.len()
@@ -72,7 +77,6 @@ impl ChiSquared
 		{
 			chi_squared: chi_squared,
 			df: df
-
 		}
 	}
 }

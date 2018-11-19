@@ -1,6 +1,10 @@
-
 use stats::distrib::{Continuous, ChiSquared};
 
+/// G-Test
+///
+/// Fore more information:
+/// <a href="https://de.wikipedia.org/wiki/G-Test">https://de.wikipedia.org/wiki/G-Test</a>
+///
 pub struct G
 {
 	df: u32,
@@ -9,13 +13,14 @@ pub struct G
 
 impl G
 {
+	///
 	/// \sum_{i}{y_{i}} = n = \sum_i{xs_i}
 	/// b = \sum_{i}{x_{i}}
 	/// k = n/b
 	/// xs_{i} = x{i}*k
 	///
 	/// x: observation
-	/// y: expectiation
+	/// y: expectation
 	pub fn test_vector(x: &Vec<f64>, y: &Vec<f64>) -> G
 	{
 		if x.len() != y.len()

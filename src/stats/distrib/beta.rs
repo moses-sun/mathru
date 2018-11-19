@@ -51,6 +51,22 @@ impl Beta
 
 impl Continuous<f64, f64> for Beta
 {
+    /// Probability density function
+    ///
+    /// # Arguments
+    ///
+    /// * `x` Random variable x &isin &#2115;
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// extern crate mathru;
+    /// use mathru::stats::distrib::{Continuous, Beta};
+    ///
+    /// let distrib: Beta = Beta::new(&0.2, &0.3);
+    /// let x: f64 = 0.5;
+    /// let p: f64 = distrib.pdf(x);
+    /// ```
     fn pdf<'a>(self: &'a Self, x: f64) -> f64
     {
         if 0.0_f64 > x || x > 1.0_f64
@@ -60,6 +76,22 @@ impl Continuous<f64, f64> for Beta
         x.powf(self.p - 1.0_f64) * (1.0_f64 - x).powf(self.q - 1.0_f64) / special::beta::beta(self.p, self.q)
     }
 
+    /// Cumulative distribution function
+    ///
+    /// # Arguments
+    ///
+    /// * `x` Random variable
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// extern crate mathru;
+    /// use mathru::stats::distrib::{Continuous, Beta};
+    ///
+    /// let distrib: Beta = Beta::new(&0.3, &0.2);
+    /// let x: f64 = 0.4;
+    /// let p: f64 = distrib.cdf(x);
+    /// ```
     fn cdf<'a>(self: &'a Self, x: f64) -> f64
     {
         beta::beta_inc_reg(x, self.p, self.q)
