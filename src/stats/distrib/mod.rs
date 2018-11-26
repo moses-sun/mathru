@@ -11,7 +11,7 @@ mod distrib;
 mod poisson;
 mod beta;
 mod gamma;
-//mod t;
+mod t;
 
 pub use self::distrib::{Discrete, Continuous};
 pub use self::binomial::Binomial;
@@ -22,4 +22,4 @@ pub use self::chisquared::ChiSquared;
 pub use self::poisson::Poisson;
 pub use self::beta::Beta;
 pub use self::gamma::Gamma;
-//pub use self::t::T;
+pub use self::t::T;

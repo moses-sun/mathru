@@ -1,3 +1,12 @@
+#[macro_use]
+pub mod num;
+
+/// Algebra
+///
+/// Fore more information:
+/// <a href="https://en.wikipedia.org/wiki/Algebra>https://en.wikipedia.org/wiki/Algebra</a>
+pub mod algebra;
+
 /// Statistics
 ///
 /// Fore more information:

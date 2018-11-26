@@ -49,6 +49,6 @@ mod beta_test
 
         let beta: f64 = beta::beta_inc_reg(x, p, q);
 
-        assert_eq!(0.4695967039528899, beta);
+        assert_eq!(0.4695967039528893, beta);
     }
 }

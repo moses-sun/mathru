@@ -22,11 +22,13 @@ use std::f64::INFINITY;
 /// let z: f64 = 0.3_f64;
 /// let gamma: f64 = gamma::gamma(z);
 /// ```
+/// The following approximatino is implemented
+/// https://en.wikipedia.org/wiki/Lanczos_approximation
 pub fn gamma(z: f64) -> f64
 {
-    if z <= 0.0_f64
+    if z < 0.5
     {
-        panic!();
+        return PI / ((PI*z).sin() * gamma (1.0 - z)) //reflection formula
     }
 
  	let t: f64 = z + 6.5;

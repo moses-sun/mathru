@@ -62,7 +62,7 @@ pub fn beta<'a>(x: f64, y: f64) -> f64
 /// let beta: f64 = beta::beta_inc_reg(x, a, b);
 /// ```
 /// The code from the following C code was ported to Rust
-/// <a href="http://people.sc.fsu.edu/~jburkardt/c_src/asa109/asa109.c">Wikipedia Beta function</a>
+/// <a href="http://people.sc.fsu.edu/~jburkardt/c_src/asa109/asa109.c">C implementation</a>
 pub fn beta_inc_reg(x: f64, a: f64, b: f64) -> f64
 {
     let acu: f64 = 0.1E-14;
