@@ -1,5 +1,5 @@
 use std::ops::{Add, AddAssign, Sub, SubAssign, Mul, MulAssign, Div, DivAssign, Rem, RemAssign};
-use algebra::abstr::identity::{Zero, One};
+//use algebra::abstr::identity::{Zero, One};
 //use std::clone::Clone;
 use std::fmt::Display;
 use algebra::abstr::cast::{ToPrimitive, FromPrimitive, NumCast};
@@ -8,8 +8,9 @@ use algebra::abstr::cast::{ToPrimitive, FromPrimitive, NumCast};
 
 /// The base trait for numeric types, covering `0` and `1` values,
 /// comparisons, basic numeric operations, and string conversion.
-pub trait Number: Sized + PartialEq + Display + ToPrimitive + Zero + One //+ Field //+ NumberOps + Copy
+pub trait Number: Sized + PartialEq + PartialOrd + Display + ToPrimitive + Copy + Clone
 {
+
 	fn min(self: Self, a: Self) -> Self;
 
 	fn max(self: Self, a: Self) -> Self;

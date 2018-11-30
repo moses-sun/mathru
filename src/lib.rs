@@ -1,3 +1,6 @@
+
+pub mod elementary;
+
 #[macro_use]
 pub mod num;
 
