@@ -1,6 +1,6 @@
-use super::number::Number;
+use algebra::abstr::Ring;
 
-pub trait Integer : Number
+pub trait Integer : Ring
 {
 
 }

@@ -14,13 +14,9 @@ use std::ops::Neg;
 
 pub trait Ring: Semiring + Neg<Output = Self>
 {
-
+	fn abs(self: Self) -> Self;
 }
 
-//pub trait Sqrt
-//{
-//    fn sqrt<'a>(self: &'a Self) -> Self;
-//}
 
 
 

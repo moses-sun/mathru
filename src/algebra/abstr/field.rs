@@ -1,5 +1,5 @@
 use algebra::abstr::Ring;
-use std::ops::{Sub, SubAssign, Div, DivAssign, Neg};
+use std::ops::{Sub, SubAssign, Div, DivAssign};
 
 pub trait Field : Ring + Sub<Self, Output = Self> + SubAssign<Self> + Div<Self, Output = Self> + DivAssign<Self>
 {

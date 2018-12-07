@@ -1,4 +1,3 @@
-use super::number::Number;
 use super::field::Field;
 use elementary::{Exponential, Trigonometry, Power, Hyperbolic};
 

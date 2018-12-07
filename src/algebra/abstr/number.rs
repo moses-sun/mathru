@@ -2,7 +2,7 @@ use std::ops::{Add, AddAssign, Sub, SubAssign, Mul, MulAssign, Div, DivAssign, R
 //use algebra::abstr::identity::{Zero, One};
 //use std::clone::Clone;
 use std::fmt::Display;
-use algebra::abstr::cast::{ToPrimitive, FromPrimitive, NumCast};
+use algebra::abstr::cast::{ToPrimitive /*, FromPrimitive, NumCast*/};
 
 
 
@@ -11,9 +11,6 @@ use algebra::abstr::cast::{ToPrimitive, FromPrimitive, NumCast};
 pub trait Number: Sized + PartialEq + PartialOrd + Display + ToPrimitive + Copy + Clone
 {
 
-	fn min(self: Self, a: Self) -> Self;
-
-	fn max(self: Self, a: Self) -> Self;
 }
 
 /// The trait for types implementing basic numeric operations
