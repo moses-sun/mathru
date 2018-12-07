@@ -1,14 +1,14 @@
 [package]
 name = "mathru"
 version = "0.0.4"
-description = "Simple matthematics library written in Rust"
+description = "Simple mathematics library written in Rust"
 authors = ["Matthias Eiholzer <matthias.eiholzer@gmail.com>"]
 exclude = ["literature/*", "tests/*"]
 keywords = ["math", "mathematics", "statistics"]
 categories = ["science", "algorithms", "data-structures"]
 readme = "README.md"
 license = "MIT"
-license-file = "LICENCE"
+license-file = "LICENSE"
 repository = "https://gitlab.com/matthiaseiholzer/mathru"
 
 [dependencies]
