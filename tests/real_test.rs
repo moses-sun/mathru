@@ -114,13 +114,13 @@ mod real_test
 ////        assert_eq!(Natural::new(2), b)
 ////    }
 //
-//    #[test]
-//    fn abs()
-//    {
-//        let a : Real<f64>= Real::new(-3.5);
-//        let b : Real<f64>= Real::new(3.5);
-//        assert_eq!(b , a.abs());
-//    }
+    #[test]
+    fn abs()
+    {
+        let a : Real<f64>= Real::new(-3.5);
+        let b : Real<f64>= Real::new(3.5);
+        assert_eq!(b , a.abs());
+    }
 
     #[test]
     fn add0()
@@ -444,10 +444,9 @@ mod real_test
     fn arccot()
     {
         let phi: Real<f64> = Real::pi() / Real!(2.0);
-        let cot_phi: Real<f64> = phi.cot();
+        let cot_phi: Real<f64> = phi.arccot();
 
-        assert!(Real::zero() <= cot_phi);
-        assert!(Real!(0.0000000000000001) > cot_phi);
+        assert_eq!(Real::new(0.5669115049410094), cot_phi);
     }
 
     #[test]
@@ -457,6 +456,7 @@ mod real_test
 
         assert_eq!(Real64!(0.7853981633974482), phi.csc().arccsc());
     }
+
 
      #[test]
     fn arcsec()
@@ -489,7 +489,7 @@ mod real_test
     {
         let base: Real<f64>= Real::one();
         let exp: Real<f64>= Real::zero();
-        assert_eq!(base, base.pow(exp));
+        assert_eq!(base, base.pow(&exp));
     }
 
     #[test]
@@ -498,7 +498,7 @@ mod real_test
         let base: Real<f64> = Real::new(2.0);
         let exp: Real<f64> = Real::new(3.0);
         let res: Real<f64> = Real::new(8.0);
-        assert_eq!(res, base.pow(exp));
+        assert_eq!(res, base.pow(&exp));
     }
 
      #[test]
@@ -507,7 +507,7 @@ mod real_test
         let base: Real<f64> = Real::new(2.0);
         let exp: Real<f64> = Real::new(3.0);
         let res: Real<f64> = Real::new(8.0);
-        assert_eq!(res, base.pow(exp));
+        assert_eq!(res, base.pow(&exp));
     }
 
     #[test]
@@ -546,7 +546,7 @@ mod real_test
 
         let f: Real<f64> = x.tanh();
         // Solving tanh() at 1 gives `(1 - e^(-2))/(1 + e^(-2))`
-        let g: Real<f64> = (Real::one() - e.pow(Real!(-2.0)))/(Real::one() + e.pow(Real!(-2.0)));
+        let g: Real<f64> = (Real::one() - e.pow(&Real!(-2.0)))/(Real::one() + e.pow(&Real!(-2.0)));
         let abs_difference: Real<f64> = (f - g).abs();
 
         assert!(abs_difference < Real!(1.0e-10));

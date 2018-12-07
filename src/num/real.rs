@@ -2,10 +2,10 @@ use std::ops::{Add, AddAssign, Mul, MulAssign, Sub, SubAssign, Div, DivAssign, N
 use std::fmt;
 use std::fmt::{Display};
 use std::cmp::{Ordering};
-use algebra::abstr::{Number, Field};
+use algebra::abstr::{Number, Field, Ring, Semiring, Zero, One};
 use algebra::abstr::Real as RealT;
-use algebra::abstr::{Semiring, Zero, One};
 use elementary::{Exponential, Trigonometry, Power, Hyperbolic};
+use algebra::abstr::cast::ToPrimitive;
 
 #[macro_export]
 macro_rules! Real
@@ -64,8 +64,45 @@ impl<T> Real<T>
         }
         self
     }
+}
+
+impl<T> RealT for Real<T>
+	where T: RealT
+{
 
 }
+
+impl<T> Field for Real<T>
+	where T: Field
+{
+
+}
+
+impl<T> Ring for Real<T>
+	where T: Ring
+{
+	fn abs(self: Self) -> Self
+	{
+		Real
+		{
+			num: self.num.abs()
+		}
+	}
+}
+
+impl<T> Semiring for Real<T>
+	where T: Semiring
+{
+
+}
+
+impl<T> Number for Real<T>
+	where T: Number
+{
+
+}
+
+
 
 impl<T> PartialEq for Real<T>
     where T: PartialEq
@@ -323,7 +360,7 @@ impl<T> Trigonometry for Real<T>
 	}
 
 	/// Sinus
-	fn sin(self: Self) -> Self
+	fn sin(self: &Self) -> Self
 	{
 		Real
 		{
@@ -332,7 +369,7 @@ impl<T> Trigonometry for Real<T>
 	}
 
 	/// Cosinus
-	fn cos(self: Self) -> Self
+	fn cos(self: &Self) -> Self
 	{
 		Real
 		{
@@ -341,7 +378,7 @@ impl<T> Trigonometry for Real<T>
 	}
 
 	///Tangens
-	fn tan(self: Self) -> Self
+	fn tan(self: &Self) -> Self
 	{
 		Real
 		{
@@ -349,7 +386,7 @@ impl<T> Trigonometry for Real<T>
 		}
 	}
 
-	fn cot(self: Self) -> Self
+	fn cot(self: &Self) -> Self
 	{
 		Real
 		{
@@ -357,7 +394,7 @@ impl<T> Trigonometry for Real<T>
 		}
 	}
 
-	fn sec(self: Self) -> Self
+	fn sec(self: &Self) -> Self
 	{
 		Real
 		{
@@ -365,7 +402,7 @@ impl<T> Trigonometry for Real<T>
 		}
 	}
 
-	fn csc(self: Self) -> Self
+	fn csc(self: &Self) -> Self
 	{
 		Real
 		{
@@ -373,7 +410,7 @@ impl<T> Trigonometry for Real<T>
 		}
 	}
 
-	fn arcsin(self: Self) -> Self
+	fn arcsin(self: &Self) -> Self
 	{
 		Real
 		{
@@ -381,14 +418,15 @@ impl<T> Trigonometry for Real<T>
 		}
 	}
 
-	fn arccos(self: Self) -> Self
+	fn arccos(self: &Self) -> Self
 	{
 		Real
 		{
 			num: self.num.arccos()
 		}
 	}
-	fn arctan(self: Self) -> Self
+
+	fn arctan(self: &Self) -> Self
 	{
 		Real
 		{
@@ -396,20 +434,31 @@ impl<T> Trigonometry for Real<T>
 		}
 	}
 
-	fn arccot(self: Self) -> Self
-	{
-		unimplemented!();
-	}
-
-	fn arcsec(self: Self) -> Self
+	fn arctan2(self: &Self, other: &Self) -> Self
 	{
 		Real
 		{
-			num: self.num.arccos()
+			num: self.num.arctan2(&other.num)
 		}
 	}
 
-	fn arccsc(self: Self) -> Self
+	fn arccot(self: &Self) -> Self
+	{
+		Real
+		{
+			num: self.num.arccot()
+		}
+	}
+
+	fn arcsec(self: &Self) -> Self
+	{
+		Real
+		{
+			num: self.num.arcsec()
+		}
+	}
+
+	fn arccsc(self: &Self) -> Self
 	{
 		Real
 		{
@@ -430,7 +479,7 @@ impl<T> Exponential for Real<T>
 	}
 
 	///Exponential function
-	fn exp(self: Self) -> Self
+	fn exp(self: &Self) -> Self
 	{
 		Real
 		{
@@ -439,7 +488,7 @@ impl<T> Exponential for Real<T>
 	}
 
 	///Logiarithm function
-	fn ln(self: Self) -> Self
+	fn ln(self: &Self) -> Self
 	{
 		Real
 		{
@@ -451,19 +500,19 @@ impl<T> Exponential for Real<T>
 impl<T> Power for Real<T>
 	where T: Power
 {
-	fn pow(self: Self, exp: Self) -> Self
+	fn pow(self: &Self, exp: &Self) -> Self
 	{
 		Real
 		{
-			num: self.num.pow(exp.num)
+			num: self.num.pow(&exp.num)
 		}
 	}
 
-	fn root(self: Self, root: Self) -> Self
+	fn root(self: &Self, root: &Self) -> Self
 	{
 		Real
 		{
-			num: self.num.root(root.num)
+			num: self.num.root(&root.num)
 		}
 	}
 }
@@ -472,7 +521,7 @@ impl<T> Hyperbolic for Real<T>
 	where T: Hyperbolic + Field
 {
 	/// Hyperbolic sine
-	fn sinh(self: Self) -> Self
+	fn sinh(self: &Self) -> Self
 	{
 		Real
 		{
@@ -481,7 +530,7 @@ impl<T> Hyperbolic for Real<T>
 	}
 
 	/// Hyperbolic cosine
-	fn cosh(self: Self) -> Self
+	fn cosh(self: &Self) -> Self
 	{
 		Real
 		{
@@ -510,7 +559,7 @@ impl<T> Hyperbolic for Real<T>
 	///
 	/// assert!(abs_difference < Real::new(1.0e-10));
     /// ```
-	fn tanh(self: Self) -> Self
+	fn tanh(self: &Self) -> Self
 	{
 		Real
 		{
@@ -543,9 +592,9 @@ impl<T> Hyperbolic for Real<T>
 	///
 	/// assert!(abs_difference < Real::new(1.0e-10));
     /// ```
-	fn coth(self: Self) -> Self
+	fn coth(self: &Self) -> Self
 	{
-		if self == Real::zero()
+		if *self == Real::zero()
 		{
 			panic!();
 		}
@@ -577,7 +626,7 @@ impl<T> Hyperbolic for Real<T>
 	///
 	/// assert!(abs_difference < Real::new(1.0e-10));
     /// ```
-	fn sech(self: Self) -> Self
+	fn sech(self: &Self) -> Self
 	{
 		Real
 		{
@@ -610,7 +659,7 @@ impl<T> Hyperbolic for Real<T>
 	///
 	/// assert!(abs_difference < Real::new(1.0e-10));
     /// ```
-	fn csch(self: Self) -> Self
+	fn csch(self: &Self) -> Self
 	{
 		Real
 		{
@@ -619,7 +668,7 @@ impl<T> Hyperbolic for Real<T>
 	}
 
 	/// Hyperbolic inverse sine
-	fn arsinh(self: Self) -> Self
+	fn arsinh(self: &Self) -> Self
 	{
 		Real
 		{
@@ -628,7 +677,7 @@ impl<T> Hyperbolic for Real<T>
 	}
 
 	/// Hyperbolic inverse cosine
-	fn arcosh(self: Self) -> Self
+	fn arcosh(self: &Self) -> Self
 	{
 		Real
 		{
@@ -637,7 +686,7 @@ impl<T> Hyperbolic for Real<T>
 	}
 
 	/// Hyperbolic inverse tangens
-	fn artanh(self: Self) -> Self
+	fn artanh(self: &Self) -> Self
 	{
 		Real
 		{
@@ -649,11 +698,7 @@ impl<T> Hyperbolic for Real<T>
 	///
     /// # Arguments
     ///
-   	/// * `self`  -1.0 > self, self > 1.0
-    ///
     /// # Panics
-    ///
-    /// if  -1.0 <= self && self <= 1.0
     ///
     /// # Example
     ///
@@ -670,13 +715,8 @@ impl<T> Hyperbolic for Real<T>
 	///
 	/// assert!(abs_difference < Real::new(1.0e-10));
     /// ```
-	fn arcoth(self: Self) -> Self
+	fn arcoth(self: &Self) -> Self
 	{
-		if -Real::one() <= self && self <= Real::one()
-		{
-			panic!();
-		}
-
 		Real
 		{
 			num: self.num.arcoth()
@@ -687,11 +727,9 @@ impl<T> Hyperbolic for Real<T>
 	///
     /// # Arguments
     ///
-   	/// * `self`  0.0 < self <= 1.0
     ///
     /// # Panics
     ///
-    /// if  0.0 >= self || self > 1.0
     ///
     /// # Example
     ///
@@ -708,13 +746,8 @@ impl<T> Hyperbolic for Real<T>
 	///
 	/// assert!(abs_difference < Real::new(1.0e-10));
     /// ```
-	fn arsech(self: Self) -> Self
+	fn arsech(self: &Self) -> Self
 	{
-		if Real::zero() >= self || self > Real::one()
-		{
-			panic!();
-		}
-
 		Real
 		{
 			num: self.num.arsech()
@@ -725,11 +758,9 @@ impl<T> Hyperbolic for Real<T>
 	///
     /// # Arguments
     ///
-   	/// * `self`  <> 0.0
     ///
     /// # Panics
     ///
-    /// iff self = 0.0
     ///
     /// # Example
     ///
@@ -746,16 +777,45 @@ impl<T> Hyperbolic for Real<T>
 	///
 	/// assert!(abs_difference < Real::new(1.0e-10));
     /// ```
-	fn arcsch(self: Self) -> Self
+	fn arcsch(self: &Self) -> Self
 	{
-		if self == Real::zero()
-		{
-			panic!()
-		}
 
 		Real
 		{
 			num: self.num.arcsch()
 		}
 	}
+}
+
+macro_rules! impl_to_primitive
+{
+    ($ty:ty, $to:ident) =>
+    {
+        fn $to(&self) -> Option<$ty>
+        {
+           	self.num.$to()
+        }
+    }
+}
+
+// Returns None if Complex part is non-zero
+impl<T> ToPrimitive for Real<T>
+	where T: ToPrimitive
+{
+    impl_to_primitive!(usize, to_usize);
+    impl_to_primitive!(isize, to_isize);
+    impl_to_primitive!(u8, to_u8);
+    impl_to_primitive!(u16, to_u16);
+    impl_to_primitive!(u32, to_u32);
+    impl_to_primitive!(u64, to_u64);
+    impl_to_primitive!(i8, to_i8);
+    impl_to_primitive!(i16, to_i16);
+    impl_to_primitive!(i32, to_i32);
+    impl_to_primitive!(i64, to_i64);
+    #[cfg(has_i128)]
+    impl_to_primitive!(u128, to_u128);
+    #[cfg(has_i128)]
+    impl_to_primitive!(i128, to_i128);
+    impl_to_primitive!(f32, to_f32);
+    impl_to_primitive!(f64, to_f64);
 }
