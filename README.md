@@ -51,7 +51,7 @@ Add this to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-mathru = "0.0.3"
+mathru = "0.0.4"
 ```
 
 and this to your crate root:
