@@ -68,7 +68,7 @@ pub trait ToPrimitive
 	/// Converts the value of `self` to an `f64`.
 	fn to_f64(&self) -> Option<f64>
 	{
-		self.to_f64().and_then(|x| x.to_f64())
+		self.to_f64().and_then(|x: f64| x.to_f64())
 	}
 }
 
