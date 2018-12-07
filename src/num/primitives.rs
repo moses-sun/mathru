@@ -12,29 +12,29 @@ macro_rules! number_impl
     {
         impl Number for $t
         {
-			fn min(self: Self, a: Self) -> Self
-    		{
-    			if self <= a
-				{
-					return self
-				}
-				else
-				{
-					return a
-				}
-            }
-
-    		fn max(self: Self, a: Self) -> Self
-    		{
-    			if self >= a
-				{
-					return self
-				}
-				else
-				{
-					return a
-				}
-    		}
+//			fn min(self: Self, a: Self) -> Self
+//    		{
+//    			if self <= a
+//				{
+//					return self
+//				}
+//				else
+//				{
+//					return a
+//				}
+//            }
+//
+//    		fn max(self: Self, a: Self) -> Self
+//    		{
+//    			if self >= a
+//				{
+//					return self
+//				}
+//				else
+//				{
+//					return a
+//				}
+//    		}
         }
     };
 }
@@ -92,7 +92,10 @@ macro_rules! ring_impl
     {
         impl Ring for $t
         {
-
+			fn abs(self: Self) -> Self
+			{
+				self.abs()
+			}
         }
     };
 }
@@ -753,44 +756,44 @@ macro_rules! trigonometry_impl
 			}
 
 			/// Sinus
-			fn sin(self: Self) -> Self
+			fn sin(self: &Self) -> Self
 			{
-				self.sin()
+				(*self).sin()
 			}
 
 			/// Cosinus
-			fn cos(self: Self) -> Self
+			fn cos(self: &Self) -> Self
 			{
-				self.cos()
+				(*self).cos()
 			}
 
 			///Tangens
-			fn tan(self: Self) -> Self
+			fn tan(self: &Self) -> Self
 			{
-				self.tan()
+				(*self).tan()
 			}
 
-			fn cot(self: Self) -> Self
+			fn cot(self: &Self) -> Self
 			{
 				1.0 / self.tan()
 			}
 
-			fn sec(self: Self) -> Self
+			fn sec(self: &Self) -> Self
 			{
 				1.0 / self.cos()
 			}
 
-			fn csc(self: Self) -> Self
+			fn csc(self: &Self) -> Self
 			{
 				1.0 / self.sin()
 			}
 
-			fn arcsin(self: Self) -> Self
+			fn arcsin(self: &Self) -> Self
 			{
 				self.asin()
 			}
 
-			fn arccos(self: Self) -> Self
+			fn arccos(self: &Self) -> Self
 			{
 				self.acos()
 			}
@@ -798,19 +801,24 @@ macro_rules! trigonometry_impl
 			/// Computes the arctangent of a number. Return value is in radians in the
     		/// range [-pi/2, pi/2];
     		///
-			fn arctan(self: Self) -> Self
+			fn arctan(self: &Self) -> Self
 			{
 				self.atan()
 			}
 
-			fn arccot(self: Self) -> Self
+			fn arctan2(self: &Self, other: &Self) -> Self
 			{
-				if self == 0.0
+				self.atan2(*other)
+			}
+
+			fn arccot(self: &Self) -> Self
+			{
+				if *self == 0.0
 				{
 					return 0.0
 				}
 
-				if self > 0.0
+				if *self > 0.0
 				{
 					return (1.0 / self).atan()
 				}
@@ -820,12 +828,12 @@ macro_rules! trigonometry_impl
 				}
 			}
 
-			fn arcsec(self: Self) -> Self
+			fn arcsec(self: &Self) -> Self
 			{
 				(1.0 / self).acos()
 			}
 
-			fn arccsc(self: Self) -> Self
+			fn arccsc(self: &Self) -> Self
 			{
 				(1.0 / self).asin()
 			}
@@ -849,15 +857,15 @@ macro_rules! exponential_impl
 				$e
 			}
 			///Exponential function
-			fn exp(self: Self) -> Self
+			fn exp(self: &Self) -> Self
 			{
-				self.exp()
+				(*self).exp()
 			}
 
 			///Logiarithm function
-			fn ln(self: Self) -> Self
+			fn ln(self: &Self) -> Self
 			{
-				self.ln()
+				(*self).ln()
 			}
 		}
 	}
@@ -872,14 +880,14 @@ macro_rules! power_impl
     {
     	impl Power for $t
 		{
-			fn pow(self: Self, exp: Self) -> Self
+			fn pow(self: &Self, exp: &Self) -> Self
 			{
-				self.powf(exp)
+				self.powf(*exp)
 			}
 
-			fn root(self: Self, root: Self) -> Self
+			fn root(self: &Self, root: &Self) -> Self
 			{
-				self.powf(1.0 / root)
+				self.powf(1.0 / *root)
 			}
 		}
 	}
@@ -895,15 +903,15 @@ macro_rules! hyperbolic_impl
     	impl Hyperbolic for $t
 		{
 			/// Hyperbolic sine
-			fn sinh(self: Self) -> Self
+			fn sinh(self: &Self) -> Self
 			{
-				self.sinh()
+				(*self).sinh()
 			}
 
 			/// Hyperbolic cosine
-			fn cosh(self: Self) -> Self
+			fn cosh(self: &Self) -> Self
 			{
-				self.cosh()
+				(*self).cosh()
 			}
 
 			/// Hyperbolic tangens
@@ -926,9 +934,9 @@ macro_rules! hyperbolic_impl
 			///
 			/// assert!(abs_difference < 1.0e-10);
     		/// ```
-			fn tanh(self: Self) -> Self
+			fn tanh(self: &Self) -> Self
 			{
-				self.tanh()
+				(*self).tanh()
 			}
 
 			/// Hyperbolic cotangens
@@ -955,9 +963,9 @@ macro_rules! hyperbolic_impl
 			///
 			/// assert!(abs_difference < 1.0e-10);
     		/// ```
-			fn coth(self: Self) -> Self
+			fn coth(self: &Self) -> Self
 			{
-				if self == 0.0
+				if *self == 0.0
 				{
 					panic!();
 				}
@@ -985,7 +993,7 @@ macro_rules! hyperbolic_impl
 			///
 			/// assert!(abs_difference < 1.0e-10);
     		/// ```
-			fn sech(self: Self) -> Self
+			fn sech(self: &Self) -> Self
 			{
 				1.0 / self.cosh()
 			}
@@ -1015,9 +1023,9 @@ macro_rules! hyperbolic_impl
 			///
 			/// assert!(abs_difference < 1.0e-10);
     		/// ```
-			fn csch(self: Self) -> Self
+			fn csch(self: &Self) -> Self
 			{
-				if self == 0.0
+				if *self == 0.0
 				{
 					panic!();
 				}
@@ -1025,21 +1033,21 @@ macro_rules! hyperbolic_impl
 			}
 
 			/// Hyperbolic inverse sine
-			fn arsinh(self: Self) -> Self
+			fn arsinh(self: &Self) -> Self
 			{
-				self.asinh()
+				(*self).asinh()
 			}
 
 			/// Hyperbolic inverse cosine
-			fn arcosh(self: Self) -> Self
+			fn arcosh(self: &Self) -> Self
 			{
-				self.acosh()
+				(*self).acosh()
 			}
 
 			/// Hyperbolic inverse tangens
-			fn artanh(self: Self) -> Self
+			fn artanh(self: &Self) -> Self
 			{
-				if -1.0 >= self || self >= 1.0
+				if -1.0 >= *self || *self >= 1.0
 				{
 					panic!();
 				}
@@ -1071,14 +1079,14 @@ macro_rules! hyperbolic_impl
 			///
 			/// assert!(abs_difference < 1.0e-10);
     		/// ```
-			fn arcoth(self: Self) -> Self
+			fn arcoth(self: &Self) -> Self
 			{
-				if -1.0 <= self && self <= 1.0
+				if -1.0 <= *self && *self <= 1.0
 				{
 					panic!();
 				}
 
-				((self + 1.0) / (self  - 1.0)).ln() / 2.0
+				((*self + 1.0) / (*self  - 1.0)).ln() / 2.0
 			}
 
 			/// Hyperbolic inverse secant
@@ -1104,9 +1112,9 @@ macro_rules! hyperbolic_impl
 			///
 			/// assert!(abs_difference < 1.0e-10);
    			/// ```
-			fn arsech(self: Self) -> Self
+			fn arsech(self: &Self) -> Self
 			{
-				if 0.0 >= self || self > 1.0
+				if 0.0 >= *self || *self > 1.0
 				{
 					panic!();
 				}
@@ -1138,7 +1146,7 @@ macro_rules! hyperbolic_impl
 			///
 			/// assert!(abs_difference < 1.0e-10);
     		/// ```
-			fn arcsch(self: Self) -> Self
+			fn arcsch(self: &Self) -> Self
 			{
 				(1.0 / self).arsinh()
 			}
