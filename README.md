@@ -21,6 +21,29 @@ A simple mathematics library written in Rust
             - chi squared distribution
             - beta distribution
             - bernoulli distribution
+
+    - elementary functions
+        - trigonometric function
+            - sin()     - arcsin()
+            - cos()     - arccos()
+            - tan()     - arctan()
+            - cot()     - arccot()
+            - sec()     - arcsec()
+            - csc()     - arccsc()
+
+        - hyperbolic functions
+            - sinh()    - arsinh()
+            - cosh()    - arcosh()
+            - tanh()    - artanh()
+            - coth()    - arcoth()
+            - sech()    - arsech()
+            - csch()    - arcsch()
+
+        - exponential
+            - exp()     - ln()
+
+        implemented for f32, f64, Complex<f32>, Complex<f64>
+
 ## Usage
 -----
 
