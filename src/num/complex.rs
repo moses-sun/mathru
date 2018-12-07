@@ -1,7 +1,12 @@
-use algebra::abstr::identity::{Zero, One};
-use std::ops::{Add, AddAssign, Sub, SubAssign, Mul, MulAssign};
+use std::ops::{Add, AddAssign, Sub, SubAssign, Mul, MulAssign, Div, DivAssign, Neg};
 use std::fmt;
 use std::fmt::{Display};
+use algebra::abstr::Complex as ComplexT;
+use algebra::abstr::{Number, Semiring, Ring, Field, Zero, One};
+use std::cmp::Ordering;
+use algebra::abstr::cast::ToPrimitive;
+use elementary::{Trigonometry, Exponential, Power, Hyperbolic};
+use algebra::abstr::Real;
 
 
 #[macro_export]
@@ -9,52 +14,158 @@ macro_rules! Complex
 {
     ($r:expr, $i:expr) =>
     {
+		Complex::new($r, $i);
+    };
+}
+
+#[macro_export]
+macro_rules! Complex32
+{
+    ($r:expr, $i:expr) =>
+    {
 		(Complex::new($r, $i));
     };
 }
 
-
+#[macro_export]
+macro_rules! Complex64
+{
+    ($r:expr, $i:expr) =>
+    {
+		(Complex::new($r, $i));
+    };
+}
 
 pub type Complex32 = Complex<f32>;
 pub type Complex64 = Complex<f64>;
 
 
-#[derive(Debug)]
+#[derive(Debug, Clone, Copy)]
 pub struct Complex<T>
 {
-	real: T,
-	imag: T,
+	re: T,
+	im: T,
 }
 
 impl<T> Complex<T>
+	where T: Real
 {
-	pub fn new(real: T, imag: T) -> Complex<T>
+	pub fn new(re: T, im: T) -> Complex<T>
 	{
 		Complex
 		{
-			real: real,
-			imag: imag
+			re: re,
+			im: im
 		}
 	}
 }
 
-//impl<T> Complex for Complex<T>
-//{
-//
-//
-//}
-//
-//impl<T> Number for Complex<T>
-//{
-//
-//}
+impl<T> Neg for Complex<T>
+    where T: Ring
+{
+    type Output = Complex<T>;
+
+    fn neg(self: Self) -> Complex<T>
+    {
+        Complex
+       	{
+        	re: -self.re,
+          	im: -self.im
+      	}
+    }
+}
+
+
+impl<T> PartialOrd for Complex<T>
+	where T: PartialEq
+{
+	fn partial_cmp(self: &Self, _other: &Self) -> Option<Ordering>
+	{
+		unimplemented!();
+    }
+}
+
+impl<T> ComplexT for Complex<T>
+	where T: Real
+{
+	fn conj(self: Self) -> Complex<T>
+    {
+        Complex
+       	{
+        	re: self.re,
+           	im: -self.im
+      	}
+    }
+
+    fn arg(self: Self) -> Self
+	{
+		Complex
+		{
+			re: self.im.arctan2(&self.re),
+			im: T::zero()
+		}
+	}
+}
+
+impl<T> Real for Complex<T>
+	where T: Real
+{
+
+}
+
+impl<T> Field for Complex<T>
+	where T: Real
+{
+
+}
+
+impl<T> Ring for Complex<T>
+	where T: Real
+{
+
+	/// Absolute value of the complex number
+	///
+	/// # Example
+	///
+	/// ```
+	/// extern crate mathru;
+	/// use mathru::algebra::abstr::Ring;
+	/// use mathru::num::Complex;
+	/// use mathru::algebra::abstr::cast::ToPrimitive;
+	///
+	/// let a: Complex<f64> = Complex::new(1.0, 2.0);
+   	/// let refer: f64 = (5.0_f64).sqrt();
+    /// assert_eq!(refer, a.abs().to_f64().unwrap());
+    /// ```
+	fn abs(self: Self) -> Self
+	{
+		let root: T = T::one() + T::one();
+		Complex
+		{
+			re: (self.re * self.re + self.im * self.im).root(&root),
+			im: T::zero()
+		}
+	}
+}
+
+impl<T> Semiring for Complex<T>
+	where T: Field
+{
+
+}
+
+impl<T> Number for Complex<T>
+	where T: Field
+{
+
+}
 
 impl<T> PartialEq for Complex<T>
     where T: PartialEq
 {
     fn eq<'a, 'b>(self: &'a Self, rhs: &Self) -> bool
     {
-        if self.real == rhs.real && self.imag == rhs.imag
+        if self.re == rhs.re && self.im == rhs.im
         {
             return true;
         }
@@ -68,11 +179,7 @@ impl<T> Display for Complex<T>
     // This trait requires `fmt` with this exact signature.
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result
     {
-        // Write strictly the first element into the supplied output
-        // stream: `f`. Returns `fmt::Result` which indicates whether the
-        // operation succeeded or failed. Note that `write!` uses syntax which
-        // is very similar to `println!`.
-        write!(f, "{} + {}i", self.real, self.imag)
+        write!(f, "{} + {}i", self.re, self.im)
     }
 }
 
@@ -83,8 +190,8 @@ impl<T> Zero for Complex<T>
 	 {
 	 	Complex
 		{
-			real: T::zero(),
-			imag: T::zero(),
+			re: T::zero(),
+			im: T::zero(),
 		}
 	 }
 }
@@ -98,23 +205,48 @@ impl<T> Add for Complex<T>
     {
         Complex
         {
-        	real: self.real + rhs.real,
-        	imag: self.imag + rhs.imag,
+        	re: self.re + rhs.re,
+        	im: self.im + rhs.im,
         }
+    }
+}
+
+impl<'a, 'b, T> Add<&'b Complex<T>> for &'a Complex<T>
+    where T: Add<T, Output = T> + Clone + Copy
+{
+    type Output = Complex<T>;
+
+    fn add(self: Self, rhs: &'b Complex<T>) -> Self::Output
+    {
+        Complex
+            {
+                re: self.re + rhs.re,
+                im: self.im + rhs.im
+            }
+    }
+}
+
+impl<T> AddAssign for Complex<T>
+    where T: AddAssign
+{
+    fn add_assign<'a>(self: &'a mut Self, other: Self)
+    {
+        self.re += other.re;
+        self.im += other.im;
     }
 }
 
 
 impl<T> One for Complex<T>
-    where T: One + Zero + Sub<T, Output = T> + Copy
+    where T: One + Mul<T, Output = T> + Add<T, Output = T> + Sub<T, Output = T> + Copy + Zero
 {
     fn one() -> Self
     {
         Complex
-            {
-                real: T::one(),
-                imag: T::zero()
-            }
+      	{
+         	re: T::one(),
+            im: T::zero()
+     	}
     }
 }
 
@@ -127,8 +259,8 @@ impl<T> Mul for Complex<T>
     {
         Complex
        	{
-        	real : self.real * other.real - self.imag * other.imag,
-            imag : self.imag * other.real + self.real * other.imag
+        	re : self.re * other.re - self.im * other.im,
+            im : self.im * other.re + self.re * other.im
        	}
     }
 }
@@ -142,9 +274,20 @@ impl<'a, 'b, T> Mul<&'b Complex<T>> for &'a Complex<T>
     {
         Complex
        	{
-        	real: self.real * rhs.real - self.imag * rhs.imag,
-           	imag: self.imag * rhs.real + self.real * rhs.imag
+        	re: self.re * rhs.re - self.im * rhs.im,
+           	im: self.im * rhs.re + self.re * rhs.im
        	}
+    }
+}
+
+impl<T> MulAssign for Complex<T>
+    where T: Mul<T, Output = T> + Add<T, Output = T> + Sub<T, Output = T> + Clone + Copy
+{
+    fn mul_assign(self: &mut Self, other: Self)
+    {
+        let temp : Complex<T> =  *self;
+        self.re = temp.re * other.re - temp.im * other.im;
+        self.im = temp.im * other.re + temp.re * other.im;
     }
 }
 
@@ -164,12 +307,13 @@ impl<'a, 'b, T> Sub<&'b Complex<T>> for &'a Complex<T>
 {
     type Output = Complex<T>;
 
-    fn sub(self: Self, rhs: &'b Complex<T>) -> Self::Output {
+    fn sub(self: Self, rhs: &'b Complex<T>) -> Self::Output
+    {
         Complex
-            {
-                real: self.real - rhs.real,
-                imag: self.imag - rhs.imag
-            }
+       	{
+        	re: self.re - rhs.re,
+           	im: self.im - rhs.im
+      	}
     }
 }
 
@@ -178,7 +322,683 @@ impl<T> SubAssign for Complex<T>
 {
     fn sub_assign<'a>(self: &'a mut Self, other: Self)
     {
-        self.real -= other.real;
-        self.imag -= other.imag;
+        self.re -= other.re;
+        self.im -= other.im;
     }
 }
+
+impl<T> Div for Complex<T>
+    where T: Real
+{
+    type Output = Complex<T>;
+
+    fn div(self: Self, rhs: Self) -> Self::Output
+    {
+		&self / &rhs
+    }
+}
+
+impl<'a, 'b, T> Div<&'b Complex<T>> for &'a Complex<T>
+    where T: Real
+{
+    type Output = Complex<T>;
+
+    fn div(self: Self, rhs: &'b Complex<T>) -> Self::Output
+    {
+        let divisor: T = rhs.re * rhs.re + rhs.im * rhs.im;
+        let mut quot: Complex<T> = self * &((*rhs).conj());
+
+        quot.re = quot.re / divisor;
+        quot.im = quot.im / divisor;
+
+        quot
+    }
+}
+
+
+impl<T> DivAssign for Complex<T>
+    where T: Real
+{
+    fn div_assign<'a>(self: &'a mut Self, other: Self)
+    {
+    	*self = *self / other;
+    }
+}
+
+macro_rules! impl_to_primitive
+{
+    ($ty:ty, $to:ident) =>
+    {
+        fn $to(&self) -> Option<$ty>
+        {
+            if self.im == T::zero()
+            {
+            	self.re.$to()
+            }
+            else
+            {
+            	None
+            }
+        }
+    }
+} // impl_to_primitive
+
+// Returns None if Complex part is non-zero
+impl<T: ToPrimitive + Number> ToPrimitive for Complex<T>
+	where T: ToPrimitive + Field
+{
+    impl_to_primitive!(usize, to_usize);
+    impl_to_primitive!(isize, to_isize);
+    impl_to_primitive!(u8, to_u8);
+    impl_to_primitive!(u16, to_u16);
+    impl_to_primitive!(u32, to_u32);
+    impl_to_primitive!(u64, to_u64);
+    impl_to_primitive!(i8, to_i8);
+    impl_to_primitive!(i16, to_i16);
+    impl_to_primitive!(i32, to_i32);
+    impl_to_primitive!(i64, to_i64);
+    #[cfg(has_i128)]
+    impl_to_primitive!(u128, to_u128);
+    #[cfg(has_i128)]
+    impl_to_primitive!(i128, to_i128);
+    impl_to_primitive!(f32, to_f32);
+    impl_to_primitive!(f64, to_f64);
+}
+
+impl<T> Exponential for Complex<T>
+	where T: Real
+{
+	fn e() -> Self
+	{
+		unimplemented!();
+	}
+
+	///Exponential function
+	///
+	/// # Example
+	///
+	/// ```
+	/// extern crate mathru;
+	/// use mathru::num::{Complex};
+	/// use mathru::elementary::Exponential;
+	///
+	/// let z: Complex<f64> = Complex::new(1.0, 2.0);
+	/// let a: Complex<f64> = z.exp();
+	/// ```
+	fn exp(self: &Self) -> Self
+	{
+		let k: T = self.re.exp();
+		Complex
+		{
+			re: k * self.im.cos(),
+			im: k * self.im.sin()
+		}
+	}
+
+	///Logiarithm function
+	///
+	/// # Example
+	///
+	/// ```
+	/// extern crate mathru;
+	/// use mathru::num::Complex;
+	/// use mathru::elementary::Exponential;
+	///
+	/// let a: Complex<f64> = Complex::new(1.0_f64, 2.0_f64);
+	/// let refer: Complex<f64> = Complex::new(5.0_f64.powf(0.5_f64).ln(), 2.0_f64.atan());
+	///
+	/// assert_eq!(refer, a.ln());
+	/// ```
+	fn ln(self: &Self) -> Self
+	{
+		Complex
+		{
+			re: self.abs().re.ln(),//self.abs(),
+			im: self.arg().re
+		}
+	}
+}
+
+impl<T> Trigonometry for Complex<T>
+	where T: Real
+{
+	/// Returns the mathematic constant PI
+	fn pi() -> Self
+	{
+		Complex
+		{
+			re: T::pi(),
+			im: T::zero()
+		}
+	}
+
+	/// Sinus function
+	///
+	/// # Example
+	///
+	/// ```
+	/// extern crate mathru;
+	/// use mathru::num::Complex;
+	/// use mathru::elementary::Trigonometry;
+	///
+    /// let a: f64 = 1.0;
+    /// let b: f64 = 2.0;
+    /// let z: Complex<f64> = Complex::new(a, b);
+	/// let re: f64 = (-(-b).exp() * a.sin() - b.exp() * a.sin()) / -2.0;
+    /// let im: f64 = ((-b).exp() * a.cos() - b.exp() * a.cos()) / -2.0;
+	///
+	/// let uut: Complex<f64> = z.sin();
+	/// let refer: Complex<f64> = Complex::new(re, im);
+	///
+    /// assert_eq!(refer, uut);
+	/// ```
+	fn sin(self: &Self) -> Self
+	{
+		let a: Complex<T> = Complex!(-self.im, self.re);
+		let b: Complex<T> = Complex!(self.im, -self.re);
+		let c: Complex<T> = Complex!(T::zero(), T::one() + T::one());
+
+		(a.exp() - b.exp()) / c
+	}
+
+	/// Cosinus function
+	///
+	/// # Example
+	///
+	/// ```
+	/// extern crate mathru;
+	/// use mathru::num::Complex;
+	/// use mathru::elementary::Trigonometry;
+	///
+	/// let a: f64 = 1.0;
+	/// let b: f64 = 2.0;
+	/// let z: Complex<f64> = Complex::new(a, b);
+	/// let re: f64 = ((-b).exp() * a.cos() + b.exp() * (-a).cos()) / 2.0;
+	/// let im: f64 = ((-b).exp() * a.sin() + b.exp() * (-a).sin()) / 2.0;
+	/// let refer: Complex<f64> = Complex::new(re, im);
+	///
+	/// let uut: Complex<f64> = z.cos();
+	///
+	/// assert_eq!(refer, uut);
+	/// ```
+	fn cos(self: &Self) -> Self
+	{
+		let a: Complex<T> = Complex!(-self.im, self.re);
+		let b: Complex<T> = Complex!(self.im, -self.re);
+		let c: Complex<T> = Complex!(T::one() + T::one(), T::zero());
+
+		(a.exp() + b.exp()) / c
+	}
+
+	/// Tangens function
+	///
+	/// # Arguments
+	///
+	/// self \in \mathbb{C} \setminus \{ k\pi + \frac{\pi}{2} | k \in \mathbb{Z} \}
+	///
+	/// # Panics
+	///
+	///
+	///
+	/// # Example
+	///
+	/// ```
+	/// extern crate mathru;
+	/// use mathru::num::Complex;
+	/// use mathru::elementary::Trigonometry;
+	///
+	/// let a: f64 = 1.0;
+	/// let b: f64 = 2.0;
+	/// let z: Complex<f64> = Complex::new(a, b);
+	/// let refer: Complex<f64> = z.sin() / z.cos();
+	///
+	/// let uut: Complex<f64> = z.tan();
+	///
+	/// assert_eq!(refer, uut);
+	/// ```
+	fn tan(self: &Self) -> Self
+	{
+		if self.im == T::zero()
+		{
+			//panic!()
+		}
+
+		self.sin() / self.cos()
+	}
+
+	/// Cotangens function
+	///
+	/// # Arguments
+	///
+	/// self: \mathbb{C} \setminus \{ \frac{k * \pi}{2} | k \in \mathbb{Z} \}
+	/// # Example
+	///
+	/// ```
+	/// extern crate mathru;
+	/// use mathru::num::Complex;
+	/// use mathru::elementary::Trigonometry;
+	///
+	/// let a: Complex<f64> = Complex::new(1.0_f64, 2.0_f64);
+    /// let refer: Complex<f64> = Complex::new(1.0_f64, 0.0_f64) / a.tan();
+	///
+    /// assert_eq!(refer, a.cot());
+	/// ```
+	fn cot(self: &Self) -> Self
+	{
+		Complex::one() / self.tan()
+	}
+
+	/// Secant function
+	///
+	/// # Arguments
+	///
+	///
+	/// # Example
+	///
+	/// ```
+	/// extern crate mathru;
+	/// use mathru::num::Complex;
+	/// use mathru::elementary::Trigonometry;
+	///
+    /// let a: Complex<f64> = Complex::new(1.0_f64, 2.0_f64);
+    /// let refer: Complex<f64> = Complex::new(1.0_f64, 0.0_f64) / a.cos();
+	///
+    /// assert_eq!(refer, a.sec());
+	/// ```
+	fn sec(self: &Self) -> Self
+	{
+		Complex::one() / self.cos()
+	}
+
+	/// Cosecant function
+	///
+	/// # Arguments
+	///
+	///
+	/// # Example
+	///
+	/// ```
+	/// extern crate mathru;
+	/// use mathru::num::Complex;
+	/// use mathru::elementary::Trigonometry;
+	///
+    /// let a: Complex<f64> = Complex::new(1.0_f64, 2.0_f64);
+    /// let refer: Complex<f64> = Complex::new(1.0_f64, 0.0_f64) / a.sin();
+	///
+    /// assert_eq!(refer, a.csc());
+	/// ```
+	fn csc(self: &Self) -> Self
+	{
+		Complex::one() / self.sin()
+	}
+
+	/// Inverse sinus function
+	///
+	/// # Arguments
+	///
+	/// # Panics
+	///
+	///
+	/// # Example
+	///
+	/// ```
+	/// extern crate mathru;
+	/// use mathru::num::Complex;
+	/// use mathru::elementary::{Trigonometry};
+	///
+	/// let a: Complex<f64> = Complex::new(1.0_f64, 2.0_f64);
+	/// let refer: Complex<f64> = Complex::new(0.4270785863924768, 1.5285709194809995);
+	///
+	/// assert_eq!(refer, a.arcsin());
+	/// ```
+	fn arcsin(self: &Self) -> Self
+	{
+
+		let mi: Complex<T> = Complex!(T::zero(), -T::one());
+		let iz: Complex<T> = Complex!(-self.im, self.re);
+		let exp: Complex<T> = Complex!(T::one() / (T::one() + T::one()), T::zero());
+
+		mi * (iz + (Complex::one() - self * self).pow(&exp)).ln()
+	}
+
+	/// Inverse cosinus function
+	///
+	/// # Arguments
+	///
+	/// # Panics
+	///
+	///
+	/// # Example
+	///
+	/// ```
+	/// extern crate mathru;
+	/// use mathru::num::Complex;
+	/// use mathru::elementary::{Trigonometry};
+	///
+	/// let a: Complex<f64> = Complex::new(1.0_f64, 2.0_f64);
+	/// let refer: Complex<f64> = Complex::new(std::f64::consts::PI / 2.0_f64, 0.0_f64) - a.arcsin();
+	///
+	/// assert_eq!(refer, a.arccos());
+	/// ```
+	fn arccos(self: &Self) -> Self
+	{
+		Complex!(T::pi() / (T::one() + T::one()), T::zero()) - self.arcsin()
+	}
+
+	/// Inverse tangens function
+	///
+	/// # Arguments
+	///
+	/// self: Complex numbers without {-i, i}
+	///
+	/// # Panics
+	///
+	/// iff self = i or self = -i
+	///
+	/// # Example
+	///
+	/// ```
+	/// extern crate mathru;
+	/// use mathru::num::Complex;
+	/// use mathru::elementary::{Trigonometry};
+	///
+	/// let a: Complex<f64> = Complex::new(0.0_f64, 2.0_f64);
+	/// let refer: Complex<f64> = Complex::new(std::f64::consts::PI / 2.0, (4.0_f64 / 5.0_f64).atanh() / 2.0_f64);
+	///
+	/// assert_eq!(refer, a.arctan());
+	/// ```
+	fn arctan(self: &Self) -> Self
+	{
+//		let iz: Complex<T> = Complex!(-self.im, self.re);
+//		let f: Complex<T> = Complex!(T::zero(), T::one() / (T::one() + T::one()));
+//		((Complex::one() - iz).ln() - (Complex::one() + iz).ln()) * f
+//		let k: Complex<T> = Complex!(T::zero(), T::one() + T::one());
+//		((Complex::one() + iz).ln() - (Complex::one() - iz).ln()) / k
+
+
+		let two: T = T::one() + T::one();
+		let re: T;
+
+		if self.re == T::zero()
+		{
+			if self.im.abs() <= T::one()
+			{
+				re = T::zero()
+			}
+			else
+			{
+				if self.im > T::zero()
+				{
+					re = T::pi() / two;
+				}
+				else
+				{
+					re = - T::pi() / two;
+				}
+			}
+		}
+		else
+		{
+			if self.re > T::zero()
+			{
+				re = (((self.re * self.re + self.im * self.im - T::one()) / (two * self.re)).arctan() +
+				T::pi
+				() /
+				two) / two
+			}
+			else
+			{
+				re = (((self.re * self.re + self.im * self.im - T::one()) / (two * self.re)).arctan() -
+				T::pi() /
+				two) / two
+			}
+		}
+
+		let im: T = ((two * self.im) / (self.re * self.re + self.im * self.im + T::one())).artanh() / two;
+
+		Complex!(re, im)
+	}
+
+
+	fn arctan2(self: &Self, other: &Self) -> Self
+	{
+		unimplemented!()
+	}
+
+	/// Inverse cotangens function
+	///
+	/// # Arguments
+	///
+	/// self: Complex numbers without {-i, i}
+	///
+	/// # Panics
+	///
+	/// iff self = i or self = -i
+	///
+	/// # Example
+	///
+	/// ```
+	/// extern crate mathru;
+	/// use mathru::num::Complex;
+	/// use mathru::algebra::abstr::One;
+	/// use mathru::elementary::{Trigonometry};
+	///
+	/// let a: Complex<f64> = Complex::new(1.0_f64, 2.0_f64);
+	/// let refer: Complex<f64> = (Complex::one() / a).arctan();
+	///
+	/// assert_eq!(refer, a.arccot());
+	/// ```
+	fn arccot(self: &Self) -> Self
+	{
+		if self.re == T::zero()
+		{
+			if self.im == T::one() || self.im == -T::one()
+			{
+				panic!()
+			}
+		}
+		(Complex::one() / *self).arctan()
+	}
+
+	/// Inverse secant function
+	///
+	/// # Arguments
+	///
+	/// self: Complex numbers without {-1, 0, 1}
+	///
+	/// # Panics
+	///
+	/// iff self = -1 or self = 0 or self = 1
+	///
+	/// # Example
+	///
+	/// ```
+	/// extern crate mathru;
+	/// use mathru::num::Complex;
+	/// use mathru::algebra::abstr::One;
+	/// use mathru::elementary::{Trigonometry};
+	///
+	/// let a: Complex<f64> = Complex::new(1.0_f64, 2.0_f64);
+	/// let refer: Complex<f64> = (Complex::one() / a).arccos();
+	///
+	/// assert_eq!(refer, a.arcsec());
+	/// ```
+	fn arcsec(self: &Self) -> Self
+	{
+		if self.im == T::zero()
+		{
+			if self.re == -T::one() || self.re == T::zero() || self.re == T::one()
+			{
+				panic!()
+			}
+		}
+
+		(Complex::one() / *self).arccos()
+	}
+
+	/// Inverse cosecant function
+	///
+	/// # Arguments
+	///
+	///
+	/// # Panics
+	///
+	///
+	/// # Example
+	///
+	/// ```
+	/// extern crate mathru;
+	/// use mathru::num::Complex;
+	/// use mathru::algebra::abstr::One;
+	/// use mathru::elementary::{Trigonometry};
+	///
+	/// let a: Complex<f64> = Complex::new(1.0_f64, 2.0_f64);
+	/// let refer: Complex<f64> = (Complex::one() / a).arcsin();
+	///
+	/// assert_eq!(refer, a.arccsc());
+	/// ```
+	fn arccsc(self: &Self) -> Self
+	{
+		(Complex::one() / *self).arcsin()
+	}
+}
+
+impl<T> Power for Complex<T>
+	where T: Real
+{
+
+	/// Power
+	///
+	/// # Example
+	///
+	/// ```
+	/// extern crate mathru;
+	/// use mathru::num::Complex;
+	/// use mathru::elementary::Power;
+	///
+	/// let a: Complex<f64> = Complex::new(1.0_f64, 2.0_f64);
+    /// let b: Complex<f64> = Complex::new(-2.0_f64, -1.0_f64);
+    /// let refer: Complex<f64> = Complex::new(-0.6006033457684014, -0.07399065302898929);
+	///
+    /// assert_eq!(refer, a.pow(&b));
+	/// ```
+	fn pow(self: &Self, exp: &Self) -> Self
+	{
+		let r: T = self.abs().re;
+		let phi: T = self.arg().re;
+		let k: T = r.pow(&exp.re) * (- exp.im * phi).exp();
+		let theta: T = r.ln() * exp.im + exp.re * phi;
+		let re: T = k * theta.cos();
+		let im: T = k * theta.sin();
+		Complex!(re, im)
+	}
+
+	fn root(self: &Self, root: &Self) -> Self
+	{
+		unimplemented!();
+	}
+}
+
+impl<T> Hyperbolic for Complex<T>
+	where T: Real
+{
+	/// Hyperbolic sine
+	fn sinh(self: &Self) -> Self
+	{
+		Complex!(T::zero(), -T::one()) * Complex!(-self.im, self.re).sin()
+	}
+
+	/// Hyperbolic cosine
+	fn cosh(self: &Self) -> Self
+	{
+		Complex!(-self.im, self.re).cos()
+	}
+
+	/// Hyperbolic tangens
+	fn tanh(self: &Self) -> Self
+	{
+		self.sinh() / self.cosh()
+	}
+
+	/// Hyperbolic cotangens
+	fn coth(self: &Self) -> Self
+	{
+		self.cosh() / self.sinh()
+	}
+
+	/// Hyperbolic secant
+	fn sech(self: &Self) -> Self
+	{
+		Complex!(-self.im, self.re).sec()
+	}
+
+	/// Hyperbolic cosecant
+	fn csch(self: &Self) -> Self
+	{
+		Complex!(T::zero(), -T::one()) * Complex!(-self.im, self.re).csc()
+	}
+
+	/// Hyperbolic inverse sine
+	///
+	/// # Arguments
+	///
+	/// # Panics
+	///
+	fn arsinh(self: &Self) -> Self
+	{
+
+		let p: Complex<T> = Complex!(T::one() / (T::one() + T::one()), T::zero());
+		(self + &(self * self + Complex::one()).pow(&p)).ln()
+	}
+
+	/// Hyperbolic inverse cosine
+	///
+	/// # Argument
+	///
+	/// # Panics
+	///
+	fn arcosh(self: &Self) -> Self
+	{
+		let p: Complex<T> = Complex!(T::one() / (T::one() + T::one()), T::zero());
+		(self + &(self * self - Complex::one()).pow(&p)).ln()
+	}
+
+	/// Inverse hyperbolic tangent
+	///
+	/// # Arguments
+	///
+	/// # Panics
+	///
+	fn artanh(self: &Self) -> Self
+	{
+		let f: Complex<T> = Complex!(T::one() / (T::one() + T::one()), T::zero());
+		((Complex::one() + *self) / (Complex::one() - *self)).ln() * f
+	}
+
+	/// Inverse hyperbolic cosecant
+	///
+	/// # Arguments
+	///
+	///
+	/// # Panics
+	///
+	fn arcoth(self: &Self) -> Self
+	{
+
+		let f: Complex<T> = Complex!(T::one() / (T::one() + T::one()), T::zero());
+		((*self + Complex::one()) / (*self - Complex::one())).ln() * f
+	}
+
+	/// Hyperbolic inverse secant
+	fn arsech(self: &Self) -> Self
+	{
+		(Complex::one() / *self).arcosh()
+	}
+
+	// Hyperbolic inverse cosecant
+	fn arcsch(self: &Self) -> Self
+	{
+		(Complex::one() / *self).arsinh()
+	}
+}
+
