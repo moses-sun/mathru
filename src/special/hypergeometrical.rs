@@ -64,7 +64,6 @@ pub fn f21(a: f64, b: f64, c: f64, z: f64) -> f64
 		b));
 
 		let f1: f64 = f21_norm(a, c - b, a - b + 1.0, 1.0 / (1.0 - z));
-		println!("f1: {}", f1);
 		let f2: f64 = f21_norm(b, c - a, b - a + 1.0, 1.0 / (1.0 - z));
 
 		f = l1 * f1 + l2 * f2;
