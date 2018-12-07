@@ -39,17 +39,22 @@ macro_rules! Complex64
 pub type Complex32 = Complex<f32>;
 pub type Complex64 = Complex<f64>;
 
-
+/// Complex number in cartesian form
+///
+///
 #[derive(Debug, Clone, Copy)]
 pub struct Complex<T>
 {
+	/// Real portion of the complex number
 	re: T,
+	/// Imaginary  portion of the complex number
 	im: T,
 }
 
 impl<T> Complex<T>
 	where T: Real
 {
+	/// Create a new complex
 	pub fn new(re: T, im: T) -> Complex<T>
 	{
 		Complex
@@ -60,6 +65,8 @@ impl<T> Complex<T>
 	}
 }
 
+
+/// Returns -self = -Re(self) - i Im(self)
 impl<T> Neg for Complex<T>
     where T: Ring
 {
@@ -76,9 +83,16 @@ impl<T> Neg for Complex<T>
 }
 
 
+/// Complex numbers can not be compared
+///
+/// # Panics
+///
+/// always
 impl<T> PartialOrd for Complex<T>
 	where T: PartialEq
 {
+
+
 	fn partial_cmp(self: &Self, _other: &Self) -> Option<Ordering>
 	{
 		unimplemented!();
@@ -88,6 +102,8 @@ impl<T> PartialOrd for Complex<T>
 impl<T> ComplexT for Complex<T>
 	where T: Real
 {
+	/// Returns the complex conjuagte
+	/// conj(self) = Re(self) - i Im(self)
 	fn conj(self: Self) -> Complex<T>
     {
         Complex
@@ -97,6 +113,7 @@ impl<T> ComplexT for Complex<T>
       	}
     }
 
+	/// Returns the argument of the complex number
     fn arg(self: Self) -> Self
 	{
 		Complex
@@ -148,6 +165,8 @@ impl<T> Ring for Complex<T>
 	}
 }
 
+
+
 impl<T> Semiring for Complex<T>
 	where T: Field
 {
@@ -160,6 +179,7 @@ impl<T> Number for Complex<T>
 
 }
 
+/// Compares to complex numbers
 impl<T> PartialEq for Complex<T>
     where T: PartialEq
 {
@@ -183,6 +203,7 @@ impl<T> Display for Complex<T>
     }
 }
 
+/// Returns 0 + i0
 impl<T> Zero for Complex<T>
 	where T: Zero
 {
@@ -196,6 +217,9 @@ impl<T> Zero for Complex<T>
 	 }
 }
 
+/// Adds two complex numbers
+///
+/// (a + ib) + (c + id) = (a + c) + i(b + d)
 impl<T> Add for Complex<T>
 	where T: Add<T, Output = T>
 {
@@ -226,6 +250,7 @@ impl<'a, 'b, T> Add<&'b Complex<T>> for &'a Complex<T>
     }
 }
 
+
 impl<T> AddAssign for Complex<T>
     where T: AddAssign
 {
@@ -237,6 +262,7 @@ impl<T> AddAssign for Complex<T>
 }
 
 
+/// Returns 1 + i0
 impl<T> One for Complex<T>
     where T: One + Mul<T, Output = T> + Add<T, Output = T> + Sub<T, Output = T> + Copy + Zero
 {
@@ -250,6 +276,9 @@ impl<T> One for Complex<T>
     }
 }
 
+/// Multiplies two complex numbers
+///
+/// (a + ib)(c + id) = (ac - bd) + i(bc + ad)
 impl<T> Mul for Complex<T>
     where T: Mul<T, Output = T> + Add<T, Output = T> + Sub<T, Output = T> + Clone + Copy
 {
@@ -291,6 +320,9 @@ impl<T> MulAssign for Complex<T>
     }
 }
 
+///Subtracts two complex numbers
+///
+/// (a + ib) - (c + id) = (a - c) + i(b - d)
 impl<T> Sub for Complex<T>
     where T: Sub<T, Output = T> + Clone + Copy
 {
@@ -327,6 +359,7 @@ impl<T> SubAssign for Complex<T>
     }
 }
 
+/// Divides two complex numbers
 impl<T> Div for Complex<T>
     where T: Real
 {
@@ -381,9 +414,9 @@ macro_rules! impl_to_primitive
             }
         }
     }
-} // impl_to_primitive
+}
 
-// Returns None if Complex part is non-zero
+/// Returns None if Complex part is non-zero
 impl<T: ToPrimitive + Number> ToPrimitive for Complex<T>
 	where T: ToPrimitive + Field
 {
@@ -408,9 +441,14 @@ impl<T: ToPrimitive + Number> ToPrimitive for Complex<T>
 impl<T> Exponential for Complex<T>
 	where T: Real
 {
+	/// Returns the euler number represented as a complex number
 	fn e() -> Self
 	{
-		unimplemented!();
+		Complex
+		{
+			re: T::e(),
+			im: T::zero()
+		}
 	}
 
 	///Exponential function
@@ -453,7 +491,7 @@ impl<T> Exponential for Complex<T>
 	{
 		Complex
 		{
-			re: self.abs().re.ln(),//self.abs(),
+			re: self.abs().re.ln(),
 			im: self.arg().re
 		}
 	}
@@ -462,7 +500,7 @@ impl<T> Exponential for Complex<T>
 impl<T> Trigonometry for Complex<T>
 	where T: Real
 {
-	/// Returns the mathematic constant PI
+	/// Returns the mathematic constant PI, represented as a complex number
 	fn pi() -> Self
 	{
 		Complex
@@ -760,7 +798,7 @@ impl<T> Trigonometry for Complex<T>
 	}
 
 
-	fn arctan2(self: &Self, other: &Self) -> Self
+	fn arctan2(self: &Self, _other: &Self) -> Self
 	{
 		unimplemented!()
 	}
@@ -893,7 +931,7 @@ impl<T> Power for Complex<T>
 		Complex!(re, im)
 	}
 
-	fn root(self: &Self, root: &Self) -> Self
+	fn root(self: &Self, _root: &Self) -> Self
 	{
 		unimplemented!();
 	}

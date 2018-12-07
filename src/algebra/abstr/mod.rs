@@ -12,7 +12,7 @@ mod real;
 mod complex;
 
 pub use self::semiring::{Semiring, Zero, One};
-pub use self::ring::Ring;
+pub use self::ring::{Ring};
 pub use self::field::Field;
 pub use self::number::Number;
 pub use self::natural::Natural;

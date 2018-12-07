@@ -1,5 +1,8 @@
 
-
+/// Trigonometric functions
+///
+///<a href="https://en.wikipedia.org/wiki/Trigonometric_functions">https://en.wikipedia
+/// .org/wiki/Trigonometric_functions</a>
 pub trait Trigonometry
 {
 	/// Returns the mathematic constant PI

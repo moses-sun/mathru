@@ -1,19 +1,12 @@
 use algebra::abstr::Semiring;
 use std::ops::Neg;
 
-//pub trait Abs
-//{
-//    fn abs<'a>(self: &'a Self) -> Self;
-//}
-//
-//pub trait Sign
-//{
-//    fn sign<'a>(self: &'a Self) -> Self;
-//}
-
-
+/// Ring
+///
+///<a href="https://en.wikipedia.org/wiki/Ring_(mathematics)">https://en.wikipedia.org/wiki/Ring_(mathematics)</a>
 pub trait Ring: Semiring + Neg<Output = Self>
 {
+	/// Absolute value
 	fn abs(self: Self) -> Self;
 }
 

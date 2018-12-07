@@ -1,13 +1,13 @@
 //use std::clone::Clone;
-use std::ops::{Add}; //, AddAssign, Mul, MulAssign, Sub, SubAssign, Neg, Div, Rem};
+//use std::ops::{Add}; //, AddAssign, Mul, MulAssign, Sub, SubAssign, Neg, Div, Rem};
 
-use algebra::abstr::Real;
-use algebra::abstr::identity::{Zero, One};
+//use algebra::abstr::Real;
+//use algebra::abstr::identity::{Zero, One};
 //use algebra::abstr::{Semiring, Ring, Field, Zero, One, Sign, Sqrt};
 //use algebra::linear::Vector;
 //use analysis::{Exponential, Interval};
 use num::{Natural};
-//use geometry::Trigonometry;
+//use elementary::Trigonometry;
 //use std::fmt::Display;
 //use std::fmt;
 

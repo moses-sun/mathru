@@ -2,12 +2,13 @@ use std::ops::{Add, AddAssign, Mul, MulAssign};
 use std::marker::Sized;
 use algebra::abstr::Number;
 
+/// Semiring
+///
+///<a href="https://en.wikipedia.org/wiki/Semiring">https://en.wikipedia.org/wiki/Semiring</a>
 pub trait Semiring: Number + Zero + Add<Self, Output = Self> + One + Mul<Self, Output = Self> + AddAssign<Self>
 + MulAssign<Self>
 {
-//	fn pow<'a, 'b>(self: &'a Self, p: &'b Self) -> Self;
-//
-//
+
 }
 
 /// Defines an additive identity element for `Self`.
@@ -21,31 +22,11 @@ pub trait Zero: Sized + Add<Self, Output = Self>
     /// a + 0 = a       ∀ a ∈ Self
     /// 0 + a = a       ∀ a ∈ Self
     /// ```
-    ///
-    /// # Purity
-    ///
-    /// This function should return the same result at all times regardless of
-    /// external mutable state, for example values stored in TLS or in
-    /// `static mut`s.
-    // This cannot be an associated constant, because of bignums.
     fn zero() -> Self;
 }
 
-
-
-//impl<T: Zero> Zero for Wrapping<T> where Wrapping<T>: Add<Output=Wrapping<T>> {
-//	fn is_zero(&self) -> bool {
-//		self.0.is_zero()
-//	}
-//	fn zero() -> Self {
-//		Wrapping(T::zero())
-//	}
-//}
-
-
 /// Defines a multiplicative identity element for `Self`.
-pub trait One: Sized + Mul<Self, Output = Self>
-{
+pub trait One: Sized + Mul<Self, Output = Self> {
     /// Returns the multiplicative identity element of `Self`, `1`.
     ///
     /// # Laws
@@ -54,13 +35,5 @@ pub trait One: Sized + Mul<Self, Output = Self>
     /// a * 1 = a       ∀ a ∈ Self
     /// 1 * a = a       ∀ a ∈ Self
     /// ```
-    ///
-    /// # Purity
-    ///
-    /// This function should return the same result at all times regardless of
-    /// external mutable state, for example values stored in TLS or in
-    /// `static mut`s.
-    // This cannot be an associated constant, because of bignums.
     fn one() -> Self;
 }
-

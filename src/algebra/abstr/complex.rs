@@ -1,13 +1,13 @@
 use super::Real;
 
+/// Complex number
+///
+///<a href="https://en.wikipedia.org/wiki/Complex_number">https://en.wikipedia.org/wiki/Complex_numberr</a>
 pub trait Complex: Real
 {
+	/// Returns the complex conjuagte
+	/// conj(self) = Re(self) - i Im(self)
 	fn conj(self: Self) -> Self;
-
-//   	pub fn inv<'a>(self: &'a Self) -> Self
-//    {
-//        &Complex::one() / self
-//    }
 
 	fn arg(self: Self) -> Self;
 }

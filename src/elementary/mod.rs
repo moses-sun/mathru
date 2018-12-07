@@ -1,4 +1,4 @@
-///Elementary function
+/// Elementary function
 
 
 mod power;

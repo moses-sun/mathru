@@ -1,5 +1,5 @@
 
-/// Coontinuous distribution
+/// Continuous distribution
 pub trait Continuous<A, B>
 {
    	/// Probability density function

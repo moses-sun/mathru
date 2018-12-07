@@ -1,6 +1,4 @@
-
-//use std::num::Wrapping;
-//use numeric::Bound;
+//Copied from https://github.com/rust-num/num-traits/blob/master/src/cast.rs
 
 /// A generic trait for converting a value to a number.
 pub trait ToPrimitive
@@ -71,8 +69,6 @@ pub trait ToPrimitive
 		self.to_f64().and_then(|x: f64| x.to_f64())
 	}
 }
-
-
 
 /// A generic trait for converting a number to a value.
 pub trait FromPrimitive: Sized
@@ -157,17 +153,7 @@ pub trait FromPrimitive: Sized
 	}
 }
 
-
-
 /// Cast from one machine scalar to another.
-///
-/// # Examples
-///
-///
-/// # use num_traits as num;
-/// let twenty: f32 = num::cast(0x14).unwrap();
-/// assert_eq!(twenty, 20f32);
-///
 ///
 pub fn cast<T: NumCast, U: NumCast>(n: T) -> Option<U>
 {

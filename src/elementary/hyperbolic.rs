@@ -1,5 +1,7 @@
 
-
+/// Hyperbolic functions
+///
+///<a href="https://en.wikipedia.org/wiki/Inverse_hyperbolic_functions">https://en.wikipedia.org/wiki/Inverse_hyperbolic_functions</a>
 pub trait Hyperbolic
 {
 	/// Hyperbolic sine
@@ -20,21 +22,21 @@ pub trait Hyperbolic
 	/// Hyperbolic cosecant
 	fn csch(self: &Self) -> Self;
 
-	/// Hyperbolic inverse sine
+	/// Inverse hyperbolic  sine
 	fn arsinh(self: &Self) -> Self;
 
-	/// Hyperbolic inverse cosine
+	/// Inverse hyperbolic cosine
 	fn arcosh(self: &Self) -> Self;
 
-	/// Hyperbolic inverse tangens
+	/// Inverse hyperbolic tangens
 	fn artanh(self: &Self) -> Self;
 
-	/// Hyperbolic inverse cosecant
+	/// Inverse hyperbolic cosecant
 	fn arcoth(self: &Self) -> Self;
 
-	/// Hyperbolic inverse secant
+	/// Inverse hyperbolic secant
 	fn arsech(self: &Self) -> Self;
 
-	// Hyperbolic inverse cosecant
+	/// Inverse hyperbolic cosecant
 	fn arcsch(self: &Self) -> Self;
 }
