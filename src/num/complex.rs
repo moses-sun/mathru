@@ -124,11 +124,6 @@ impl<T> ComplexT for Complex<T>
 	}
 }
 
-impl<T> Real for Complex<T>
-	where T: Real
-{
-
-}
 
 impl<T> Field for Complex<T>
 	where T: Real
@@ -154,7 +149,7 @@ impl<T> Ring for Complex<T>
    	/// let refer: f64 = (5.0_f64).sqrt();
     /// assert_eq!(refer, a.abs().to_f64().unwrap());
     /// ```
-	fn abs(self: Self) -> Self
+	fn abs(self: &Self) -> Self
 	{
 		let root: T = T::one() + T::one();
 		Complex
@@ -576,7 +571,7 @@ impl<T> Trigonometry for Complex<T>
 	///
 	/// # Panics
 	///
-	///
+	/// if the argument bounds are not fulfilled
 	///
 	/// # Example
 	///
@@ -598,7 +593,10 @@ impl<T> Trigonometry for Complex<T>
 	{
 		if self.im == T::zero()
 		{
-			//panic!()
+			if self.re / T::pi().ceil() == self.re / T::pi()
+			{
+				panic!();
+			}
 		}
 
 		self.sin() / self.cos()
@@ -704,7 +702,6 @@ impl<T> Trigonometry for Complex<T>
 	/// # Arguments
 	///
 	/// # Panics
-	///
 	///
 	/// # Example
 	///

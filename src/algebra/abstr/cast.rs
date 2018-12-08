@@ -64,10 +64,10 @@ pub trait ToPrimitive
 	}
 
 	/// Converts the value of `self` to an `f64`.
-	fn to_f64(&self) -> Option<f64>
-	{
-		self.to_f64().and_then(|x: f64| x.to_f64())
-	}
+	fn to_f64(&self) -> Option<f64>;
+//	{
+//		self.to_f64().and_then(|x: f64| x.to_f64())
+//	}
 }
 
 /// A generic trait for converting a number to a value.
@@ -147,10 +147,10 @@ pub trait FromPrimitive: Sized
 
 	/// Convert a `f64` to return an optional value of this type. If the
 	/// type cannot be represented by this value, the `None` is returned.
-	fn from_f64(n: f64) -> Option<Self>
-	{
-		FromPrimitive::from_f64(n as f64)
-	}
+	fn from_f64(n: f64) -> Option<Self>;
+//	{
+//		FromPrimitive::from_f64(n as f64)
+//	}
 }
 
 /// Cast from one machine scalar to another.

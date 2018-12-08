@@ -244,13 +244,24 @@ mod complex_test
     fn ln()
     {
         let a: Complex<f64> = Complex!(1.0_f64, 2.0_f64);
-        let refer: Complex<f64> = Complex!(5.0_f64.powf(0.5_f64).ln(), 2.0.arctan());
+        let refer: Complex<f64> = Complex!(5.0_f64.powf(0.5_f64).ln(), 2.0_f64.arctan2(&1.0_f64));
 
         assert_eq!(refer, a.ln());
     }
 
+
     #[test]
+    #[should_panic]
     fn arctan0()
+    {
+        let a: Complex<f64> = Complex!(3.0 * std::f64::consts::PI / 2.0, 0.0);
+        let refer: Complex<f64> = Complex!(std::f64::consts::PI / 3.0, (4.0_f64 / 5.0_f64).artanh() / 2.0_f64);
+
+        assert_eq!(refer, a.arctan());
+    }
+
+    #[test]
+    fn arctan1()
     {
         let a: Complex<f64> = Complex!(0.0_f64, 2.0_f64);
         let refer: Complex<f64> = Complex!(std::f64::consts::PI / 2.0, (4.0_f64 / 5.0_f64).artanh() / 2.0_f64);
@@ -259,7 +270,7 @@ mod complex_test
     }
 
     #[test]
-    fn arctan1()
+    fn arctan2()
     {
         let a: Complex<f64> = Complex!(1.0_f64, 2.0_f64);
         let refer: Complex<f64> = Complex!((2.0_f64.atan() + std::f64::consts::PI / 2.0_f64) / 2.0_f64, (4.0_f64 / 6.0_f64).atanh() / 2.0_f64);

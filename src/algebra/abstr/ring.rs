@@ -7,7 +7,7 @@ use std::ops::Neg;
 pub trait Ring: Semiring + Neg<Output = Self>
 {
 	/// Absolute value
-	fn abs(self: Self) -> Self;
+	fn abs(self: &Self) -> Self;
 }
 
 

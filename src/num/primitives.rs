@@ -92,9 +92,9 @@ macro_rules! ring_impl
     {
         impl Ring for $t
         {
-			fn abs(self: Self) -> Self
+			fn abs(self: &Self) -> Self
 			{
-				self.abs()
+				(*self).abs()
 			}
         }
     };
@@ -229,7 +229,17 @@ macro_rules! real_impl
     {
         impl Real for $t
         {
+			/// Returns the smallest integer greater than or equal to a number.
+			fn ceil(self: &Self) -> Self
+			{
+				(*self).ceil()
+			}
 
+			/// Returns the largest integer less than or equal to a number.
+			fn floor(self: &Self) -> Self
+			{
+				(*self).floor()
+			}
         }
     }
 }
@@ -773,11 +783,20 @@ macro_rules! trigonometry_impl
 				(*self).tan()
 			}
 
+
+			//
 			fn cot(self: &Self) -> Self
 			{
 				1.0 / self.tan()
 			}
 
+			/// Secant
+			///
+			/// # Panics
+			///
+			/// self = n pi + pi/2 n \in Z
+			///
+			///
 			fn sec(self: &Self) -> Self
 			{
 				1.0 / self.cos()
@@ -788,28 +807,59 @@ macro_rules! trigonometry_impl
 				1.0 / self.sin()
 			}
 
+			/// Inverse sine function
+			///
+			/// # Arguemnts
+			///
+			/// -1.0 <= x <= 1.0
+			///
+			/// # Panics
+			///
+			/// |x| > 1.0
+			///
 			fn arcsin(self: &Self) -> Self
 			{
+				if self.abs() > 1.0
+				{
+					panic!();
+				}
+
 				self.asin()
 			}
 
+			/// Inverse cosine function
+			///
+			/// # Arguemnts
+			///
+			/// -1.0 <= x <= 1.0
+			///
+			/// # Panics
+			///
+			/// |x| > 1.0
+			///
 			fn arccos(self: &Self) -> Self
 			{
+				if self.abs() > 1.0
+				{
+					panic!();
+				}
+
 				self.acos()
 			}
 
-			/// Computes the arctangent of a number. Return value is in radians in the
-    		/// range [-pi/2, pi/2];
+			/// Computes the arctangent of a number
     		///
 			fn arctan(self: &Self) -> Self
 			{
 				self.atan()
 			}
 
+			/// Computes the arctangent
 			fn arctan2(self: &Self, other: &Self) -> Self
 			{
 				self.atan2(*other)
 			}
+
 
 			fn arccot(self: &Self) -> Self
 			{

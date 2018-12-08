@@ -46,7 +46,7 @@ pub struct Real<T>
 }
 
 impl<T> Real<T>
-	where T: Neg<Output = T> + PartialOrd + Copy + Zero
+	where T: RealT
 {
 	pub fn new(num: T) -> Self
 	{
@@ -55,21 +55,26 @@ impl<T> Real<T>
 			num: num,
 		}
 	}
-
-    pub fn abs(self: Self) -> Real<T>
-    {
-        if self < Real::zero()
-        {
-           	return self.neg();
-        }
-        self
-    }
 }
 
 impl<T> RealT for Real<T>
 	where T: RealT
 {
+	fn ceil(self: &Self) -> Self
+	{
+		Real
+		{
+			num: self.num.ceil()
+		}
+	}
 
+	fn floor(self: &Self) -> Self
+	{
+		Real
+		{
+			num: self.num.floor()
+		}
+	}
 }
 
 impl<T> Field for Real<T>
@@ -81,7 +86,7 @@ impl<T> Field for Real<T>
 impl<T> Ring for Real<T>
 	where T: Ring
 {
-	fn abs(self: Self) -> Self
+	fn abs(self: &Self) -> Self
 	{
 		Real
 		{
@@ -318,10 +323,6 @@ impl<T> Neg for Real<T>
     }
 }
 
-
-
-
-
 impl<T> One for Real<T>
     where T: One + Copy
 {
@@ -334,21 +335,8 @@ impl<T> One for Real<T>
     }
 }
 
-
-//impl<T> Abs for Real<T>
-//    where T: Abs
-//{
-//    fn abs<'a>(self: &'a Self) -> Self
-//    {
-//        Real
-//        {
-//            num: self.num.abs()
-//        }
-//    }
-//}
-
 impl<T> Trigonometry for Real<T>
-	where T: Trigonometry
+	where T: Field + Trigonometry
 {
 	/// Returns the mathematic constant PI
 	fn pi() -> Self
@@ -359,7 +347,7 @@ impl<T> Trigonometry for Real<T>
 		}
 	}
 
-	/// Sinus
+	/// Sinus function
 	fn sin(self: &Self) -> Self
 	{
 		Real
@@ -377,7 +365,7 @@ impl<T> Trigonometry for Real<T>
 		}
 	}
 
-	///Tangens
+	/// Tangens
 	fn tan(self: &Self) -> Self
 	{
 		Real
@@ -393,6 +381,7 @@ impl<T> Trigonometry for Real<T>
 			num: self.num.cot()
 		}
 	}
+
 
 	fn sec(self: &Self) -> Self
 	{
@@ -410,16 +399,46 @@ impl<T> Trigonometry for Real<T>
 		}
 	}
 
+	/// Inverse cosine function
+	///
+	/// # Arguemnts
+	///
+	/// -1.0 <= x <= 1.0
+	///
+	/// # Panics
+	///
+	/// |x| > 1.0
+	///
 	fn arcsin(self: &Self) -> Self
 	{
+		if self.abs() > Real::one()
+		{
+			panic!();
+		}
+
 		Real
 		{
 			num: self.num.arcsin()
 		}
 	}
 
+	/// Inverse cosine function
+	///
+	/// # Arguemnts
+	///
+	/// -1.0 <= x <= 1.0
+	///
+	/// # Panics
+	///
+	/// |x| > 1.0
+	///
 	fn arccos(self: &Self) -> Self
 	{
+		if self.abs() > Real::one()
+		{
+			panic!();
+		}
+
 		Real
 		{
 			num: self.num.arccos()
@@ -555,9 +574,8 @@ impl<T> Hyperbolic for Real<T>
 	///
 	/// let f: Real<f64> = x.tanh();
 	/// let g: Real<f64> = Real::new(0.0_f64);
-	/// let abs_difference: Real<f64> = (f - g).abs();
 	///
-	/// assert!(abs_difference < Real::new(1.0e-10));
+	/// assert_eq!(g, f);
     /// ```
 	fn tanh(self: &Self) -> Self
 	{
@@ -588,9 +606,8 @@ impl<T> Hyperbolic for Real<T>
 	///
 	/// let f: Real<f64> = x.coth();
 	/// let g: Real<f64> = x.cosh() / x.sinh();
-	/// let abs_difference: Real<f64> = (f - g).abs();
 	///
-	/// assert!(abs_difference < Real::new(1.0e-10));
+	/// assert_eq!(g, f);
     /// ```
 	fn coth(self: &Self) -> Self
 	{
@@ -622,9 +639,8 @@ impl<T> Hyperbolic for Real<T>
 	///
 	/// let f: Real<f64> = x.sech();
 	/// let g: Real<f64> = Real::new(1.0);
-	/// let abs_difference: Real<f64> = (f - g).abs();
 	///
-	/// assert!(abs_difference < Real::new(1.0e-10));
+	/// assert_eq!(g, f);
     /// ```
 	fn sech(self: &Self) -> Self
 	{
@@ -655,9 +671,8 @@ impl<T> Hyperbolic for Real<T>
 	///
 	/// let f: Real<f64> = x.csch();
 	/// let g: Real<f64> = Real::new(1.0) / x.sinh();
-	/// let abs_difference: Real<f64> = (f - g).abs();
 	///
-	/// assert!(abs_difference < Real::new(1.0e-10));
+	/// assert_eq!(g, f);
     /// ```
 	fn csch(self: &Self) -> Self
 	{
@@ -710,10 +725,6 @@ impl<T> Hyperbolic for Real<T>
     ///
     /// let x: Real<f64> = Real::new(2.0_f64);
 	/// let f: Real<f64> = x.arcoth();
-	/// let g: Real<f64> = ((x + Real::new(1.0)) / ( x - Real::new(1.0))).ln() / Real::new(2.0);
-	/// let abs_difference: Real<f64> = (f - g).abs();
-	///
-	/// assert!(abs_difference < Real::new(1.0e-10));
     /// ```
 	fn arcoth(self: &Self) -> Self
 	{
@@ -741,10 +752,6 @@ impl<T> Hyperbolic for Real<T>
     ///
     /// let x: Real<f64> = Real::new(0.5_f64);
 	/// let f: Real<f64> = x.arsech();
-	/// let g: Real<f64> = (Real::new(1.0) / x).arcosh();
-	/// let abs_difference: Real<f64> = (f - g).abs();
-	///
-	/// assert!(abs_difference < Real::new(1.0e-10));
     /// ```
 	fn arsech(self: &Self) -> Self
 	{
@@ -772,10 +779,6 @@ impl<T> Hyperbolic for Real<T>
     ///
     /// let x: Real<f64> = Real::new(2.0_f64);
 	/// let f: Real<f64> = x.arcsch();
-	/// let g: Real<f64> = (Real::new(1.0) / x).arsinh();
-	/// let abs_difference: Real<f64> = (f - g).abs();
-	///
-	/// assert!(abs_difference < Real::new(1.0e-10));
     /// ```
 	fn arcsch(self: &Self) -> Self
 	{
