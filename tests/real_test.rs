@@ -4,7 +4,8 @@ extern crate mathru;
 #[cfg(test)]
 mod real_test
 {
-    use mathru::algebra::abstr::{Zero, One};
+    use mathru::algebra::abstr::{Ring, Zero, One};
+    use mathru::algebra::abstr::Real as RealT;
     use mathru::elementary::{Exponential, Trigonometry, Power, Hyperbolic};
     use mathru::num::{Real, Real32, Real64};
     use std::ops::Neg;
@@ -435,9 +436,9 @@ mod real_test
     #[test]
     fn arctan()
     {
-        let phi: Real<f64> = Real::pi() / Real!(4.0);
+        let phi: Real<f64> = Real::pi() / Real!(3.0);
 
-        assert_eq!(phi, (Real::pi() / Real!(4.0)).tan().arctan());
+        assert_eq!(phi, (Real::pi() / Real!(3.0)).tan().arctan());
     }
 
        #[test]
@@ -609,5 +610,23 @@ mod real_test
 	    let abs_difference: Real<f64> = (f - g).abs();
 
 	    assert!(abs_difference < Real::new(1.0e-10));
+    }
+
+    #[test]
+    fn floor()
+    {
+        let x: Real<f64> = Real::new(7.4);
+        let refer: Real<f64> = Real::new(7.0);
+
+        assert_eq!(refer, x.floor());
+    }
+
+    #[test]
+    fn ceil()
+    {
+        let x: Real<f64> = Real::new(7.4);
+        let refer: Real<f64> = Real::new(8.0);
+
+        assert_eq!(refer, x.ceil());
     }
 }
