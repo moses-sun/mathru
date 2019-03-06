@@ -4,11 +4,13 @@ extern crate mathru;
 #[cfg(test)]
 mod real_test
 {
-    use mathru::algebra::abstr::{Ring, Zero, One};
+    use mathru::algebra::abstr::{Zero, One, Abs};
     use mathru::algebra::abstr::Real as RealT;
     use mathru::elementary::{Exponential, Trigonometry, Power, Hyperbolic};
     use mathru::num::{Real, Real32, Real64};
     use std::ops::Neg;
+    use mathru::algebra::abstr::cast::{FromPrimitive};
+    use mathru::algebra::abstr::cast;
 
 //    #[test]
 //    fn lower_bound()
@@ -629,4 +631,40 @@ mod real_test
 
         assert_eq!(refer, x.ceil());
     }
+
+    #[test]
+    fn cast0()
+    {
+        let x: f32 = cast::cast(0.5_f64).unwrap();
+        //let y: f32 = 0.5_f64.
+        let y: Real<f32> = cast::cast(x).unwrap();
+
+        assert_eq!(Real::new(x), y);
+    }
+
+    #[test]
+    fn cast1()
+    {
+        let y: Real<f32> = cast::cast(7_u64).unwrap();
+
+        assert_eq!(Real::new(7.0), y);
+    }
+
+    #[test]
+    fn cast2()
+    {
+        let y: Real<f32> = cast::cast(-7_i64).unwrap();
+
+        assert_eq!(Real::new(-7.0), y);
+    }
+
+     #[test]
+    fn from0()
+    {
+        let y: Real<f32> = Real::from_i64(-7i64).unwrap();
+
+        assert_eq!(Real::new(-7.0), y);
+    }
+
+
 }

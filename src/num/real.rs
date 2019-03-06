@@ -2,10 +2,11 @@ use std::ops::{Add, AddAssign, Mul, MulAssign, Sub, SubAssign, Div, DivAssign, N
 use std::fmt;
 use std::fmt::{Display};
 use std::cmp::{Ordering};
-use algebra::abstr::{Number, Field, Ring, Semiring, Zero, One};
+use algebra::abstr::{Number, Field, Sign, Abs, Ring, Semiring, Zero, One};
 use algebra::abstr::Real as RealT;
 use elementary::{Exponential, Trigonometry, Power, Hyperbolic};
-use algebra::abstr::cast::ToPrimitive;
+use algebra::abstr::cast::{ToPrimitive, FromPrimitive, NumCast};
+use algebra::abstr::cast;
 
 #[macro_export]
 macro_rules! Real
@@ -77,22 +78,48 @@ impl<T> RealT for Real<T>
 	}
 }
 
+
+
 impl<T> Field for Real<T>
 	where T: Field
 {
 
 }
 
-impl<T> Ring for Real<T>
-	where T: Ring
+impl<T> Sign for Real<T>
+	where T: Field
+{
+	fn sgn(self: &Self) -> Self
+	{
+		if self < &Self::zero()
+		{
+			return -Self::one()
+		}
+		else
+		{
+			return Self::one()
+		}
+	}
+}
+
+impl<T> Abs for Real<T>
+	where T: Field
 {
 	fn abs(self: &Self) -> Self
 	{
-		Real
+		if self <&Self::zero()
 		{
-			num: self.num.abs()
+			return -*self;
 		}
+		*self
 	}
+}
+
+
+impl<T> Ring for Real<T>
+	where T: Ring
+{
+
 }
 
 impl<T> Semiring for Real<T>
@@ -157,20 +184,6 @@ impl<T> Zero for Real<T>
 		}
 	}
 }
-
-//impl<T> Neg for Real<T>
-//	where T: Neg
-//{
-//	type Output = Real<T>;
-//
-//    fn neg(self) -> Real<T>
-//    {
-//    	Real
-//		{
-//			num: -self.num
-//		}
-//    }
-//}
 
 impl<T> Add for Real<T>
     where T: Add<T, Output = T> + Copy
@@ -264,7 +277,6 @@ impl<'a, 'b, T> Sub<&'b Real<T>> for &'a Real<T>
     }
 }
 
-
 impl<T> SubAssign for Real<T>
     where T: SubAssign
 {
@@ -298,7 +310,6 @@ impl<'a, 'b, T> Div<&'b Real<T>> for &'a Real<T>
     }
 }
 
-
 impl<T> DivAssign for Real<T>
     where T: DivAssign
 {
@@ -307,7 +318,6 @@ impl<T> DivAssign for Real<T>
         self.num.div_assign(other.num);
     }
 }
-
 
 impl<T> Neg for Real<T>
     where T: Neg<Output = T>
@@ -821,4 +831,96 @@ impl<T> ToPrimitive for Real<T>
     impl_to_primitive!(i128, to_i128);
     impl_to_primitive!(f32, to_f32);
     impl_to_primitive!(f64, to_f64);
+}
+
+//macro_rules! impl_from_primitive
+//{
+//    ($ty:ty, $to:ident) =>
+//    {
+//        fn $to(&self) -> Option<$ty>
+//        {
+//           	self.num.$to()
+//        }
+//    }
+//}
+
+/// A generic trait for converting a number to a value.
+impl<T> FromPrimitive for Real<T>
+	where T: FromPrimitive + NumCast
+{
+
+	/// Convert an `i64` to return an optional value of this type. If the
+	/// type cannot be represented by this value, the `None` is returned.
+	fn from_i64(n: i64) -> Option<Self>
+	{
+		Some(
+			Real
+			{
+				num: cast::cast(n).unwrap()
+			}
+		)
+	}
+
+	/// Convert an `u64` to return an optional value of this type. If the
+	/// type cannot be represented by this value, the `None` is returned.
+	fn from_u64(n: u64) -> Option<Self>
+	{
+		Some(
+			Real
+			{
+				num: cast::cast(n).unwrap()
+			}
+		)
+	}
+
+
+	/// Convert a `f64` to return an optional value of this type. If the
+	/// type cannot be represented by this value, the `None` is returned.
+	///
+	/// # FIXME
+	fn from_f64(n: f64) -> Option<Self>
+	{
+		//let n_cast: Option<f64> = cast::cast(n);
+//
+//		match n_cast
+//		{
+//    		// The division was valid
+//    		Some(x) => return Some(
+//			Real
+//			{
+//				num: x
+//			}
+//			),
+//    		// The division was invalid
+//    		None    => return None,
+//		}
+//		if n_cast == None
+//		{
+//			return None
+//		}
+		Some(
+			Real
+			{
+				num: cast::cast(n).unwrap()
+			}
+		)
+	}
+}
+
+/// An interface for casting between machine scalars.
+impl<T> NumCast for Real<T>
+	where T: ToPrimitive + NumCast
+{
+	/// Creates a number from another value that can be converted into
+	/// a primitive via the `ToPrimitive` trait.
+	fn from<K: ToPrimitive>(n: K) -> Option<Self>
+	{
+		Some
+		(
+			Real
+			{
+				num: cast::cast(n.to_f64().unwrap()).unwrap()
+			}
+		)
+	}
 }
