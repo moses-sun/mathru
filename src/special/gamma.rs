@@ -1,7 +1,6 @@
 use std::f64::consts::PI;
-use std::f64::consts;
-use std::f64::INFINITY;
 
+use algebra::abstr::Real;
 
 /// Gamma function
 ///
@@ -22,47 +21,29 @@ use std::f64::INFINITY;
 /// let z: f64 = 0.3_f64;
 /// let gamma: f64 = gamma::gamma(z);
 /// ```
-/// The following approximatino is implemented
+/// The following approximation is implemented
 /// https://en.wikipedia.org/wiki/Lanczos_approximation
-pub fn gamma(z: f64) -> f64
+pub fn gamma<T>(z: T) -> T
+    where T: Real
 {
-    if z < 0.5
+    if z < T::from_f64(0.5_f64).unwrap()
     {
-        return PI / ((PI*z).sin() * gamma (1.0 - z)) //reflection formula
+        return T::pi() / ((T::pi() * z).sin() * gamma (T::one() - z)) //reflection formula
     }
 
- 	let t: f64 = z + 6.5;
-    let x: f64 = 0.99999999999980993 +
-        676.5203681218851 / z -
-        1259.1392167224028 / (z + 1.0) +
-        771.32342877765313 / (z + 2.0) -
-        176.61502916214059 / (z + 3.0) +
-        12.507343278686905 / (z + 4.0) -
-        0.13857109526572012 / (z + 5.0) +
-        9.9843695780195716e-6 / (z + 6.0) +
-        1.5056327351493116e-7 / (z + 7.0);
+ 	let t: T = z + T::from_f64(6.5).unwrap();
+    let x: T = T::from_f64(0.99999999999980993).unwrap() +
+        T::from_f64(676.5203681218851).unwrap() / z -
+        T::from_f64(1259.1392167224028).unwrap() / (z + T::one()) +
+        T::from_f64(771.32342877765313).unwrap() / (z + T::from_f64(2.0).unwrap()) -
+        T::from_f64(176.61502916214059).unwrap() / (z + T::from_f64(3.0).unwrap()) +
+        T::from_f64(12.507343278686905).unwrap() / (z + T::from_f64( 4.0).unwrap()) -
+        T::from_f64(0.13857109526572012).unwrap() / (z + T::from_f64(5.0).unwrap()) +
+        T::from_f64(9.9843695780195716e-6).unwrap() / (z + T::from_f64(6.0).unwrap()) +
+        T::from_f64(1.5056327351493116e-7).unwrap() / (z + T::from_f64(7.0).unwrap());
 
-    return 2.0_f64.sqrt() * PI.sqrt() * t.powf(z - 0.5) * (-t).exp() * x
+    return T::from_f64(2.0_f64.sqrt() * PI.sqrt()).unwrap() * t.pow(&(z - T::from_f64(0.5).unwrap())) * (-t).exp() * x
 }
-
-/// Auxiliary variable when evaluating the `gamma_ln` function
-const GAMMA_R: f64 = 10.900511;
-
-/// Polynomial coefficients for approximating the `gamma_ln` function
-const GAMMA_DK: &'static [f64] = &[
-    2.48574089138753565546e-5,
-    1.05142378581721974210,
-    -3.45687097222016235469,
-    4.51227709466894823700,
-    -2.98285225323576655721,
-    1.05639711577126713077,
-    -1.95428773191645869583e-1,
-    1.70970543404441224307e-2,
-    -5.71926117404305781283e-4,
-    4.63399473359905636708e-6,
-    -2.71994908488607703910e-9,
-];
-
 
 
 /// Log-gamma function
@@ -85,33 +66,53 @@ const GAMMA_DK: &'static [f64] = &[
 ///
 /// let ln_gamma: f64 = gamma::ln_gamma(x);
 /// ```
-pub fn ln_gamma(x: f64) -> f64
- {
-    if x < 0.5
+pub fn ln_gamma<T>(x: T) -> T
+    where T: Real
+{
+    // Auxiliary variable when evaluating the `gamma_ln` function
+    let gamma_r: T = T::from_f64(10.900511).unwrap();
+
+    // Polynomial coefficients for approximating the `gamma_ln` function
+    let gamma_dk: & [T] = &[
+    T::from_f64(2.48574089138753565546e-5).unwrap(),
+    T::from_f64(1.05142378581721974210).unwrap(),
+    T::from_f64(-3.45687097222016235469).unwrap(),
+    T::from_f64(4.51227709466894823700).unwrap(),
+    T::from_f64(-2.98285225323576655721).unwrap(),
+    T::from_f64(1.05639711577126713077).unwrap(),
+    T::from_f64(-1.95428773191645869583e-1).unwrap(),
+    T::from_f64(1.70970543404441224307e-2).unwrap(),
+    T::from_f64(-5.71926117404305781283e-4).unwrap(),
+    T::from_f64(4.63399473359905636708e-6).unwrap(),
+    T::from_f64(-2.71994908488607703910e-9).unwrap(),
+    ];
+
+    if x < T::from_f64(0.5).unwrap()
     {
-        let s = GAMMA_DK
+        let s = gamma_dk
             .iter()
             .enumerate()
             .skip(1)
-            .fold(GAMMA_DK[0], |s, t| s + t.1 / (t.0 as f64 - x));
+            .fold(gamma_dk[0], |s, t| s + *t.1 / (T::from_usize(t.0).unwrap() - x));
 
-        consts::PI.ln()
-            - (consts::PI * x).sin().ln()
+        T::pi().ln()
+            - (T::pi() * x).sin().ln()
             - s.ln()
-            - (2.0 * (consts::E / consts::PI).sqrt()).ln()
-            - (0.5 - x) * ((0.5 - x + GAMMA_R) / consts::E).ln()
+            - (T::from_f64(2.0).unwrap() * (T::e() / T::pi()).pow(&T::from_f64(0.5).unwrap())).ln()
+            - (T::from_f64(0.5).unwrap() - x) * ((T::from_f64(0.5).unwrap() - x + gamma_r) / T::e()).ln()
     }
+
     else
     {
-        let s = GAMMA_DK
+        let s = gamma_dk
             .iter()
             .enumerate()
             .skip(1)
-            .fold(GAMMA_DK[0], |s, t| s + t.1 / (x + t.0 as f64 - 1.0));
+            .fold(gamma_dk[0], |s, t| s + *t.1 / (x + T::from_usize(t.0).unwrap() - T::one()));
 
         s.ln()
-            + (2.0 * (consts::E / consts::PI).sqrt()).ln()
-            + (x - 0.5) * ((x - 0.5 + GAMMA_R) / consts::E).ln()
+            + (T::from_f64(2.0).unwrap() * (T::e() / T::pi()).pow(&T::from(0.5).unwrap())).ln()
+            + (x - T::from_f64(0.5).unwrap()) * ((x - T::from_f64(0.5).unwrap() + gamma_r) / T::e()).ln()
     }
 }
 
@@ -135,50 +136,62 @@ pub fn ln_gamma(x: f64) -> f64
 /// let x: f64 = 0.3_f64;
 /// let digamma: f64 = gamma::digamma(x);
 /// ```
-pub fn digamma(x: f64) -> f64
+pub fn digamma<T>(x: T) -> T
+    where T: Real
 {
-  	let c: f64 = 8.5;
-  	let euler_mascheroni: f64 = 0.57721566490153286060;
+  	let c: T = T::from_f64(8.5).unwrap();
+ // 	let euler_mascheroni: T = T::from_f64(0.57721566490153286060).unwrap();
 
 	/*
   	Check the input.
 	*/
-  	if x <= 0.0
-  	{
-   		return 0.0
-  	}
+//	let real_neg: bool;
+//  	if x <= T::zero()
+//  	{
+//  	    real_neg = true;
+//  	}
+//  	else
+//    {
+//        real_neg = false;
+//    }
+//
+//	/*
+//  	Use approximation for small argument.
+//	*/
+//  	if x <= T::from_f64(0.000001).unwrap()
+//  	{
+//    	return -euler_mascheroni - T::one() / x + T::from_f64(1.6449340668482264365).unwrap() * x;
+//  	}
 
-	/*
-  	Use approximation for small argument.
-	*/
-  	if x <= 0.000001
-  	{
-    	return -euler_mascheroni - 1.0 / x + 1.6449340668482264365 * x;
-  	}
+
   	/*
   	Reduce to DIGAMA(X + N).
 	*/
-  	let mut value : f64 = 0.0;
-  	let mut x2: f64= x;
+  	let mut value : T = T::zero();
+  	let mut x2: T = x;
+  	//The comparison only compares the real part ot the number
   	while  x2 < c
   	{
-    	value = value - 1.0 / x2;
-    	x2 = x2 + 1.0;
+    	value = value - T::one() / x2;
+    	x2 = x2 + T::one();
   	}
 	/*
   	Use Stirling's (actually de Moivre's) expansion.
 	*/
-  	let mut r: f64 = 1.0 / x2;
-  	value = value + x2.ln() - 0.5 * r;
+  	let mut r: T = T::one() / x2;
+  	value = value + x2.ln() - T::from_f64(0.5).unwrap() * r;
 
   	r = r * r;
 
   	value = value
-    - r * ( 1.0 / 12.0
-    - r * ( 1.0 / 120.0
-    - r * ( 1.0 / 252.0
-    - r * ( 1.0 / 240.0
-    - r * ( 1.0 / 132.0 ) ) ) ) );
+    - r * ( T::from_f64(1.0 / 12.0).unwrap()
+    - r * ( T::from_f64(1.0 / 120.0).unwrap()
+    - r * ( T::from_f64(1.0 / 252.0).unwrap()
+    - r * ( T::from_f64(1.0 / 240.0).unwrap()
+    - r * ( T::from_f64(1.0 / 132.0).unwrap()
+    - r * ( T::from_f64(691.0 / 32760.0).unwrap()
+    - r * ( T::from_f64(1.0 / 12.0).unwrap()
+    ) ) ) ) ) ) );
 
   	return value;
 }
@@ -207,10 +220,12 @@ pub fn digamma(x: f64) -> f64
 ///
 /// let gamma_u: f64 = gamma::gamma_u(a, x);
 /// ```
-pub fn gamma_u(a: f64, x: f64) -> f64
+pub fn gamma_u<T>(a: T, x: T) -> T
+    where T: Real
 {
     gamma_ur(a, x) * gamma(a)
 }
+
 
 /// Upper incomplete regularized gamma function
 ///
@@ -237,10 +252,12 @@ pub fn gamma_u(a: f64, x: f64) -> f64
 ///
 /// let gamma_u: f64 = gamma::gamma_ur(a, x);
 /// ```
-pub fn gamma_ur(a: f64, x: f64) -> f64
+pub fn gamma_ur<T>(a: T, x: T) -> T
+    where T: Real
 {
-    1.0 - gamma_lr(a, x)
+    T::one() - gamma_lr(a, x)
 }
+
 
 /// Lower incomplete gamma function
 ///
@@ -267,10 +284,12 @@ pub fn gamma_ur(a: f64, x: f64) -> f64
 ///
 /// let gamma_u: f64 = gamma::gamma_ur(a, x);
 /// ```
-//pub fn gamma_l(a: f64, x: f64) -> f64
-//{
-//    gamma_l(a, x) * gamma(a)
-//}
+pub fn gamma_l<T>(a: T, x: T) -> T
+    where T: Real
+{
+    gamma_lr(a, x) * gamma(a)
+}
+
 
 /// Lower regularized incomplete gamma function
 ///
@@ -281,6 +300,7 @@ pub fn gamma_ur(a: f64, x: f64) -> f64
 /// .org/wiki/Incomplete_gamma_function#Regularized_Gamma_functions_and_Poisson_random_variables">https://en
 /// .wikipedia.org/wiki/Incomplete_gamma_function#Regularized_Gamma_functions_and_Poisson_random_variables</a>
 ///
+/// https://people.sc.fsu.edu/~jburkardt/c_src/asa239/asa239.c
 /// # Arguments
 ///
 /// * `a`
@@ -297,55 +317,56 @@ pub fn gamma_ur(a: f64, x: f64) -> f64
 ///
 /// let gamma_u: f64 = gamma::gamma_ur(a, x);
 /// ```
-pub fn gamma_lr(a: f64, x: f64) -> f64
+pub fn gamma_lr<T>(a: T, x: T) -> T
+    where T: Real
 {
-    if a.is_nan() || x.is_nan()
+//    if a.is_nan() || x.is_nan()
+//    {
+//        panic!();
+//    }
+//
+//    if a <= T::zero() || a == INFINITY
+//    {
+//        panic!();
+//    }
+    if x <= T::zero() // || x == INFINITY
     {
         panic!();
     }
 
-    if a <= 0.0 || a == INFINITY
-    {
-        panic!();
-    }
-    if x <= 0.0 || x == INFINITY
-    {
-        panic!();
-    }
+    let eps: T = T::from_f64(0.000000000000001_f64).unwrap();
+    let big: T = T::from_f64(4503599627370496.0_f64).unwrap();
+    let big_inv: T = T::from_f64(2.22044604925031308085e-16_f64).unwrap();
 
-    let eps: f64 = 0.000000000000001_f64;
-    let big: f64 = 4503599627370496.0_f64;
-    let big_inv: f64 = 2.22044604925031308085e-16_f64;
-
-    if a == 0.0_f64
+    if a == T::zero()
     {
-        return 1.0_f64
+        return T::one()
     }
 
-    if x == 0.0_f64
+    if x == T::zero()
     {
-        return 0.0_f64;
+        return T::zero()
     }
 
-    let ax = a * x.ln() - x - ln_gamma(a);
+    let ax: T = a * x.ln() - x - ln_gamma(a);
 
-    if ax < -709.78271289338399_f64
+    if ax < T::from_f64(-709.78271289338399_f64).unwrap()
     {
         if a < x
         {
-            return 1.0_f64
+            return T::one()
         }
-        return 0.0_f64
+        return T::zero()
     }
 
-    if x <= 1.0_f64 || x <= a
+    if x <= T::one() || x <= a
     {
-        let mut r2: f64 = a;
-        let mut c2: f64 = 1.0_f64;
-        let mut ans2: f64= 1.0_f64;
+        let mut r2: T = a;
+        let mut c2: T = T::one();
+        let mut ans2: T = T::one();
         loop
         {
-            r2 += 1.0_f64;
+            r2 += T::one();
             c2 *= x / r2;
             ans2 += c2;
 
@@ -357,22 +378,22 @@ pub fn gamma_lr(a: f64, x: f64) -> f64
         return ax.exp() * ans2 / a
     }
 
-    let mut y: f64 = 1.0 - a;
-    let mut z: f64 = x + y + 1.0;
-    let mut c: u32 = 0;
+    let mut y: T = T::one() - a;
+    let mut z: T = x + y + T::one();
+    let mut c: T = T::zero();
 
-    let mut p3: f64 = 1.0_f64;
-    let mut q3: f64 = x;
-    let mut p2: f64 = x + 1.0_f64;
-    let mut q2: f64 = z * x;
-    let mut ans: f64 = p2 / q2;
+    let mut p3: T = T::one();
+    let mut q3: T = x;
+    let mut p2: T = x + T::one();
+    let mut q2: T = z * x;
+    let mut ans: T = p2 / q2;
 
     loop
     {
-        y += 1.0_f64;
-        z += 2.0_f64;
-        c += 1;
-        let yc = y * f64::from(c);
+        y += T::one();
+        z += T::from_f64(2.0_f64).unwrap();
+        c += T::one();
+        let yc = y * c;
 
         let p = p2 * z - p3 * yc;
         let q = q2 * z - q3 * yc;
@@ -390,7 +411,7 @@ pub fn gamma_lr(a: f64, x: f64) -> f64
             q2 *= big_inv;
         }
 
-        if q != 0.0_f64
+        if q != T::zero()
         {
             let nextans = p / q;
             let error = ((ans - nextans) / nextans).abs();
@@ -403,5 +424,5 @@ pub fn gamma_lr(a: f64, x: f64) -> f64
         }
     }
 
-    1.0_f64 - ax.exp() * ans
+    T::one() - ax.exp() * ans
 }
