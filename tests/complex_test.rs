@@ -6,10 +6,10 @@ mod complex_test
 {
     use mathru::num::{Complex, Complex32, Complex64};
     use mathru::algebra::abstr::Complex as ComplexT;
-    use mathru::algebra::abstr::{One, Zero};
+    use mathru::algebra::abstr::{One, Zero, Abs};
     use mathru::elementary::{Trigonometry, Exponential, Hyperbolic, Power};
-    use mathru::algebra::abstr::Ring;
-    use mathru::algebra::abstr::cast::ToPrimitive;
+    use mathru::algebra::abstr::cast::{FromPrimitive, ToPrimitive};
+    use std::f64::consts;
 
 //    #[test]
 //    fn abs()
@@ -251,11 +251,10 @@ mod complex_test
 
 
     #[test]
-    #[should_panic]
     fn arctan0()
     {
         let a: Complex<f64> = Complex!(3.0 * std::f64::consts::PI / 2.0, 0.0);
-        let refer: Complex<f64> = Complex!(std::f64::consts::PI / 3.0, (4.0_f64 / 5.0_f64).artanh() / 2.0_f64);
+        let refer: Complex<f64> = Complex!(1.3616916829711636, 0.0);
 
         assert_eq!(refer, a.arctan());
     }
@@ -484,4 +483,14 @@ mod complex_test
 
         assert_eq!(refer, a.arcsch());
     }
+
+    #[test]
+    fn from_f64()
+    {
+        let a: Complex<f64> = Complex::from_f64(consts::PI).unwrap();
+        let refer: Complex<f64> = Complex::pi();
+
+        assert_eq!(refer, a);
+    }
+
 }

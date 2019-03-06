@@ -1,10 +1,9 @@
-use super::field::Field;
-use elementary::{Exponential, Trigonometry, Power, Hyperbolic};
+use super::Real;
 
 /// Complex number
 ///
 ///<a href="https://en.wikipedia.org/wiki/Complex_number">https://en.wikipedia.org/wiki/Complex_numberr</a>
-pub trait Complex: Field + Exponential + Trigonometry + Power + Hyperbolic
+pub trait Complex: Real
 {
 	/// Returns the complex conjuagte
 	/// conj(self) = Re(self) - i Im(self)

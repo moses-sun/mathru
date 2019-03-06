@@ -168,5 +168,12 @@ pub trait NumCast: Sized + ToPrimitive
 	fn from<T: ToPrimitive>(n: T) -> Option<Self>;
 }
 
+pub trait AsPrimitive<T>: 'static + Copy
+where
+    T: 'static + Copy,
+{
+    /// Convert a value to another, using the `as` operator.
+    fn as_(self) -> T;
+}
 
 

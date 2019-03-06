@@ -1,6 +1,6 @@
 use algebra::abstr::{Natural, Integer, Real};
-use algebra::abstr::{Number, Semiring, Ring, Field, Zero, One};
-use algebra::abstr::cast::{NumCast, FromPrimitive, ToPrimitive};
+use algebra::abstr::{Number, Semiring, Ring, Sign, Abs, Field, Zero, One};
+use algebra::abstr::cast::{NumCast, FromPrimitive, ToPrimitive, AsPrimitive};
 use elementary::{Exponential, Trigonometry, Power, Hyperbolic};
 use num::bound::Bound;
 use std::mem::size_of;
@@ -58,11 +58,7 @@ macro_rules! semiring_impl
     {
         impl Semiring for $t
         {
-//          	fn pow<'a, 'b>(self: &'a Self, p: &'b Self) -> Self
-//			{
-//				self.pow(p)
-//			}
-//
+
 //			fn get_primitive<'a>(self: &'a Self) -> $t
 //			{
 //				return *self
@@ -92,10 +88,7 @@ macro_rules! ring_impl
     {
         impl Ring for $t
         {
-			fn abs(self: &Self) -> Self
-			{
-				(*self).abs()
-			}
+
         }
     };
 }
@@ -117,6 +110,29 @@ macro_rules! field_impl
         {
 
         }
+
+        impl Sign for $t
+		{
+			fn sgn(self: &Self) -> Self
+            {
+                if *self < 1.0
+                {
+                    return -1.0;
+                }
+                else
+                {
+                    return 1.0;
+                }
+            }
+		}
+
+		impl Abs for $t
+		{
+			fn abs(self: &Self) -> Self
+			{
+				(*self).abs()
+			}
+		}
     };
 }
 
@@ -1206,3 +1222,55 @@ macro_rules! hyperbolic_impl
 
 hyperbolic_impl!(f32);
 hyperbolic_impl!(f64);
+
+
+
+macro_rules! impl_as_primitive
+{
+    (@ $T: ty => $(#[$cfg:meta])* impl $U: ty ) =>
+    {
+        $(#[$cfg])*
+        impl AsPrimitive<$U> for $T
+        {
+            #[inline]
+            fn as_(self) -> $U
+            {
+            	self as $U
+            }
+        }
+    };
+
+    (@ $T: ty => { $( $U: ty ),* } ) =>
+    {
+    	$(
+        	impl_as_primitive!(@ $T => impl $U);
+    	)*
+    };
+    ($T: ty => { $( $U: ty ),* } ) =>
+    {
+        impl_as_primitive!(@ $T => { $( $U ),* });
+        impl_as_primitive!(@ $T => { u8, u16, u32, u64, usize });
+        impl_as_primitive!(@ $T => #[cfg(has_i128)] impl u128);
+        impl_as_primitive!(@ $T => { i8, i16, i32, i64, isize });
+        impl_as_primitive!(@ $T => #[cfg(has_i128)] impl i128);
+    };
+}
+
+impl_as_primitive!(u8 => { char, f32, f64 });
+impl_as_primitive!(i8 => { f32, f64 });
+impl_as_primitive!(u16 => { f32, f64 });
+impl_as_primitive!(i16 => { f32, f64 });
+impl_as_primitive!(u32 => { f32, f64 });
+impl_as_primitive!(i32 => { f32, f64 });
+impl_as_primitive!(u64 => { f32, f64 });
+impl_as_primitive!(i64 => { f32, f64 });
+#[cfg(has_i128)]
+impl_as_primitive!(u128 => { f32, f64 });
+#[cfg(has_i128)]
+impl_as_primitive!(i128 => { f32, f64 });
+impl_as_primitive!(usize => { f32, f64 });
+impl_as_primitive!(isize => { f32, f64 });
+impl_as_primitive!(f32 => { f32, f64 });
+impl_as_primitive!(f64 => { f32, f64 });
+impl_as_primitive!(char => { char });
+impl_as_primitive!(bool => {});

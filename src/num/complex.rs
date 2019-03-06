@@ -2,12 +2,13 @@ use std::ops::{Add, AddAssign, Sub, SubAssign, Mul, MulAssign, Div, DivAssign, N
 use std::fmt;
 use std::fmt::{Display};
 use algebra::abstr::Complex as ComplexT;
-use algebra::abstr::{Number, Semiring, Ring, Field, Zero, One};
+use algebra::abstr::Real as RealT;
+use algebra::abstr::{Number, Semiring, Sign, Abs, Ring, Field, Zero, One};
 use std::cmp::Ordering;
-use algebra::abstr::cast::ToPrimitive;
+use algebra::abstr::cast::{ToPrimitive, FromPrimitive, NumCast};
 use elementary::{Trigonometry, Exponential, Power, Hyperbolic};
 use algebra::abstr::Real;
-
+use algebra::abstr::cast;
 
 #[macro_export]
 macro_rules! Complex
@@ -87,15 +88,15 @@ impl<T> Neg for Complex<T>
 ///
 /// # Panics
 ///
-/// always
+/// # FIXME
+///
+///
 impl<T> PartialOrd for Complex<T>
-	where T: PartialEq
+	where T: PartialOrd
 {
-
-
-	fn partial_cmp(self: &Self, _other: &Self) -> Option<Ordering>
+	fn partial_cmp(self: &Self, other: &Self) -> Option<Ordering>
 	{
-		unimplemented!();
+		self.re.partial_cmp(&other.re)
     }
 }
 
@@ -124,6 +125,21 @@ impl<T> ComplexT for Complex<T>
 	}
 }
 
+impl<T> RealT for Complex<T>
+	where T: RealT
+{
+	/// Returns the smallest integer greater than or equal to a number.
+	fn ceil(self: &Self) -> Self
+	{
+		unimplemented!();
+	}
+
+	/// Returns the largest integer less than or equal to a number.
+	fn floor(self: &Self) -> Self
+	{
+		unimplemented!();
+	}
+}
 
 impl<T> Field for Complex<T>
 	where T: Real
@@ -131,8 +147,19 @@ impl<T> Field for Complex<T>
 
 }
 
-impl<T> Ring for Complex<T>
-	where T: Real
+impl<T> Sign for Complex<T>
+	where T: Field
+{
+	fn sgn(self: &Self) -> Self
+	{
+		unimplemented!()
+	}
+
+
+}
+
+impl<T> Abs for Complex<T>
+	where T: Field + Power
 {
 
 	/// Absolute value of the complex number
@@ -141,7 +168,7 @@ impl<T> Ring for Complex<T>
 	///
 	/// ```
 	/// extern crate mathru;
-	/// use mathru::algebra::abstr::Ring;
+	/// use mathru::algebra::abstr::{Ring, Abs};
 	/// use mathru::num::Complex;
 	/// use mathru::algebra::abstr::cast::ToPrimitive;
 	///
@@ -158,6 +185,13 @@ impl<T> Ring for Complex<T>
 			im: T::zero()
 		}
 	}
+}
+
+impl<T> Ring for Complex<T>
+	where T: Real
+{
+
+
 }
 
 
@@ -1037,3 +1071,61 @@ impl<T> Hyperbolic for Complex<T>
 	}
 }
 
+/// A generic trait for converting a number to a value.
+impl<T> FromPrimitive for Complex<T>
+	where T: FromPrimitive + NumCast + Zero
+{
+
+	/// Convert an `i64` to return an optional value of this type. If the
+	/// type cannot be represented by this value, the `None` is returned.
+	fn from_i64(_n: i64) -> Option<Self>
+	{
+		None
+	}
+
+	/// Convert an `u64` to return an optional value of this type. If the
+	/// type cannot be represented by this value, the `None` is returned.
+	fn from_u64(n: u64) -> Option<Self>
+	{
+		Some
+		(
+			Complex
+			{
+				re: cast::cast(n).unwrap(),
+				im: T::zero()
+			}
+		)
+	}
+
+	/// Convert a `f64` to return an optional value of this type. If the
+	/// type cannot be represented by this value, the `None` is returned.
+	fn from_f64(n: f64) -> Option<Self>
+	{
+		Some
+		(
+			Complex
+			{
+				re: cast::cast(n).unwrap(),
+				im: T::zero()
+			}
+		)
+	}
+}
+
+/// An interface for casting between machine scalars.
+impl<T> NumCast for Complex<T>
+	where T: ToPrimitive + Zero + Field
+{
+	/// Creates a number from another value that can be converted into
+	/// a primitive via the `ToPrimitive` trait.
+	fn from<K: ToPrimitive>(n: K) -> Option<Self>
+	{
+		Some(
+			Complex
+			{
+				re: cast::cast(n.to_f64().unwrap()).unwrap(),
+				im: T::zero()
+			}
+		)
+	}
+}

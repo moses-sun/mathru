@@ -1,4 +1,5 @@
-//pub mod linear;
+
+pub mod linear;
 
 
 /// Abstract algebra
