@@ -1,5 +1,3 @@
-
-
 /// Exponential function and its inverse
 ///
 ///<a href="https://en.wikipedia.org/wiki/Exponential_function">https://en.wikipedia.org/wiki/Exponential_function</a>
