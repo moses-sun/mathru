@@ -2,7 +2,7 @@
 
 [![crate](https://img.shields.io/crates/v/mathru.svg)](https://crates.io/crates/mathru)
 [![documentation](https://docs.rs/mathru/badge.svg)](https://docs.rs/mathru)
-[![minimum rustc 1.32.0]](https://img.shields.io/badge/rustc-1.32.0-green.svg)
+![minimum rustc 1.32.0](https://img.shields.io/badge/rustc-1.32.0-green.svg)
 
 ------------
 A simple mathematics library written in Rust
