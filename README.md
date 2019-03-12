@@ -2,7 +2,7 @@
 
 [![crate](https://img.shields.io/crates/v/mathru.svg)](https://crates.io/crates/mathru)
 [![documentation](https://docs.rs/mathru/badge.svg)](https://docs.rs/mathru)
-![minimum rustc 1.30.1](https://img.shields.io/badge/rustc-1.30.1-green.svg)
+[![minimum rustc 1.32.0](https://img.shields.io/badge/rustc-1.32.0-green.svg)]
 
 ------------
 A simple mathematics library written in Rust
@@ -63,8 +63,6 @@ This project is implemented using Rust.
         implemented for f32, f64, Complex<f32>, Complex<f64>
 
 ## Usage
------
-
 
 The library usage is described well in the API documentation - including example code.
 
@@ -99,6 +97,5 @@ assert_eq!(l_ref, l);
 
 
 ## Contributions
--------------
 
 Any contribution is welcome!
