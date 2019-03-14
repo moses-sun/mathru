@@ -2,8 +2,6 @@ use std::clone::Clone;
 use std::ops::{Add, AddAssign, Mul, MulAssign, Sub, Neg, Div};
 use algebra::abstr::{Semiring, Zero, One, Sign};
 use algebra::linear::Vector;
-use elementary::{Exponential, Power};
-use algebra::abstr::cast::FromPrimitive;
 use algebra::abstr::Real;
 use std::fmt::Display;
 use std::fmt;
@@ -1739,7 +1737,7 @@ impl<T> Matrix<T>
 
         let (_q, h): (Matrix<T>, Matrix<T>) = self.dec_hessenberg();
 
-        let (u, t): (Matrix<T>, Matrix<T>) = h.clone().francis();
+        let (_u, t): (Matrix<T>, Matrix<T>) = h.clone().francis();
 
         let mut eig: Vector<T> = Vector::zero(&m);
 
@@ -1815,7 +1813,7 @@ impl<T> Matrix<T>
 
             // Determine the Givens rotation P with P [x; y]T = αe1 ;
             let (c, s): (T, T) = Matrix::givens_cosine_sine_pair(x, y);
-            let mut g: Matrix<T> = Matrix::givens(&2, &0, &1, &c, &s);
+            let g: Matrix<T> = Matrix::givens(&2, &0, &1, &c, &s);
 
             {
                 let temp: Matrix<T> = &g * &self.get_slice(q - 1, p - 1, p - 3, n - 1);
