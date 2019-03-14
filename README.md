@@ -25,6 +25,9 @@ This project is implemented using Rust.
             - Determinant
             - Trace
 
+    - complex numbers
+        - Complex<f32>
+        - Complex<f64>
 
     - special functions
         - gamma functions
@@ -59,8 +62,6 @@ This project is implemented using Rust.
 
         - exponential
             - exp()     - ln()
-
-        implemented for f32, f64, Complex<f32>, Complex<f64>
 
 ## Usage
 
