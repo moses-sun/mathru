@@ -7,7 +7,7 @@ use std::ops::{Sub, SubAssign, Div, DivAssign};
 pub trait Field : Ring + Sub<Self, Output = Self> + SubAssign<Self> + Sign + Div<Self, Output = Self> +
 DivAssign<Self> + Abs
 {
-
+	fn epsilon() -> Self;
 }
 
 pub trait Sign

@@ -144,7 +144,14 @@ impl<T> RealT for Complex<T>
 impl<T> Field for Complex<T>
 	where T: Real
 {
-
+	fn epsilon() -> Complex<T>
+	{
+		Complex
+		{
+			re: T::epsilon(),
+			im: T::epsilon()
+		}
+	}
 }
 
 impl<T> Sign for Complex<T>

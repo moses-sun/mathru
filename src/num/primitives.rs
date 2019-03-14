@@ -58,7 +58,6 @@ macro_rules! semiring_impl
     {
         impl Semiring for $t
         {
-
 //			fn get_primitive<'a>(self: &'a Self) -> $t
 //			{
 //				return *self
@@ -69,7 +68,7 @@ macro_rules! semiring_impl
 
 semiring_impl!(usize);
 semiring_impl!(u8);
-semiring_impl!( u16);
+semiring_impl!(u16);
 semiring_impl!(u32);
 semiring_impl!(u64);
 
@@ -104,11 +103,14 @@ ring_impl!(f64);
 
 macro_rules! field_impl
 {
-    ($t:ty) =>
+    ($t:ty, $pi: expr) =>
     {
         impl Field for $t
         {
-
+			fn epsilon() -> Self
+			{
+				$pi
+			}
         }
 
         impl Sign for $t
@@ -136,8 +138,8 @@ macro_rules! field_impl
     };
 }
 
-field_impl!(f32);
-field_impl!(f64);
+field_impl!(f32, f32::EPSILON);
+field_impl!(f64, f64::EPSILON);
 
 macro_rules! zero_impl {
     ($t:ty, $v:expr) =>

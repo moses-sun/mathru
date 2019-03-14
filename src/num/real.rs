@@ -83,7 +83,13 @@ impl<T> RealT for Real<T>
 impl<T> Field for Real<T>
 	where T: Field
 {
-
+	fn epsilon() -> Real<T>
+	{
+		Real
+		{
+			num: T::epsilon()
+		}
+	}
 }
 
 impl<T> Sign for Real<T>
