@@ -350,33 +350,6 @@ mod matrix_test
         assert_eq!(-6.0, tr);
     }
 
-
-//    #[test]
-//    fn householder()
-//    {
-//        let a: Matrix<Real<f32>> = Matrix::new(&4, &4, &vec![Real::new(4.0), Real::one(),
-//																						Real::new(-2.0), Real::new(2.0),
-//        Real::one(), Real::new(2.0), Real::zero(), Real::one(), Real::new(-2.0), Real::zero(), Real::new(3.0), Real::new(-2.0), Real::new(2.0), Real::one(), Real::new(-2.0), Real::new(-1.0)]);
-//
-//        let h_ref: Matrix<Real<f32>> = Matrix::new(&4, &4, &vec![Real::new(0.8), Real::new(0.19999999), Real::new(-0.39999998), Real::new(0.39999998), Real::new(0.19999999), Real::new(0.8), Real::new(0.39999998), Real::new(-0.39999998),
-//Real::new(-0.39999998), Real::new(0.39999998), Real::new(0.20000005), Real::new(0.79999995),
-//Real::new(0.39999998), -Real::new(0.39999998), Real::new(0.79999995), Real::new(0.20000005)]);
-//
-//        let x: Vector<Real<f32>> = a.get_column(&0);
-//        let (m, _n): (usize, usize) = x.dim();
-//        let p: Real<f32> = Real::new(2.0);
-//
-//        let abs: Real<f32> =  x.p_norm(&p);
-//        let mut y: Vector<Real<f32>> = Vector::zero(&m);
-//        *y.get_mut(&0) = abs;
-//
-//        let v : Vector<Real<f32>> = &x - &y;
-//
-//        let u_1: Matrix<Real<f32>> = Matrix::householder(&v, 0);
-//
-//        assert_eq!(h_ref, u_1);
-//    }
-
     #[test]
     fn householder_0()
     {
@@ -495,82 +468,6 @@ mod matrix_test
 
         assert_eq!(b_ref, b);
     }
-
-//    #[test]
-//    fn zero_diagonal_0()
-//    {
-//        let mut a: Matrix<Real<f32>> = Matrix::new(&4, &4, &vec![Real::new(1.0), Real::new(5.0), Real::new(0.0),
-//        Real::new(0.0), Real::new(0.0), Real::new(-7.0), Real::new(3.0), Real::new(0.0), Real::new(0.0), Real::new(0.0), Real::new(0.0), Real::new(4.0), Real::new(0.0), Real::new(0.0), Real::zero(), Real::new(4.0)]);
-//
-//        let a_ref: Matrix<Real<f32>> = Matrix::new(&4, &4, &vec![Real::new(1.0), Real::new(5.0), Real::new(0.0),
-//        Real::new(0.0), Real::new(0.0), Real::new(-7.0), Real::new(3.0), Real::new(0.0), Real::new(0.0), Real::new(0.0), Real::new(0.0), Real::new(0.0), Real::new(0.0), Real::new(0.0), Real::zero(), Real::new(4.0)]);
-//
-//        let b: bool = a.zero_diagonal();
-//
-//        assert_eq!(true, b);
-//        assert_eq!(a_ref, a);
-//    }
-//
-//    #[test]
-//    fn find_nonzero_superdiagonal_0()
-//    {
-//        let a: Matrix<Real<f32>> = Matrix::new(&4, &4, &vec![Real::new(2.0), Real::new(0.0), Real::new(0.0),
-//        Real::new(0.0), Real::new(0.0), Real::new(2.0), Real::new(1.0), Real::new(0.0), Real::new(0.0), Real::zero(),
-//        Real::new(8.0), Real::new(0.0), Real::new(0.0), Real::new(0.0), Real::new(0.0), Real::new(2.0)]);
-//
-//        let b: usize = a.find_nonzero_superdiagonal();
-//
-//        assert_eq!(2, b);
-//    }
-//
-//    #[test]
-//    fn find_zero_superdiagonal_0()
-//    {
-//        let a: Matrix<Real<f32>> = Matrix::new(&4, &4, &vec![Real::new(2.0), Real::new(0.0), Real::new(0.0),
-//        Real::new(0.0), Real::new(0.0), Real::new(2.0), Real::new(0.0), Real::new(0.0), Real::new(0.0), Real::zero(),
-//        Real::new(8.0), Real::new(-1.0), Real::new(0.0), Real::new(0.0), Real::new(0.0), Real::new(2.0)]);
-//
-//        let b: usize = a.find_zero_superdiagonal();
-//
-//        assert_eq!(2, b);
-//    }
-
-//    #[test]
-//    fn find_zero_superdiagonal_1()
-//    {
-//        let a: Matrix<Real<f32>> = Matrix::new(&4, &4, &vec![Real::new(2.0), Real::new(0.0), Real::new(0.0),
-//        Real::new(0.0), Real::new(0.0), Real::new(2.0), Real::new(1.0), Real::new(0.0), Real::new(0.0), Real::zero(),
-//        Real::new(8.0), Real::new(0.0), Real::new(0.0), Real::new(0.0), Real::new(0.0), Real::new(2.0)]);
-//
-//        let b: usize = a.find_zero_superdiagonal();
-//
-//        assert_eq!(1, b);
-//    }
-
-//    #[test]
-//    fn find_zero_superdiagonal_1()
-//    {
-//        let a: Matrix<Real<f32>> = Matrix::new(&4, &4, &vec![Real::new(1.0), Real::new(5.0), Real::new(0.0),
-//        Real::new(0.0), Real::new(0.0), Real::new(-7.0), Real::new(3.0), Real::new(0.0), Real::new(0.0), Real::new(0.0), Real::new(0.0), Real::new(4.0), Real::new(0.0), Real::new(0.0), Real::zero(), Real::new(4.0)]);
-//
-//        println!("{}");
-//        let b: usize = a.find_zero_superdiagonal();
-//
-//        assert_eq!(2, b);
-//        assert_eq!(a_ref, a);
-//    }
-
-//	#[test]
-//	fn golub_kahan_step_0()
-//	{
-//	    let a: Matrix<Real<f32>> = Matrix::new(&4, &4, &vec![Real::one(), Real::new(2.0), Real::zero(), Real::zero(),
-//        Real::zero(), Real::new(3.0), Real::new(4.0), Real::zero(), Real::zero(), Real::zero(), Real::new(5.0),
-//        Real::new(7.0), Real::zero(), Real::zero(), Real::zero(), Real::new(7.0)]);
-//
-//        let (u, b, v): (Matrix<Real<f32>>, Matrix<Real<f32>>, Matrix<Real<f32>>) = a.golub_kahan_step();
-//
-//       //println!("b: {}", b);
-//	}
 
     #[test]
     fn rot_0()
@@ -711,15 +608,5 @@ mod matrix_test
 
         assert_eq!(eig_ref, eig);
     }
-
-
-//    #[test]
-//    fn eigenvalue_1()
-//    {
-//        let (c, s): (f64, f64) = Matrix::givens_cosine_sine_pair(5.0,4.0);
-//
-//        println!("c: {}, s: {}", c, s);
-//    }
-
 
 }
