@@ -24,6 +24,7 @@ This project is implemented using Rust.
             - Inverse matrix
             - Determinant
             - Trace
+            - Eigenvalue
 
     - complex numbers
         - Complex<f32>
