@@ -1,3 +1,5 @@
+/// Matrix
+
 use std::clone::Clone;
 use std::ops::{Add, AddAssign, Mul, MulAssign, Sub, Neg, Div};
 use algebra::abstr::{Semiring, Zero, One, Sign};
@@ -1725,7 +1727,7 @@ impl<T> Matrix<T>
     /// extern crate mathru;
     /// use mathru::algebra::linear::{Vector, Matrix};
     ///
-    /// let a: Matrix<f64> = Matrix::new(&3, &3, &vec![1.0, 5.0, 3.0, 1.0, 0.0, -7.0, 3.0, 8.0, 9.0]);
+    /// let a: Matrix<f64> = Matrix::new(&3, &3, &vec![1.0, -3.0, 3.0, 3.0, -5.0, 3.0, 6.0, -6.0, 4.0]);
     /// let eig_ref = Vector::new_column(&3, &vec![3.9999999999999996, -2.0, -1.9999999999999982]);
     /// let eig: Vector<f64> = a.eigenvalue();
     ///
@@ -1883,7 +1885,7 @@ impl<T> Matrix<T>
         let (m, n) : (usize, usize) = self.dim();
         if m < n
         {
-            panic!("Read the API");
+            panic!("m is smaller than n");
         }
 
         let mut q: Matrix<T> = Matrix::one(&m);

@@ -1,9 +1,9 @@
+//! Algebra
+//!
+//! Fore more information:
+//! <a href="https://en.wikipedia.org/wiki/Algebra">https://en.wikipedia.org/wiki/Algebra</a>
 
 pub mod linear;
 
-
-/// Abstract algebra
-///
-/// <a href="https://en.wikipedia.org/wiki/Abstract_algebra">https://en.wikipedia.org/wiki/Abstract_algebra</a>
 pub mod abstr;
 

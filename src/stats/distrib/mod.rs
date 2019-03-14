@@ -1,4 +1,9 @@
-
+//! Distributions
+//!
+//! Fore more information:
+//! <a href="https://en.wikipedia.org/wiki/Probability_distribution">https://en.wikipedia
+//! .org/wiki/Probability_distribution</a>
+//!
 mod normal;
 mod bernoulli;
 mod binomial;

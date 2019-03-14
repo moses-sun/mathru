@@ -1,3 +1,7 @@
+//! Abstract algebra
+//!
+//! <a href="https://en.wikipedia.org/wiki/Abstract_algebra">https://en.wikipedia.org/wiki/Abstract_algebra</a>
+
 mod number;
 pub mod cast;
 mod field;
@@ -5,7 +9,6 @@ mod ring;
 mod semiring;
 
 
-//pub mod identity;
 mod natural;
 mod integer;
 mod real;

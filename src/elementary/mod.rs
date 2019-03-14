@@ -1,5 +1,7 @@
-/// Elementary function
-
+//! Elementary functions
+//!
+//! Fore more information:
+//! <a href="https://en.wikipedia.org/wiki/Elementary_function">https://en.wikipedia.org/wiki/Elementary_function</a>
 
 mod power;
 

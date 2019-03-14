@@ -1,3 +1,7 @@
+//! Vector
+//!
+//!
+
 use algebra::linear::Matrix;
 use elementary::{Exponential, Power};
 use std::ops::{Add, AddAssign, Mul, Sub, Div};

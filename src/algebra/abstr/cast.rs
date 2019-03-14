@@ -1,3 +1,5 @@
+//! Cast module
+
 //Copied from https://github.com/rust-num/num-traits/blob/master/src/cast.rs
 
 /// A generic trait for converting a value to a number.

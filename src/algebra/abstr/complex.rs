@@ -1,3 +1,5 @@
+//! Complex number
+
 use super::Real;
 
 /// Complex number

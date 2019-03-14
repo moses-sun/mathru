@@ -1,10 +1,10 @@
 [package]
 name = "mathru"
-version = "0.0.5"
+version = "0.1.0"
 description = "Simple mathematics library written in Rust"
 authors = ["Matthias Eiholzer <matthias.eiholzer@gmail.com>"]
 exclude = ["literature/*", "tests/*", "backup/*", ".gitignore"]
-keywords = ["math", "mathematics", "statistics"]
+keywords = ["math", "mathematics", "statistics", "linear", "algebra", "matrix", "vector"]
 categories = ["science", "algorithms", "data-structures"]
 readme = "README.md"
 license = "MIT"

@@ -1,30 +1,53 @@
-/// Algebra
-///
-/// Fore more information:
-/// <a href="https://en.wikipedia.org/wiki/Algebra">https://en.wikipedia.org/wiki/Algebra</a>
+//! # mathru
+//!
+//! A crate that provides  mathematics functions implemented entirely in Rust.
+//!
+//!
+//! ## Usage
+//!
+//! The library usage is described well in the API documentation - including example code.
+//!
+//!
+//! Add this to your `Cargo.toml`:
+//!
+//! ```toml
+//! [dependencies]
+//! mathru = "0.1.0"
+//! ```
+//!
+//! And then import the library using:
+//! ```rust
+//! extern crate mathru;
+//! ```
+//!
+//! Then import the modules and it is ready to be used:
+//!
+//!``` rust
+//! extern crate mathru;
+//! use mathru::algebra::linear::{Matrix};
+//! // Compute the LU decomposition of a 2x2 matrix
+//! let a: Matrix<f64> = Matrix::new(&2, &2, &vec![1.0, -2.0, 3.0, -7.0]);
+//! let l_ref: Matrix<f64> = Matrix::new(&2, &2, &vec![1.0, 0.0, 1.0 / 3.0, 1.0]);
+//!
+//! let (l, u, p): (Matrix<f64>, Matrix<f64>, Matrix<f64>) = a.dec_lu();
+//!
+//! assert_eq!(l_ref, l);
+//!```
+
+
 pub mod algebra;
 
-/// Elementary functions
-///
-/// Fore more information:
-/// <a href="https://en.wikipedia.org/wiki/Elementary_function">https://en.wikipedia.org/wiki/Elementary_function</a>
+
 pub mod elementary;
 
 /// Numbers
 #[macro_use]
 pub mod num;
 
-/// Special functions
-///
-/// Fore more information:
-/// <a href="https://en.wikipedia.org/wiki/List_of_mathematical_functions">https://en.wikipedia
-/// .org/wiki/List_of_mathematical_functions</a>
+
 pub mod special;
 
-/// Statistics
-///
-/// Fore more information:
-/// <a href="https://en.wikipedia.org/wiki/Statistics">https://en.wikipedia.org/wiki/Statistics</a>
+
 pub mod stats;
 
 

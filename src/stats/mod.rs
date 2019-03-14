@@ -1,10 +1,11 @@
+//! Statistics
+//!
+//! Fore more information:
+//! <a href="https://en.wikipedia.org/wiki/Statistics">https://en.wikipedia.org/wiki/Statistics</a>
 
 pub mod combins;
 
-/// Distributions
-///
-/// Fore more information:
-/// <a href="https://en.wikipedia.org/wiki/Probability_distribution">https://en.wikipedia.org/wiki/Probability_distribution</a>
+
 pub mod distrib;
 
 
