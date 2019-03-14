@@ -8,6 +8,7 @@ mod matrix_test
     use mathru::num::{Real};
     use mathru::elementary::{Trigonometry, Power};
 
+
     #[test]
     fn zeros()
     {
@@ -322,6 +323,34 @@ mod matrix_test
         assert_eq!(351.99999999999994, d);
     }
 
+    #[test]
+    fn trace_0()
+    {
+        let a: Matrix<f64> = Matrix::new(&0, &0, &vec![]);
+        let tr: f64 = a.trace();
+
+        assert_eq!(0.0, tr);
+    }
+
+    #[test]
+    fn trace_1()
+    {
+        let a: Matrix<f64> = Matrix::new(&1, &1, &vec![-9.0]);
+        let tr: f64 = a.trace();
+
+        assert_eq!(-9.0, tr);
+    }
+
+    #[test]
+    fn trace_2()
+    {
+        let a: Matrix<f64> = Matrix::new(&2, &2, &vec![1.0, -2.0, 3.0, -7.0]);
+        let tr: f64 = a.trace();
+
+        assert_eq!(-6.0, tr);
+    }
+
+
 //    #[test]
 //    fn householder()
 //    {
@@ -347,6 +376,39 @@ mod matrix_test
 //
 //        assert_eq!(h_ref, u_1);
 //    }
+
+    #[test]
+    fn householder_0()
+    {
+        let v: Vector<f64> = Vector::new_column(&3, &vec![1.0, 2.0, 3.0]);
+        let h: Matrix<f64> = Matrix::householder(&v, 0);
+
+        let h_ref: Matrix<f64> = Matrix::new(&3, &3, &vec![-0.2672612419124243, -0.5345224838248488, -0.8017837257372731, -0.5345224838248488, 0.7745419205884382, -0.33818711911734267, -0.8017837257372731, -0.33818711911734267, 0.4927193213239861]);
+
+        assert_eq!(h_ref, h);
+    }
+
+    #[test]
+    fn householder_1()
+    {
+        let v: Vector<f64> = Vector::new_column(&3, &vec![1.0, 2.0, 3.0]);
+        let h: Matrix<f64> = Matrix::householder(&v, 1);
+
+        let h_ref: Matrix<f64> = Matrix::new(&3, &3, &vec![1.0, 0.0, 0.0, 0.0, -0.5547001962252291, -0.8320502943378437, 0.0, -0.8320502943378437, 0.5547001962252291]);
+
+        assert_eq!(h_ref, h);
+    }
+
+     #[test]
+    fn householder_2()
+    {
+        let v: Vector<f64> = Vector::new_column(&3, &vec![1.0, 2.0, 3.0]);
+        let h: Matrix<f64> = Matrix::householder(&v, 2);
+
+        let h_ref: Matrix<f64> = Matrix::new(&3, &3, &vec![1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, -1.0]);
+
+        assert_eq!(h_ref, h);
+    }
 
     #[test]
     fn slice_get_0()
@@ -395,19 +457,13 @@ mod matrix_test
     #[test]
     fn householder_bidiagonal_0()
     {
-        let a: Matrix<Real<f32>> = Matrix::new(&4, &3, &vec![Real::new(1.0), Real::new(2.0), Real::new(3.0), Real::new
-        (4.0),
-        Real::new(5.0), Real::new(6.0), Real::new(7.0), Real::new(8.0), Real::new(9.0), Real::new(10.0), Real::new(11.0),
-        Real::new(12.0)]);
+        let a: Matrix<f32> = Matrix::new(&4, &3, &vec![1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0, 11.0,
+        12.0]);
 
-        let b_ref: Matrix<Real<f32>> = Matrix::new(&4, &3, &vec![Real::new(-12.884102), Real::new(21.876442
-        ), Real::zero(), Real::zero(), Real::new(2.2462401), Real::new(0.6132816),
-        Real::zero(), Real::zero(), Real::new(-0.0000004172325), Real::zero(),
-        Real::zero(), Real::zero()]);
+        let b_ref: Matrix<f32> = Matrix::new(&4, &3, &vec![-12.884099, 21.876434, 0.0, 0.0, 2.2462382, -0.61328155, 0.0, 0.0, -0.000000029802322, 0.0, 0.0, 0.0]);
 
-        let v_ref: Matrix<Real<f32>> = Matrix::new(&3, &3, &vec![Real::one(), Real::zero(), Real::zero(), Real::zero
-        (), Real::new(-0.6670023), Real::new(0.7450558), Real::zero(), Real::new(-0.7450558), Real::new(-0.6670022)]);
-        let (_u, b, v): (Matrix<Real<f32>>, Matrix<Real<f32>>, Matrix<Real<f32>>) = a.householder_bidiag();
+        let v_ref: Matrix<f32> = Matrix::new(&3, &3, &vec![1.0, 0.0, 0.0, 0.0, -0.6670023, -0.7450557, 0.0, -0.7450557, 0.6670023]);
+        let (_u, b, v): (Matrix<f32>, Matrix<f32>, Matrix<f32>) = a.householder_bidiag();
 
         assert_eq!(b_ref, b);
         assert_eq!(v_ref, v);
@@ -416,15 +472,12 @@ mod matrix_test
     #[test]
     fn householder_bidiagonal_1()
     {
-        let a: Matrix<Real<f64>> = Matrix::new(&3, &3, &vec![Real::new(1.0), Real::new(5.0), Real::new(3.0),
-        Real::new(1.0), Real::new(0.0), Real::new(-7.0), Real::new(3.0), Real::new(8.0), Real::new(9.0)]);
+        let a: Matrix<f64> = Matrix::new(&3, &3, &vec![1.0, 5.0, 3.0,1.0, 0.0, -7.0, 3.0, 8.0, 9.0]);
 
-        let b_ref: Matrix<Real<f64>> = Matrix::new(&3, &3, &vec![Real::new(-3.3166247903554), Real::new(11.159993483217384), Real::zero(), Real::zero(), Real::new(-8.274961233187126), Real::new(-5.336122204714561),
-        Real::zero(), Real::zero(), Real::new(-2.550561087319375)]);
+        let b_ref: Matrix<f64> = Matrix::new(&3, &3, &vec![-3.3166247903554, 11.15999348321739, 0.0, 0.0, -8.27496123318713, 5.336122204714563, 0.0, 0.0, 2.5505610873193763]);
 
-        let v_ref: Matrix<Real<f64>> = Matrix::new(&3, &3, &vec![Real::one(), Real::zero(), Real::zero(), Real::zero
-       (), Real::new(-0.7834976790895336), Real::new(0.6213947110020438), Real::zero(), Real::new(-0.621394711002044), Real::new(-0.7834976790895335)]);
-        let (_u, b, v): (Matrix<Real<f64>>, Matrix<Real<f64>>, Matrix<Real<f64>>) = a.householder_bidiag();
+        let v_ref: Matrix<f64> = Matrix::new(&3, &3, &vec![1.0, 0.0, 0.0, 0.0, -0.783497679089534, -0.6213947110020441, 0.0, -0.6213947110020441, 0.7834976790895338]);
+        let (_u, b, v): (Matrix<f64>, Matrix<f64>, Matrix<f64>) = a.householder_bidiag();
 
         assert_eq!(b_ref, b);
         assert_eq!(v_ref, v);
@@ -433,15 +486,12 @@ mod matrix_test
     #[test]
     fn householder_bidiagonal_2()
     {
-        let a: Matrix<Real<f32>> = Matrix::new(&4, &4, &vec![Real::new(4.0), Real::new(1.0), Real::new(-2.0),
-        Real::new(2.0), Real::new(1.0), Real::new(2.0), Real::new(0.0), Real::new(-2.0), Real::new(0.0), Real::new(3.0), Real::new(-2.0), Real::new(2.0), Real::new(2.0), Real::new(1.0), Real::new(-2.0), Real::new(-1.0)]);
+        let a: Matrix<f32> = Matrix::new(&4, &4, &vec![4.0, 1.0, -2.0,
+        2.0, 1.0, 2.0, 0.0, -2.0, 0.0, 3.0, -2.0, 2.0, 2.0, 1.0, -2.0, -1.0]);
 
-        let b_ref: Matrix<Real<f32>> = Matrix::new(&4, &4, &vec![Real::new(-4.582576), Real::new(3.2659864), Real::new(
-        0.0), Real::new(0.0), Real::new(0.0), Real::new(-3.7764935), Real::new(-1.5535973), Real::new(0.0), Real::new
-        (0.0), Real::new(0.0), Real::new(1.4568503), Real::new(1.2036494), Real::new(0.0), Real::new(0.0), Real::new
-        (0.0), Real::new(3.014395)]);
+        let b_ref: Matrix<f32> = Matrix::new(&4, &4, &vec![-4.582576, 3.2659864, 0.0, 0.0, 0.0, -3.7764935, -1.5535977, 0.0, 0.0, 0.0, 1.4568509, -1.203649, 0.0, 0.0, 0.0, -3.014395]);
 
-        let (_u, b, _v): (Matrix<Real<f32>>, Matrix<Real<f32>>, Matrix<Real<f32>>) = a.householder_bidiag();
+        let (_u, b, _v): (Matrix<f32>, Matrix<f32>, Matrix<f32>) = a.householder_bidiag();
 
         assert_eq!(b_ref, b);
     }
@@ -565,42 +615,6 @@ mod matrix_test
         assert_eq!(r_ref, r);
     }
 
-//    #[test]
-//    fn vsweep_0()
-//    {
-//        let u: Matrix<f64> = Matrix::one(&4);
-//        let v: Matrix<f64> = Matrix::one(&4);
-//
-//        let d: Vector<f64> = Vector::new_row(&4, &vec![1.0 , 2.0, 3.0, 4.0]);
-//        let e: Vector<f64> = Vector::new_row(&3, &vec![5.0, 6.0, 7.0]);
-//
-//        let d_ref: Vector<f64> = Vector::new_row(&4, &vec![5.463163355250679, 6.36054616275083, 7.359559770025111, 0.0031239153071850067]);
-//        let e_ref: Vector<f64> = Vector::new_row(&3, &vec![2.1584718652373973, 3.295858340787664, 0.11174033462404505]);
-//
-//        let (u_p, d_n, e_n, v_p): (Matrix<f64>, Vector<f64>, Vector<f64>, Matrix<f64>) = Matrix::vsweep(u, d, e, v);
-//
-//        assert_eq!(d_ref, d_n);
-//        assert_eq!(e_ref, e_n);
-//    }
-//
-//     #[test]
-//    fn vsweep_1()
-//    {
-//        let u: Matrix<f64> = Matrix::one(&4);
-//        let v: Matrix<f64> = Matrix::one(&4);
-//
-//        let d: Vector<f64> = Vector::new_row(&4, &vec![-4.5826 , -3.7765, 1.4569, 3.0144]);
-//        let e: Vector<f64> = Vector::new_row(&3, &vec![3.266, -1.5536, 1.2036]);
-//
-//        let d_ref: Vector<f64> = Vector::new_row(&4, &vec![-6.039122259764489, -3.277103355963835, 2.6844174078076057, 1.6235439947772108]);
-//        let e_ref: Vector<f64> = Vector::new_row(&3, &vec![1.2504987877306921, -0.35519399014449327, 1.5027028697913907]);
-//
-//        let (u_p, d_n, e_n, v_p): (Matrix<f64>, Vector<f64>, Vector<f64>, Matrix<f64>) = Matrix::vsweep(u, d, e, v);
-//
-//        assert_eq!(d_ref, d_n);
-//        assert_eq!(e_ref, e_n);
-//    }
-
     #[test]
     fn svd_0()
     {
@@ -609,9 +623,9 @@ mod matrix_test
 
         let (u, s, v): (Matrix<f64>, Matrix<f64>, Matrix<f64>) = a.dec_sv();
 
-        let u_ref: Matrix<f64> = Matrix::new(&4, &4, &vec![0.7506189754205654, -0.10396419803550966, -0.5550030946996072, 0.3431241235169469, 0.16660611095451494, 0.7151480228364367, 0.42071909480761316, 0.5327299057590197, 0.4914576812699054, -0.48965007323306603, 0.7174571018374724, -0.06298777918484932, 0.40900232890779525, 0.48784993260512727, -0.014910236788854345, -0.7710364602559812]);
-        let v_ref: Matrix<f64> = Matrix::new(&4, &4, &vec![0.6414139394319739, 0.37707634018335073, -0.5915891468488654, 0.3105219369173846, 0.4773429354587908, 0.10210161763763852, 0.7839592576263362, 0.3835711981175504, -0.5312275172316613, 0.06255922864595147, -0.0954399832842174, 0.8395087119487317, 0.28023062860049164, -0.9184089700459931, -0.1622386307366864, 0.22732000622454226]);
-        let s_ref: Matrix<f64> = Matrix::new(&4, &4, &vec![6.216089837372844, 0.0, 0.0, 0.0, 0.0, 3.3812545631601023, 0.0, 0.0, 0.0, 0.0, 3.0918649662716566, 0.0, 0.0, 0.0, 0.0, 1.1694937978293751]);
+        let u_ref: Matrix<f64> = Matrix::new(&4, &4, &vec![0.750618975420566, -0.10396419803551285, -0.5550030946996072, -0.3431241235169467, 0.16660611095451502, 0.7151480228364393, 0.42071909480760994, -0.5327299057590199, 0.49145768126990524, -0.4896500732330627, 0.7174571018374751, 0.06298777918484924, 0.40900232890779536, 0.48784993260512777, -0.014910236788856494, 0.7710364602559809]);
+        let v_ref: Matrix<f64> = Matrix::new(&4, &4, &vec![0.641413939431974, 0.3770763401833474, -0.5915891468488664, -0.3105219369173845, 0.4773429354587908, 0.10210161763764197, 0.7839592576263352, -0.3835711981175503, -0.5312275172316614, 0.06255922864595094, -0.09543998328421795, -0.8395087119487312, 0.2802306286004916, -0.9184089700459931, -0.1622386307366823, -0.2273200062245417]);
+        let s_ref: Matrix<f64> = Matrix::new(&4, &4, &vec![6.216089837372844, 0.0, 0.0, 0.0, 0.0, 3.3812545631600996, 0.0, 0.0, 0.0, 0.0, 3.0918649662716553, 0.0, 0.0, 0.0, 0.0, 1.1694937978293738]);
 
         assert_eq!(u_ref, u);
         assert_eq!(s_ref, s);
@@ -621,22 +635,14 @@ mod matrix_test
     #[test]
     fn svd_1()
     {
-        let a: Matrix<Real<f64>> = Matrix::new(&4, &4, &vec![Real::new(4.0), Real::new(1.0), Real::new(-2.0),
-        Real::new(2.0), Real::new(1.0), Real::new(2.0), Real::new(0.0), Real::new(-2.0), Real::new(0.0), Real::new(3.0), Real::new(-2.0), Real::new(2.0), Real::new(2.0), Real::new(1.0), Real::new(-2.0), Real::new(-1.0)]);
+        let a: Matrix<f64> = Matrix::new(&4, &4, &vec![4.0, 1.0, -2.0,
+        2.0, 1.0, 2.0, 0.0, -2.0, 0.0, 3.0, -2.0, 2.0, 2.0, 1.0, -2.0, -1.0]);
 
-        let (u, _s, v): (Matrix<Real<f64>>, Matrix<Real<f64>>, Matrix<Real<f64>>) = a.dec_sv();
+        let (u, _s, v): (Matrix<f64>, Matrix<f64>, Matrix<f64>) = a.dec_sv();
 
-        let u_ref: Matrix<Real<f64>> = Matrix::new(&4, &4, &vec![Real::new(0.7506189754205658), Real::new(-0.1039641980355133), Real::new(-0.555003094699607),
-         Real::new(0.343124123516947),
-Real::new(0.16660611095451502), Real::new(0.7151480228364399), Real::new(0.4207190948076098), Real::new(0.5327299057590196),
-Real::new(0.49145768126990524), Real::new(-0.4896500732330621), Real::new(0.7174571018374756), Real::new(-0.06298777918484935),
-Real::new(0.40900232890779536), Real::new(0.48784993260512743), Real::new(-0.014910236788857048), Real::new(-0.7710364602559812)]);
+        let u_ref: Matrix<f64> = Matrix::new(&4, &4, &vec![0.750618975420566, -0.10396419803551285, -0.5550030946996072, -0.3431241235169467, 0.16660611095451502, 0.7151480228364393, 0.42071909480760994, -0.5327299057590199, 0.49145768126990524, -0.4896500732330627, 0.7174571018374751, 0.06298777918484924, 0.40900232890779536, 0.48784993260512777, -0.014910236788856494, 0.7710364602559809]);
 
-        let v_ref: Matrix<Real<f64>> = Matrix::new(&4, &4, &vec![Real::new(0.6414139394319739), Real::new(0.377076340183347), Real::new(-0.5915891468488668),
-         Real::new(0.31052193691738456),
-Real::new(0.4773429354587908), Real::new(0.10210161763764261), Real::new(0.7839592576263353), Real::new(0.38357119811755047),
-Real::new(-0.5312275172316613), Real::new(0.06255922864595102), Real::new(-0.09543998328421785), Real::new(0.8395087119487314),
-Real::new(0.2802306286004916), Real::new(-0.9184089700459929), Real::new(-0.16223863073668135), Real::new(0.22732000622454218)]);
+        let v_ref: Matrix<f64> = Matrix::new(&4, &4, &vec![0.641413939431974, 0.3770763401833474, -0.5915891468488664, -0.3105219369173845, 0.4773429354587908, 0.10210161763764197, 0.7839592576263352, -0.3835711981175503, -0.5312275172316614, 0.06255922864595094, -0.09543998328421795, -0.8395087119487312, 0.2802306286004916, -0.9184089700459931, -0.1622386307366823, -0.2273200062245417]);
 
         assert_eq!(u_ref, u);
         assert_eq!(v_ref, v);
@@ -649,7 +655,7 @@ Real::new(0.2802306286004916), Real::new(-0.9184089700459929), Real::new(-0.1622
         //let (l, u, p) : (Matrix<f64>, Matrix<f64>, Matrix<f64>) = a.dec_lu();
         let a_inv_ref : Matrix<f64> = Matrix::new(&3, &3, &vec![-13.0, 7.0, 4.5, -10.0, 5.0, 3.0, -2.0, 1.0, 0.5]);
 
-        let a_inv: Matrix<f64> = a.inv();
+        let a_inv: Matrix<f64> = a.inv().unwrap();
 
         assert_eq!(a_inv_ref, a_inv);
     }
@@ -661,7 +667,7 @@ Real::new(0.2802306286004916), Real::new(-0.9184089700459929), Real::new(-0.1622
         //let (l, u, p) : (Matrix<f64>, Matrix<f64>, Matrix<f64>) = a.dec_lu();
         let a_inv_ref : Matrix<f64> = Matrix::new(&3, &3, &vec![0.8823529411764706, -0.11764705882352942, 0.19607843137254904, 0.17647058823529413, 0.17647058823529413, 0.03921568627450981, 0.05882352941176471, 0.05882352941176471, -0.09803921568627452]);
 
-        let a_inv: Matrix<f64> = a.inv();
+        let a_inv: Matrix<f64> = a.inv().unwrap();
 
         assert_eq!(a_inv_ref, a_inv);
     }
@@ -674,24 +680,46 @@ Real::new(0.2802306286004916), Real::new(-0.9184089700459929), Real::new(-0.1622
 
         let a_inv_ref : Matrix<f64> = Matrix::new(&5, &5, &vec![0.38478669499836576, -0.03759398496240601, -0.08489293886891143, -0.006578947368421052, -0.005720823798627002, 0.03571428571428603, -0.07142857142857142, 0.03571428571428571, 0.0, -0.000000000000000001734723475976807, -0.021739130434782705, 0.0, 0.04347826086956519, 0.0, -0.021739130434782608, -0.024517816279830296, 0.06390977443609022, -0.033671134357633165, -0.02631578947368421, 0.020594965675057208, 0.2953293559986926, -0.03007518796992481, -0.030414351095129147, 0.019736842105263157, -0.004576659038901602]);
 
-        let a_inv: Matrix<f64> = a.inv();
+        let a_inv: Matrix<f64> = a.inv().unwrap();
 
         assert_eq!(a_inv_ref, a_inv);
     }
+
 
     #[test]
     fn hessenberg_decomposition_0()
     {
         let a: Matrix<f64> = Matrix::new(&3, &3, &vec![1.0, 5.0, 3.0, 1.0, 0.0, -7.0, 3.0, 8.0, 9.0]);
 
-        let h_ref: Matrix<f64> = Matrix::new(&3, &3, &vec![1.0, -4.427188724235729, -3.794733192202053, -3.162277660168378, 8.399999999999995, -5.199999999999996, 0.0000000000000007771561172376096, 9.799999999999999, 0.600000000000001]);
+        let h_ref: Matrix<f64> = Matrix::new(&3, &3, &vec![1.0, -4.427188724235731, 3.7947331922020537, -3.162277660168379, 8.399999999999997, -5.1999999999999975, -0.0000000000000006661338147750939, 9.799999999999999, 0.600000000000001]);
 
-        let q_ref: Matrix<f64> = Matrix::new(&3, &3, &vec![1.0, 0.0, 0.0, 0.0, -0.3162277660168378, 0.9486832980505135, 0.0, -0.9486832980505135, -0.3162277660168381]);
+        let q_ref: Matrix<f64> = Matrix::new(&3, &3, &vec![1.0, 0.0, 0.0, 0.0, -0.316227766016838, 0.9486832980505137, 0.0, -0.9486832980505137, -0.3162277660168381]);
 
         let (q, h): (Matrix<f64>, Matrix<f64>) = a.dec_hessenberg();
 
         assert_eq!(q_ref, q);
         assert_eq!(h_ref, h);
-
     }
+
+
+    #[test]
+    fn eigenvalue_0()
+    {
+        let a: Matrix<f64> = Matrix::new(&3, &3, &vec![1.0, -3.0, 3.0, 3.0, -5.0,  3.0, 6.0, -6.0,  4.0]);
+        let eig_ref: Vector<f64> = Vector::new_column(&3, &vec![3.9999999999999996, -2.0, -1.9999999999999982]);
+        let eig: Vector<f64> = a.eigenvalue();
+
+        assert_eq!(eig_ref, eig);
+    }
+
+
+//    #[test]
+//    fn eigenvalue_1()
+//    {
+//        let (c, s): (f64, f64) = Matrix::givens_cosine_sine_pair(5.0,4.0);
+//
+//        println!("c: {}, s: {}", c, s);
+//    }
+
+
 }

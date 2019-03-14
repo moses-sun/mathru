@@ -134,10 +134,16 @@ impl <T> Vector<T>
             data: Matrix::new(m, &1, data)
         }
     }
+
+    pub fn apply(mut self: Vector<T>, f: &Fn(&T) -> T) -> Self
+    {
+        self.data = self.data.apply(f);
+        self
+    }
 }
 
 impl<T> Vector<T>
-    where T: Clone + Zero
+    where T: Real
 {
 
     /// Returns the transposed vector
@@ -162,7 +168,7 @@ impl<T> Vector<T>
 }
 
 impl<T> Vector<T>
-    where T: AddAssign + Zero + Mul<T, Output = T> + Clone
+    where T: Real
 {
     /// Computes the dot product of two vectors
     ///
@@ -437,9 +443,18 @@ impl<T> Vector<T>
     /// ```
     pub fn get_slice(self: &Self, s: usize, e: usize) -> Vector<T>
     {
-        let (m, _n): (usize, usize) = self.dim();
-        assert!(s < m);
-        assert!(e < m);
+        let (m, n): (usize, usize) = self.dim();
+        if m == 1
+        {
+            println!("n: {}, s: {}, e: {}", n, s, e);
+            assert!(s < n);
+            assert!(e < n);
+        }
+        else
+        {
+            assert!(s < m);
+            assert!(e < m);
+        }
 
         let mut slice: Vector<T> = Vector::zero(&(e - s + 1));
 

@@ -20,29 +20,17 @@ pub struct Matrix<T>
     data:  Vec<T>
 }
 
-
-impl <T> Matrix<T>
-    where T: Semiring + Sign
+impl<T> Matrix<T>
 {
-
-    fn gather<'a>(self: &'a Self, i: usize, j: usize, b: usize) -> usize
+    pub fn apply(mut self: Matrix<T>, f: &Fn(&T) -> T) -> Matrix<T>
     {
-        (i + (j / b)) % (self.m)
-    }
-
-    fn gather_sa<'a>(self: &'a Self, i: usize, j: usize, a: usize) -> usize
-    {
-        (j + i * self.n - i / a) % self.m
-    }
-
-    fn scatter_da<'a>(self: &'a Self, i: usize, j: usize, b: usize) -> usize
-    {
-        (((i + j / b)) % (self.m) + j * self.m) % (self.n)
+        self.data = self.data.iter().map(f).collect();
+        self
     }
 }
 
 impl<T> Matrix<T>
-    where T: Clone + Zero
+    where T: Real
 {
     /// Returns the transposed matrix
     ///
@@ -169,7 +157,24 @@ impl<T> Matrix<T>
         return self;
     }
 
+    fn gather<'a>(self: &'a Self, i: usize, j: usize, b: usize) -> usize
+    {
+        (i + (j / b)) % (self.m)
+    }
+
+    fn gather_sa<'a>(self: &'a Self, i: usize, j: usize, a: usize) -> usize
+    {
+        (j + i * self.n - i / a) % self.m
+    }
+
+    fn scatter_da<'a>(self: &'a Self, i: usize, j: usize, b: usize) -> usize
+    {
+        (((i + j / b)) % (self.m) + j * self.m) % (self.n)
+    }
+
 }
+
+
 //
 //impl<T> Matrix<T>
 //{
@@ -251,6 +256,7 @@ impl<T> Matrix<T>
 
 
 impl<T> Matrix<T>
+    where T: Real
 {
 
     /// Calculates the determinant
@@ -267,8 +273,6 @@ impl<T> Matrix<T>
     /// assert_eq!(-1.0, determinant_a);
     /// ```
     pub fn det<'a>(self: &'a Self) -> T
-        where T: MulAssign + Add<Output = T> + Sub<Output = T> +  Mul<Output = T>  + Div<Output = T> + One + Zero  +
-        Clone + PartialOrd + Neg<Output = T>
     {
         assert_eq!(self.m, self.n);
 
@@ -305,13 +309,57 @@ impl<T> Matrix<T>
 
         (perm) * det
     }
+
+
+    /// Calculates the trace of a matrix
+    ///
+    /// # Arguments
+    ///
+    /// self: square matrix
+    ///
+    /// # Panics
+    ///
+    /// if it is not a square matrix
+    /// # Example
+    ///
+    /// ```
+    /// extern crate mathru;
+    /// use mathru::algebra::linear::{Matrix};
+    ///
+    /// let a: Matrix<f64> = Matrix::new(&2, &2, &vec![1.0, -2.0, 3.0, -7.0]);
+    /// let tr: f64 = a.trace();
+    ///
+    /// assert_eq!(-6.0, tr);
+    /// ```
+    pub fn trace(self: &Self) -> T
+        where T: MulAssign + Add<Output = T> + Sub<Output = T> +  Mul<Output = T>  + Div<Output = T> + One + Zero  +
+        Clone + PartialOrd + Neg<Output = T> + AddAssign
+    {
+        let (m, n): (usize, usize) = self.dim();
+        if m != n
+        {
+            panic!("matrix is not square");
+        }
+
+        let mut sum: T = T::zero();
+        for i in 0..m
+        {
+            sum += self.get(&i, &i).clone();
+        }
+
+        return sum;
+    }
 }
 
 impl<T> Matrix<T>
-    where T:  Add<Output = T> + Sub<Output = T> +  Mul<Output = T>  + Div<Output = T> + One + Zero + Clone +
-    PartialOrd
+    where T: Real
 {
     /// Decomposes the matrix into a upper and a lower matrix
+    ///
+    /// PA = LU
+    ///
+    /// # Arguments
+    ///
     ///
     /// # Example
     ///
@@ -399,8 +447,7 @@ impl<T> Matrix<T>
 }
 
 impl<T> Matrix<T>
-    where T: Neg<Output = T> + Div<T, Output = T>  + Mul<T, Output = T> + Add<T, Output = T> + Power + Clone +
-PartialOrd + One + Zero + Sign + AddAssign + FromPrimitive + Display
+    where T: Real
 {
     /// QR Decomposition with Givens rotations
     ///
@@ -473,12 +520,11 @@ impl<T> Matrix<T>
 
 
 impl<T> Matrix<T>
+    where T: Real
 {
-
     //
     // returns column vector
     pub fn get_column<'a, 'b>(self: &'a Self, i: &'b usize) -> Vector<T>
-        where T: Zero + Copy + One
     {
         let mut v: Vector<T> = Vector::zero(&self.m);
 
@@ -493,7 +539,6 @@ impl<T> Matrix<T>
     //
     // return row vector
     pub fn get_row<'a, 'b>(self: &'a Self, i: &'b usize) -> Vector<T>
-        where T: Zero + One + Copy
     {
         let mut v: Vector<T> = Vector::zero(&self.n);
         v = v.transpose();
@@ -507,7 +552,6 @@ impl<T> Matrix<T>
     }
 
     fn set_column(mut self: Self, row: &Vector<T>, i: &usize) -> Matrix<T>
-        where T: Zero + One + Copy
     {
         for k in 0..self.m
         {
@@ -518,9 +562,12 @@ impl<T> Matrix<T>
 }
 
 impl<T> Matrix<T>
+    where T: Real
 {
+
+    ///
+    ///
     pub fn givens<'a, 'b, 'c, 'd, 'e>(m: &'a usize, i: &'b usize, j: &'c usize, c: &'d T, s: &'e T) -> Self
-        where T: Neg<Output = T> + Zero + One + Clone + PartialOrd
     {
         if *i >= *m || *j >= *m
         {
@@ -528,49 +575,129 @@ impl<T> Matrix<T>
         }
         let mut givens: Matrix<T> = Matrix::one(m);
         *(givens.get_mut(i,i)) = c.clone();
-        *(givens.get_mut(j,j)) = c.clone();
+        *(givens.get_mut(j,j)) = *c;
         *(givens.get_mut(i,j)) = s.clone();
-        *(givens.get_mut(j,i)) = -s.clone();
+        *(givens.get_mut(j,i)) = -*s;
         givens
+    }
+
+    /// function [c,s] = Givens(a,b)
+    /// Givens rotation computation
+    /// Determines cosine-sine pair (c,s) so that [c s;-s c]'*[a;b] = [r;0]
+    /// GVL4: Algorithm 5.1.3
+    fn givens_cosine_sine_pair(a: T,b: T) -> (T, T)
+    {
+        let exponent: T = T::from_f64(2.0).unwrap();
+        let exponent_sqrt: T = T::from_f64(0.5).unwrap();
+
+        let c: T;
+        let s: T;
+
+        if b == T::zero()
+        {
+            c = T::one();
+            s = T::zero();
+        }
+        else
+        {
+            if b.abs() > a.abs()
+            {
+                let tau: T = -a / b;
+                s = T::one() / (T::one() + tau.pow(&exponent)).pow(&exponent_sqrt);
+                c = s * tau;
+            }
+            else
+            {
+                let tau: T = -b / a;
+			    c = T::one() / (T::one() + tau.pow(&exponent)).pow(&exponent_sqrt);
+                s = c * tau;
+            }
+        }
+
+        return (c, s);
     }
 }
 
 
 
 impl<T> Matrix<T>
-    where T: Mul<T, Output = T> + Sub<T, Output = T> + Zero + One + Clone + Copy + Add<T, Output = T>
- + Div<T, Output = T> + Exponential + AddAssign + Display + Power + FromPrimitive
+    where T: Real
 {
-    /// calculates the householder matrix from the householder reflector v
+    /// Returns the householder matrix
     ///
-    ///v:
-//    pub fn householder<'a>(v: &'a Vector<T>, k: usize) -> Self
-//    {
-//        let (v_m, v_n): (usize, usize) = v.dim();
-//
-//        let d: Vector<T> = v.get_slice(k, v_n -1);
-//        let alpha: T = d.p_norm(&T::one());
-//        if d.get(&0) >= 0.0
-//        {
-//            alpha = -alpha;
-//        }
-//
-//        if alpha == 0
-//        {
-//            let h: Matrix<T> = Matrix::one(&v_n);
-//            return h;
-//        }
-//
-//    }
-
-    fn householder_1(v: & Vector<T>) -> Self
+    /// # Arguments
+    ///
+    /// v: Column vector
+    /// k: index 0 <= k < m
+    ///
+    /// # Panics
+    ///
+    /// if index out of bounds
+    pub fn householder(v: & Vector<T>, k: usize) -> Self
     {
-        let (v_m, _v_n): (usize, usize) = v.dim();
+        let (v_m, v_n): (usize, usize) = v.dim();
+        if k >= v_m
+        {
+            panic!("Index k out of bounds");
+        }
+
+        if v_m == 0
+        {
+            panic!();
+        }
+
+        if v_m == 1
+        {
+            return Matrix::one(&v_m);
+        }
+
+        let d: Vector<T> = v.get_slice(k, v_m -1);
+
+        let norm: T = T::from_f64(2.0).unwrap();
+
+        let alpha: T;
+
+        let d_0: T = *d.get(&0);
+
+        if  d_0 >= T::zero()
+        {
+            alpha = -d.p_norm(&norm);
+        }
+        else
+        {
+            alpha = d.p_norm(&norm);
+        }
+
+        if alpha == T::zero()
+        {
+            let h: Matrix<T> = Matrix::one(&v_n);
+            return h;
+        }
+
+        let (d_m, _d_n) = d.dim();
+
+        let mut v: Vector<T> = Vector::zero(&d_m);
+
+        * v.get_mut(&0) = (T::from_f64(0.5).unwrap() * (T::one() - d_0 / alpha)).pow(&T::from_f64(0.5).unwrap());
+        let p: T = -alpha * *v.get(&0);
+
+        if d_m - 1 >= 1
+        {
+            let temp: Vector<T> = d.get_slice(1, d_m - 1).apply(&|e: &T| -> T {*e / (T::from_f64(2.0).unwrap() * p)});
+            v.set_slice(&temp, 1);
+        }
+
+        let mut w: Vector<T> = Vector::zero(&v_m);
+
+        w.set_slice(&v, k);
+
+
         let ident : Matrix<T> = Matrix::one(&v_m);
 
         let two: T = T::from_f64(2.0).unwrap();
-        let v_dyadp: Matrix<T> = v.dyadp(&v);
-        let h : Matrix<T> = ident - v_dyadp.mul_scalar(&two);
+        let w_dyadp: Matrix<T> = w.dyadp(&w);
+        let h : Matrix<T> = ident - w_dyadp.mul_scalar(&two);
+
         h
     }
 }
@@ -647,140 +774,7 @@ impl<T> Matrix<T>
         return (u, b, v)
     }
 
-
-//    pub fn dec_sv<'a>(self: &'a Self) -> (Self, Self, Self)
-//    {
-//        let (mut u, mut b, mut v): (Matrix<T>, Matrix<T>, Matrix<T>) = self.householder_bidiag();
-//
-//        let TOLERANCE: T = T::from_f64(100.0*0.0001).unwrap();
-//        let (m, n): (usize, usize) = b.dim();
-//        let max_iterations: usize = 500 * n * n;
-//
-//        let mut d: Vector<T> = Vector::zero(&n);
-//        let mut e: Vector<T> = Vector::zero(&(n-1));
-//
-//        for i in 0..n
-//        {
-//            *d.get_mut(&i) = *b.get(&i, &i);
-//        }
-//
-//        for i in 0..n-1
-//        {
-//            *e.get_mut(&i) = *b.get(&i, &(i + 1));
-//        }
-//
-//        let THRESH: T = T::from_f64(1.9e-19_f64).unwrap();
-//
-//        let mut i_upper: usize = n - 2;
-//        let mut i_lower: usize = 0;
-//
-//        for k in 0..max
-//        {
-//
-//            for i in (0..i_upper + 1).rev()
-//            {
-//                if e.get(&i).abs() > THRESH
-//                {
-//                    i_upper = i;
-//                    break;
-//                }
-//            }
-//
-//            for i in i_lower..(i_upper + 1)
-//            {
-//                if e.get(&i).abs() > THRESH
-//                {
-//                    i_lower = i;
-//                    break;
-//                }
-//            }
-//
-//            if ((i_upper == i_lower) &&  (e.get(&i_upper).abs() <= THRESH)) || (i_upper < i_lower)
-//            {
-//                println!("sort");
-//                //sort
-//                let singular: Matrix<T> = Matrix::new_diag(&m, &n, &d);
-//                return (u, singular, v);
-//            }
-//
-//            let e_slice: Vector<T> = e.get_slice(i_lower, i_upper).transpose();
-//            let d_slice: Vector<T> = d.get_slice(i_lower, i_upper + 1).transpose();
-//
-//            let u_slice: Matrix<T> = u.get_slice(i_lower, i_upper + 1, i_lower, i_upper + 1);
-//            let v_slice: Matrix<T> = v.get_slice(i_lower, i_upper + 1, i_lower, i_upper + 1);
-//
-//            let (u_slice_updated, d_slice_updated, e_slice_updated, v_slice_updated): (Matrix<T>, Vector<T>,
-//            Vector<T>, Matrix<T>) =
-//            Matrix::vsweep(u_slice,
-//            d_slice,
-//            e_slice,
-//             v_slice);
-//            u = u.set_slice(&u_slice_updated, i_lower, i_lower);
-//            v = v.set_slice( &v_slice_updated, i_lower, i_lower);
-//
-//            d.set_slice(&d_slice_updated.transpose(), i_lower);
-//            e.set_slice(&e_slice_updated.transpose(), i_lower);
-//
-//        }
-//
-//        let singular: Matrix<T> = Matrix::new_diag(&m, &n, &d);
-//        return (u, singular, v)
-//    }
-//
-//    pub fn vsweep(mut u: Matrix<T>, mut d: Vector<T>, mut e: Vector<T>, mut v: Matrix<T>) -> (Matrix<T>, Vector<T>,
-//    Vector<T>, Matrix<T>)
-//    {
-//        let (m, n): (usize, usize) = d.dim();
-//
-//        let mut c_old: T = T::one();
-//        let mut s_old: T = T::one();
-//        let (mut c, mut s, mut r): (T, T, T) = (T::one(), T::one(), T::one());
-//
-//        //println!("m {}, n{}", m, n);
-//
-//
-//        for i in 0..n-1
-//        {
-//            let mut q : Matrix<T> = Matrix::one(&n);
-//
-//            let (c_n, s_n, r_n) = Matrix::rot(c * *d.get(&i), *e.get(&i));
-//
-//            *q.get_mut(&i, &i) = c_n;
-//            *q.get_mut(&i, &(i +1)) = s_n;
-//            *q.get_mut(&(i + 1), &i) = -s_n;
-//            *q.get_mut(&(i + 1), &(i + 1)) = c_n;
-//
-//		    u = &q * &u;
-//
-//            c = c_n;
-//            s = s_n;
-//            r = r_n;
-//            if i != 0
-//            {
-//                *e.get_mut(&(i-1)) = s_old * r;
-//            }
-//            let (c_old_n, s_old_n, r_n) = Matrix::rot(c_old * r, *d.get(&(i + 1)) * s);
-//
-//            *q.get_mut(&i, &i) = c_old_n;
-//            *q.get_mut(&i, &(i +1)) = s_old_n;
-//            *q.get_mut(&(i + 1), &i) = -s_old_n;
-//            *q.get_mut(&(i + 1), &(i + 1)) = c_old_n;
-//
-//            v = &v * &q.transpose();
-//
-//            c_old = c_old_n;
-//            s_old = s_old_n;
-//            *d.get_mut(&i) = r_n;
-//        }
-//
-//        let h: T = *d.get(&(n - 1)) * c;
-//        *e.get_mut(&(n-2)) = h * s;
-//        *d.get_mut(&(n-1)) = h * c;
-//
-//        return (u, d, e, v);
-//    }
-
-    pub fn msweep(mut u: Matrix<T>, mut b: Matrix<T>, mut v: Matrix<T>) -> (Matrix<T>, Matrix<T>, Matrix<T>)
+    fn msweep(mut u: Matrix<T>, mut b: Matrix<T>, mut v: Matrix<T>) -> (Matrix<T>, Matrix<T>, Matrix<T>)
     {
         let (_m, n): (usize, usize) = b.dim();
 
@@ -850,22 +844,6 @@ impl<T> Matrix<T>
     }
 
 
-    pub fn zero_diagonal(self: &mut Self) -> bool
-    {
-        let (_m, n): (usize, usize) = self.dim();
-        let mut diagonal_zero: bool = false;
-
-        for i in 0..n
-        {
-            if *self.get(&i, &i) == T::zero()
-            {
-                diagonal_zero = true;
-                *self.get_mut(&i, &(i + 1)) = T::zero()
-            }
-        }
-
-        return diagonal_zero
-    }
 
     ///
     /// self is an m times n matrix with m >= n
@@ -895,8 +873,7 @@ impl<T> Matrix<T>
             let u_x: Vector<T> = a_i.clone().get_column(&i);
             let u_slice: Vector<T> = u_x.get_slice(i, m - 1);
 
-            let u_reflector : Vector<T> = Matrix::reflector(&u_slice);
-            let u_i : Matrix<T> = Matrix::householder_1(&u_reflector);
+            let u_i: Matrix<T> = Matrix::householder(&u_slice, 0);
 
             let a_i_slice = &u_i * &a_i.clone().get_slice(i, m - 1, i, n - 1);
             a_i = a_i.set_slice(&a_i_slice, i, i);
@@ -916,8 +893,8 @@ impl<T> Matrix<T>
                 let v_x_trans: Vector<T> = v_x.transpose();
                 let v_x_trans_slice: Vector<T> = v_x_trans.get_slice(i+1, n - 1);
 
-                let v_reflector : Vector<T> = Matrix::reflector(&v_x_trans_slice);
-                let v_i : Matrix<T> = Matrix::householder_1(&v_reflector);
+                let v_i: Matrix<T> = Matrix::householder(&v_x_trans_slice, 0);
+
                 let mut v_ni: Matrix<T> = Matrix::one(&n);
                 v_ni = v_ni.set_slice(&v_i, i+1, i+1);
                 //let a_i_slice = &a_i.clone().get_slice(i+1, m - 1, i+1, n - 1) * &v_i;
@@ -943,25 +920,6 @@ impl<T> Matrix<T>
         (u, a_i, v)
 
     }
-
-    /// norm(x) = 1
-    ///
-    pub fn reflector<'a>(x: &Vector<T>) -> Vector<T>
-    {
-        let two = T::one() + T::one();
-        let mut x_temp: Vector<T> = x.clone();
-
-        let norm_x: T = x.p_norm(&two);
-
-        *x_temp.get_mut(&0) += x.get(&0).sgn() * norm_x;
-
-        let f: T = T::one() / x_temp.p_norm(&two);
-        x_temp = x_temp.mul_scalar(&f);
-
-        x_temp
-    }
-
-
 
 }
 //    pub fn golub_kahan_step<'a>(self: &'a Self) -> (Self, Self, Self)
@@ -1655,11 +1613,8 @@ impl<T> Matrix<T>
 }
 
 impl<T> Matrix<T>
-     where T:  Add<Output = T> + Sub<Output = T> +  Mul<Output = T>  + Div<Output = T> + One + Zero + Clone +
-    PartialOrd + AddAssign + Copy
+     where T: Real
 {
-
-
     /// Inverse Matrix
     ///
     /// # Example
@@ -1669,16 +1624,16 @@ impl<T> Matrix<T>
     /// use mathru::algebra::linear::{Matrix};
     ///
     /// let a: Matrix<f64> = Matrix::new(&2, &2, &vec![1.0, 0.0, 3.0, -7.0]);
-    /// let b_inv: Matrix<f64> = a.inv();
+    /// let b_inv: Matrix<f64> = a.inv().unwrap();
     ///
     /// ```
-    pub fn inv<'a>(self: &'a Self) -> Matrix<T>
+    pub fn inv<'a>(self: &'a Self) -> Result<Matrix<T>, &'static str>
     {
         let (mut l, mut u, p) : (Matrix<T>, Matrix<T>, Matrix<T>) = self.dec_lu();
 
         l.subst_forward();
         u.subst_backward();
-        return &(&u * &l) * &p;
+        return Ok(&(&u * &l) * &p);
     }
 
      /*
@@ -1755,6 +1710,155 @@ impl<T> Matrix<T>
 impl<T> Matrix<T>
      where T: Real
 {
+    /// Computes the eigenvalues of a real matrix
+    ///
+    ///
+    /// # Arguments
+    ///
+    ///
+    ///
+    /// # Return
+    ///
+    /// Vector with unsorted eigenvalues
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// extern crate mathru;
+    /// use mathru::algebra::linear::{Vector, Matrix};
+    ///
+    /// let a: Matrix<f64> = Matrix::new(&3, &3, &vec![1.0, 5.0, 3.0, 1.0, 0.0, -7.0, 3.0, 8.0, 9.0]);
+    /// let eig_ref = Vector::new_column(&3, &vec![3.9999999999999996, -2.0, -1.9999999999999982]);
+    /// let eig: Vector<f64> = a.eigenvalue();
+    ///
+    /// assert_eq!(eig_ref, eig);
+    /// ```
+    pub fn eigenvalue(self: &Self) -> Vector<T>
+    {
+        let (m, _n) : (usize, usize) = self.dim();
+
+        let (_q, h): (Matrix<T>, Matrix<T>) = self.dec_hessenberg();
+
+        let (u, t): (Matrix<T>, Matrix<T>) = h.clone().francis();
+
+        let mut eig: Vector<T> = Vector::zero(&m);
+
+        for i in 0..m
+        {
+            *eig.get_mut(&i) = t.get(&i, &i).clone();
+        }
+
+        return eig;
+    }
+
+
+
+    fn francis(mut self: Self) -> (Matrix<T>, Matrix<T>)
+    {
+        let epsilon: T = T::epsilon();
+
+        let (m, n): (usize, usize) = self.dim();
+
+        let mut u: Matrix<T> = Matrix::one(&m);
+
+        let mut p: usize = n;
+        let mut q: usize;
+
+        while p > 2
+        {
+            q = p - 1;
+
+            // Bulge generating
+            let s: T = *self.get(&(q - 1),&(q -1)) + *self.get(&(p -1),&(p -1));
+            let t: T = *self.get(&(q - 1),&(q -1)) * *self.get(&(p - 1),&(p - 1)) - *self.get(&(q -1),&(p -1)) * *self
+            .get(&(p - 1),&(q - 1));
+
+            // compute first 3 elements of first column of M
+            let mut x: T = self.get(&0,&0).pow(&T::from_f64(2.0).unwrap()) + *self.get(&0,&1) * *self.get(&1,&0) - s *
+            *self.get(&0,&0) + t;
+            let mut y: T = *self.get(&1,&0) * (*self.get(&0,&0) + *self.get(&1, &1) - s);
+            let mut z: T = *self.get(&1,&0) * *self.get(&2,&1);
+
+            for k in 0..(p - 2)
+            {
+                let b: Vector<T> = Vector::new_column(&3, &vec![x, y, z]);
+                let mut h: Matrix<T> = Matrix::householder(&b, 0);
+
+                //Determine the Householder reflector P with P [x; y; z] = αe1 ;
+                {
+                    let r: usize = k.max(1);
+
+                    let temp = &h * &self.get_slice(k, k + 2,r - 1, n - 1);
+                    self = self.set_slice(&temp, k, r - 1);
+
+                }
+
+                {
+                    let h_trans: Matrix<T> = h.transpose_inplace();
+                    let r: usize = p.min(k + 4);
+                    let temp: Matrix<T> = &self.get_slice(0, r - 1, k, k + 2) * &h_trans;
+                    self = self.set_slice(&temp, 0, k);
+
+                    let temp1: Matrix<T> = &u.get_slice(0, n-1, k, k + 2) * &h_trans;
+
+                    //println!("h_trans: {}", h_trans);
+                    u = u.set_slice(&temp1, 0, k);
+                }
+
+                x  = *self.get(&(k + 1), &k);
+                y = *self.get(&(k + 2), &k);
+                if k < (p - 3)
+                {
+                    z = *self.get(&(k + 3), &k);
+                }
+            }
+
+            // Determine the Givens rotation P with P [x; y]T = αe1 ;
+            let (c, s): (T, T) = Matrix::givens_cosine_sine_pair(x, y);
+            let mut g: Matrix<T> = Matrix::givens(&2, &0, &1, &c, &s);
+
+            {
+                let temp: Matrix<T> = &g * &self.get_slice(q - 1, p - 1, p - 3, n - 1);
+                self = self.set_slice(&temp, q - 1, p - 3);
+            }
+
+            {
+                let g_trans: Matrix<T> = g.transpose_inplace();
+                let temp: Matrix<T> = &self.get_slice(0, p - 1, p - 2, p - 1) * &g_trans;
+                self = self.set_slice(&temp, 0, p - 2);
+
+                let u_slice = &self.get_slice(0, n - 1, p - 2, p - 1) * & g_trans;
+                u = u.set_slice(&u_slice, 0, p - 2);
+            }
+
+            // check for convergence
+            let m: T = self.get(&(q - 1),&(q - 1)).abs();
+            let n: T = self.get(&(p - 1),&(p - 1)).abs();
+            if self.get(&(p - 1) ,&(q - 1)).abs() < epsilon.clone() * (m + n)
+            {
+                *self.get_mut(&(p - 1), &(q - 1)) = T::zero();
+                p = p - 1;
+            }
+            else
+            {
+                let k: T = self.get(&(q - 2),&(q - 2)).abs();
+                let l: T = self.get(&(q - 1),&(q - 1)).abs();
+                if self.get(&(p - 2), &(q - 2)).abs() < epsilon.clone() * (k + l)
+                {
+                    *self.get_mut(&(p - 2), &(q - 2)) = T::zero();
+                    p = p - 2;
+                }
+            }
+            p = p -1;
+        }
+
+        return (u, self);
+    }
+}
+
+impl<T> Matrix<T>
+     where T: Real
+{
     /// Decomposes self in to the M
     ///
     /// q * h * q^T = self
@@ -1787,28 +1891,36 @@ impl<T> Matrix<T>
         let mut q: Matrix<T> = Matrix::one(&m);
         let mut h: Matrix<T> = self.clone();
 
-        for i in 0..n-1
+//        for i in 0..n-1
+//        {
+//            // eliminate non-zeros below the lower subdiagonal
+//            let u_x: Vector<T> = h.clone().get_column(&i);
+//            let u_slice: Vector<T> = u_x.get_slice(i+1, m - 1);
+//
+//            let u_i: Matrix<T> = Matrix::householder(&u_slice, 0);
+//
+//            let h_slice = &u_i * &h.clone().get_slice(i+1, m - 1, i, n - 1);
+//            h = h.set_slice(&h_slice, i+1, i);
+//
+//            let h_trans =  h.clone().get_slice(i, m - 1, i+1, n - 1);
+//
+//            let h_slice_r = &h_trans * &u_i;
+//            h = h.set_slice(&h_slice_r, i, i+1);
+//
+//            let mut q_mi: Matrix<T> = Matrix::one(&m);
+//            q_mi = q_mi.set_slice(&u_i, i+1, i+1);
+//
+//            q = &q_mi * &q;
+//
+//        }
+        for k in 1..m
         {
-            // eliminate non-zeros below the lower subdiagonal
-            let u_x: Vector<T> = h.clone().get_column(&i);
-            let u_slice: Vector<T> = u_x.get_slice(i+1, m - 1);
+            let v: Vector<T> = h.get_column(&(k-1));
 
-            let u_reflector : Vector<T> = Matrix::reflector(&u_slice);
-            let u_i : Matrix<T> = Matrix::householder_1(&u_reflector);
-
-            let h_slice = &u_i * &h.clone().get_slice(i+1, m - 1, i, n - 1);
-            h = h.set_slice(&h_slice, i+1, i);
-
-            let h_trans =  h.clone().get_slice(i, m - 1, i+1, n - 1);
-
-            let h_slice_r = &h_trans * &u_i;
-            h = h.set_slice(&h_slice_r, i, i+1);
-
-            let mut q_mi: Matrix<T> = Matrix::one(&m);
-            q_mi = q_mi.set_slice(&u_i, i+1, i+1);
-
-            q = &q_mi * &q;
-
+            let househ: Matrix<T> = Matrix::householder(&v, k);
+            h = &househ * &h;
+            q = &househ * &q;
+            h = &h.clone() * &househ.transpose_inplace();
         }
 
         return (q.transpose_inplace(), h);
