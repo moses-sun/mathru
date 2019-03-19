@@ -34,20 +34,18 @@
 //! assert_eq!(l_ref, l);
 //!```
 
+#[macro_use]
+extern crate serde;
 
+#[macro_use]
 pub mod algebra;
-
-
 pub mod elementary;
-
-/// Numbers
 #[macro_use]
 pub mod num;
-
-
 pub mod special;
-
-
 pub mod stats;
+
+//pub mod plot;
+
 
 

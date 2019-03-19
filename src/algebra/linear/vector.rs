@@ -11,7 +11,51 @@ use algebra::abstr::cast::FromPrimitive;
 use std::fmt::Display;
 use std::fmt;
 
-#[derive(Debug, Clone)]
+use serde::{Serialize, Deserialize};
+
+/// Macro to construct vectores
+///
+/// ```
+/// #[macro_use]
+/// extern crate mathru;
+/// fn main()
+/// {
+///     use mathru::algebra::linear::Vector;
+///
+///     // Construct a 2x3 matrix of f32
+///     let mat: Vector<f64> = vector![1.0; 2.0; 3.0];
+/// }
+/// ```
+#[macro_export]
+macro_rules! vector
+{
+    ($( $x: expr ),*) =>
+    {
+        {
+            let data = [ $($x),* ];
+            let rows = data.len();
+            let data_array: Vec<_> = data.into_iter()
+                .cloned()
+                .collect();
+            Vector::new_row(&rows, &data_array)
+        }
+    };
+
+    ($( $x: expr );*) =>
+    {
+        {
+            let data = [ $($x),* ];
+            let cols = data.len();
+            let data_vec: Vec<_> = data.into_iter()
+                .cloned()
+                .collect();
+            Vector::new_column(&cols, &data_vec)
+        }
+    };
+}
+
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Vector<T>
 {
     data: Matrix<T>

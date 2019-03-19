@@ -1,3 +1,4 @@
+#[macro_use]
 extern crate mathru;
 
 #[cfg(test)]
@@ -7,6 +8,37 @@ mod vector_test
     use mathru::num::{Real};
     use mathru::algebra::abstr::{Zero, One};
     use mathru::elementary::Power;
+
+    #[test]
+    fn macro_vector_column()
+    {
+        let vec: Vector<f32> = vector![1.0; 2.0; 3.0];
+
+        let vec_ref: Vector<f32> = Vector::new_column(&3, &vec![1.0, 2.0, 3.0]);
+
+        assert_eq!(vec_ref, vec);
+    }
+
+    #[test]
+    fn macro_vector_row()
+    {
+        let vec: Vector<f32> = vector![1.0, 2.0, 3.0];
+
+        let vec_ref: Vector<f32> = Vector::new_row(&3, &vec![1.0, 2.0, 3.0]);
+
+        assert_eq!(vec_ref, vec);
+    }
+
+    #[test]
+    fn serde_0()
+    {
+        let mat:Vector<f64> = vector![1.0; 2.0; 3.0];
+        let serialized = serde_json::to_string(&mat).unwrap();
+
+        let mat_s: Vector<f64> = serde_json::from_str(&serialized).unwrap();
+
+        assert_eq!(mat_s, mat);
+    }
 
     #[test]
     fn zero()

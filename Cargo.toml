@@ -13,3 +13,19 @@ repository = "https://gitlab.com/matthiaseiholzer/mathru"
 
 [dependencies]
 rand = "0.6"
+#svg = "0.5.12"
+#failure = "0.1.5"
+
+
+[dependencies.serde]
+version =  "1.0"
+features = ["derive"]
+
+#[dependencies.resvg]
+#version = "0.6.1"
+#default-features = false # do not include the default features, and optionally
+                         # cherry-pick individual features
+#features = ["qt-backend"]
+
+[dev-dependencies]
+serde_json = "1.0"

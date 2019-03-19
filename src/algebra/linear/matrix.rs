@@ -8,8 +8,43 @@ use algebra::abstr::Real;
 use std::fmt::Display;
 use std::fmt;
 
-/// A matrix is described here
-#[derive(Debug, Clone)]
+//use serde::ser::{Serialize};
+///use serde::de::{Deserialize};
+
+
+/// Macro to construct matricecs
+///
+/// ```
+/// #[macro_use]
+/// extern crate mathru;
+/// fn main()
+/// {
+///     use mathru::algebra::linear::Matrix;
+///
+///     // Construct a 2x3 matrix of f32
+///     let mat: Matrix<f32> = matrix![1.0, 2.0, 3.0; 4.0, 5.0, 6.0];
+/// }
+/// ```
+#[macro_export]
+macro_rules! matrix
+{
+    ($( $( $x: expr ),*);*) =>
+    {
+        {
+            let data_nested_array = [ $( [ $($x),* ] ),* ];
+            let rows = data_nested_array.len();
+            let cols = data_nested_array[0].len();
+            let data_array: Vec<_> = data_nested_array.into_iter()
+                .flat_map(|row| row.into_iter())
+                .cloned()
+                .collect();
+            Matrix::new(&rows, &cols, &data_array)
+        }
+    }
+}
+
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Matrix<T>
 {
     /// Num of rows which the matrix has
@@ -22,11 +57,22 @@ pub struct Matrix<T>
 
 impl<T> Matrix<T>
 {
+    /// Applies the function f on every element in the matrix
+    ///
     pub fn apply(mut self: Matrix<T>, f: &Fn(&T) -> T) -> Matrix<T>
     {
         self.data = self.data.iter().map(f).collect();
         self
     }
+
+    //
+//    pub fn apply_indices(mut self: Matrix<T>, row: usize, column: usize, f: &Fn(&T) -> T) -> Matrix<T>
+//    {
+//
+//        self.data = self.data.iter().map(f()
+//
+//        self
+//    }
 }
 
 impl<T> Matrix<T>

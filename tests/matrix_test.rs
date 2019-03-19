@@ -1,4 +1,6 @@
+#[macro_use]
 extern crate mathru;
+extern crate serde;
 
 #[cfg(test)]
 mod matrix_test
@@ -8,6 +10,27 @@ mod matrix_test
     use mathru::num::{Real};
     use mathru::elementary::{Trigonometry, Power};
 
+    #[test]
+    fn macro_0()
+    {
+        //Construct a 2x3 matrix of f32
+        let mat: Matrix<f32> = matrix![1.0, 2.0, 3.0; 4.0, 5.0, 6.0];
+
+        let mat_ref: Matrix<f32> = Matrix::new(&2, &3, &vec![1.0, 2.0, 3.0, 4.0, 5.0, 6.0]);
+
+        assert_eq!(mat, mat_ref);
+    }
+
+    #[test]
+    fn serde_0()
+    {
+        let mat:Matrix<f64> = matrix![1.0, 2.0; 3.0, 4.0];
+        let serialized = serde_json::to_string(&mat).unwrap();
+
+        let mat_s: Matrix<f64> = serde_json::from_str(&serialized).unwrap();
+
+        assert_eq!(mat_s, mat);
+    }
 
     #[test]
     fn zeros()
