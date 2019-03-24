@@ -387,21 +387,7 @@ impl<T> Vector<T>
     }
 }
 
-////impl<T> Semiring<T> for Vector<T>
-////    where T: Semiring<T>
-////{
-////    fn pow<'a, 'b>(self: &'a Self, p: &'b Self) -> Self
-////    {
-////        unimplemented!()
-////    }
-////
-////    fn get_primitive<'a>(self: &'a Self) -> T
-////    {
-////        unimplemented!()
-////    }
-////}
-////
-////
+
 impl<T> Vector<T>
     where T: Zero + Clone + Copy
 {
@@ -718,7 +704,7 @@ impl <'a, 'b, T> Sub<&'b Vector<T>> for &'a Vector<T>
 impl<T> Vector<T>
     where T: Mul<T, Output = T> + Zero + Clone
 {
-
+    #[deprecated(since = "0.1.1")]
     /// Multiplies the vector with a scalar
     ///
     /// # Example
@@ -756,27 +742,70 @@ impl<T> Vector<T>
 
 
 
-//impl<T>  Mul<T> for Vector<T>
-//  where T: Field
-//{/
-//    type Output = Vector<T>;
-//
-//    fn mul(self: Self, rhs: T) -> Self::Output
-//    {
-//        &self * &rhs
-//    }
-//}
+impl<T>  Mul<T> for Vector<T>
+  where T: Copy + Zero + Mul<T, Output = T> + Add<T, Output = T>
+{
+    type Output = Vector<T>;
 
-//impl<'a, 'b, T> Mul<&'b T> for &'a Vector<T>
-//  where T: Field
-//{
-//    type Output = Vector<T>;
-//
-//    fn mul(self: Self, rhs: &'b T) -> Self::Output
-//    {
-//        Vector
-//        {
-//            data: self.data * (*rhs)
-//        }
-//    }
-//}
+    fn mul(self: Self, rhs: T) -> Self::Output
+    {
+        &self * &rhs
+    }
+}
+
+impl<'a, 'b, T> Mul<&'b T> for &'a Vector<T>
+    where T: Copy + Zero + Mul<T, Output = T> + Add<T, Output = T>
+{
+    type Output = Vector<T>;
+
+    fn mul(self: Self, rhs: &'b T) -> Self::Output
+    {
+        Vector
+        {
+            data: &self.data * (rhs)
+        }
+    }
+}
+
+
+impl<T>  Mul<Matrix<T>> for Vector<T>
+  where T: Copy + Zero + Mul<T, Output = T> + Add<T, Output = T> + One + Display
+{
+    type Output = Vector<T>;
+
+    fn mul(self: Self, rhs: Matrix<T>) -> Self::Output
+    {
+        &self * &rhs
+    }
+}
+
+impl<'a, 'b, T> Mul<&'b Matrix<T>> for &'a Vector<T>
+    where T: Copy + Zero + Mul<T, Output = T> + Add<T, Output = T> + One + Display
+{
+    type Output = Vector<T>;
+
+    fn mul(self: Self, rhs: &'b Matrix<T>) -> Self::Output
+    {
+        let (rhs_m, rhs_n): (usize, usize) = rhs.dim();
+        let (_m, n): (usize, usize) = self.dim();
+
+        if n != rhs_m
+        {
+            panic!("Vector and matrix dimension do not match");
+        }
+
+        let mut res: Vec<T> = Vec::with_capacity(n);
+
+        for i in 0..n
+        {
+            let mut sum: T = T::zero();
+            for k in 0..n
+            {
+                sum = sum + *self.data.get(&0, &k) * *rhs.get(&k, &i);
+            }
+            res.push(sum.clone());
+        }
+
+        Vector::new_row(&n, &res)
+    }
+}

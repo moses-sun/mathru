@@ -232,6 +232,29 @@ mod matrix_test
     }
 
     #[test]
+    fn scalar_mul()
+    {
+        let m = matrix![1.0, 2.0; 3.0, 4.0];
+        let prod_ref = matrix![-0.5, -1.0; -1.5, -2.0];
+
+        let res = m * -0.5;
+
+        assert_eq!(prod_ref, res);
+    }
+
+    #[test]
+    fn vector_mul()
+    {
+        let m = matrix![1.0, 2.0; 3.0, 4.0];
+        let v = vector![2.0; 4.0];
+        let prod_ref = vector![10.0; 22.0];
+
+        let res = m * v;
+
+        assert_eq!(prod_ref, res);
+    }
+
+    #[test]
     fn transpose()
     {
         let uut: Matrix<Real<f32>> = Matrix::new(&4, &2, &vec![Real::one(), Real::zero(), Real::new(3.0), Real::zero(), Real::one(), Real::new(-7.0), Real::new(0.5), Real::new(0.25)]);

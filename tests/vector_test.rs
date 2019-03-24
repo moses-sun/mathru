@@ -249,4 +249,27 @@ mod vector_test
         let p_norm : Real<f32> =  v.p_norm(&p);
         assert_eq!(p_norm_ref, p_norm);
     }
+
+    #[test]
+    fn scalar_mul()
+    {
+        let v = vector![1.0; 2.0; 3.0; 4.0];
+        let prod_ref = vector![-0.5; -1.0; -1.5; -2.0];
+
+        let res = v * -0.5;
+
+        //assert_eq!(prod_ref, res);
+    }
+
+    #[test]
+    fn vector_mul()
+    {
+        let m = matrix![1.0, 2.0; 3.0, 4.0];
+        let v = vector![1.0, 2.0];
+        let prod_ref = vector![7.0, 10.0];
+
+        let res = v * m;
+
+        assert_eq!(prod_ref, res);
+    }
 }

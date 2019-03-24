@@ -742,7 +742,7 @@ impl<T> Matrix<T>
 
         let two: T = T::from_f64(2.0).unwrap();
         let w_dyadp: Matrix<T> = w.dyadp(&w);
-        let h : Matrix<T> = ident - w_dyadp.mul_scalar(&two);
+        let h : Matrix<T> = &ident - &(&w_dyadp * &two);
 
         h
     }
@@ -799,7 +799,7 @@ impl<T> Matrix<T>
             {
                 *b.get_mut(&l, &l) = - *b.get(&l, &l);
                 let mut column_l: Vector<T> = u.get_column(&l);
-                column_l = column_l.mul_scalar(&-T::one());
+                column_l = &column_l * &-T::one();
                 u = u.set_column(&column_l, &l);
             }
         }
@@ -1293,20 +1293,7 @@ impl<T> Matrix<T>
 impl<T> Matrix<T>
     where T: Mul<T, Output = T> + Zero + Clone
 {
-    /// Multiplies a matrix with a scalar
-    ///
-    /// # Example
-    ///
-    /// ```
-    /// extern crate mathru;
-    /// use mathru::algebra::linear::{Matrix};
-    ///
-    /// let a: Matrix<f64> = Matrix::new(&2, &2, &vec![1.0, 0.0, 3.0, -7.0]);
-    /// let f: f64 = 7.0;
-    /// let res_ref: Matrix<f64> = Matrix::new(&2, &2, &vec![7.0, 0.0, 21.0, -49.0]);
-    ///
-    /// assert_eq!(res_ref, a.mul_scalar(&f));
-    /// ```
+    #[deprecated(since = "0.1.1")]
     pub fn mul_scalar<'a, 'b>(self: &'a Self, rhs: &'b T) -> Matrix<T>
     {
         let (rows, cols): (usize, usize) = self.dim();
@@ -1324,8 +1311,93 @@ impl<T> Matrix<T>
     }
 }
 
+//Multiplies matrix by scalar
+impl<T> Mul<T> for Matrix<T>
+    where T: Copy + Zero + Mul<T, Output = T> + Add<T, Output = T>
+{
+    type Output = Matrix<T>;
 
-impl <T> Mul for Matrix<T>
+    /// Multiplies a matrix with a scalar
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// extern crate mathru;
+    /// use mathru::algebra::linear::{Matrix};
+    ///
+    /// let a: Matrix<f64> = Matrix::new(&2, &2, &vec![1.0, 0.0, 3.0, -7.0]);
+    /// let f: f64 = 7.0;
+    /// let res_ref: Matrix<f64> = Matrix::new(&2, &2, &vec![7.0, 0.0, 21.0, -49.0]);
+    ///
+    /// assert_eq!(res_ref, a * f);
+    /// ```
+    fn mul(self, m: T) -> Matrix<T>
+    {
+        (&self).mul(&m)
+    }
+}
+
+
+
+// Multiplies matrix by scalar
+impl<'a, 'b, T> Mul<&'b T> for &'a Matrix<T>
+    where T: Copy + Zero + Mul<T, Output = T> + Add<T, Output = T>
+{
+    type Output = Matrix<T>;
+
+    fn mul(self, m: &'b T) -> Matrix<T>
+    {
+        (self.clone().apply(&|&x| x * *m))
+    }
+}
+
+
+// Multiplies matrix by vector.
+impl<T> Mul<Vector<T>> for Matrix<T>
+    where T: Copy + Zero + Mul<T, Output = T> + Add<T, Output = T> + One + AddAssign
+{
+    type Output = Vector<T>;
+
+    fn mul(self, m: Vector<T>) -> Vector<T>
+    {
+        (&self) * (&m)
+    }
+}
+
+/// Multiplies matrix by vector.
+impl<'a, 'b, T> Mul<&'b Vector<T>> for &'a Matrix<T>
+    where T: Copy + Zero + Mul<T, Output = T> + Add<T, Output = T> + One + AddAssign
+{
+    type Output = Vector<T>;
+
+    fn mul(self, v: &'b Vector<T>) -> Vector<T>
+    {
+        let (self_m, self_n): (usize, usize) = self.dim();
+        let (v_m, v_n): (usize, usize) = v.dim();
+
+        if self_n != v_m
+        {
+            panic!("Matrix and Vector dimension do not match");
+        }
+
+        let mut prod_data = Vec::with_capacity(self.m);
+
+        for i in 0..self.m
+        {
+            let mut row_column_product: T = T::zero();
+            for k in 0..self.n
+            {
+                row_column_product += self.data[i * self.n + k] * *v.get( &k);
+            }
+            prod_data.push(row_column_product);
+        }
+
+        Vector::new_column(&self.m, &prod_data)
+    }
+}
+
+
+impl <T> Mul<Matrix<T>> for Matrix<T>
     where T: AddAssign + Zero + Mul<T, Output = T> + Clone
 {
     type Output = Matrix<T>;
@@ -1633,6 +1705,16 @@ impl<T> Matrix<T>
             data: data,
         }
     }
+
+    pub fn ones(m: usize, n: usize) -> Self
+    {
+        Matrix
+        {
+            m: m,
+            n: n,
+            data: vec![T::one(); m * n]
+        }
+    }
 }
 
 
@@ -1847,7 +1929,6 @@ impl<T> Matrix<T>
 
                     let temp1: Matrix<T> = &u.get_slice(0, n-1, k, k + 2) * &h_trans;
 
-                    //println!("h_trans: {}", h_trans);
                     u = u.set_slice(&temp1, 0, k);
                 }
 
@@ -1937,28 +2018,6 @@ impl<T> Matrix<T>
         let mut q: Matrix<T> = Matrix::one(&m);
         let mut h: Matrix<T> = self.clone();
 
-//        for i in 0..n-1
-//        {
-//            // eliminate non-zeros below the lower subdiagonal
-//            let u_x: Vector<T> = h.clone().get_column(&i);
-//            let u_slice: Vector<T> = u_x.get_slice(i+1, m - 1);
-//
-//            let u_i: Matrix<T> = Matrix::householder(&u_slice, 0);
-//
-//            let h_slice = &u_i * &h.clone().get_slice(i+1, m - 1, i, n - 1);
-//            h = h.set_slice(&h_slice, i+1, i);
-//
-//            let h_trans =  h.clone().get_slice(i, m - 1, i+1, n - 1);
-//
-//            let h_slice_r = &h_trans * &u_i;
-//            h = h.set_slice(&h_slice_r, i, i+1);
-//
-//            let mut q_mi: Matrix<T> = Matrix::one(&m);
-//            q_mi = q_mi.set_slice(&u_i, i+1, i+1);
-//
-//            q = &q_mi * &q;
-//
-//        }
         for k in 1..m
         {
             let v: Vector<T> = h.get_column(&(k-1));
