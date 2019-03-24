@@ -45,8 +45,6 @@ pub mod num;
 pub mod special;
 pub mod stats;
 
-pub mod optim;
-//pub mod plot;
 
 pub mod machlearn;
 
