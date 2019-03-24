@@ -258,7 +258,7 @@ mod vector_test
 
         let res = v * -0.5;
 
-        //assert_eq!(prod_ref, res);
+        assert_eq!(prod_ref, res);
     }
 
     #[test]
