@@ -1372,8 +1372,8 @@ impl<'a, 'b, T> Mul<&'b Vector<T>> for &'a Matrix<T>
 
     fn mul(self, v: &'b Vector<T>) -> Vector<T>
     {
-        let (self_m, self_n): (usize, usize) = self.dim();
-        let (v_m, v_n): (usize, usize) = v.dim();
+        let (_self_m, self_n): (usize, usize) = self.dim();
+        let (v_m, _v_n): (usize, usize) = v.dim();
 
         if self_n != v_m
         {

@@ -786,7 +786,7 @@ impl<'a, 'b, T> Mul<&'b Matrix<T>> for &'a Vector<T>
 
     fn mul(self: Self, rhs: &'b Matrix<T>) -> Self::Output
     {
-        let (rhs_m, rhs_n): (usize, usize) = rhs.dim();
+        let (rhs_m, _rhs_n): (usize, usize) = rhs.dim();
         let (_m, n): (usize, usize) = self.dim();
 
         if n != rhs_m
