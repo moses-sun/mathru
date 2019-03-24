@@ -74,7 +74,7 @@ Add this to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-mathru = "0.1.0"
+mathru = "0.1.1"
 ```
 
 And then import the library using:
