@@ -14,7 +14,7 @@ repository = "https://gitlab.com/matthiaseiholzer/mathru"
 [dependencies]
 rand = "0.6"
 blas = "0.19"
-#openblas-src = "0.5"
+openblas-src = "0.5"
 lapack = { version = "0.16"}
 #lapack-src = { version = "0.2", features = ["openblas"] }
 
