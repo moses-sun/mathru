@@ -1,6 +1,6 @@
 [package]
 name = "mathru"
-version = "0.1.1"
+version = "0.1.2"
 description = "Simple mathematics library written in Rust"
 authors = ["Matthias Eiholzer <matthias.eiholzer@gmail.com>"]
 exclude = ["literature/*", "tests/*", "backup/*", ".gitignore"]
@@ -13,19 +13,22 @@ repository = "https://gitlab.com/matthiaseiholzer/mathru"
 
 [dependencies]
 rand = "0.6"
-#svg = "0.5.12"
-#failure = "0.1.5"
-
+blas = "0.19"
+#openblas-src = "0.5"
+lapack = { version = "0.16"}
+#lapack-src = { version = "0.2", features = ["openblas"] }
 
 [dependencies.serde]
 version =  "1.0"
 features = ["derive"]
 
-#[dependencies.resvg]
-#version = "0.6.1"
-#default-features = false # do not include the default features, and optionally
-                         # cherry-pick individual features
-#features = ["qt-backend"]
 
 [dev-dependencies]
 serde_json = "1.0"
+
+[features]
+default = ["native"]
+lapack_be = []
+native = []
+
+

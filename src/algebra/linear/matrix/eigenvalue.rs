@@ -1,5 +1,4 @@
 use algebra::linear::{Vector, Matrix};
-use algebra::abstr::Zero;
 use algebra::abstr::Real;
 
 impl<T> Matrix<T>

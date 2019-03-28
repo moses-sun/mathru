@@ -12,12 +12,6 @@ use std::fmt::Display;
 use std::fmt;
 use serde::{Serialize, Deserialize};
 
-#[cfg(default = "lapack")]
-extern crate blas;
-extern crate openblas_src;
-
-
-
 
 /// Macro to construct vectores
 ///
@@ -496,7 +490,7 @@ impl<T> Vector<T>
             assert!(e < m);
         }
 
-        let mut slice: Vector<T> = Vector::zero((e - s + 1));
+        let mut slice: Vector<T> = Vector::zero(e - s + 1);
 
         for r in s..(e + 1)
         {

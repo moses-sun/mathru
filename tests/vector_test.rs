@@ -5,8 +5,6 @@ extern crate mathru;
 mod vector_test
 {
     use mathru::algebra::linear::{Vector, Matrix};
-    //use mathru::num::{Real};
-    use mathru::algebra::abstr::{Zero, One};
     use mathru::elementary::Power;
 
     #[test]

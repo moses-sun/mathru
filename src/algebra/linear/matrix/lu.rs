@@ -1,5 +1,4 @@
-use algebra::linear::{Vector, Matrix};
-use algebra::abstr::Zero;
+use algebra::linear::{Matrix};
 use algebra::abstr::Real;
 
 impl<T> Matrix<T>
@@ -33,7 +32,6 @@ impl<T> Matrix<T>
     #[cfg(feature = "native")]
     fn dec_lu_r<'a>(self: &'a Self) -> (Matrix<T>, Matrix<T>, Matrix<T>)
     {
-        let (m, n): (usize, usize) = self.dim();
 
         let mut l: Matrix<T> = Matrix::one(self.m);
         let mut u: Matrix<T> = Matrix::one(self.n);
