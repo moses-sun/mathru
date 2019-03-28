@@ -1,4 +1,4 @@
-# Rumath
+# mathru
 
 [![crate](https://img.shields.io/crates/v/mathru.svg)](https://crates.io/crates/mathru)
 [![documentation](https://docs.rs/mathru/badge.svg)](https://docs.rs/mathru)
@@ -17,14 +17,14 @@ This project is implemented using Rust.
         - Matrix
             - Basic matrix operations(+,-,*)
             - Transposition
-            - LU decomposition
+            - LU decomposition (native/lapack)
             - QR decomposition
-            - Hessenberg decomposition
+            - Hessenberg decomposition (native/lapack)
             - Singular value decomposition
             - Inverse matrix
             - Determinant
             - Trace
-            - Eigenvalue
+            - Eigenvalue (native/lapack)
 
     - complex numbers
         - Complex<f32>
@@ -74,7 +74,7 @@ Add this to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-mathru = "0.1.1"
+mathru = "0.1.2"
 ```
 
 And then import the library using:

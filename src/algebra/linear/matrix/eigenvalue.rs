@@ -1,5 +1,9 @@
 use algebra::linear::{Vector, Matrix};
-use algebra::abstr::Real;
+use algebra::abstr::{Real};
+
+#[cfg(feature = "lapack_be")]
+use algebra::abstr::{Zero};
+
 
 impl<T> Matrix<T>
      where T: Real + 'static
@@ -162,11 +166,7 @@ impl<T> Matrix<T>
         let mut self_data = self.data.clone();
         let n_i32: i32 = n as i32;
 
-        let mut tau: Vec<T> = vec![Zero::zero(); n - 1];
-
         let mut info: i32 = 0;
-
-
 
         let mut wr: Vec<T> = vec![Zero::zero(); n];
         let mut wi: Vec<T> = vec![Zero::zero(); n];

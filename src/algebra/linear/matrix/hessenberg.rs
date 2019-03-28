@@ -69,7 +69,7 @@ impl<T> Matrix<T>
 
         let mut info: i32 = 0;
 
-        let mut lwork: i32 = T::xgehrd_work_size(n_i32, 1, n_i32, & mut self_data[..], n_i32, tau.as_mut(), &mut info);
+        let lwork: i32 = T::xgehrd_work_size(n_i32, 1, n_i32, & mut self_data[..], n_i32, tau.as_mut(), &mut info);
 
         assert_eq!(0, info);
 
@@ -87,10 +87,7 @@ impl<T> Matrix<T>
             &mut info,
         );
 
-        let k: T = T::zero();
-
         assert_eq!(0, info);
-
 
         let h: Matrix<T> = Matrix::new(n, n, self_data.clone()).h();
         let mut q = self_data;

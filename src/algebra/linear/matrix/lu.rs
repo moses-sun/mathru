@@ -1,5 +1,8 @@
 use algebra::linear::{Matrix};
-use algebra::abstr::Real;
+use algebra::abstr::{Real};
+
+#[cfg(feature = "lapack_be")]
+use algebra::abstr::{Zero};
 
 impl<T> Matrix<T>
     where T: Real
@@ -103,9 +106,6 @@ impl<T> Matrix<T>
     #[cfg(feature = "lapack_be")]
     fn dec_lu_r<'a>(self: &'a Self) -> (Matrix<T>, Matrix<T>, Matrix<T>)
     {
-
-        let mut p: Matrix<T> = Matrix::one(self.m);
-
         let (m, n): (usize, usize) = self.dim();
         let m_i32: i32 = m as i32;
         let n_i32: i32 = n as i32;

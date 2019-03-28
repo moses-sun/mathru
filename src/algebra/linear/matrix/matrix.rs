@@ -1171,7 +1171,7 @@ impl<T> Matrix<T>
         assert!(column_s < self.n);
         assert!(column_e < self.n);
 
-        let mut slice: Matrix<T> = Matrix::zero((row_e - row_s + 1), (column_e - column_s + 1));
+        let mut slice: Matrix<T> = Matrix::zero(row_e - row_s + 1, column_e - column_s + 1);
 
         for r in row_s..(row_e + 1)
         {
