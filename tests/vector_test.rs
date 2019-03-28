@@ -5,7 +5,7 @@ extern crate mathru;
 mod vector_test
 {
     use mathru::algebra::linear::{Vector, Matrix};
-    use mathru::num::{Real};
+    //use mathru::num::{Real};
     use mathru::algebra::abstr::{Zero, One};
     use mathru::elementary::Power;
 
@@ -14,7 +14,7 @@ mod vector_test
     {
         let vec: Vector<f32> = vector![1.0; 2.0; 3.0];
 
-        let vec_ref: Vector<f32> = Vector::new_column(&3, &vec![1.0, 2.0, 3.0]);
+        let vec_ref: Vector<f32> = Vector::new_column(3, vec![1.0, 2.0, 3.0]);
 
         assert_eq!(vec_ref, vec);
     }
@@ -24,7 +24,7 @@ mod vector_test
     {
         let vec: Vector<f32> = vector![1.0, 2.0, 3.0];
 
-        let vec_ref: Vector<f32> = Vector::new_row(&3, &vec![1.0, 2.0, 3.0]);
+        let vec_ref: Vector<f32> = Vector::new_row(3, vec![1.0, 2.0, 3.0]);
 
         assert_eq!(vec_ref, vec);
     }
@@ -45,14 +45,14 @@ mod vector_test
     {
         let rows: usize = 5;
 
-        let m_zero : Vector<Real<f32>> = Vector::zero(&rows);
+        let m_zero : Vector<f32> = Vector::zero(rows);
         let (m, n) = m_zero.dim();
         assert_eq!(m, rows);
         assert_eq!(n, 1);
 
         for i in 0..rows
         {
-            assert_eq!(*(m_zero.get(&i)), Real::zero());
+            assert_eq!(*(m_zero.get(&i)), 0.0);
         }
     }
 
@@ -60,14 +60,11 @@ mod vector_test
     fn add()
     {
         let dim: usize = 5;
-        let a : Vector<Real<f32>>  = Vector::new_column(&dim, &vec![Real::new(1.0), Real::new(2.0), Real::new(3.0),
-                                                                Real::new(4.0), Real::new(5.0)]);
-        let b : Vector<Real<f32>> = Vector::new_column(&dim, &vec![Real::new(1.0), Real::new(4.0), Real::new(-1.0),
-                                                               Real::new(0.0), Real::new(-7.0)]);
-        let res_ref : Vector<Real<f32>>  = Vector::new_column(&dim, &vec![Real::new(2.0), Real::new(6.0),
-                                                                              Real::new(2.0), Real::new(4.0), Real::new(-2.0)]);
+        let a : Vector<f32>  = Vector::new_column(dim, vec![1.0, 2.0, 3.0, 4.0, 5.0]);
+        let b : Vector<f32> = Vector::new_column(dim, vec![1.0, 4.0, -1.0, 0.0, -7.0]);
+        let res_ref : Vector<f32>  = Vector::new_column(dim, vec![2.0, 6.0, 2.0, 4.0, -2.0]);
 
-        let res : Vector<Real<f32>> = a + b;
+        let res : Vector<f32> = a + b;
 
         for i in 0..dim
         {
@@ -79,14 +76,11 @@ mod vector_test
     fn add_ref()
     {
         let dim: usize = 5;
-        let a : Vector<Real<f32>>  = Vector::new_column(&dim, &vec![Real::new(1.0), Real::new(2.0), Real::new(3.0),
-                                                                    Real::new(4.0), Real::new(5.0)]);
-        let b : Vector<Real<f32>> = Vector::new_column(&dim, &vec![Real::new(1.0), Real::new(4.0), Real::new(-1.0),
-                                                                   Real::new(0.0), Real::new(-7.0)]);
-        let res_ref : Vector<Real<f32>>  = Vector::new_column(&dim, &vec![Real::new(2.0), Real::new(6.0),
-                                                                              Real::new(2.0), Real::new(4.0), Real::new(-2.0)]);
+        let a : Vector<f32>  = Vector::new_column(dim, vec![1.0, 2.0, 3.0, 4.0, 5.0]);
+        let b : Vector<f32> = Vector::new_column(dim, vec![1.0, 4.0, -1.0, 0.0, -7.0]);
+        let res_ref : Vector<f32>  = Vector::new_column(dim, vec![2.0, 6.0, 2.0, 4.0, -2.0]);
 
-        let res : Vector<Real<f32>> = &a + &b;
+        let res : Vector<f32> = &a + &b;
 
         for i in 0..dim
         {
@@ -98,14 +92,11 @@ mod vector_test
     fn sub()
     {
         let dim: usize = 5;
-        let a : Vector<Real<f32>>  = Vector::new_column(&dim, &vec![Real::new(1.0), Real::new(2.0), Real::new(3.0),
-                                                                Real::new(4.0), Real::new(5.0)]);
-        let b : Vector<Real<f32>> = Vector::new_column(&dim, &vec![Real::new(1.0), Real::new(4.0), Real::new(-1.0),
-                                                               Real::new(0.0), Real::new(-7.0)]);
-        let res_ref : Vector<Real<f32>>  = Vector::new_column(&dim, &vec![Real::new(0.0), Real::new(-2.0), Real::new
-            (4.0), Real::new(4.0), Real::new(12.0)]);
+        let a : Vector<f32>  = Vector::new_column(dim, vec![1.0, 2.0, 3.0, 4.0, 5.0]);
+        let b : Vector<f32> = Vector::new_column(dim, vec![1.0, 4.0, -1.0, 0.0, -7.0]);
+        let res_ref : Vector<f32>  = Vector::new_column(dim, vec![0.0, -2.0, 4.0, 4.0, 12.0]);
 
-        let res : Vector<Real<f32>> = a - b;
+        let res : Vector<f32> = a - b;
 
         for i in 0..dim
         {
@@ -117,14 +108,11 @@ mod vector_test
     fn sub_ref()
     {
         let dim: usize = 5;
-        let a : Vector<Real<f32>>  = Vector::new_column(&dim, &vec![Real::new(1.0), Real::new(2.0), Real::new(3.0),
-                                                                    Real::new(4.0), Real::new(5.0)]);
-        let b : Vector<Real<f32>> = Vector::new_column(&dim, &vec![Real::new(1.0), Real::new(4.0), Real::new(-1.0),
-                                                                   Real::new(0.0), Real::new(-7.0)]);
-        let res_ref : Vector<Real<f32>>  = Vector::new_column(&dim, &vec![Real::new(0.0), Real::new(-2.0), Real::new
-            (4.0), Real::new(4.0), Real::new(12.0)]);
+        let a : Vector<f32>  = Vector::new_column(dim, vec![1.0, 2.0, 3.0, 4.0, 5.0]);
+        let b : Vector<f32> = Vector::new_column(dim, vec![1.0, 4.0, -1.0, 0.0, -7.0]);
+        let res_ref : Vector<f32>  = Vector::new_column(dim, vec![0.0, -2.0, 4.0, 4.0, 12.0]);
 
-        let res : Vector<Real<f32>> = &a - &b;
+        let res : Vector<f32> = &a - &b;
 
         for i in 0..dim
         {
@@ -136,8 +124,8 @@ mod vector_test
     fn get_0()
     {
         let dim: usize = 5;
-        let res : Vector<Real<f32>>  = Vector::new_column(&dim, &vec![Real::new(1.0), Real::new(2.0), Real::new(3.0), Real::new(4.0), Real::new(5.0)]);
-        let res_ref : Vector<Real<f32>>  = Vector::new_column(&dim, &vec![Real::new(1.0), Real::new(2.0), Real::new(3.0), Real::new(4.0), Real::new(5.0)]);
+        let res : Vector<f32>  = Vector::new_column(dim, vec![1.0, 2.0, 3.0, 4.0, 5.0]);
+        let res_ref : Vector<f32>  = Vector::new_column(dim, vec![1.0, 2.0, 3.0, 4.0, 5.0]);
         for i in 0..dim
         {
             assert_eq!(*(res_ref.get(&i)), *(res.get(&i)));
@@ -148,9 +136,8 @@ mod vector_test
     fn get_1()
     {
         let dim: usize = 5;
-        let res : Vector<Real<f32>>  = Vector::new_row(&dim, &vec![Real::new(1.0), Real::new(2.0), Real::new(3.0),
-        Real::new(4.0), Real::new(5.0)]);
-        let res_ref : Vector<Real<f32>>  = Vector::new_column(&dim, &vec![Real::new(1.0), Real::new(2.0), Real::new(3.0), Real::new(4.0), Real::new(5.0)]);
+        let res : Vector<f32>  = Vector::new_row(dim, vec![1.0, 2.0, 3.0, 4.0, 5.0]);
+        let res_ref : Vector<f32>  = Vector::new_column(dim, vec![1.0, 2.0, 3.0, 4.0, 5.0]);
         for i in 0..dim
         {
             assert_eq!(*(res_ref.get(&i)), *(res.get(&i)));
@@ -161,10 +148,10 @@ mod vector_test
     fn get_slice_0()
     {
         let dim: usize = 5;
-        let res: Vector<Real<f32>>  = Vector::new_column(&dim, &vec![Real::new(1.0), Real::new(2.0), Real::new(3.0), Real::new(4.0), Real::new(5.0)]);
-        let res_ref: Vector<Real<f32>>  = Vector::new_column(&3, &vec![ Real::new(3.0), Real::new(4.0), Real::new(5.0)]);
+        let res: Vector<f32>  = Vector::new_column(dim, vec![1.0, 2.0, 3.0, 4.0, 5.0]);
+        let res_ref: Vector<f32>  = Vector::new_column(3, vec![3.0, 4.0, 5.0]);
 
-        let slice: Vector<Real<f32>> = res.get_slice(2, 4);
+        let slice: Vector<f32> = res.get_slice(2, 4);
 
         assert_eq!(res_ref, slice);
     }
@@ -172,12 +159,10 @@ mod vector_test
     #[test]
     fn set_slice_0()
     {
-        let mut a: Vector<Real<f32>>  = Vector::new_column(&5, &vec![Real::new(1.0), Real::new(2.0), Real::new(3.0),
-        Real::new(4.0), Real::new(5.0)]);
+        let mut a: Vector<f32>  = Vector::new_column(5, vec![1.0, 2.0, 3.0, 4.0, 5.0]);
 
-        let b: Vector<Real<f32>>  = Vector::new_column(&3, &vec![ Real::new(-3.0), Real::new(-4.0), Real::new(-5.0)]);
-        let res_ref: Vector<Real<f32>>  = Vector::new_column(&5, &vec![Real::new(1.0), Real::new(2.0), Real::new(-3.0),
-        Real::new(-4.0), Real::new(-5.0)]);
+        let b: Vector<f32>  = Vector::new_column(3, vec![ -3.0, -4.0, -5.0]);
+        let res_ref: Vector<f32>  = Vector::new_column(5, vec![1.0, 2.0, -3.0, -4.0, -5.0]);
 
         a.set_slice(&b, 2);
 
@@ -188,8 +173,8 @@ mod vector_test
     fn transpose()
     {
         let (m_ref, n_ref) : (usize, usize) = (4, 1);
-        let  vec : Vector<Real<f32>> = Vector::new_column(&m_ref, &vec![Real::new(2.0), Real::new(6.0), Real::new(-2.5), Real::new(0.0)]);
-        let vec_trans : Vector<Real<f32>>= vec.transpose();
+        let  vec : Vector<f32> = Vector::new_column(m_ref, vec![2.0, 6.0, -2.5, 0.0]);
+        let vec_trans : Vector<f32>= vec.transpose();
 
         let (m, n) : (usize, usize) =  vec_trans.dim();
 
@@ -200,41 +185,34 @@ mod vector_test
     #[test]
     fn dotp()
     {
-        let a: Vector<Real<f32>> = Vector::new_column(&4, &vec![Real::new(-1.0), Real::new(-3.0),
-                                                                              Real::new(6.0), Real::new(-1.0)]);
-        let b: Vector<Real<f32>> = Vector::new_column(&4, &vec![Real::new(-2.0), Real::new(-5.0),
-                                                                              Real::new
-            (-3.0), Real::new(2.0)]);
-        let dotp_ref : Real<f32> = Real::new(-3.0);
-        let dotp : Real<f32> = a.dotp(&b);
+        let a: Vector<f32> = Vector::new_column(4, vec![-1.0, -3.0, 6.0, -1.0]);
+        let b: Vector<f32> = Vector::new_column(4, vec![-2.0, -5.0, -3.0, 2.0]);
+        let dotp_ref : f32 = -3.0;
+        let dotp : f32 = a.dotp(&b);
         assert_eq!(dotp_ref, dotp);
     }
 
 //    #[test]
 //    fn crossp()
 //    {
-//        let a: Vector<Real<f32>> = Vector::new_column(&3, &vec![Real::new(-1.0), Real::new(-3.0),
-//                                                                              Real::new(6.0)]);
-//        let b: Vector<Real<f32>> = Vector::new_column(&3, &vec![Real::new(-2.0), Real::new(-5.0),
+//        let a: Vector<f32> = Vector::new_column(&3, vec![-1.0), -3.0),
+//                                                                              6.0)]);
+//        let b: Vector<f32> = Vector::new_column(&3, vec![-2.0), -5.0),
 //                                                                              Real::new
 //            (-3.0)]);
-//        let crossp_ref : Real<f32> = Real::new(-3.0);
-//        let cross : Vector<Real<f32>> = a.crossp(&b);
+//        let crossp_ref : f32 = -3.0);
+//        let cross : Vector<f32> = a.crossp(&b);
 //        assert_eq!(crossp_ref, croossp);
 //    }
 
     #[test]
     fn dyadp()
     {
-        let x: Vector<Real<f32>> = Vector::new_column(&3, &vec![Real::new(1.0), Real::new(3.0),
-        Real::new(2.0)]);
-        let y: Vector<Real<f32>> = Vector::new_column(&4, &vec![Real::new(2.0), Real::new(1.0),
-        Real::new(0.0), Real::new(3.0)]);
-        let dyadp_ref : Matrix<Real<f32>> = Matrix::new(&3, &4, &vec![Real::new(2.0),
-        Real::one(), Real::zero(), Real::new(3.0), Real::new(6.0), Real::new(3.0), Real::zero(), Real::new(9.0),
-        Real::new(4.0), Real::new(2.0), Real::zero(), Real::new(6.0)]);
+        let x: Vector<f32> = Vector::new_column(3, vec![1.0, 3.0, 2.0]);
+        let y: Vector<f32> = Vector::new_column(4, vec![2.0, 1.0, 0.0, 3.0]);
+        let dyadp_ref : Matrix<f32> = Matrix::new(3, 4, vec![2.0, 1.0, 0.0, 3.0, 6.0, 3.0, 0.0, 9.0, 4.0, 2.0, 0.0, 6.0]);
 
-        let p: Matrix<Real<f32>> =  x.dyadp(&y);
+        let p: Matrix<f32> =  x.dyadp(&y);
 
         assert_eq!(dyadp_ref, p);
     }
@@ -242,11 +220,10 @@ mod vector_test
     #[test]
     fn p_norm()
     {
-        let p : Real<f32> = Real::new(2.0);
-        let v : Vector<Real<f32>> = Vector::new_column(&4, &vec![Real::new(-2.0), Real::new(-5.0),
-                                                                           Real::new(-3.0), Real::new(2.0)]);
-        let p_norm_ref : Real<f32> = Real::new(42.0).pow(&Real::new(0.5));
-        let p_norm : Real<f32> =  v.p_norm(&p);
+        let p : f32 = 2.0;
+        let v : Vector<f32> = Vector::new_column(4, vec![-2.0, -5.0, -3.0, 2.0]);
+        let p_norm_ref : f32 = 42.0.pow(&0.5);
+        let p_norm : f32 =  v.p_norm(&p);
         assert_eq!(p_norm_ref, p_norm);
     }
 

@@ -4,7 +4,6 @@ extern crate mathru;
 mod special_test
 {
     use mathru::special;
-    use mathru::num::Real;
     use mathru::num::Complex;
     //use mathru::num::primitives;
 
@@ -53,11 +52,11 @@ mod special_test
     #[test]
     fn gamma_real()
     {
-         let x: Real<f64> = Real::new(-0.5);
+         let x: f64 = -0.5;
 
-        let gamma: Real<f64> = special::gamma::gamma(x);
+        let gamma: f64 = special::gamma::gamma(x);
 
-        assert_eq!(Real::new(-3.544907701811029), gamma);
+        assert_eq!((-3.544907701811029), gamma);
     }
 
     #[test]
@@ -186,12 +185,12 @@ mod special_test
 	#[test]
     fn gamma_lr2()
     {
-        let x: Real<f64> = Real::new(1.5_f64);
-        let a: Real<f64> = Real::new(0.5_f64);
+        let x: f64 = 1.5_f64;
+        let a: f64 = 0.5_f64;
 
-        let gamma: Real<f64> = special::gamma::gamma_lr(a, x);
+        let gamma: f64 = special::gamma::gamma_lr(a, x);
 
-        assert_eq!(Real::new(0.9167354833364494), gamma);
+        assert_eq!(0.9167354833364494, gamma);
     }
 
     #[test]
