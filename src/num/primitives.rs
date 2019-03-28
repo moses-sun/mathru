@@ -1,10 +1,16 @@
 use algebra::abstr::{Natural, Integer, Real};
-use algebra::abstr::{Number, Semiring, Ring, Sign, Abs, Field, Zero, One};
+use algebra::abstr::{Number, Semiring, Ring, Sign, Abs, Field, Zero, One, Lapack};
 use algebra::abstr::cast::{NumCast, FromPrimitive, ToPrimitive, AsPrimitive};
 use elementary::{Exponential, Trigonometry, Power, Hyperbolic};
 use num::bound::Bound;
 use std::mem::size_of;
 use std::{u8, u16, u32, u64, usize, i8, i16, i32, i64, isize, f32, f64};
+
+//#[cfg(feature = "openblas")]
+extern crate lapack;
+extern crate blas;
+extern crate openblas_src;
+//use lapack;
 
 macro_rules! number_impl
 {
@@ -144,15 +150,13 @@ field_impl!(f64, f64::EPSILON);
 macro_rules! zero_impl {
     ($t:ty, $v:expr) =>
     {
-        impl Zero for $t {
+        impl Zero for $t
+        {
             #[inline]
-            fn zero() -> $t {
+            fn zero() -> $t
+            {
                 $v
             }
-//            #[inline]
-//            fn is_zero(&self) -> bool {
-//                *self == $v
-//            }
         }
     };
 }
@@ -1225,8 +1229,6 @@ macro_rules! hyperbolic_impl
 hyperbolic_impl!(f32);
 hyperbolic_impl!(f64);
 
-
-
 macro_rules! impl_as_primitive
 {
     (@ $T: ty => $(#[$cfg:meta])* impl $U: ty ) =>
@@ -1276,3 +1278,78 @@ impl_as_primitive!(f32 => { f32, f64 });
 impl_as_primitive!(f64 => { f32, f64 });
 impl_as_primitive!(char => { char });
 impl_as_primitive!(bool => {});
+
+
+
+macro_rules! lapack_impl(
+    ($T: ty, $xgehrd: path, $xorghr: path, $xgeev: path, $xgetrf: path) => (
+        impl Lapack for $T
+       	{
+
+       		//Hessenberg
+       		fn xgehrd(n: i32, ilo: i32, ihi: i32, a: &mut [Self], lda: i32,
+                      tau: &mut [Self], work: &mut [Self], lwork: i32, info: &mut i32)
+           	{
+                unsafe { $xgehrd(n, ilo, ihi, a, lda, tau, work, lwork, info) }
+			}
+
+            fn xgehrd_work_size(n: i32, ilo: i32, ihi: i32, a: &mut [Self], lda: i32,
+                                tau: &mut [Self], info: &mut i32) -> i32
+            {
+                let mut work = [Zero::zero()];
+                let lwork = -1 as i32;
+
+                unsafe { $xgehrd(n, ilo, ihi, a, lda, tau, &mut work, lwork, info) };
+
+                work[0] as i32
+            }
+
+         	fn xorghr(n: i32, ilo: i32, ihi: i32, a: &mut [Self], lda: i32, tau: &[Self],
+                      work: &mut [Self], lwork: i32, info: &mut i32)
+          	{
+                unsafe { $xorghr(n, ilo, ihi, a, lda, tau, work, lwork, info) }
+            }
+
+            fn xorghr_work_size(n: i32, ilo: i32, ihi: i32, a: &mut [Self], lda: i32,
+                                tau: &[Self], info: &mut i32) -> i32 {
+                let mut work = [ Zero::zero() ];
+                let lwork = -1 as i32;
+
+                unsafe { $xorghr(n, ilo, ihi, a, lda, tau, &mut work, lwork, info) };
+
+                work[0] as i32
+            }
+
+            fn xgeev(jobvl: u8, jobvr: u8, n: i32, a: &mut [Self], lda: i32,
+                     wr: &mut [Self], wi: &mut [Self],
+                     vl: &mut [Self], ldvl: i32, vr: &mut [Self], ldvr: i32,
+                     work: &mut [Self], lwork: i32, info: &mut i32)
+          	{
+                unsafe { $xgeev(jobvl, jobvr, n, a, lda, wr, wi, vl, ldvl, vr, ldvr, work, lwork, info) }
+            }
+
+
+            fn xgeev_work_size(jobvl: u8, jobvr: u8, n: i32, a: &mut [Self], lda: i32,
+                               wr: &mut [Self], wi: &mut [Self], vl: &mut [Self], ldvl: i32,
+                               vr: &mut [Self], ldvr: i32, info: &mut i32) -> i32
+          	{
+                let mut work = [ Zero::zero() ];
+                let lwork = -1 as i32;
+
+                unsafe { $xgeev(jobvl, jobvr, n, a, lda, wr, wi, vl, ldvl, vr, ldvr, &mut work, lwork, info) };
+                work[0] as i32
+			}
+
+			fn xgetrf(m: i32, n: i32, a: &mut [Self], lda: i32, ipiv: &mut [i32], info: &mut i32)
+			{
+                unsafe { $xgetrf(m, n, a, lda, ipiv, info)}
+			}
+        }
+    )
+);
+
+
+lapack_impl!(f32, lapack::sgehrd, lapack::sorghr, lapack::sgeev, lapack::sgetrf);
+lapack_impl!(f64, lapack::dgehrd, lapack::dorghr, lapack::dgeev, lapack::dgetrf);
+//hessenberg_scalar_impl!(Complex<f32>, lapack::cgehrd);
+//hessenberg_scalar_impl!(Complex<f64>, lapack::zgehrd);

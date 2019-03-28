@@ -20,5 +20,5 @@ pub use self::field::{Field, Sign, Abs};
 pub use self::number::Number;
 pub use self::natural::Natural;
 pub use self::integer::Integer;
-pub use self::real::Real;
+pub use self::real::{Real, Lapack};
 pub use self::complex::Complex;

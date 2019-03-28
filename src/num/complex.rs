@@ -7,7 +7,7 @@ use algebra::abstr::{Number, Semiring, Sign, Abs, Ring, Field, Zero, One};
 use std::cmp::Ordering;
 use algebra::abstr::cast::{ToPrimitive, FromPrimitive, NumCast};
 use elementary::{Trigonometry, Exponential, Power, Hyperbolic};
-use algebra::abstr::Real;
+use algebra::abstr::{Real, Lapack};
 use algebra::abstr::cast;
 
 #[macro_export]
@@ -140,6 +140,64 @@ impl<T> RealT for Complex<T>
 		unimplemented!();
 	}
 }
+
+impl<T> Lapack for Complex<T>
+{
+	fn xgehrd(n: i32, ilo: i32, ihi: i32, a: &mut [Self], lda: i32, tau: &mut [Self], work: &mut [Self], lwork: i32,
+	info: &mut i32)
+	{
+		unimplemented!();
+	}
+
+  	fn xgehrd_work_size(n: i32, ilo: i32, ihi: i32, a: &mut [Self], lda: i32, tau: &mut [Self], info: &mut i32) -> i32
+  	{
+		unimplemented!();
+	}
+
+    fn xorghr(
+        n: i32,
+        ilo: i32,
+        ihi: i32,
+        a: &mut [Self],
+        lda: i32,
+        tau: &[Self],
+        work: &mut [Self],
+        lwork: i32,
+        info: &mut i32,
+    )
+    {
+		unimplemented!();
+	}
+
+    fn xorghr_work_size(n: i32, ilo: i32, ihi: i32, a: &mut [Self], lda: i32, tau: &[Self], info: &mut i32) -> i32
+    {
+		unimplemented!();
+	}
+
+	fn xgeev(jobvl: u8, jobvr: u8, n: i32, a: &mut [Self], lda: i32,
+                     wr: &mut [Self], wi: &mut [Self],
+                     vl: &mut [Self], ldvl: i32, vr: &mut [Self], ldvr: i32,
+                     work: &mut [Self], lwork: i32, info: &mut i32)
+	{
+		unimplemented!();
+	}
+
+
+
+  	fn xgeev_work_size(jobvl: u8, jobvr: u8, n: i32, a: &mut [Self], lda: i32,
+                               wr: &mut [Self], wi: &mut [Self], vl: &mut [Self], ldvl: i32,
+                               vr: &mut [Self], ldvr: i32, info: &mut i32) -> i32
+	{
+		unimplemented!();
+	}
+
+	fn xgetrf(m: i32, n: i32, a: &mut [Self], lda: i32, ipiv: &mut [i32], info: &mut i32)
+	{
+		unimplemented!();
+	}
+}
+
+
 
 impl<T> Field for Complex<T>
 	where T: Real

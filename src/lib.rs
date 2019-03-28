@@ -26,8 +26,8 @@
 //! extern crate mathru;
 //! use mathru::algebra::linear::{Matrix};
 //! // Compute the LU decomposition of a 2x2 matrix
-//! let a: Matrix<f64> = Matrix::new(&2, &2, &vec![1.0, -2.0, 3.0, -7.0]);
-//! let l_ref: Matrix<f64> = Matrix::new(&2, &2, &vec![1.0, 0.0, 1.0 / 3.0, 1.0]);
+//! let a: Matrix<f64> = Matrix::new(2, 2, vec![1.0, -2.0, 3.0, -7.0]);
+//! let l_ref: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 0.0, 1.0 / 3.0, 1.0]);
 //!
 //! let (l, u, p): (Matrix<f64>, Matrix<f64>, Matrix<f64>) = a.dec_lu();
 //!

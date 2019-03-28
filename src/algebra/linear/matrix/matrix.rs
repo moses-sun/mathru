@@ -12,7 +12,7 @@ use std::fmt;
 ///use serde::de::{Deserialize};
 
 
-/// Macro to construct matricecs
+/// Macro to construct matrices
 ///
 /// ```
 /// #[macro_use]
@@ -38,7 +38,7 @@ macro_rules! matrix
                 .flat_map(|row| row.into_iter())
                 .cloned()
                 .collect();
-            Matrix::new(&rows, &cols, &data_array)
+            Matrix::new(rows, cols, data_array)
         }
     }
 }
@@ -48,11 +48,11 @@ macro_rules! matrix
 pub struct Matrix<T>
 {
     /// Num of rows which the matrix has
-    m: usize,
+    pub(super) m: usize,
     /// Num of columns which the matrix ha
-    n: usize,
+    pub(super) n: usize,
     /// Matrix entries
-    data:  Vec<T>
+    pub(super) data:  Vec<T>
 }
 
 impl<T> Matrix<T>
@@ -86,16 +86,16 @@ impl<T> Matrix<T>
     /// extern crate mathru;
     /// use mathru::algebra::linear::{Matrix};
     ///
-    /// let mut a: Matrix<f64> = Matrix::new(&2, &2, &vec![1.0, -2.0, 3.0, -7.0]);
+    /// let mut a: Matrix<f64> = Matrix::new(2, 2, vec![1.0, -2.0, 3.0, -7.0]);
     /// a = a.transpose();
     ///
-    /// let a_trans: Matrix<f64> = Matrix::new(&2, &2, &vec![1.0, 3.0, -2.0, -7.0]);
+    /// let a_trans: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 3.0, -2.0, -7.0]);
     ///
     /// assert_eq!(a_trans, a);
     /// ```
     pub fn transpose(self: &Self) -> Self
     {
-        let mut trans : Matrix<T> = Matrix::zero(&self.n, &self.m);
+        let mut trans : Matrix<T> = Matrix::zero(self.n, self.m);
 
         for j in 0..self.n
         {
@@ -135,10 +135,10 @@ impl<T> Matrix<T>
 	/// extern crate mathru;
 	/// use mathru::algebra::linear::{Matrix};
 	///
-	/// let mut uut: Matrix<f64> = Matrix::new(&4, &2, &vec![1.0, 0.0, 3.0, 0.0, 1.0, -7.0, 0.5, 0.25]);
+	/// let mut uut: Matrix<f64> = Matrix::new(4, 2, vec![1.0, 0.0, 3.0, 0.0, 1.0, -7.0, 0.5, 0.25]);
     /// uut = uut.transpose_inplace();
     ///
-    /// let refer: Matrix<f64> = Matrix::new(&2, &4, &vec![1.0, 3.0, 1.0, 0.5, 0.0, 0.0, -7.0, 0.25]);
+    /// let refer: Matrix<f64> = Matrix::new(2, 4, vec![1.0, 3.0, 1.0, 0.5, 0.0, 0.0, -7.0, 0.25]);
     /// assert_eq!(refer, uut);
     /// ```
     pub fn transpose_inplace<'a>(mut self: Self) -> Matrix<T>
@@ -313,7 +313,7 @@ impl<T> Matrix<T>
     /// extern crate mathru;
     /// use mathru::algebra::linear::{Matrix};
     ///
-    /// let a: Matrix<f64> = Matrix::new(&2, &2, &vec![1.0, -2.0, 3.0, -7.0]);
+    /// let a: Matrix<f64> = Matrix::new(2, 2, vec![1.0, -2.0, 3.0, -7.0]);
     /// let determinant_a: f64 = a.det();
     ///
     /// assert_eq!(-1.0, determinant_a);
@@ -372,7 +372,7 @@ impl<T> Matrix<T>
     /// extern crate mathru;
     /// use mathru::algebra::linear::{Matrix};
     ///
-    /// let a: Matrix<f64> = Matrix::new(&2, &2, &vec![1.0, -2.0, 3.0, -7.0]);
+    /// let a: Matrix<f64> = Matrix::new(2, 2, vec![1.0, -2.0, 3.0, -7.0]);
     /// let tr: f64 = a.trace();
     ///
     /// assert_eq!(-6.0, tr);
@@ -397,100 +397,100 @@ impl<T> Matrix<T>
     }
 }
 
-impl<T> Matrix<T>
-    where T: Real
-{
-    /// Decomposes the matrix into a upper and a lower matrix
-    ///
-    /// PA = LU
-    ///
-    /// # Arguments
-    ///
-    ///
-    /// # Example
-    ///
-    /// ```
-    /// extern crate mathru;
-    /// use mathru::algebra::linear::{Matrix};
-    ///
-    /// let a: Matrix<f64> = Matrix::new(&2, &2, &vec![1.0, -2.0, 3.0, -7.0]);
-    /// let l_ref: Matrix<f64> = Matrix::new(&2, &2, &vec![1.0, 0.0, 1.0 / 3.0, 1.0]);
-    ///
-    /// let (l, u, p): (Matrix<f64>, Matrix<f64>, Matrix<f64>) = a.dec_lu();
-    ///
-    /// assert_eq!(l_ref, l);
-    /// ```
-    pub fn dec_lu<'a>(self: &'a Self) -> (Matrix<T>, Matrix<T>, Matrix<T>)
-    {
-        assert_eq!(self.m, self.n);
-
-        let mut l: Matrix<T> = Matrix::one(&self.m);
-        let mut u: Matrix<T> = Matrix::one(&self.n);
-        let mut p: Matrix<T> = Matrix::one(&self.m);
-
-        let mut a: Matrix<T> = self.clone();
-
-        for i in 0..a.m
-        {
-            //pivoting
-            let mut max: T = a.get(&i, &i).clone();
-            let mut i_max: usize = i;
-
-            for l in i + 1..a.m
-            {
-                if *a.get(&l, &i) > max
-                {
-                    max = a.get(&l, &i).clone();
-                    i_max = l;
-                }
-            }
-
-            if i != i_max
-            {
-                a.swap_rows(&i, &i_max);
-                p.swap_rows(&i, &i_max);
-            }
-
-
-            for j in (i + 1)..a.n
-            {
-                let f: T;
-                if a.get(&i, &i).clone() != T::zero()
-                {
-                    f = (*(a.get(&(j), &i))).clone() / a.get(&i, &i).clone();
-                }
-                else
-                {
-                    f = (*(a.get(&(j), &i))).clone();
-                }
-
-                for k in (i + 1)..a.n
-                {
-                    *(a.get_mut(&(j), &k)) =  a.get(&(j), &k).clone() - f.clone() * a.get(&i, &k).clone();
-                }
-                *(a.get_mut(&(j), &i)) = f.clone();
-            }
-        }
-
-        for i in 1..a.n
-        {
-            for j in 0..i
-            {
-                l.data[i * a.n + j] = a.data[i * a.n + j].clone();
-            }
-        }
-
-        for i in 0..a.n
-        {
-            for k in i..a.n
-            {
-                u.data[i * a.n + k] = a.data[i * a.n + k].clone();
-            }
-        }
-
-        (l, u, p)
-    }
-}
+//impl<T> Matrix<T>
+//    where T: Real
+//{
+//    /// Decomposes the matrix into a upper and a lower matrix
+//    ///
+//    /// PA = LU
+//    ///
+//    /// # Arguments
+//    ///
+//    ///
+//    /// # Example
+//    ///
+//    /// ```
+//    /// extern crate mathru;
+//    /// use mathru::algebra::linear::{Matrix};
+//    ///
+//    /// let a: Matrix<f64> = Matrix::new(&2, &2, vec![1.0, -2.0, 3.0, -7.0]);
+//    /// let l_ref: Matrix<f64> = Matrix::new(&2, &2, vec![1.0, 0.0, 1.0 / 3.0, 1.0]);
+//    ///
+//    /// let (l, u, p): (Matrix<f64>, Matrix<f64>, Matrix<f64>) = a.dec_lu();
+//    ///
+//    /// assert_eq!(l_ref, l);
+//    /// ```
+//    pub fn dec_lu<'a>(self: &'a Self) -> (Matrix<T>, Matrix<T>, Matrix<T>)
+//    {
+//        assert_eq!(self.m, self.n);
+//
+//        let mut l: Matrix<T> = Matrix::one(&self.m);
+//        let mut u: Matrix<T> = Matrix::one(&self.n);
+//        let mut p: Matrix<T> = Matrix::one(&self.m);
+//
+//        let mut a: Matrix<T> = self.clone();
+//
+//        for i in 0..a.m
+//        {
+//            //pivoting
+//            let mut max: T = a.get(&i, &i).clone();
+//            let mut i_max: usize = i;
+//
+//            for l in i + 1..a.m
+//            {
+//                if *a.get(&l, &i) > max
+//                {
+//                    max = a.get(&l, &i).clone();
+//                    i_max = l;
+//                }
+//            }
+//
+//            if i != i_max
+//            {
+//                a.swap_rows(&i, &i_max);
+//                p.swap_rows(&i, &i_max);
+//            }
+//
+//
+//            for j in (i + 1)..a.n
+//            {
+//                let f: T;
+//                if a.get(&i, &i).clone() != T::zero()
+//                {
+//                    f = (*(a.get(&(j), &i))).clone() / a.get(&i, &i).clone();
+//                }
+//                else
+//                {
+//                    f = (*(a.get(&(j), &i))).clone();
+//                }
+//
+//                for k in (i + 1)..a.n
+//                {
+//                    *(a.get_mut(&(j), &k)) =  a.get(&(j), &k).clone() - f.clone() * a.get(&i, &k).clone();
+//                }
+//                *(a.get_mut(&(j), &i)) = f.clone();
+//            }
+//        }
+//
+//        for i in 1..a.n
+//        {
+//            for j in 0..i
+//            {
+//                l.data[i * a.n + j] = a.data[i * a.n + j].clone();
+//            }
+//        }
+//
+//        for i in 0..a.n
+//        {
+//            for k in i..a.n
+//            {
+//                u.data[i * a.n + k] = a.data[i * a.n + k].clone();
+//            }
+//        }
+//
+//        (l, u, p)
+//    }
+//}
 
 impl<T> Matrix<T>
     where T: Real
@@ -507,8 +507,8 @@ impl<T> Matrix<T>
     /// extern crate mathru;
     /// use mathru::algebra::linear::{Matrix};
     ///
-    /// let a: Matrix<f64> = Matrix::new(&2, &2, &vec![1.0, -2.0, 3.0, -7.0]);
-    /// let q_ref: Matrix<f64> = Matrix::new(&2, &2, &vec![0.31622776601683794, -0.9486832980505138, 0.9486832980505138, 0.31622776601683794]);
+    /// let a: Matrix<f64> = Matrix::new(2, 2, vec![1.0, -2.0, 3.0, -7.0]);
+    /// let q_ref: Matrix<f64> = Matrix::new(2, 2, vec![0.31622776601683794, -0.9486832980505138, 0.9486832980505138, 0.31622776601683794]);
     ///
     /// let (q, r): (Matrix<f64>, Matrix<f64>) = a.dec_qr();
     ///
@@ -520,7 +520,7 @@ impl<T> Matrix<T>
         {
             panic!();
         }
-        let mut q: Matrix<T> = Matrix::one(&self.m);
+        let mut q: Matrix<T> = Matrix::one(self.m);
         let mut r: Matrix<T> = self.clone();
 
         for j in 0..self.n
@@ -551,7 +551,7 @@ impl<T> Matrix<T>
 impl<T> Matrix<T>
     where T: Clone
 {
-    fn swap_rows<'a, 'b, 'c>(self: &'a mut Self, i: &'b usize, j: &'c usize)
+    pub(super) fn swap_rows<'a, 'b, 'c>(self: &'a mut Self, i: &'b usize, j: &'c usize)
     {
         for k in 0..self.n
         {
@@ -572,7 +572,7 @@ impl<T> Matrix<T>
     // returns column vector
     pub fn get_column<'a, 'b>(self: &'a Self, i: &'b usize) -> Vector<T>
     {
-        let mut v: Vector<T> = Vector::zero(&self.m);
+        let mut v: Vector<T> = Vector::zero(self.m);
 
         for k in 0..self.m
         {
@@ -586,7 +586,7 @@ impl<T> Matrix<T>
     // return row vector
     pub fn get_row<'a, 'b>(self: &'a Self, i: &'b usize) -> Vector<T>
     {
-        let mut v: Vector<T> = Vector::zero(&self.n);
+        let mut v: Vector<T> = Vector::zero(self.n);
         v = v.transpose();
 
         for k in 0..self.n
@@ -619,7 +619,7 @@ impl<T> Matrix<T>
         {
             panic!("Index out of bounds");
         }
-        let mut givens: Matrix<T> = Matrix::one(m);
+        let mut givens: Matrix<T> = Matrix::one(*m);
         *(givens.get_mut(i,i)) = c.clone();
         *(givens.get_mut(j,j)) = *c;
         *(givens.get_mut(i,j)) = s.clone();
@@ -631,7 +631,7 @@ impl<T> Matrix<T>
     /// Givens rotation computation
     /// Determines cosine-sine pair (c,s) so that [c s;-s c]'*[a;b] = [r;0]
     /// GVL4: Algorithm 5.1.3
-    fn givens_cosine_sine_pair(a: T,b: T) -> (T, T)
+    pub(super) fn givens_cosine_sine_pair(a: T,b: T) -> (T, T)
     {
         let exponent: T = T::from_f64(2.0).unwrap();
         let exponent_sqrt: T = T::from_f64(0.5).unwrap();
@@ -694,7 +694,7 @@ impl<T> Matrix<T>
 
         if v_m == 1
         {
-            return Matrix::one(&v_m);
+            return Matrix::one(v_m);
         }
 
         let d: Vector<T> = v.get_slice(k, v_m -1);
@@ -716,16 +716,17 @@ impl<T> Matrix<T>
 
         if alpha == T::zero()
         {
-            let h: Matrix<T> = Matrix::one(&v_n);
+            let h: Matrix<T> = Matrix::one(v_n);
             return h;
         }
 
         let (d_m, _d_n) = d.dim();
 
-        let mut v: Vector<T> = Vector::zero(&d_m);
+        let mut v: Vector<T> = Vector::zero(d_m);
 
         * v.get_mut(&0) = (T::from_f64(0.5).unwrap() * (T::one() - d_0 / alpha)).pow(&T::from_f64(0.5).unwrap());
         let p: T = -alpha * *v.get(&0);
+
 
         if d_m - 1 >= 1
         {
@@ -733,12 +734,12 @@ impl<T> Matrix<T>
             v.set_slice(&temp, 1);
         }
 
-        let mut w: Vector<T> = Vector::zero(&v_m);
+        let mut w: Vector<T> = Vector::zero(v_m);
 
         w.set_slice(&v, k);
 
 
-        let ident : Matrix<T> = Matrix::one(&v_m);
+        let ident : Matrix<T> = Matrix::one(v_m);
 
         let two: T = T::from_f64(2.0).unwrap();
         let w_dyadp: Matrix<T> = w.dyadp(&w);
@@ -765,7 +766,7 @@ impl<T> Matrix<T>
     /// extern crate mathru;
     /// use mathru::algebra::linear::{Matrix};
     ///
-    /// let a: Matrix<f64> = Matrix::new(&4, &4, &vec![4.0, 1.0, -2.0, 2.0, 1.0, 2.0, 0.0, -2.0, 0.0, 3.0, -2.0, 2.0,
+    /// let a: Matrix<f64> = Matrix::new(4, 4, vec![4.0, 1.0, -2.0, 2.0, 1.0, 2.0, 0.0, -2.0, 0.0, 3.0, -2.0, 2.0,
     /// 2.0, 1.0, -2.0, -1.0]);
     ///
     /// let (u, s, v): (Matrix<f64>, Matrix<f64>, Matrix<f64>) = a.dec_sv();
@@ -778,7 +779,7 @@ impl<T> Matrix<T>
         let max_iterations: usize = 500 * n * n;
 
 
-        let mut u_k: Matrix<T> = Matrix::one(&n);
+        let mut u_k: Matrix<T> = Matrix::one(n);
 
         for _k in 0.. max_iterations
         {
@@ -826,7 +827,7 @@ impl<T> Matrix<T>
 
         for k in 0..n-1
         {
-            let mut q : Matrix<T> = Matrix::one(&n);
+            let mut q : Matrix<T> = Matrix::one(n);
 
             // Construct matrix Q and multiply on the right by Q'.
             // Q annihilates both B(k-1,k+1) and B(k,k+1)
@@ -906,8 +907,8 @@ impl<T> Matrix<T>
             panic!("Read the API");
         }
 
-        let mut u: Matrix<T> = Matrix::one(&m);
-        let mut v: Matrix<T> = Matrix::one(&n);
+        let mut u: Matrix<T> = Matrix::one(m);
+        let mut v: Matrix<T> = Matrix::one(n);
         //let mut b_i : Matrix<T> = Matrix::zero(&n, &n);
         let mut a_i : Matrix<T> = self.clone();
 
@@ -923,7 +924,7 @@ impl<T> Matrix<T>
 
             let a_i_slice = &u_i * &a_i.clone().get_slice(i, m - 1, i, n - 1);
             a_i = a_i.set_slice(&a_i_slice, i, i);
-            let mut u_mi: Matrix<T> = Matrix::one(&m);
+            let mut u_mi: Matrix<T> = Matrix::one(m);
             u_mi = u_mi.set_slice(&u_i, i, i);
 
 
@@ -941,7 +942,7 @@ impl<T> Matrix<T>
 
                 let v_i: Matrix<T> = Matrix::householder(&v_x_trans_slice, 0);
 
-                let mut v_ni: Matrix<T> = Matrix::one(&n);
+                let mut v_ni: Matrix<T> = Matrix::one(n);
                 v_ni = v_ni.set_slice(&v_i, i+1, i+1);
                 //let a_i_slice = &a_i.clone().get_slice(i+1, m - 1, i+1, n - 1) * &v_i;
                 //a_i = a_i.set_slice(&a_i_slice, i+1, i+1);
@@ -1156,10 +1157,10 @@ impl<T> Matrix<T>
     /// extern crate mathru;
     /// use mathru::algebra::linear::{Matrix};
     ///
-    /// let mut a: Matrix<f64> = Matrix::new(&2, &2, &vec![1.0, -2.0, 3.0, -7.0]);
+    /// let mut a: Matrix<f64> = Matrix::new(2, 2, vec![1.0, -2.0, 3.0, -7.0]);
     /// a = a.get_slice(0, 0, 1, 1);
     ///
-    /// let a_ref: Matrix<f64> = Matrix::new(&1, &1, &vec![-2.0]);
+    /// let a_ref: Matrix<f64> = Matrix::new(1, 1, vec![-2.0]);
     ///
     /// assert_eq!(a_ref, a);
     /// ```
@@ -1170,7 +1171,7 @@ impl<T> Matrix<T>
         assert!(column_s < self.n);
         assert!(column_e < self.n);
 
-        let mut slice: Matrix<T> = Matrix::zero(&(row_e - row_s + 1), &(column_e - column_s + 1));
+        let mut slice: Matrix<T> = Matrix::zero((row_e - row_s + 1), (column_e - column_s + 1));
 
         for r in row_s..(row_e + 1)
         {
@@ -1195,11 +1196,11 @@ impl<T> Matrix<T>
     /// extern crate mathru;
     /// use mathru::algebra::linear::{Matrix};
     ///
-    /// let mut a: Matrix<f64> = Matrix::new(&2, &2, &vec![1.0, 0.0, 3.0, -7.0]);
-    /// let b: Matrix<f64> = Matrix::new(&1, &2, &vec![2.0, -1.0]);
+    /// let mut a: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
+    /// let b: Matrix<f64> = Matrix::new(1, 2, vec![2.0, -1.0]);
     /// a = a.set_slice(&b, 0, 0);
     ///
-    /// let a_updated: Matrix<f64> = Matrix::new(&2, &2, &vec![2.0, -1.0, 3.0, -7.0]);
+    /// let a_updated: Matrix<f64> = Matrix::new(2, 2, vec![2.0, -1.0, 3.0, -7.0]);
     ///
     /// assert_eq!(a_updated, a);
     /// ```
@@ -1251,10 +1252,10 @@ impl<T> Matrix<T>
     /// extern crate mathru;
     /// use mathru::algebra::linear::{Matrix};
     ///
-    /// let mut a: Matrix<f64> = Matrix::new(&2, &2, &vec![1.0, 0.0, 3.0, -7.0]);
+    /// let mut a: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
     /// *a.get_mut(&1, &0) = -8.0;
     ///
-    /// let a_updated: Matrix<f64> = Matrix::new(&2, &2, &vec![1.0, 0.0, -8.0, -7.0]);
+    /// let a_updated: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 0.0, -8.0, -7.0]);
     /// assert_eq!(a_updated, a);
     /// ```
     pub fn get_mut<'a, 'b, 'c>(self: &'a mut Self, i: &'b usize, j: &'c usize) -> &'a mut T
@@ -1273,7 +1274,7 @@ impl<T> Matrix<T>
     /// extern crate mathru;
     /// use mathru::algebra::linear::{Matrix};
     ///
-    /// let a: Matrix<f64> = Matrix::new(&2, &2, &vec![1.0, 0.0, 3.0, -7.0]);
+    /// let a: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
     /// let a_ref: f64 = 3.0;
     /// let element: f64 = *a.get(&1, &0);
     ///
@@ -1298,7 +1299,7 @@ impl<T> Matrix<T>
     {
         let (rows, cols): (usize, usize) = self.dim();
 
-        let mut prod: Matrix<T> = Matrix::zero(&rows, &cols);
+        let mut prod: Matrix<T> = Matrix::zero(rows, cols);
 
         for i in 0..rows
         {
@@ -1325,9 +1326,9 @@ impl<T> Mul<T> for Matrix<T>
     /// extern crate mathru;
     /// use mathru::algebra::linear::{Matrix};
     ///
-    /// let a: Matrix<f64> = Matrix::new(&2, &2, &vec![1.0, 0.0, 3.0, -7.0]);
+    /// let a: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
     /// let f: f64 = 7.0;
-    /// let res_ref: Matrix<f64> = Matrix::new(&2, &2, &vec![7.0, 0.0, 21.0, -49.0]);
+    /// let res_ref: Matrix<f64> = Matrix::new(2, 2, vec![7.0, 0.0, 21.0, -49.0]);
     ///
     /// assert_eq!(res_ref, a * f);
     /// ```
@@ -1392,7 +1393,7 @@ impl<'a, 'b, T> Mul<&'b Vector<T>> for &'a Matrix<T>
             prod_data.push(row_column_product);
         }
 
-        Vector::new_column(&self.m, &prod_data)
+        Vector::new_column(self.m, prod_data)
     }
 }
 
@@ -1410,9 +1411,9 @@ impl <T> Mul<Matrix<T>> for Matrix<T>
     /// extern crate mathru;
     /// use mathru::algebra::linear::{Matrix};
     ///
-    /// let a: Matrix<f64> = Matrix::new(&2, &2, &vec![1.0, 0.0, 3.0, -7.0]);
-    /// let b: Matrix<f64> = Matrix::new(&2, &2, &vec![1.0, 0.0, 3.0, -7.0]);
-    /// let res_ref: Matrix<f64> = Matrix::new(&2, &2, &vec![1.0, 0.0, -18.0, 49.0]);
+    /// let a: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
+    /// let b: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
+    /// let res_ref: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 0.0, -18.0, 49.0]);
     /// assert_eq!(res_ref, a * b);
     /// ```
     fn mul(self: Self, rhs: Self) -> Self::Output
@@ -1434,9 +1435,9 @@ impl <'a, 'b, T> Mul<&'b Matrix<T>> for &'a Matrix<T>
     /// extern crate mathru;
     /// use mathru::algebra::linear::{Matrix};
     ///
-    /// let a: Matrix<f64> = Matrix::new(&2, &2, &vec![1.0, 0.0, 3.0, -7.0]);
-    /// let b: Matrix<f64> = Matrix::new(&2, &2, &vec![1.0, 0.0, 3.0, -7.0]);
-    /// let res_ref: Matrix<f64> = Matrix::new(&2, &2, &vec![1.0, 0.0, -18.0, 49.0]);
+    /// let a: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
+    /// let b: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
+    /// let res_ref: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 0.0, -18.0, 49.0]);
     /// assert_eq!(res_ref, &a * &b);
     /// ```
     fn mul(self: Self, rhs: &'b Matrix<T>) -> Self::Output
@@ -1445,7 +1446,7 @@ impl <'a, 'b, T> Mul<&'b Matrix<T>> for &'a Matrix<T>
         let (r_rows, r_cols): (usize, usize) = rhs.dim();
         assert_eq!(l_cols, r_rows);
 
-        let mut prod: Matrix<T> = Matrix::zero(&l_rows, &r_cols);
+        let mut prod: Matrix<T> = Matrix::zero(l_rows, r_cols);
 
         for i in 0..l_rows
         {
@@ -1477,10 +1478,10 @@ impl <T> Add for Matrix<T>
     /// extern crate mathru;
     /// use mathru::algebra::linear::{Matrix};
     ///
-    /// let a: Matrix<f64> = Matrix::new(&2, &2, &vec![1.0, 0.0, 3.0, -7.0]);
-    /// let b: Matrix<f64> = Matrix::new(&2, &2, &vec![1.0, 0.0, 3.0, -7.0]);
+    /// let a: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
+    /// let b: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
     ///
-    /// assert_eq!(b, Matrix::zero(&2, &2) + a);
+    /// assert_eq!(b, Matrix::zero(2, 2) + a);
     /// ```
     fn add(self: Self, rhs: Self) -> Self::Output
     {
@@ -1505,16 +1506,16 @@ impl <'a, 'b, T> Add<&'b Matrix<T>> for &'a Matrix<T>
     /// extern crate mathru;
     /// use mathru::algebra::linear::{Matrix};
     ///
-    /// let a: Matrix<f64> = Matrix::new(&2, &2, &vec![1.0, 0.0, 3.0, -7.0]);
-    /// let b: Matrix<f64> = Matrix::new(&2, &2, &vec![1.0, 0.0, 3.0, -7.0]);
+    /// let a: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
+    /// let b: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
     ///
-    /// assert_eq!(b, &Matrix::zero(&2, &2) + &a);
+    /// assert_eq!(b, &Matrix::zero(2, 2) + &a);
     /// ```
     fn add(self: Self, rhs: &'b Matrix<T>) -> Self::Output
     {
         assert_eq!(self.dim(), rhs.dim());
 
-        let mut sum: Matrix<T> = Matrix::zero(&self.m, &self.n);
+        let mut sum: Matrix<T> = Matrix::zero(self.m, self.n);
 
         for i in 0..sum.m
         {
@@ -1549,10 +1550,10 @@ impl <T> Sub for Matrix<T>
     /// extern crate mathru;
     /// use mathru::algebra::linear::{Matrix};
     ///
-    /// let a: Matrix<f64> = Matrix::new(&2, &2, &vec![1.0, 0.0, 3.0, -7.0]);
-    /// let b: Matrix<f64> = Matrix::new(&2, &2, &vec![1.0, 0.0, 3.0, -7.0]);
+    /// let a: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
+    /// let b: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
     ///
-    /// assert_eq!(Matrix::zero(&2, &2), a - b);
+    /// assert_eq!(Matrix::zero(2, 2), a - b);
     /// ```
     fn sub(self: Self, rhs: Self) -> Self::Output
     {
@@ -1571,7 +1572,7 @@ impl<'a, 'b, T> Sub<&'b Matrix<T>> for &'a Matrix<T>
         assert_eq!(self.dim(), rhs.dim());
         let (m, n) : (usize, usize) = self.dim();
 
-        let mut diff: Matrix<T> = Matrix::zero(&m, &n);
+        let mut diff: Matrix<T> = Matrix::zero(m, n);
 
         for i in 0..m//Interval::range(Natural::zero(), m)
         {
@@ -1596,8 +1597,8 @@ impl<T> PartialEq for Matrix<T>
     /// extern crate mathru;
     /// use mathru::algebra::linear::{Matrix};
     ///
-    /// let a: Matrix<f64> = Matrix::new(&2, &2, &vec![1.0, 0.0, 3.0, -7.0]);
-    /// let b: Matrix<f64> = Matrix::new(&2, &2, &vec![1.0, 0.0, 3.0, -7.0]);
+    /// let a: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
+    /// let b: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
     ///
     /// assert_eq!(true, a==b);
     /// ```
@@ -1621,10 +1622,10 @@ impl<T> PartialEq for Matrix<T>
 impl<T> Matrix<T>
     where T: Clone + Copy + Zero + One
 {
-    pub fn new<'a, 'b, 'c>(m: &'a usize, n: &'b usize, data: &'c Vec<T>) -> Self
+    pub fn new<'a, 'b>(m: usize, n: usize, data: Vec<T>) -> Self
     {
-        assert_eq!(*m * *n, data.len());
-        Matrix{m: *m, n: *n, data: data.clone()}
+        assert_eq!(m * n, data.len());
+        Matrix{m: m, n: n, data: data}
     }
 
 //    fn new_diag<'a, 'b, 'c>(m: &'a usize, n: &'b usize, data: &'c Vector<T>) -> Self
@@ -1657,17 +1658,17 @@ impl<T> Matrix<T>
     /// extern crate mathru;
     /// use mathru::algebra::linear::{Matrix};
     ///
-    /// let a: Matrix<f64> = Matrix::new(&2, &2, &vec![1.0, 0.0, 3.0, -7.0]);
-    /// let b: Matrix<f64> = &a + &Matrix::zero(&2, &2);
+    /// let a: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
+    /// let b: Matrix<f64> = &a + &Matrix::zero(2, 2);
     ///
     /// assert_eq!(a, b);
     /// ```
-    pub fn zero<'a, 'b>(m: &'a usize, n: &'b usize) -> Self
+    pub fn zero(m: usize, n: usize) -> Self
     {
         Matrix {
-            m: *m,
-            n: *n,
-            data: vec![T::zero(); *m * *n],
+            m: m,
+            n: n,
+            data: vec![T::zero(); m * n],
         }
     }
 }
@@ -1684,24 +1685,24 @@ impl<T> Matrix<T>
     /// extern crate mathru;
     /// use mathru::algebra::linear::{Matrix};
     ///
-    /// let a: Matrix<f64> = Matrix::new(&2, &2, &vec![1.0, 0.0, 3.0, -7.0]);
-    /// let b: Matrix<f64> = &a * &Matrix::one(&2);
+    /// let a: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
+    /// let b: Matrix<f64> = &a * &Matrix::one(2);
     ///
     /// assert_eq!(a, b);
     /// ```
-    pub fn one<'a>(size: &'a usize) -> Self
+    pub fn one(size: usize) -> Self
     {
-        let mut data = vec![T::zero(); *size * *size];
+        let mut data = vec![T::zero(); size * size];
 
-        for i in 0..*size //Interval::range(Natural::zero(), *size)
+        for i in 0..size
         {
-            data[i * *size + i] = T::one();
+            data[i * size + i] = T::one();
         }
 
         Matrix
         {
-            m: *size,
-            n: *size,
+            m: size,
+            n: size,
             data: data,
         }
     }
@@ -1728,7 +1729,7 @@ impl<T> Matrix<T>
     /// extern crate mathru;
     /// use mathru::algebra::linear::{Matrix};
     ///
-    /// let a: Matrix<f64> = Matrix::new(&4, &2, &vec![1.0, 0.0, 3.0, 0.0, 1.0, -7.0, 0.5, 0.25]);
+    /// let a: Matrix<f64> = Matrix::new(4, 2, vec![1.0, 0.0, 3.0, 0.0, 1.0, -7.0, 0.5, 0.25]);
     /// let (m, n) = a.dim();
     ///
     /// assert_eq!(4, m);
@@ -1751,7 +1752,7 @@ impl<T> Matrix<T>
     /// extern crate mathru;
     /// use mathru::algebra::linear::{Matrix};
     ///
-    /// let a: Matrix<f64> = Matrix::new(&2, &2, &vec![1.0, 0.0, 3.0, -7.0]);
+    /// let a: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
     /// let b_inv: Matrix<f64> = a.inv().unwrap();
     ///
     /// ```
@@ -1835,200 +1836,7 @@ impl<T> Matrix<T>
     }
 }
 
-impl<T> Matrix<T>
-     where T: Real
-{
-    /// Computes the eigenvalues of a real matrix
-    ///
-    ///
-    /// # Arguments
-    ///
-    ///
-    ///
-    /// # Return
-    ///
-    /// Vector with unsorted eigenvalues
-    ///
-    /// # Example
-    ///
-    /// ```
-    /// extern crate mathru;
-    /// use mathru::algebra::linear::{Vector, Matrix};
-    ///
-    /// let a: Matrix<f64> = Matrix::new(&3, &3, &vec![1.0, -3.0, 3.0, 3.0, -5.0, 3.0, 6.0, -6.0, 4.0]);
-    /// let eig_ref = Vector::new_column(&3, &vec![3.9999999999999996, -2.0, -1.9999999999999982]);
-    /// let eig: Vector<f64> = a.eigenvalue();
-    ///
-    /// assert_eq!(eig_ref, eig);
-    /// ```
-    pub fn eigenvalue(self: &Self) -> Vector<T>
-    {
-        let (m, _n) : (usize, usize) = self.dim();
-
-        let (_q, h): (Matrix<T>, Matrix<T>) = self.dec_hessenberg();
-
-        let (_u, t): (Matrix<T>, Matrix<T>) = h.clone().francis();
-
-        let mut eig: Vector<T> = Vector::zero(&m);
-
-        for i in 0..m
-        {
-            *eig.get_mut(&i) = t.get(&i, &i).clone();
-        }
-
-        return eig;
-    }
 
 
 
-    fn francis(mut self: Self) -> (Matrix<T>, Matrix<T>)
-    {
-        let epsilon: T = T::epsilon();
-
-        let (m, n): (usize, usize) = self.dim();
-
-        let mut u: Matrix<T> = Matrix::one(&m);
-
-        let mut p: usize = n;
-        let mut q: usize;
-
-        while p > 2
-        {
-            q = p - 1;
-
-            // Bulge generating
-            let s: T = *self.get(&(q - 1),&(q -1)) + *self.get(&(p -1),&(p -1));
-            let t: T = *self.get(&(q - 1),&(q -1)) * *self.get(&(p - 1),&(p - 1)) - *self.get(&(q -1),&(p -1)) * *self
-            .get(&(p - 1),&(q - 1));
-
-            // compute first 3 elements of first column of M
-            let mut x: T = self.get(&0,&0).pow(&T::from_f64(2.0).unwrap()) + *self.get(&0,&1) * *self.get(&1,&0) - s *
-            *self.get(&0,&0) + t;
-            let mut y: T = *self.get(&1,&0) * (*self.get(&0,&0) + *self.get(&1, &1) - s);
-            let mut z: T = *self.get(&1,&0) * *self.get(&2,&1);
-
-            for k in 0..(p - 2)
-            {
-                let b: Vector<T> = Vector::new_column(&3, &vec![x, y, z]);
-                let mut h: Matrix<T> = Matrix::householder(&b, 0);
-
-                //Determine the Householder reflector P with P [x; y; z] = αe1 ;
-                {
-                    let r: usize = k.max(1);
-
-                    let temp = &h * &self.get_slice(k, k + 2,r - 1, n - 1);
-                    self = self.set_slice(&temp, k, r - 1);
-
-                }
-
-                {
-                    let h_trans: Matrix<T> = h.transpose_inplace();
-                    let r: usize = p.min(k + 4);
-                    let temp: Matrix<T> = &self.get_slice(0, r - 1, k, k + 2) * &h_trans;
-                    self = self.set_slice(&temp, 0, k);
-
-                    let temp1: Matrix<T> = &u.get_slice(0, n-1, k, k + 2) * &h_trans;
-
-                    u = u.set_slice(&temp1, 0, k);
-                }
-
-                x  = *self.get(&(k + 1), &k);
-                y = *self.get(&(k + 2), &k);
-                if k < (p - 3)
-                {
-                    z = *self.get(&(k + 3), &k);
-                }
-            }
-
-            // Determine the Givens rotation P with P [x; y]T = αe1 ;
-            let (c, s): (T, T) = Matrix::givens_cosine_sine_pair(x, y);
-            let g: Matrix<T> = Matrix::givens(&2, &0, &1, &c, &s);
-
-            {
-                let temp: Matrix<T> = &g * &self.get_slice(q - 1, p - 1, p - 3, n - 1);
-                self = self.set_slice(&temp, q - 1, p - 3);
-            }
-
-            {
-                let g_trans: Matrix<T> = g.transpose_inplace();
-                let temp: Matrix<T> = &self.get_slice(0, p - 1, p - 2, p - 1) * &g_trans;
-                self = self.set_slice(&temp, 0, p - 2);
-
-                let u_slice = &self.get_slice(0, n - 1, p - 2, p - 1) * & g_trans;
-                u = u.set_slice(&u_slice, 0, p - 2);
-            }
-
-            // check for convergence
-            let m: T = self.get(&(q - 1),&(q - 1)).abs();
-            let n: T = self.get(&(p - 1),&(p - 1)).abs();
-            if self.get(&(p - 1) ,&(q - 1)).abs() < epsilon.clone() * (m + n)
-            {
-                *self.get_mut(&(p - 1), &(q - 1)) = T::zero();
-                p = p - 1;
-            }
-            else
-            {
-                let k: T = self.get(&(q - 2),&(q - 2)).abs();
-                let l: T = self.get(&(q - 1),&(q - 1)).abs();
-                if self.get(&(p - 2), &(q - 2)).abs() < epsilon.clone() * (k + l)
-                {
-                    *self.get_mut(&(p - 2), &(q - 2)) = T::zero();
-                    p = p - 2;
-                }
-            }
-            p = p -1;
-        }
-
-        return (u, self);
-    }
-}
-
-impl<T> Matrix<T>
-     where T: Real
-{
-    /// Decomposes self in to the M
-    ///
-    /// q * h * q^T = self
-    ///
-    /// # Arguments
-    ///
-    /// # Return
-    ///
-    /// (q, h)
-    ///
-    /// q:
-    /// # Example
-    ///
-    /// ```
-    /// extern crate mathru;
-    /// use mathru::algebra::linear::{Matrix};
-    ///
-    /// let a: Matrix<f64> = Matrix::new(&3, &3, &vec![1.0, 5.0, 3.0, 1.0, 0.0, -7.0, 3.0, 8.0, 9.0]);
-    /// let (q, h): (Matrix<f64>, Matrix<f64>) = a.dec_hessenberg();
-    ///
-    /// ```
-    pub fn dec_hessenberg(self: &Self) -> (Matrix<T>, Matrix<T>)
-    {
-        let (m, n) : (usize, usize) = self.dim();
-        if m < n
-        {
-            panic!("m is smaller than n");
-        }
-
-        let mut q: Matrix<T> = Matrix::one(&m);
-        let mut h: Matrix<T> = self.clone();
-
-        for k in 1..m
-        {
-            let v: Vector<T> = h.get_column(&(k-1));
-
-            let househ: Matrix<T> = Matrix::householder(&v, k);
-            h = &househ * &h;
-            q = &househ * &q;
-            h = &h.clone() * &househ.transpose_inplace();
-        }
-
-        return (q.transpose_inplace(), h);
-    }
-}
 
