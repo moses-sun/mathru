@@ -34,6 +34,10 @@
 //! assert_eq!(l_ref, l);
 //!```
 
+#[cfg(feature = "lapack_be")]
+extern crate blas;
+extern crate openblas_src;
+
 #[macro_use]
 extern crate serde;
 
