@@ -344,16 +344,22 @@ impl<T> Matrix<T>
 			det *= u.get(&i, &i).clone();
         }
 
-        let mut perm: T = -T::one();
+        let mut counter: usize = 0;
         for i in 0..self.m
         {
             if *p.get(&i, &i) != T::one()
             {
-                perm *= -T::one();
+                counter += 1;
             }
         }
 
-        (perm) * det
+        let mut perm: T = T::one();
+        if counter != 0
+        {
+            perm = (-T::one()).pow( &T::from_usize(counter - 1).unwrap());
+        }
+
+        perm * det
     }
 
 
@@ -492,61 +498,7 @@ impl<T> Matrix<T>
 //    }
 //}
 
-impl<T> Matrix<T>
-    where T: Real
-{
-    /// QR Decomposition with Givens rotations
-    ///
-    /// A = QR \
-    /// Q is an orthogonal matrix \
-    /// R is an upper triangular matrix \
-    ///
-    /// # Example
-    ///
-    /// ```
-    /// extern crate mathru;
-    /// use mathru::algebra::linear::{Matrix};
-    ///
-    /// let a: Matrix<f64> = Matrix::new(2, 2, vec![1.0, -2.0, 3.0, -7.0]);
-    /// let q_ref: Matrix<f64> = Matrix::new(2, 2, vec![0.31622776601683794, -0.9486832980505138, 0.9486832980505138, 0.31622776601683794]);
-    ///
-    /// let (q, r): (Matrix<f64>, Matrix<f64>) = a.dec_qr();
-    ///
-    /// assert_eq!(q_ref, q);
-    /// ```
-    pub fn dec_qr<'a>(self: &'a Self) -> (Matrix<T>, Matrix<T>)
-    {
-        if self.m < self.n
-        {
-            panic!();
-        }
-        let mut q: Matrix<T> = Matrix::one(self.m);
-        let mut r: Matrix<T> = self.clone();
 
-        for j in 0..self.n
-        {
-            for i in (j + 1..self.m).rev()
-            {
-                let a_jj: T = r.get(&j, &j).clone();
-                let a_ij: T = r.get(&i, &j).clone();
-                //let k: T = a_jj.sgn();
-                let p: T = (a_jj.clone() * a_jj.clone() + a_ij.clone() * a_ij.clone()).pow(&T::from_f64
-                (0.5).unwrap());
-                if (p != T::zero()) && (a_jj != T::zero()) && (a_ij != T::zero())
-                {
-                    let c : T = a_jj / p.clone();
-                    let s : T = -a_ij / p;
-                    let g_ij: Matrix<T> = Matrix::givens(&r.m, &i, &j, &c, &s);
-
-                    r = &g_ij * &r;
-                    q = &g_ij * &q;
-                }
-            }
-        }
-        q = q.transpose();
-        (q, r)
-    }
-}
 
 impl<T> Matrix<T>
     where T: Clone
@@ -1741,100 +1693,7 @@ impl<T> Matrix<T>
     }
 }
 
-impl<T> Matrix<T>
-     where T: Real
-{
-    /// Inverse Matrix
-    ///
-    /// # Example
-    ///
-    /// ```
-    /// extern crate mathru;
-    /// use mathru::algebra::linear::{Matrix};
-    ///
-    /// let a: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
-    /// let b_inv: Matrix<f64> = a.inv().unwrap();
-    ///
-    /// ```
-    pub fn inv<'a>(self: &'a Self) -> Result<Matrix<T>, &'static str>
-    {
-        let (mut l, mut u, p) : (Matrix<T>, Matrix<T>, Matrix<T>) = self.dec_lu();
 
-        l.subst_forward();
-        u.subst_backward();
-        return Ok(&(&u * &l) * &p);
-    }
-
-     /*
-     * inplace backward substitution
-     */
-    fn subst_backward<'a>(self: &'a mut Self)
-    {
-        for k in (0..self.n).rev()
-        {
-            for l in (k..self.n).rev()
-            {
-
-                let mut sum : T = T::zero();
-
-                for i in (k+1)..self.n
-                {
-                    sum += self.data[k * self.n + i] * self.data[i * self.n + l];
-                }
-
-                let b : T;
-                if k == l
-                {
-                    b = T::one();
-
-                }
-                else
-                {
-                    b = T::zero();
-                }
-                let div : T = self.data[k * self.n + k];
-                self.data[k * self.n + l] = (b - sum) / div;
-
-            }
-        }
-    }
-
-    /**
-     * inplace forward substitution
-     */
-    fn subst_forward<'a>(self: &'a mut Self)
-    {
-
-        for k in 0..self.n
-        {
-            for l in 0..k
-            {
-
-                let mut sum : T = T::zero();
-
-                for i in 0..k
-                {
-                    sum += self.data[k * self.n + i] * self.data[i * self.n + l];
-                }
-
-                let b : T;
-                if k == l
-                {
-                    b = T::one();
-
-                }
-                else
-                {
-                    b = T::zero();
-                }
-                let div : T = self.data[k * self.n + k];
-                self.data[k * self.n + l] = (b - sum) / div;
-
-            }
-        }
-
-    }
-}
 
 
 

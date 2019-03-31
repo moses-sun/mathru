@@ -1,7 +1,7 @@
 use algebra::linear::{Vector, Matrix};
 use algebra::abstr::{Real};
 
-#[cfg(feature = "lapack_be")]
+#[cfg(feature = "blaslapack")]
 use algebra::abstr::{Zero};
 
 
@@ -158,12 +158,12 @@ impl<T> Matrix<T>
         return (u, self);
     }
 
-    #[cfg(feature = "lapack_be")]
+    #[cfg(feature = "blaslapack")]
     pub fn eigenvalue_r(self: &Self) -> Vector<T>
     {
         let (m, n) : (usize, usize) = self.dim();
 
-        let mut self_data = self.data.clone();
+        let mut self_data = self.transpose().data;
         let n_i32: i32 = n as i32;
 
         let mut info: i32 = 0;

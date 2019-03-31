@@ -7,7 +7,9 @@ use algebra::abstr::{Number, Semiring, Sign, Abs, Ring, Field, Zero, One};
 use std::cmp::Ordering;
 use algebra::abstr::cast::{ToPrimitive, FromPrimitive, NumCast};
 use elementary::{Trigonometry, Exponential, Power, Hyperbolic};
-use algebra::abstr::{Real, Lapack};
+use algebra::abstr::Real;
+#[cfg(feature = "blaslapack")]
+use algebra::abstr::{Lapack};
 use algebra::abstr::cast;
 
 #[macro_export]
@@ -141,57 +143,97 @@ impl<T> RealT for Complex<T>
 	}
 }
 
+#[cfg(feature = "blaslapack")]
 impl<T> Lapack for Complex<T>
 {
-	fn xgehrd(n: i32, ilo: i32, ihi: i32, a: &mut [Self], lda: i32, tau: &mut [Self], work: &mut [Self], lwork: i32,
-	info: &mut i32)
+	fn xgehrd(_n: i32, _ilo: i32, _ihi: i32, _a: &mut [Self], _lda: i32, _tau: &mut [Self], _work: &mut [Self], _lwork:
+	i32,
+	_info: &mut i32)
 	{
 		unimplemented!();
 	}
 
-  	fn xgehrd_work_size(n: i32, ilo: i32, ihi: i32, a: &mut [Self], lda: i32, tau: &mut [Self], info: &mut i32) -> i32
+  	fn xgehrd_work_size(_n: i32, _ilo: i32, _ihi: i32, _a: &mut [Self], _lda: i32, _tau: &mut [Self], _info: &mut
+  	i32) -> i32
   	{
 		unimplemented!();
 	}
 
     fn xorghr(
-        n: i32,
-        ilo: i32,
-        ihi: i32,
-        a: &mut [Self],
-        lda: i32,
-        tau: &[Self],
-        work: &mut [Self],
-        lwork: i32,
-        info: &mut i32,
+        _n: i32,
+        _ilo: i32,
+        _ihi: i32,
+        _a: &mut [Self],
+        _lda: i32,
+        _tau: &[Self],
+        _work: &mut [Self],
+        _lwork: i32,
+        _info: &mut i32,
     )
     {
 		unimplemented!();
 	}
 
-    fn xorghr_work_size(n: i32, ilo: i32, ihi: i32, a: &mut [Self], lda: i32, tau: &[Self], info: &mut i32) -> i32
+    fn xorghr_work_size(_n: i32, _ilo: i32, _ihi: i32, _a: &mut [Self], _lda: i32, _tau: &[Self], _info: &mut i32) ->
+     i32
     {
 		unimplemented!();
 	}
 
-	fn xgeev(jobvl: u8, jobvr: u8, n: i32, a: &mut [Self], lda: i32,
-                     wr: &mut [Self], wi: &mut [Self],
-                     vl: &mut [Self], ldvl: i32, vr: &mut [Self], ldvr: i32,
-                     work: &mut [Self], lwork: i32, info: &mut i32)
+	fn xgeev(_jobvl: u8, _jobvr: u8, _n: i32, _a: &mut [Self], _lda: i32,
+                     _wr: &mut [Self], _wi: &mut [Self],
+                     _vl: &mut [Self], _ldvl: i32, _vr: &mut [Self], _ldvr: i32,
+                     _work: &mut [Self], _lwork: i32, _info: &mut i32)
 	{
 		unimplemented!();
 	}
 
 
 
-  	fn xgeev_work_size(jobvl: u8, jobvr: u8, n: i32, a: &mut [Self], lda: i32,
-                               wr: &mut [Self], wi: &mut [Self], vl: &mut [Self], ldvl: i32,
-                               vr: &mut [Self], ldvr: i32, info: &mut i32) -> i32
+  	fn xgeev_work_size(_jobvl: u8, _jobvr: u8, _n: i32, _a: &mut [Self], _lda: i32,
+                               _wr: &mut [Self], _wi: &mut [Self], _vl: &mut [Self], _ldvl: i32,
+                               _vr: &mut [Self], _ldvr: i32, _info: &mut i32) -> i32
 	{
 		unimplemented!();
 	}
 
-	fn xgetrf(m: i32, n: i32, a: &mut [Self], lda: i32, ipiv: &mut [i32], info: &mut i32)
+	fn xgetrf(_m: i32, _n: i32, _a: &mut [Self], _lda: i32, _ipiv: &mut [i32], _info: &mut i32)
+	{
+		unimplemented!();
+	}
+
+	fn xgeqrf(_m: i32, _n: i32, _a: &mut [Self], _lda: i32, _tau: &mut [Self], _work: &mut [Self], _lwork: i32, _info:
+	&mut
+	i32)
+	{
+		unimplemented!();
+	}
+
+  	fn xgeqrf_work_size(_m: i32, _n: i32, _a: &mut [Self], _lda: i32, _tau: &mut [Self], _info: &mut i32) -> i32
+	{
+		unimplemented!();
+	}
+
+	fn xorgqr(_m: i32, _n: i32, _k: i32, _a: &mut [Self], _lda: i32, _tau: &mut [Self], _work: &mut [Self], _lwork:
+	i32, _info:
+	&mut
+	i32)
+	{
+		unimplemented!();
+	}
+
+  	fn xorgqr_work_size(_m: i32, _n: i32, _k: i32, _a: &mut [Self], _lda: i32, _tau: &mut [Self], _info: &mut i32) ->
+  	 i32
+	{
+		unimplemented!();
+	}
+
+	fn xgetri(_n: i32, _a: &mut [Self], _lda: i32, _ipiv: &mut [i32], _work: &mut [Self], _lwork: i32, _info: &mut i32)
+	{
+    	unimplemented!();
+	}
+
+	fn xgetri_work_size(_n: i32, _a: &mut [Self], _lda: i32, _ipiv: &mut [i32], _info: &mut i32) -> i32
 	{
 		unimplemented!();
 	}

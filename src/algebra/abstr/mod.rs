@@ -20,5 +20,7 @@ pub use self::field::{Field, Sign, Abs};
 pub use self::number::Number;
 pub use self::natural::Natural;
 pub use self::integer::Integer;
-pub use self::real::{Real, Lapack};
+pub use self::real::Real;
+#[cfg(feature = "blaslapack")]
+pub use self::real::{Lapack};
 pub use self::complex::Complex;

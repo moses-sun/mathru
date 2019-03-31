@@ -1,7 +1,7 @@
 use algebra::linear::{Matrix};
 use algebra::abstr::{Real};
 
-#[cfg(feature = "lapack_be")]
+#[cfg(feature = "blaslapack")]
 use algebra::abstr::{Zero};
 
 impl<T> Matrix<T>
@@ -103,7 +103,7 @@ impl<T> Matrix<T>
         (l, u, p)
     }
 
-    #[cfg(feature = "lapack_be")]
+    #[cfg(feature = "blaslapack")]
     fn dec_lu_r<'a>(self: &'a Self) -> (Matrix<T>, Matrix<T>, Matrix<T>)
     {
         let (m, n): (usize, usize) = self.dim();
@@ -129,54 +129,54 @@ impl<T> Matrix<T>
         assert_eq!(0, info);
 
         let mat: Matrix<T> = Matrix::new(m, n, self_data).transpose_inplace();
-        let l: Matrix<T> = Matrix::l(&mat, m, n);
-        let u: Matrix<T> = Matrix::u(&mat, m, n);
+        let l: Matrix<T> = Matrix::l(mat.clone());
+        let u: Matrix<T> = Matrix::u(mat.clone());
         let p: Matrix<T> = Matrix::p(ipiv);
 
         (l, u, p)
     }
 
-    #[cfg(feature = "lapack_be")]
-    fn l(mat: &Matrix<T>, m: usize, n: usize) -> Self
+    #[cfg(feature = "blaslapack")]
+    fn l(mut mat: Matrix<T>) -> Self
     {
-        let mut res: Matrix<T> = mat.clone();
+        let (m, n): (usize, usize) = mat.dim();
 
         //fill upper triangle with zero
         for i in 0..m
         {
             for k in i..n
             {
-                *res.get_mut(&i, &k) = T::zero();
+                *mat.get_mut(&i, &k) = T::zero();
             }
         }
 
         //set diagonal to 1
         for i in 0..m
         {
-             *res.get_mut(&i, &i) = T::one();
+             *mat.get_mut(&i, &i) = T::one();
         }
 
-        res
+        mat
     }
 
-    #[cfg(feature = "lapack_be")]
-    fn u(mat: &Matrix<T>, m: usize, n: usize) -> Self
+    #[cfg(feature = "blaslapack")]
+    fn u(mut mat: Matrix<T>) -> Self
     {
-        let mut res: Matrix<T> = mat.clone();
+        let (m, _n): (usize, usize) = mat.dim();
 
         //fill lower triangle with zero
         for i in 0..m
         {
             for k in 0..i
             {
-                *res.get_mut(&i, &k) = T::zero();
+                *mat.get_mut(&i, &k) = T::zero();
             }
         }
 
-        res
+        mat
     }
 
-    #[cfg(feature = "lapack_be")]
+    #[cfg(feature = "blaslapack")]
     /// transforms a sequence of permutations to a permutation matrix
     fn p(per: Vec<i32>) -> Self
     {

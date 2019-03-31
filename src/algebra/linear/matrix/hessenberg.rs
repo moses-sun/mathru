@@ -1,6 +1,10 @@
-use algebra::linear::{Vector, Matrix};
-use algebra::abstr::Zero;
+use algebra::linear::{Matrix};
 use algebra::abstr::Real;
+#[cfg(feature = "native")]
+use algebra::linear::Vector;
+#[cfg(feature = "blaslapack")]
+use algebra::abstr::Zero;
+
 
 
 
@@ -39,7 +43,7 @@ impl<T> Matrix<T>
     #[cfg(feature = "native")]
     fn dec_hessenberg_r(self: &Self) -> (Matrix<T>, Matrix<T>)
     {
-        let (m, n) : (usize, usize) = self.dim();
+        let (m, _n) : (usize, usize) = self.dim();
 
         let mut q: Matrix<T> = Matrix::one(m);
         let mut h: Matrix<T> = self.clone();
@@ -57,12 +61,13 @@ impl<T> Matrix<T>
         return (q.transpose_inplace(), h);
     }
 
-    #[cfg(feature = "lapack_be")]
+    #[cfg(feature = "blaslapack")]
     fn dec_hessenberg_r(self: &Self) -> (Matrix<T>, Matrix<T>)
     {
         let (m, n) : (usize, usize) = self.dim();
 
-        let mut self_data = self.data.clone();
+        //lapack(fortran) uses column major order
+        let mut self_data = self.transpose().data;
         let n_i32: i32 = n as i32;
 
         let mut tau: Vec<T> = vec![Zero::zero(); n - 1];
@@ -73,7 +78,7 @@ impl<T> Matrix<T>
 
         assert_eq!(0, info);
 
-        let mut work: Vec<T> = vec![Zero::zero(); lwork as usize];
+        let mut work_xgehrd: Vec<T> = vec![Zero::zero(); lwork as usize];
 
         T::xgehrd(
             n_i32,
@@ -82,20 +87,20 @@ impl<T> Matrix<T>
             &mut self_data[..],
             n_i32,
             tau.as_mut(),
-            work.as_mut(),
+            &mut work_xgehrd[..],
             lwork,
             &mut info,
         );
 
         assert_eq!(0, info);
 
-        let h: Matrix<T> = Matrix::new(n, n, self_data.clone()).h();
+        let h: Matrix<T> = Matrix::new(n, n, self_data.clone()).transpose_inplace().h();
         let mut q = self_data;
 
         let mut info: i32 = 0;
 
         let lwork: i32 = T::xorghr_work_size(n_i32, 1, n_i32, &mut q[..], n_i32, tau.as_mut(), &mut info);
-        //let mut work = vec![Zero::zero(), lwork as usize];
+        let mut work_xorghr = vec![T::zero(); lwork as usize];
 
         assert_eq!(0, info);
 
@@ -106,25 +111,23 @@ impl<T> Matrix<T>
             &mut q[..],
             n_i32,
             &tau[..],
-            &mut work[..],
+            &mut work_xorghr[..],
             lwork,
             &mut info,
         );
 
         assert_eq!(0, info);
 
-
-        //return (q.transpose_inplace(), h);
-        (Matrix::new(m, n, q), h)
+        return (Matrix::new(m, n, q), h)
     }
 
-    #[cfg(feature = "lapack_be")]
+    #[cfg(feature = "blaslapack")]
     fn h(mut self: Self) -> Self
     {
         let (m, _n) = self.dim();
         for i in 2..m
         {
-            for k in 0..i
+            for k in 0..(i-1)
             {
                 *self.get_mut(&i, &k) = T::zero();
             }

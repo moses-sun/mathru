@@ -728,8 +728,6 @@ impl<T> Vector<T>
 }
 
 //
-// a, b, c E R^n
-// c = a*b^T
 //impl<T> Mul<Vector<T>> for Vector<T>
 //    where T: Field
 //{

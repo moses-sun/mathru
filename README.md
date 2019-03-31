@@ -5,11 +5,11 @@
 ![minimum rustc 1.32.0](https://img.shields.io/badge/rustc-1.32.0-green.svg)
 
 ------------
-A simple mathematics library written in Rust
+A simple mathematics library written in Rust and supports BLAS/LAPACK.
 
 ## Implementation
 
-This project is implemented using Rust.
+This project is implemented entirely in Rust.
 
 ## Features
     - linear algebra
@@ -18,11 +18,11 @@ This project is implemented using Rust.
             - Basic matrix operations(+,-,*)
             - Transposition
             - LU decomposition (native/lapack)
-            - QR decomposition
+            - QR decomposition (native/lapack)
             - Hessenberg decomposition (native/lapack)
             - Singular value decomposition
-            - Inverse matrix
-            - Determinant
+            - Inverse matrix (native/lapack)
+            - Determinant (native/lapack)
             - Trace
             - Eigenvalue (native/lapack)
 

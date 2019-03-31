@@ -1,15 +1,18 @@
 use algebra::abstr::{Natural, Integer, Real};
-use algebra::abstr::{Number, Semiring, Ring, Sign, Abs, Field, Zero, One, Lapack};
+use algebra::abstr::{Number, Semiring, Ring, Sign, Abs, Field, Zero, One};
 use algebra::abstr::cast::{NumCast, FromPrimitive, ToPrimitive, AsPrimitive};
 use elementary::{Exponential, Trigonometry, Power, Hyperbolic};
 use num::bound::Bound;
 use std::mem::size_of;
 use std::{u8, u16, u32, u64, usize, i8, i16, i32, i64, isize, f32, f64};
 
-//#[cfg(feature = "openblas")]
+
+#[cfg(feature = "blaslapack")]
+use algebra::abstr::Lapack;
+#[cfg(feature = "blaslapack")]
 extern crate lapack;
+#[cfg(feature = "blaslapack")]
 extern crate blas;
-//use lapack;
 
 macro_rules! number_impl
 {
@@ -1281,7 +1284,8 @@ impl_as_primitive!(bool => {});
 
 
 macro_rules! lapack_impl(
-    ($T: ty, $xgehrd: path, $xorghr: path, $xgeev: path, $xgetrf: path) => (
+    ($T: ty, $xgehrd: path, $xorghr: path, $xgeev: path, $xgetrf: path, $xgeqrf: path, $xorgqr: path, $xgetri: path)
+    => (
         impl Lapack for $T
        	{
 
@@ -1339,16 +1343,68 @@ macro_rules! lapack_impl(
                 work[0] as i32
 			}
 
+			//LU decomposition
 			fn xgetrf(m: i32, n: i32, a: &mut [Self], lda: i32, ipiv: &mut [i32], info: &mut i32)
 			{
                 unsafe { $xgetrf(m, n, a, lda, ipiv, info)}
 			}
-        }
+
+			fn xgeqrf(m: i32, n: i32, a: &mut [Self], lda: i32, tau: &mut [Self], work: &mut [Self], lwork: i32,
+			info: &mut i32)
+			{
+				unsafe { $xgeqrf(m, n, a, lda, tau, work, lwork, info) };
+			}
+
+  			fn xgeqrf_work_size(m: i32, n: i32, a: &mut [Self], lda: i32, tau: &mut [Self], info: &mut i32) -> i32
+			{
+				let mut work = [ Zero::zero() ];
+                let lwork = -1 as i32;
+
+                unsafe { $xgeqrf(m, n, a, lda, tau, &mut work, lwork, info) };
+                work[0] as i32
+			}
+
+			fn xorgqr(m: i32, n: i32, k: i32, a: &mut [Self], lda: i32, tau: &mut [Self], work: &mut [Self], lwork:
+			i32,
+			info: &mut i32)
+			{
+				unsafe { $xorgqr(m, n, k, a, lda, tau, work, lwork, info) };
+			}
+
+  			fn xorgqr_work_size(m: i32, n: i32, k: i32, a: &mut [Self], lda: i32, tau: &mut [Self], info: &mut i32) ->
+  			 i32
+			{
+				let mut work = [ Zero::zero() ];
+                let lwork = -1 as i32;
+
+                unsafe { $xorgqr(m, n, k, a, lda, tau, &mut work, lwork, info) };
+                work[0] as i32
+			}
+
+			//
+			fn xgetri(n: i32, a: &mut [Self], lda: i32, ipiv: &mut [i32], work: &mut [Self], lwork: i32, info: &mut i32)
+			{
+                unsafe { $xgetri(n, a, lda, ipiv, work, lwork, info)}
+			}
+
+			fn xgetri_work_size(n: i32, a: &mut [Self], lda: i32, ipiv: &mut [i32], info: &mut i32) -> i32
+			{
+				let mut work = [ Zero::zero() ];
+                let lwork = -1 as i32;
+				unsafe { $xgetri(n, a, lda, ipiv, &mut work, lwork, info) };
+
+				work[0] as i32
+			}
+
+      	}
     )
 );
 
-
-lapack_impl!(f32, lapack::sgehrd, lapack::sorghr, lapack::sgeev, lapack::sgetrf);
-lapack_impl!(f64, lapack::dgehrd, lapack::dorghr, lapack::dgeev, lapack::dgetrf);
+#[cfg(feature = "blaslapack")]
+lapack_impl!(f32, lapack::sgehrd, lapack::sorghr, lapack::sgeev, lapack::sgetrf, lapack::sgeqrf, lapack::sorgqr,
+lapack::sgetri);
+#[cfg(feature = "blaslapack")]
+lapack_impl!(f64, lapack::dgehrd, lapack::dorghr, lapack::dgeev, lapack::dgetrf, lapack::dgeqrf, lapack::dorgqr,
+lapack::dgetri);
 //hessenberg_scalar_impl!(Complex<f32>, lapack::cgehrd);
 //hessenberg_scalar_impl!(Complex<f64>, lapack::zgehrd);

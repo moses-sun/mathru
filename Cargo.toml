@@ -11,12 +11,13 @@ license = "MIT"
 license-file = "LICENSE"
 repository = "https://gitlab.com/matthiaseiholzer/mathru"
 
+[features]
+default = ["native"]
+blaslapack = ["lapack", "blas", "openblas-src"]
+native = []
+
 [dependencies]
 rand = "0.6"
-blas = "0.19"
-openblas-src = "0.5"
-lapack = { version = "0.16"}
-#lapack-src = { version = "0.2", features = ["openblas"] }
 
 [dependencies.serde]
 version =  "1.0"
@@ -26,9 +27,19 @@ features = ["derive"]
 [dev-dependencies]
 serde_json = "1.0"
 
-[features]
-default = ["lapack_be"]
-lapack_be = []
-native = []
+
+[dependencies.lapack]
+version = "0.16"
+optional = true
+
+[dependencies.blas]
+version = "0.16"
+optional = true
+
+[dependencies.openblas-src]
+version = "0.5"
+optional = true
+
+
 
 
