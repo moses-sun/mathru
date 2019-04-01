@@ -45,30 +45,11 @@ This project is implemented entirely in Rust.
             - bernoulli distribution
 
     - elementary functions
-        - trigonometric function
-            - sin()     - arcsin()
-            - cos()     - arccos()
-            - tan()     - arctan()
-            - cot()     - arccot()
-            - sec()     - arcsec()
-            - csc()     - arccsc()
-
+        - trigonometric functions
         - hyperbolic functions
-            - sinh()    - arsinh()
-            - cosh()    - arcosh()
-            - tanh()    - artanh()
-            - coth()    - arcoth()
-            - sech()    - arsech()
-            - csch()    - arcsch()
-
         - exponential
-            - exp()     - ln()
 
 ## Usage
-
-The library usage is described well in the API documentation - including example code.
-
-### Installation
 
 Add this to your `Cargo.toml`:
 

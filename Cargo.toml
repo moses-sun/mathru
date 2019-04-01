@@ -13,6 +13,7 @@ repository = "https://gitlab.com/matthiaseiholzer/mathru"
 
 [features]
 default = ["native"]
+#default = ["blaslapack"]
 blaslapack = ["lapack", "blas", "openblas-src"]
 native = []
 
