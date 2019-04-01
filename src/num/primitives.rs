@@ -14,6 +14,7 @@ extern crate lapack;
 #[cfg(feature = "blaslapack")]
 extern crate blas;
 
+
 macro_rules! number_impl
 {
     ($t:ty) =>
@@ -1282,7 +1283,7 @@ impl_as_primitive!(char => { char });
 impl_as_primitive!(bool => {});
 
 
-
+#[cfg(feature = "blaslapack")]
 macro_rules! lapack_impl(
     ($T: ty, $xgehrd: path, $xorghr: path, $xgeev: path, $xgetrf: path, $xgeqrf: path, $xorgqr: path, $xgetri: path)
     => (
