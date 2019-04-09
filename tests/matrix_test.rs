@@ -712,6 +712,19 @@ mod matrix_test
         assert_eq!(true, compare_vector_epsilon(&eig_ref, &eig, 1.0e-10));
     }
 
+    #[test]
+    fn apply_0()
+    {
+        let a: Matrix<f64> = Matrix::new(3, 3, vec![1.0, -3.0, 3.0, 3.0, -5.0, 3.0, 6.0, -6.0, 4.0]);
+        let a_ref: Matrix<f64> = Matrix::new(3, 3, vec![-1.0, 3.0, -3.0, -3.0, 5.0, -3.0, -6.0, 6.0, -4.0]);
+
+        let b: Matrix<f64> = a.apply(&|x| -x);
+
+        assert_eq!(a_ref, b);
+    }
+
+
+
     fn compare_matrix_epsilon<T: Real>(a: &Matrix<T>, b: &Matrix<T>, epsilon: T) -> bool
     {
         let (a_m, a_n): (usize, usize) = a.dim();

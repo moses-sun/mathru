@@ -6,7 +6,7 @@ use algebra::linear::Matrix;
 use elementary::{Exponential, Power};
 use std::ops::{Add, AddAssign, Mul, Sub, Div};
 use algebra::abstr::{Zero, One};
-use algebra::abstr::{Real};
+use algebra::abstr::{Real, Number};
 use algebra::abstr::cast::FromPrimitive;
 use std::fmt::Display;
 use std::fmt;
@@ -215,6 +215,8 @@ impl<T> Vector<T>
 
 }
 
+
+
 impl<T> Vector<T>
     where T: Real
 {
@@ -237,9 +239,93 @@ impl<T> Vector<T>
     /// ```
     pub fn dotp<'a, 'b>(self: &'a Self, rhs: &'b Self) -> T
     {
+        let (lhs_m, lhs_n) = self.dim();
+        let (rhs_m, rhs_n) = rhs.dim();
+        assert!(lhs_m != 0);
+        assert!(lhs_n == 1);
+        assert_eq!(lhs_m,rhs_m);
+        assert_eq!(lhs_n, rhs_n);
+
         let temp : Vector<T> = self.transpose();
         let res : Matrix<T> = (&temp.data).mul( &(rhs.data));
         (*res.get(&0, &0)).clone()
+    }
+
+
+    /// Find the argmax of the vector.
+    ///
+    /// Returns the index of the largest value in the vector.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// extern crate mathru;
+    /// use mathru::algebra::linear::Vector;
+    ///
+    /// let a = Vector::new_column(4, vec![1.0, 2.0, -3.0, 5.0]);
+    /// let idx = a.argmax();
+    /// assert_eq!(idx, 3);
+    /// ```
+    pub fn argmax(self: &Self) -> usize
+    {
+        let (m, n) = self.dim();
+
+        let mut max_index: usize = 0;
+        let mut max = *self.get(&max_index);;
+
+        let limit: usize = m.max(n);
+
+        assert!(limit != 0);
+
+        for idx in 0..limit
+        {
+            let element: T = *self.get(&idx);
+            if  element > max
+            {
+                max_index = idx;
+                max = element;
+            }
+        }
+
+        return max_index;
+    }
+
+    /// Find the argmin of the vector.
+    ///
+    /// Returns the index of the smallest value in the vector.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// extern crate mathru;
+    /// use mathru::algebra::linear::Vector;
+    ///
+    /// let a = Vector::new_column(4, vec![1.0, -2.0, -6.0, 75.0]);
+    /// let b = a.argmin();
+    /// assert_eq!(b, 2);
+    /// ```
+    pub fn argmin(&self) -> usize
+    {
+        let (m, n) = self.dim();
+
+        let mut min_index: usize = 0;
+        let mut min: T = *self.get(&min_index);;
+
+        let limit: usize = m.max(n);
+
+        assert!(limit != 0);
+
+        for idx in 0..limit
+        {
+            let element: T = *self.get(&idx);
+            if  element < min
+            {
+                min_index = idx;
+                min = element;
+            }
+        }
+
+        return min_index;
     }
 }
 
@@ -556,8 +642,8 @@ impl<T> Vector<T>
 //}
 
 
-impl<T> PartialEq for Vector<T>
-    where T: Real
+impl<T> PartialEq<Self> for Vector<T>
+    where T: Number
 {
     /// Compares if two vectors are equal
     ///

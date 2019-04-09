@@ -1,6 +1,6 @@
 [package]
 name = "mathru"
-version = "0.1.2"
+version = "0.1.3"
 description = "Simple mathematics library written in Rust"
 authors = ["Matthias Eiholzer <matthias.eiholzer@gmail.com>"]
 exclude = ["literature/*", "tests/*", "backup/*", ".gitignore"]
@@ -8,7 +8,6 @@ keywords = ["mathematics", "statistics", "algebra"]
 categories = ["science", "algorithms", "data-structures"]
 readme = "README.md"
 license = "MIT"
-license-file = "LICENSE"
 repository = "https://gitlab.com/matthiaseiholzer/mathru"
 
 [features]

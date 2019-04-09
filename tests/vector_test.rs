@@ -55,6 +55,22 @@ mod vector_test
     }
 
     #[test]
+    fn partial_eq0()
+    {
+        let lhs: Vector<f32> = Vector::new_column(2, vec![1.0, 2.0]);
+        let rhs: Vector<f32> = Vector::new_column(2, vec![1.0, 2.0]);
+        assert_eq!(lhs, rhs);
+    }
+
+     #[test]
+    fn partial_eq1()
+    {
+        let lhs: Vector<u32> = Vector::new_column(2, vec![1, 2]);
+        let rhs: Vector<u32> = Vector::new_column(2, vec![1, 2]);
+        assert_eq!(lhs, rhs);
+    }
+
+    #[test]
     fn add()
     {
         let dim: usize = 5;
@@ -181,12 +197,21 @@ mod vector_test
 
 
     #[test]
-    fn dotp()
+    fn dotp_0()
     {
         let a: Vector<f32> = Vector::new_column(4, vec![-1.0, -3.0, 6.0, -1.0]);
         let b: Vector<f32> = Vector::new_column(4, vec![-2.0, -5.0, -3.0, 2.0]);
         let dotp_ref : f32 = -3.0;
         let dotp : f32 = a.dotp(&b);
+        assert_eq!(dotp_ref, dotp);
+    }
+
+    #[test]
+    fn dotp_1()
+    {
+        let a: Vector<f32> = Vector::new_column(4, vec![-1.0, -3.0, 6.0, -1.0]);
+        let dotp_ref : f32 = 47.0;
+        let dotp : f32 = a.dotp(&a);
         assert_eq!(dotp_ref, dotp);
     }
 
@@ -246,5 +271,21 @@ mod vector_test
         let res = v * m;
 
         assert_eq!(prod_ref, res);
+    }
+
+    #[test]
+    fn argmax()
+    {
+        let m = vector![1.0, -2.0, 3.0, -4.0];
+
+        assert_eq!(2, m.argmax());
+    }
+
+    #[test]
+    fn argmin()
+    {
+        let m = vector![1.0, -2.0, 3.0, -4.0];
+
+        assert_eq!(3, m.argmin());
     }
 }

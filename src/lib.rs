@@ -49,6 +49,7 @@ pub mod elementary;
 pub mod num;
 pub mod special;
 pub mod stats;
+pub mod optim;
 
 
 
