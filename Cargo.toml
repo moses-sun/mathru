@@ -9,37 +9,46 @@ categories = ["science", "algorithms", "data-structures"]
 readme = "README.md"
 license = "MIT"
 repository = "https://gitlab.com/matthiaseiholzer/mathru"
+autobenches = false
+edition = "2018"
 
 [features]
 default = ["native"]
 #default = ["blaslapack"]
-blaslapack = ["lapack", "blas", "openblas-src"]
+blaslapack = ["lapack", "blas", "lapack-src", "blas-src"]
 native = []
 
 [dependencies]
+
 rand = "0.6"
 
 [dependencies.serde]
 version =  "1.0"
 features = ["derive"]
 
-
-[dev-dependencies]
-serde_json = "1.0"
-
-
 [dependencies.lapack]
 version = "0.16"
 optional = true
 
 [dependencies.blas]
-version = "0.16"
+version = "0.20"
 optional = true
 
-[dependencies.openblas-src]
-version = "0.5"
+[dependencies.blas-src]
+version = "0.2"
+features = ["openblas"]
 optional = true
 
+[dependencies.lapack-src]
+version = "0.2"
+features = ["openblas"]
+optional = true
 
+[dev-dependencies]
+serde_json = "1.0"
+criterion = "0.2"
 
-
+[[bench]]
+name = "benchmark"
+path = "benches/lib.rs"
+harness = false
