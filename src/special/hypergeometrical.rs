@@ -1,4 +1,4 @@
-use special::gamma;
+use crate::special::gamma;
 
 
 /// Hypergeometrical function

@@ -1,5 +1,5 @@
 use super::field::Field;
-use elementary::{Exponential, Trigonometry, Power, Hyperbolic};
+use crate::elementary::{Exponential, Trigonometry, Power, Hyperbolic};
 
 #[cfg(feature = "native")]
 /// Real number
@@ -18,7 +18,7 @@ pub trait Real: Field + Exponential + Trigonometry + Power + Hyperbolic
 /// Real number
 ///
 ///<a href="https://en.wikipedia.org/wiki/Real_number">https://en.wikipedia.org/wiki/Real_number</a>
-pub trait Real: Field + Exponential + Trigonometry + Power + Hyperbolic + Lapack
+pub trait Real: Field + Exponential + Trigonometry + Power + Hyperbolic + Lapack + Blas
 {
 	/// Returns the smallest integer greater than or equal to a number.
 	fn ceil(self: &Self) -> Self;
@@ -82,4 +82,16 @@ pub trait Lapack: Sized
 }
 
 
+#[cfg(feature = "blaslapack")]
+pub trait Blas: Sized
+{
+	fn xgemm(transa: u8, transb: u8, m: i32, n: i32, k: i32, alpha: Self,
+    a: &[Self],
+    lda: i32,
+    b: &[Self],
+    ldb: i32,
+    beta: Self,
+    c: &mut [Self],
+    ldc: i32 ) ;
 
+}

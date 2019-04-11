@@ -1,4 +1,4 @@
-use algebra::abstr::Semiring;
+use crate::algebra::abstr::Semiring;
 use std::ops::Neg;
 
 /// Ring

@@ -1,6 +1,6 @@
-use stats::distrib::Continuous;
-use special;
-extern crate rand;
+use crate::stats::distrib::Continuous;
+use crate::special;
+use rand;
 use std::f64;
 
 /// Normal distribution

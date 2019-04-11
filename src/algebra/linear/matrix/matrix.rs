@@ -2,11 +2,15 @@
 
 use std::clone::Clone;
 use std::ops::{Add, AddAssign, Mul, MulAssign, Sub, Neg, Div};
-use algebra::abstr::{Semiring, Zero, One, Sign};
-use algebra::linear::Vector;
-use algebra::abstr::Real;
+use crate::algebra::abstr::{Number, Semiring, Zero, One, Sign};
+use crate::algebra::linear::Vector;
+use crate::algebra::abstr::Real;
 use std::fmt::Display;
 use std::fmt;
+
+use rand;
+use rand::prelude::ThreadRng;
+use rand::Rng;
 
 //use serde::ser::{Serialize};
 ///use serde::de::{Deserialize};
@@ -152,6 +156,7 @@ impl<T> Matrix<T>
         let bigger: usize = self.m.max(self.n);
 
         let mut temp : Vec<T> = Vec::with_capacity(bigger);
+        //Bad
         unsafe {temp.set_len(bigger)};
 
         if gcdiv > 1
@@ -1148,125 +1153,10 @@ impl<T> Matrix<T>
     }
 }
 
-impl <T> Add for Matrix<T>
-    where T: Semiring
-{
-    type Output = Matrix<T>;
-
-    /// Adds two matrices
-    ///
-    /// # Example
-    ///
-    /// ```
-    /// extern crate mathru;
-    /// use mathru::algebra::linear::{Matrix};
-    ///
-    /// let a: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
-    /// let b: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
-    ///
-    /// assert_eq!(b, Matrix::zero(2, 2) + a);
-    /// ```
-    fn add(self: Self, rhs: Self) -> Self::Output
-    {
-        (&self).add(&rhs)
-    }
-}
 
 
-///
-///Adds two matrices
-///
-impl <'a, 'b, T> Add<&'b Matrix<T>> for &'a Matrix<T>
-    where T: Add<T, Output = T> + Zero + Clone
-{
-    type Output = Matrix<T>;
-
-    /// Adds two matrices
-    ///
-    /// # Example
-    ///
-    /// ```
-    /// extern crate mathru;
-    /// use mathru::algebra::linear::{Matrix};
-    ///
-    /// let a: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
-    /// let b: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
-    ///
-    /// assert_eq!(b, &Matrix::zero(2, 2) + &a);
-    /// ```
-    fn add(self: Self, rhs: &'b Matrix<T>) -> Self::Output
-    {
-        assert_eq!(self.dim(), rhs.dim());
-
-        let mut sum: Matrix<T> = Matrix::zero(self.m, self.n);
-
-        for i in 0..sum.m
-        {
-            for j in 0..sum.n
-            {
-                *sum.get_mut(&i, &j) = self.get(&i, &j).clone() + rhs.get(&i, &j).clone();
-            }
-        }
-        sum
-    }
-}
 
 
-impl <T> Sub for Matrix<T>
-    where T: Sub<Output = T> + Zero + Clone + Copy
-{
-    type Output = Matrix<T>;
-
-    /// Subtracts two matrices
-    ///
-    /// A = (a_{ij}) \in T^{m \times n}
-    /// B = (b_{ij}) \in T^{m \times n}
-    /// A - B = ( a_{ij} - b_{ij} )
-    ///
-    /// # Arguments
-    ///
-    /// rhs:
-    ///
-    /// # Example
-    ///
-    /// ```
-    /// extern crate mathru;
-    /// use mathru::algebra::linear::{Matrix};
-    ///
-    /// let a: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
-    /// let b: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
-    ///
-    /// assert_eq!(Matrix::zero(2, 2), a - b);
-    /// ```
-    fn sub(self: Self, rhs: Self) -> Self::Output
-    {
-        (&self).sub(&rhs)
-    }
-}
-
-
-impl<'a, 'b, T> Sub<&'b Matrix<T>> for &'a Matrix<T>
-    where T: Sub<T, Output = T> + Zero + Clone + Copy
-{
-    type Output = Matrix<T>;
-
-    fn sub(self: Self, rhs: &'b Matrix<T>) -> Self::Output
-    {
-        assert_eq!(self.dim(), rhs.dim());
-        let (m, n) : (usize, usize) = self.dim();
-
-        let mut diff: Matrix<T> = Matrix::zero(m, n);
-
-        for i in 0..m//Interval::range(Natural::zero(), m)
-        {
-            for j in 0..n //Interval::range(Natural::zero(), n)
-            {
-                *diff.get_mut(&i, &j) = self.get(&i, &j).clone() - rhs.get(&i, &j).clone();
-            }
-        }
-        diff
-    }
-}
 
 
 impl<T> PartialEq for Matrix<T>
@@ -1311,21 +1201,17 @@ impl<T> Matrix<T>
         Matrix{m: m, n: n, data: data}
     }
 
-//    fn new_diag<'a, 'b, 'c>(m: &'a usize, n: &'b usize, data: &'c Vector<T>) -> Self
-//    {
-//        let (size_m, _size_n): (usize, usize) = data.dim();
-//        assert!(size_m <= *m);
-//        assert!(size_m <= *n);
-//
-//        let mut diag: Matrix<T> = Matrix::zero(&m, &n);
-//
-//        for i in 0..size_m
-//        {
-//            *diag.get_mut(&i, &i) = *data.get(&i);
-//        }
-//
-//        return diag;
-//    }
+}
+
+impl<T> Matrix<T>
+    where T: Number + Clone + Copy + Zero + One
+{
+    pub fn new_random(m: usize, n: usize) -> Matrix<T>
+    {
+        let mut rng = rand::thread_rng();
+        let data: Vec<T> = vec![T::from_f64(rng.gen()).unwrap() ; m * n];
+        Matrix::new(m, n, data)
+    }
 }
 
 

@@ -2,12 +2,12 @@
 //!
 //!
 
-use algebra::linear::Matrix;
-use elementary::{Exponential, Power};
+use crate::algebra::linear::Matrix;
+use crate::elementary::{Exponential, Power};
 use std::ops::{Add, AddAssign, Mul, Sub, Div};
-use algebra::abstr::{Zero, One};
-use algebra::abstr::{Real, Number};
-use algebra::abstr::cast::FromPrimitive;
+use crate::algebra::abstr::{Zero, One};
+use crate::algebra::abstr::{Real, Semiring, Number};
+use crate::algebra::abstr::cast::FromPrimitive;
 use std::fmt::Display;
 use std::fmt;
 use serde::{Serialize, Deserialize};
@@ -189,6 +189,50 @@ impl <T> Vector<T>
         self
     }
 }
+
+impl <T> Vector<T>
+    where T: Number + Clone + Copy + Zero + One
+{
+    /// Returns a row vector initialized with random numbers
+    ///
+    /// # Example
+	///
+	/// ```
+	/// extern crate mathru;
+	/// use mathru::algebra::linear::{Vector};
+	///
+	/// let a: Vector<f64> = Vector::new_row_random(4);
+    ///
+    /// ```
+    pub fn new_row_random(n: usize) -> Self
+    {
+        Vector
+        {
+            data: Matrix::new_random(1, n)
+        }
+    }
+
+    /// Returns a column vector initialized with random numbers
+    ///
+    /// # Example
+	///
+	/// ```
+	/// extern crate mathru;
+	/// use mathru::algebra::linear::{Vector};
+	///
+	/// let a: Vector<f64> = Vector::new_column_random(4);
+    ///
+    /// ```
+    pub fn new_column_random(m: usize) -> Self
+    {
+        Vector
+        {
+            data: Matrix::new_random(m, 1)
+        }
+    }
+
+}
+
 
 impl<T> Vector<T>
     where T: Real
@@ -458,7 +502,7 @@ impl<T> Vector<T>
 impl<T> Vector<T>
     where T: Real
 {
-    pub fn reflector<'a>(self: &Self) -> Vector<T>
+    pub fn reflector(self: &Self) -> Vector<T>
     {
         let two = T::one() + T::one();
         let mut x_temp: Vector<T> = self.clone();
@@ -466,8 +510,8 @@ impl<T> Vector<T>
         let norm_x: T = self.p_norm(&two);
 
         *x_temp.get_mut(&0) += self.get(&0).sgn() * norm_x;
-
-        *x_temp.get_mut(&0) /= x_temp.p_norm(&two);
+        let x_temp_norm: T = x_temp.p_norm(&two);
+        *x_temp.get_mut(&0) /= x_temp_norm;
 
         x_temp
     }
@@ -679,7 +723,7 @@ impl<T> Display for Vector<T>
 
 
 impl <T> Add for Vector<T>
-    where T: Add<T, Output = T> + Mul<T, Output = T> + Zero + Clone + Copy
+    where T: Real
 {
     type Output = Vector<T>;
 
@@ -705,7 +749,7 @@ impl <T> Add for Vector<T>
 
 //c = a + b, a,b,c E T^m
 impl<'a, 'b, T> Add<&'b Vector<T>> for &'a Vector<T>
-    where T: Add<T, Output = T> + Zero + Clone + Copy
+    where T: Real
 {
     type Output = Vector<T>;
 
@@ -734,7 +778,7 @@ impl<'a, 'b, T> Add<&'b Vector<T>> for &'a Vector<T>
 
 //c = a - b , a,b,c E T^m
 impl <T> Sub for Vector<T>
-    where T: Sub<Output = T> + Zero + Clone + Copy
+    where T: Real
 {
     type Output = Vector<T>;
 
@@ -758,9 +802,8 @@ impl <T> Sub for Vector<T>
     }
 }
 
-//c = a - b , a,b,c E T^m
 impl <'a, 'b, T> Sub<&'b Vector<T>> for &'a Vector<T>
-    where T: Sub<T, Output = T> + Zero + Clone + Copy
+    where T: Real
 {
     type Output = Vector<T>;
 
@@ -787,31 +830,6 @@ impl <'a, 'b, T> Sub<&'b Vector<T>> for &'a Vector<T>
     }
 }
 
-impl<T> Vector<T>
-    where T: Mul<T, Output = T> + Zero + Clone
-{
-    #[deprecated(since = "0.1.1")]
-    /// Multiplies the vector with a scalar
-    ///
-    /// # Example
-	///
-	/// ```
-	/// extern crate mathru;
-	/// use mathru::algebra::linear::{Vector};
-	///
-	/// let a: Vector<f64> = Vector::new_column(4, vec![1.0, -2.0, 3.0, 4.0]);
-	/// let res_ref: Vector<f64> = Vector::new_column(4, vec![-2.0, 4.0, -6.0, -8.0]);
-	///
-	/// assert_eq!(res_ref, a.mul_scalar(&-2.0));
-    /// ```
-    pub fn mul_scalar<'a, 'b>(self: &'a Self, rhs: &'b T) -> Vector<T>
-    {
-        Vector
-        {
-            data: self.data.mul_scalar(rhs)
-        }
-    }
-}
 
 //
 //impl<T> Mul<Vector<T>> for Vector<T>
@@ -827,7 +845,7 @@ impl<T> Vector<T>
 
 
 impl<T>  Mul<T> for Vector<T>
-  where T: Copy + Zero + Mul<T, Output = T> + Add<T, Output = T>
+  where T: Real
 {
     type Output = Vector<T>;
 
@@ -838,7 +856,7 @@ impl<T>  Mul<T> for Vector<T>
 }
 
 impl<'a, 'b, T> Mul<&'b T> for &'a Vector<T>
-    where T: Copy + Zero + Mul<T, Output = T> + Add<T, Output = T>
+    where T: Real
 {
     type Output = Vector<T>;
 

@@ -1,4 +1,4 @@
-use stats::distrib::{Continuous, ChiSquared};
+use crate::stats::distrib::{Continuous, ChiSquared};
 
 /// G-Test
 ///

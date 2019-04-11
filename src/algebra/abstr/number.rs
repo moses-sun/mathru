@@ -1,6 +1,6 @@
 use std::fmt::Display;
 use std::fmt::Debug;
-use algebra::abstr::cast::{ToPrimitive , FromPrimitive, NumCast};
+use crate::algebra::abstr::cast::{ToPrimitive , FromPrimitive, NumCast};
 
 
 

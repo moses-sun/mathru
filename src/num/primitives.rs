@@ -1,18 +1,18 @@
-use algebra::abstr::{Natural, Integer, Real};
-use algebra::abstr::{Number, Semiring, Ring, Sign, Abs, Field, Zero, One};
-use algebra::abstr::cast::{NumCast, FromPrimitive, ToPrimitive, AsPrimitive};
-use elementary::{Exponential, Trigonometry, Power, Hyperbolic};
-use num::bound::Bound;
+use crate::algebra::abstr::{Natural, Integer, Real};
+use crate::algebra::abstr::{Number, Semiring, Ring, Sign, Abs, Field, Zero, One};
+use crate::algebra::abstr::cast::{NumCast, FromPrimitive, ToPrimitive, AsPrimitive};
+use crate::elementary::{Exponential, Trigonometry, Power, Hyperbolic};
+use crate::num::bound::Bound;
 use std::mem::size_of;
 use std::{u8, u16, u32, u64, usize, i8, i16, i32, i64, isize, f32, f64};
 
 
 #[cfg(feature = "blaslapack")]
-use algebra::abstr::Lapack;
+use crate::algebra::abstr::{Blas, Lapack};
 #[cfg(feature = "blaslapack")]
-extern crate lapack;
+use lapack;
 #[cfg(feature = "blaslapack")]
-extern crate blas;
+use blas;
 
 
 macro_rules! number_impl
@@ -1402,6 +1402,27 @@ macro_rules! lapack_impl(
 );
 
 #[cfg(feature = "blaslapack")]
+macro_rules! blas_impl(
+    ($T: ty, $xgemm: path)
+    => (
+        impl Blas for $T
+       	{
+       		fn xgemm(transa: u8, transb: u8, m: i32, n: i32, k: i32, alpha: Self,
+    		a: &[Self],
+    		lda: i32,
+    		b: &[Self],
+    		ldb: i32,
+    		beta: Self,
+    		c: &mut [Self],
+    		ldc: i32 )
+			{
+				unsafe { $xgemm(transa, transb, m, n , k, alpha, a, lda, b, ldb, beta, c, ldc)}
+			}
+		}
+	)
+);
+
+#[cfg(feature = "blaslapack")]
 lapack_impl!(f32, lapack::sgehrd, lapack::sorghr, lapack::sgeev, lapack::sgetrf, lapack::sgeqrf, lapack::sorgqr,
 lapack::sgetri);
 #[cfg(feature = "blaslapack")]
@@ -1409,3 +1430,8 @@ lapack_impl!(f64, lapack::dgehrd, lapack::dorghr, lapack::dgeev, lapack::dgetrf,
 lapack::dgetri);
 //hessenberg_scalar_impl!(Complex<f32>, lapack::cgehrd);
 //hessenberg_scalar_impl!(Complex<f64>, lapack::zgehrd);
+
+#[cfg(feature = "blaslapack")]
+blas_impl!(f32, blas::sgemm);
+#[cfg(feature = "blaslapack")]
+blas_impl!(f64, blas::dgemm);

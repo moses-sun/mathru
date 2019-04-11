@@ -1,4 +1,4 @@
-use algebra::abstr::Ring;
+use crate::algebra::abstr::Ring;
 
 /// Integer
 ///

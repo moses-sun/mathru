@@ -1,8 +1,8 @@
-use algebra::linear::{Matrix};
-use algebra::abstr::{Real};
+use crate::algebra::linear::{Matrix};
+use crate::algebra::abstr::{Real};
 
 #[cfg(feature = "blaslapack")]
-use algebra::abstr::{Zero};
+use crate::algebra::abstr::{Zero};
 
 impl<T> Matrix<T>
     where T: Real
@@ -126,7 +126,7 @@ impl<T> Matrix<T>
             &mut info,
         );
 
-        assert_eq!(0, info);
+        assert!(info >= 0);
 
         let mat: Matrix<T> = Matrix::new(m, n, self_data).transpose_inplace();
         let l: Matrix<T> = Matrix::l(mat.clone());

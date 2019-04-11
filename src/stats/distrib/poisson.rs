@@ -1,6 +1,6 @@
-use stats::distrib::Discrete;
-use stats::combins;
-use special;
+use crate::stats::distrib::Discrete;
+use crate::stats::combins;
+use crate::special;
 
 
 /// Poisson distribution

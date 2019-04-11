@@ -1,6 +1,6 @@
-use stats::distrib::ChiSquared as ChiSquaredDistrib;
-use stats::distrib::Continuous;
-use stats::test::Test;
+use crate::stats::distrib::ChiSquared as ChiSquaredDistrib;
+use crate::stats::distrib::Continuous;
+use crate::stats::test::Test;
 
 /// Chi-Squared Ttest
 ///
@@ -47,7 +47,7 @@ impl ChiSquared
 		{
 			for k in 0..2
 			{
-				let mut n_jk: f64;
+				let n_jk: f64;
 				let mut n_k: f64 = 0.0;
 				if k == 0
 				{

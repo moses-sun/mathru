@@ -1,7 +1,6 @@
-use stats::distrib::Continuous;
-use special::gamma;
-use special;
-extern crate rand as selfrand;
+use crate::stats::distrib::Continuous;
+use crate::special::gamma;
+use crate::special;
 use std::f64;
 use super::Normal;
 

@@ -1,5 +1,5 @@
-use stats::distrib::Continuous;
-extern crate rand;
+use crate::stats::distrib::Continuous;
+use rand;
 use std::f64;
 
 /// Exponential distribution

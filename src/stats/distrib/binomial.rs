@@ -1,5 +1,5 @@
-use stats::distrib::Discrete;
-use stats::combins;
+use crate::stats::distrib::Discrete;
+use crate::stats::combins;
 
 /// Binomial distribution
 ///

@@ -1,6 +1,6 @@
 /// Field
 
-use algebra::abstr::Ring;
+use crate::algebra::abstr::Ring;
 use std::ops::{Sub, SubAssign, Div, DivAssign};
 
 

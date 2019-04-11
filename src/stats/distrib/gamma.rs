@@ -1,5 +1,5 @@
-use stats::distrib::Continuous;
-use special::gamma;
+use crate::stats::distrib::Continuous;
+use crate::special::gamma;
 
 /// Gamma distribution
 ///

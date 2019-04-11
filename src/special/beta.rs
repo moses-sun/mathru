@@ -1,4 +1,4 @@
-use special::gamma::gamma;
+use crate::special::gamma::gamma;
 
 /// Beta function
 ///

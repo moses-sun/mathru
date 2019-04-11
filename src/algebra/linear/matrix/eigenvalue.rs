@@ -1,8 +1,8 @@
-use algebra::linear::{Vector, Matrix};
-use algebra::abstr::{Real};
+use crate::algebra::linear::{Vector, Matrix};
+use crate::algebra::abstr::{Real};
 
 #[cfg(feature = "blaslapack")]
-use algebra::abstr::{Zero};
+use crate::algebra::abstr::{Zero};
 
 
 impl<T> Matrix<T>
@@ -86,7 +86,7 @@ impl<T> Matrix<T>
             for k in 0..(p - 2)
             {
                 let b: Vector<T> = Vector::new_column(3, vec![x, y, z]);
-                let mut h: Matrix<T> = Matrix::householder(&b, 0);
+                let h: Matrix<T> = Matrix::householder(&b, 0);
 
                 //Determine the Householder reflector P with P [x; y; z] = αe1 ;
                 {

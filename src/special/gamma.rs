@@ -1,6 +1,6 @@
 use std::f64::consts::PI;
 
-use algebra::abstr::Real;
+use crate::algebra::abstr::Real;
 
 /// Gamma function
 ///

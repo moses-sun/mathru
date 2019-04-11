@@ -1,6 +1,6 @@
 use std::ops::{Add, AddAssign, Mul, MulAssign};
 use std::marker::Sized;
-use algebra::abstr::Number;
+use crate::algebra::abstr::Number;
 
 /// Semiring
 ///

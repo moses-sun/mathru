@@ -1,16 +1,15 @@
 use std::ops::{Add, AddAssign, Sub, SubAssign, Mul, MulAssign, Div, DivAssign, Neg};
 use std::fmt;
 use std::fmt::{Display};
-use algebra::abstr::Complex as ComplexT;
-use algebra::abstr::Real as RealT;
-use algebra::abstr::{Number, Semiring, Sign, Abs, Ring, Field, Zero, One};
+use crate::algebra::abstr::Complex as ComplexT;
+use crate::algebra::abstr::Real as RealT;
+use crate::algebra::abstr::{Number, Semiring, Sign, Abs, Ring, Field, Zero, One};
 use std::cmp::Ordering;
-use algebra::abstr::cast::{ToPrimitive, FromPrimitive, NumCast};
-use elementary::{Trigonometry, Exponential, Power, Hyperbolic};
-use algebra::abstr::Real;
+use crate::algebra::abstr::cast::{ToPrimitive, FromPrimitive, NumCast};
+use crate::elementary::{Trigonometry, Exponential, Power, Hyperbolic};
+use crate::algebra::abstr::{cast, Real};
 #[cfg(feature = "blaslapack")]
-use algebra::abstr::{Lapack};
-use algebra::abstr::cast;
+use crate::algebra::abstr::{Blas, Lapack};
 
 #[macro_export]
 macro_rules! Complex
@@ -237,6 +236,23 @@ impl<T> Lapack for Complex<T>
 	{
 		unimplemented!();
 	}
+}
+
+#[cfg(feature = "blaslapack")]
+impl<T> Blas for Complex<T>
+{
+	fn xgemm(transa: u8, transb: u8, m: i32, n: i32, k: i32, alpha: Self,
+    a: &[Self],
+    lda: i32,
+    b: &[Self],
+    ldb: i32,
+    beta: Self,
+    c: &mut [Self],
+    ldc: i32 )
+	{
+		unimplemented!();
+	}
+
 }
 
 

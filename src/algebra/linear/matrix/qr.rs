@@ -1,8 +1,8 @@
-use algebra::linear::{Matrix};
-use algebra::abstr::{Real};
+use crate::algebra::linear::{Matrix};
+use crate::algebra::abstr::{Real};
 
 #[cfg(feature = "blaslapack")]
-use algebra::abstr::{Zero};
+use crate::algebra::abstr::{Zero};
 
 impl<T> Matrix<T>
     where T: Real

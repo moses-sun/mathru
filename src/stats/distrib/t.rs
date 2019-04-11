@@ -1,6 +1,6 @@
-use stats::distrib::Continuous;
-use special::gamma;
-use special::hypergeometrical;
+use crate::stats::distrib::Continuous;
+use crate::special::gamma;
+use crate::special::hypergeometrical;
 
 /// T distribution
 ///

@@ -1,9 +1,9 @@
-use algebra::linear::{Matrix};
-use algebra::abstr::Real;
+use crate::algebra::linear::{Matrix};
+use crate::algebra::abstr::Real;
 #[cfg(feature = "native")]
-use algebra::linear::Vector;
+use crate::algebra::linear::Vector;
 #[cfg(feature = "blaslapack")]
-use algebra::abstr::Zero;
+use crate::algebra::abstr::Zero;
 
 
 

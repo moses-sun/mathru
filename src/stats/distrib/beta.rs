@@ -1,6 +1,6 @@
-use stats::distrib::Continuous;
-use special;
-use special::beta;
+use crate::stats::distrib::Continuous;
+use crate::special;
+use crate::special::beta;
 
 
 /// Beta distribution

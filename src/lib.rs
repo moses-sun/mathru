@@ -37,7 +37,9 @@
 #[cfg(feature = "blaslapack")]
 extern crate blas;
 #[cfg(feature = "blaslapack")]
-extern crate openblas_src;
+extern crate blas_src;
+#[cfg(feature = "blaslapack")]
+extern crate lapack;
 
 #[macro_use]
 extern crate serde;
@@ -49,7 +51,7 @@ pub mod elementary;
 pub mod num;
 pub mod special;
 pub mod stats;
-pub mod optim;
+//pub mod optim;
 
 
 

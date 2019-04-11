@@ -1,4 +1,4 @@
-use stats::distrib::Discrete;
+use crate::stats::distrib::Discrete;
 
 
 /// Bernoulli distribution
