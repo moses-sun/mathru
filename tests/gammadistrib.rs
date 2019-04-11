@@ -1,7 +1,7 @@
 extern crate mathru;
 
 #[cfg(test)]
-mod gammadistrib_test
+mod gammadistrib
 {
 	use mathru::stats::distrib::Gamma;
 	use mathru::stats::distrib::Continuous;

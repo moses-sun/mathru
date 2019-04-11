@@ -1,7 +1,7 @@
 extern crate mathru;
 
 #[cfg(test)]
-mod tdistrib_test
+mod tdistrib
 {
 	use mathru::stats::distrib::T;
 	use mathru::stats::distrib::Continuous;

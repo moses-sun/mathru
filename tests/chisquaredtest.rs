@@ -1,7 +1,7 @@
 extern crate mathru;
 
 #[cfg(test)]
-mod chisquaredtest_test
+mod chisquaredtest
 {
     use mathru::stats::test::{Test, ChiSquared};
 

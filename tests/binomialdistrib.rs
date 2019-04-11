@@ -1,7 +1,7 @@
 extern crate mathru;
 
 #[cfg(test)]
-mod binomialdistrib_test
+mod binomialdistrib
 {
     use mathru::stats::distrib::{Discrete, Binomial};
 

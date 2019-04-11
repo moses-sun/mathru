@@ -1,7 +1,7 @@
 extern crate mathru;
 
 #[cfg(test)]
-mod bernoullidistrib_test
+mod bernoullidistrib
 {
     use mathru::stats::distrib::{Discrete, Bernoulli};
 

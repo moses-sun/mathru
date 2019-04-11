@@ -3,7 +3,7 @@ extern crate mathru;
 extern crate serde;
 
 #[cfg(test)]
-mod matrix_test
+mod matrix
 {
     use mathru::algebra::linear::{Vector, Matrix};
     use mathru::elementary::{Power};
@@ -113,20 +113,8 @@ mod matrix_test
 
         let m_res : Matrix<f32> = &m_zero + &m_one;
 
-        for i in 0..dim
-        {
-            for k in 0..dim
-            {
-                if i == k
-                {
-                    assert_eq!(1.0, *(m_res.get(&i, &k)));
-                }
-                else
-                {
-                    assert_eq!(0.0, *(m_res.get(&i, &k)));
-                }
-            }
-        }
+        assert!(compare_matrix_epsilon(&m_one, &m_res, 10e-10));
+
     }
 
     #[test]
@@ -156,6 +144,65 @@ mod matrix_test
     }
 
     #[test]
+    fn mul_3()
+    {
+        let a: Matrix<f64> = matrix![1.0, 2.0, 5.0; 3.0, 4.0, 6.0];
+        let b: Matrix<f64> = matrix![5.0, 8.0; 6.0, 9.0; 7.0, 10.0];
+        let reference: Matrix<f64> = matrix![52.0, 76.0; 81.0, 120.0];
+
+        let res: Matrix<f64> = &a * &b;
+
+        assert_eq!(reference, res);
+    }
+
+    #[test]
+    fn mul_4()
+    {
+        let a: Matrix<f64> = matrix![1.0, 2.0, 5.0];
+        let b: Matrix<f64> = matrix![5.0, 8.0; 6.0, 9.0; 7.0, 10.0];
+        let reference: Matrix<f64> = matrix![52.0, 76.0];
+
+        let res: Matrix<f64> = &a * &b;
+
+        assert_eq!(reference, res);
+    }
+
+    #[test]
+    fn mul_5()
+    {
+        let a: Matrix<f64> = matrix![1.0, 2.0, 5.0; 3.0, 4.0, 6.0];
+        let b: Matrix<f64> = matrix![5.0; 6.0; 7.0];
+        let reference: Matrix<f64> = matrix![52.0; 81.0];
+
+        let res: Matrix<f64> = &a * &b;
+
+        assert_eq!(reference, res);
+    }
+
+    #[test]
+    fn mul_6()
+    {
+        let a: Matrix<f64> = matrix![1.0, 2.0, 5.0; 3.0, 4.0, 6.0; 7.0, 8.0, 9.0];
+        let b: Matrix<f64> = matrix![5.0, 8.0; 6.0, 9.0; 7.0, 10.0];
+        let reference: Matrix<f64> = matrix![52.0, 76.0; 81.0, 120.0; 146.0, 218.0];
+
+        let res: Matrix<f64> = &a * &b;
+
+        assert!(compare_matrix_epsilon(&reference, &res, 10e-10));
+    }
+
+    #[test]
+    fn mul_scalar_0()
+    {
+        let a: Matrix<f64> = matrix![1.0, -2.0, 5.0; 3.0, 4.0, 6.0; 7.0, -8.0, 9.0];
+        let reference = matrix![-2.0, 4.0, -10.0; -6.0, -8.0, -12.0; -14.0, 16.0, -18.0];
+
+        let res: Matrix<f64> = &a * &-2.0;
+
+        assert_eq!(reference, res);
+    }
+
+    #[test]
     fn decompose_lu_0()
     {
         let dim: usize = 3;
@@ -171,7 +218,7 @@ mod matrix_test
         assert!(compare_matrix_epsilon(&u_ref, &u, 1.0e-10));
         assert!(compare_matrix_epsilon( &p_ref,&p, 1.0e-10));
 
-        assert_eq!(p*a, l*u);
+        assert_eq!(&p * &a, &l * &u);
     }
 
     #[test]
@@ -344,7 +391,7 @@ mod matrix_test
 
         assert!(compare_matrix_epsilon(&q_ref, &q, 1.0e-10));
         //assert!(compare_matrix_epsilon(&r_ref, &r, 1.0e-10));
-        assert!(compare_matrix_epsilon(&(q*r), &a, 1.0e-10));
+        assert!(compare_matrix_epsilon(&(&q * &r), &a, 1.0e-10));
     }
 
     #[cfg(feature = "blaslapack")]
@@ -358,12 +405,12 @@ mod matrix_test
         let q_ref: Matrix<f64> = matrix![-8.571428571428572e-01, 3.942857142857143e-01, 3.314285714285715e-01;
         -4.285714285714286e-01, -9.028571428571428e-01, -3.428571428571425e-02;
         2.857142857142858e-01, -1.714285714285714e-01,  9.428571428571428e-01];
-
-        let qr_ref: Matrix<f64> = matrix![12.0, -51.0, 4.0, 6.0, 167.0, -68.0, -4.0, 24.0, -41.0];
+        let r_ref = matrix![-14.0, -21.0, 14.0; 0.0, -175.0, 70.0; 0.0, 0.0, -35.0];
+        let qr_ref: Matrix<f64> = matrix![12.0, -51.0, 4.0; 6.0, 167.0, -68.0; -4.0, 24.0, -41.0];
 
         assert!(compare_matrix_epsilon(&q_ref, &q, 1.0e-10));
-        //assert!(compare_matrix_epsilon(&r_ref, &r, 1.0e-10));
-       assert!(compare_matrix_epsilon(&(q*r), &qr_ref, 1.0e-10));
+        assert!(compare_matrix_epsilon(&r_ref, &r, 1.0e-10));
+        assert!(compare_matrix_epsilon(&(&q * &r), &qr_ref, 1.0e-10));
     }
 
     #[test]
@@ -727,8 +774,12 @@ mod matrix_test
 
     fn compare_matrix_epsilon<T: Real>(a: &Matrix<T>, b: &Matrix<T>, epsilon: T) -> bool
     {
+
         let (a_m, a_n): (usize, usize) = a.dim();
-        //let (b_m, b_n): (usize, usize) = b.dim();
+        let (b_m, b_n): (usize, usize) = b.dim();
+
+        assert!(a_m == b_m);
+        assert!(a_n == b_n);
 
         for i in 0..a_m
         {

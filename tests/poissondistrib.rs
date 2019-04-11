@@ -1,7 +1,7 @@
 extern crate mathru;
 
 #[cfg(test)]
-mod poissondistrib_test
+mod poissondistrib
 {
     use mathru::stats::distrib::{Discrete, Poisson};
 

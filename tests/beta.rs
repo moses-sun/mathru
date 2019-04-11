@@ -1,7 +1,7 @@
 extern crate mathru;
 
 #[cfg(test)]
-mod beta_test
+mod beta
 {
 	use mathru::special::beta;
 

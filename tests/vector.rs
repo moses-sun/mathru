@@ -2,7 +2,7 @@
 extern crate mathru;
 
 #[cfg(test)]
-mod vector_test
+mod vector
 {
     use mathru::algebra::linear::{Vector, Matrix};
     use mathru::elementary::Power;

@@ -1,7 +1,7 @@
 extern crate mathru;
 
 #[cfg(test)]
-mod combins_test
+mod combins
 {
     use mathru::stats::combins;
 

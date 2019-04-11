@@ -2,7 +2,7 @@
 extern crate mathru;
 
 #[cfg(test)]
-mod complex_test
+mod complex
 {
     use mathru::num::{Complex, Complex32, Complex64};
     use mathru::algebra::abstr::Complex as ComplexT;

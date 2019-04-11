@@ -2,7 +2,7 @@
 extern crate mathru;
 
 #[cfg(test)]
-mod gtest_test
+mod gtest
 {
     use mathru::stats::test::{G};
 

@@ -1,7 +1,7 @@
 extern crate mathru;
 
 #[cfg(test)]
-mod chisquareddistrib_test
+mod chisquareddistrib
 {
     use mathru::stats::distrib::{Continuous, ChiSquared};
 

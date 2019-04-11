@@ -1,7 +1,7 @@
 extern crate mathru;
 
 #[cfg(test)]
-mod special_test
+mod special
 {
     use mathru::special;
     use mathru::num::Complex;
