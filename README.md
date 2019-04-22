@@ -51,12 +51,20 @@ This project is implemented entirely in Rust.
 
 ## Usage
 
-Add this to your `Cargo.toml`:
+Add this to your `Cargo.toml` for the native Rust implementation:
 
 ```toml
-[dependencies]
-mathru = "0.1.2"
+[dependencies.mathru]
+version = "0.1.3"
 ```
+
+```toml
+[dependencies.mathru]
+version = "0.1.3"
+default-features = false
+features = ["blaslapack"]
+```
+
 
 And then import the library using:
 ```rust

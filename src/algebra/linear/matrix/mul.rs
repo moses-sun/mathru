@@ -2,8 +2,6 @@ use crate::algebra::linear::{Vector, Matrix};
 use crate::algebra::abstr::{Zero, One, Real};
 use std::ops::{Add, AddAssign, Mul};
 
-#[cfg(feature = "blaslapack")]
-use crate::algebra::abstr::Blas;
 
 /// Multiplies matrix by vector.
 impl<'a, 'b, T> Mul<&'b Vector<T>> for &'a Matrix<T>
@@ -159,7 +157,7 @@ impl<'a, 'b, T> Matrix<T>
     #[cfg(feature = "blaslapack")]
     fn mul_r(self: &'a Self, rhs: &'b Matrix<T>) -> Matrix<T>
     {
-        let (self_cols, self_rows) = self.dim();
+        let (self_cols, _self_rows) = self.dim();
         let (rhs_cols, rhs_rows) = rhs.dim();
 
 

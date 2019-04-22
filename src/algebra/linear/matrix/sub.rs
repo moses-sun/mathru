@@ -71,7 +71,6 @@ impl<'a, 'b, T> Matrix<T>
     fn sub_r(self: &Self, rhs: &'b Matrix<T>) -> Matrix<T>
     {
         let mut c: Matrix<T> = rhs.clone();
-        let (c_m, c_n): (usize, usize) = c.dim();
         let (b_m, b_n): (usize, usize) = rhs.dim();
 
         let a: Matrix<T> = Matrix::one(b_m);
