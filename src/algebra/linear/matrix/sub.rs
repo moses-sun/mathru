@@ -1,6 +1,6 @@
-use crate::algebra::linear::{Vector, Matrix};
-use crate::algebra::abstr::{Zero, Real, Semiring};
-use std::ops::{Add, AddAssign, Mul, MulAssign, Sub, Neg, Div};
+use crate::algebra::linear::{Matrix};
+use crate::algebra::abstr::{Real};
+use std::ops::{Sub};
 
 impl <T> Sub for Matrix<T>
     where T: Real

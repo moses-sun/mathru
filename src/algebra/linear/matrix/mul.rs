@@ -1,6 +1,6 @@
 use crate::algebra::linear::{Vector, Matrix};
 use crate::algebra::abstr::{Zero, One, Real};
-use std::ops::{Add, AddAssign, Mul, MulAssign, Sub, Neg, Div};
+use std::ops::{Add, AddAssign, Mul};
 
 #[cfg(feature = "blaslapack")]
 use crate::algebra::abstr::Blas;

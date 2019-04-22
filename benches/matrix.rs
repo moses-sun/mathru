@@ -9,12 +9,12 @@ use mathru::algebra::linear::Matrix;
 
 criterion_group!(
 	matrix,
-//	mat100_add_mat100,
-//	mat200_add_mat200,
-//	mat500_add_mat500,
-//	mat100_mul_mat100,
-//	mat200_mul_mat200,
-//	mat500_mul_mat500,
+	mat100_add_mat100,
+	mat200_add_mat200,
+	mat500_add_mat500,
+	mat100_mul_mat100,
+	mat200_mul_mat200,
+	mat500_mul_mat500,
 	dec_lu_100x100,
 	dec_lu_200x200,
 	dec_lu_500x500,

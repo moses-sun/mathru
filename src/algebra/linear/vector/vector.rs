@@ -6,7 +6,7 @@ use crate::algebra::linear::Matrix;
 use crate::elementary::{Exponential, Power};
 use std::ops::{Add, AddAssign, Mul, Sub, Div};
 use crate::algebra::abstr::{Zero, One};
-use crate::algebra::abstr::{Real, Semiring, Number};
+use crate::algebra::abstr::{Real, Number};
 use crate::algebra::abstr::cast::FromPrimitive;
 use std::fmt::Display;
 use std::fmt;

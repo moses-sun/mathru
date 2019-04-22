@@ -1,6 +1,6 @@
-use crate::algebra::linear::{Vector, Matrix};
-use crate::algebra::abstr::{Zero, One, Real};
-use std::ops::{Add, AddAssign, Mul, MulAssign, Sub, Neg, Div};
+use crate::algebra::linear::{Matrix};
+use crate::algebra::abstr::{Real};
+use std::ops::{Add};
 
 impl <T> Add for Matrix<T>
     where T: Real
