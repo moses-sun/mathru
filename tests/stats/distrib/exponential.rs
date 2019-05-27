@@ -1,7 +1,7 @@
 extern crate mathru;
 
 #[cfg(test)]
-mod exponentialdistrib
+mod exponential
 {
     use mathru::stats::distrib::{Continuous, Exponential};
 

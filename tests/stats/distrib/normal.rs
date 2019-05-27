@@ -1,7 +1,7 @@
 extern crate mathru;
 
 #[cfg(test)]
-mod normaldistrib
+mod normal
 {
     use mathru::stats::distrib::{Continuous, Normal};
 

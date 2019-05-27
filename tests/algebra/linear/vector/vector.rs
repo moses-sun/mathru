@@ -1,11 +1,10 @@
-#[macro_use]
-extern crate mathru;
 
 #[cfg(test)]
-mod vector
+mod vector_test
 {
     use mathru::algebra::linear::{Vector, Matrix};
     use mathru::elementary::Power;
+
 
     #[test]
     fn macro_vector_column()
@@ -71,7 +70,7 @@ mod vector
     }
 
     #[test]
-    fn add()
+    fn add_owner()
     {
         let dim: usize = 5;
         let a : Vector<f32>  = Vector::new_column(dim, vec![1.0, 2.0, 3.0, 4.0, 5.0]);
@@ -87,7 +86,7 @@ mod vector
     }
 
     #[test]
-    fn add_ref()
+    fn add_borrow()
     {
         let dim: usize = 5;
         let a : Vector<f32>  = Vector::new_column(dim, vec![1.0, 2.0, 3.0, 4.0, 5.0]);
@@ -95,6 +94,36 @@ mod vector
         let res_ref : Vector<f32>  = Vector::new_column(dim, vec![2.0, 6.0, 2.0, 4.0, -2.0]);
 
         let res : Vector<f32> = &a + &b;
+
+        for i in 0..dim
+        {
+            assert_eq!(*(res.get(&i)), *(res_ref.get(&i)));
+        }
+    }
+
+    #[test]
+    fn scalar_add_owner()
+    {
+        let dim: usize = 5;
+        let a : Vector<f32>  = Vector::new_column(dim, vec![1.0, 2.0, 3.0, 4.0, 5.0]);
+        let res_ref : Vector<f32>  = Vector::new_column(dim, vec![6.0, 7.0, 8.0, 9.0, 10.0]);
+
+        let res : Vector<f32> = a + 5.0;
+
+        for i in 0..dim
+        {
+            assert_eq!(*(res.get(&i)), *(res_ref.get(&i)));
+        }
+    }
+
+    #[test]
+    fn scalar_add_borrow()
+    {
+        let dim: usize = 5;
+        let a : Vector<f32>  = Vector::new_column(dim, vec![1.0, 2.0, 3.0, 4.0, 5.0]);
+        let res_ref : Vector<f32>  = Vector::new_column(dim, vec![6.0, 7.0, 8.0, 9.0, 10.0]);
+
+        let res : Vector<f32> = &a + &5.0;
 
         for i in 0..dim
         {
@@ -251,7 +280,7 @@ mod vector
     }
 
     #[test]
-    fn scalar_mul()
+    fn scalar_mul_owner()
     {
         let v = vector![1.0; 2.0; 3.0; 4.0];
         let prod_ref = vector![-0.5; -1.0; -1.5; -2.0];
@@ -262,13 +291,36 @@ mod vector
     }
 
     #[test]
-    fn vector_mul()
+    fn scalar_mul_borrow()
+    {
+        let v = vector![1.0; 2.0; 3.0; 4.0];
+        let prod_ref = vector![-0.5; -1.0; -1.5; -2.0];
+
+        let res = &v * &-0.5;
+
+        assert_eq!(prod_ref, res);
+    }
+
+    #[test]
+    fn matrix_mul_owner()
     {
         let m = matrix![1.0, 2.0; 3.0, 4.0];
         let v = vector![1.0, 2.0];
         let prod_ref = vector![7.0, 10.0];
 
         let res = v * m;
+
+        assert_eq!(prod_ref, res);
+    }
+
+    #[test]
+    fn matrix_mul_borrow()
+    {
+        let m = matrix![1.0, 2.0; 3.0, 4.0];
+        let v = vector![1.0, 2.0];
+        let prod_ref = vector![7.0, 10.0];
+
+        let res = &v * &m;
 
         assert_eq!(prod_ref, res);
     }

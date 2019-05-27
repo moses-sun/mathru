@@ -1,12 +1,12 @@
+/*
 #[macro_use]
-extern crate mathru;
 
 #[cfg(test)]
 mod complex
 {
     use mathru::num::{Complex, Complex32, Complex64};
-    use mathru::algebra::abstr::Complex as ComplexT;
     use mathru::algebra::abstr::{One, Zero, Abs};
+    use mathru::algebra::abstr::Complex as ComplexT;
     use mathru::elementary::{Trigonometry, Exponential, Hyperbolic, Power};
     use mathru::algebra::abstr::cast::{FromPrimitive, ToPrimitive};
     use std::f64::consts;
@@ -494,3 +494,4 @@ mod complex
     }
 
 }
+*/
