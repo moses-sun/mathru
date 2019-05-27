@@ -1,8 +1,9 @@
 use crate::algebra::linear::{Matrix};
 use crate::algebra::abstr::{Real};
+use crate::algebra::abstr::Zero;
 use std::ops::{Add};
 
-impl <T> Add for Matrix<T>
+impl<T> Add<Self> for Matrix<T>
     where T: Real
 {
     type Output = Matrix<T>;
@@ -30,7 +31,7 @@ impl <T> Add for Matrix<T>
 ///
 ///Adds two matrices
 ///
-impl <'a, 'b, T> Add<&'b Matrix<T>> for &'a Matrix<T>
+impl<'a, 'b, T> Add<&'b Matrix<T>> for &'a Matrix<T>
     where T: Real
 {
     type Output = Matrix<T>;
@@ -91,3 +92,58 @@ impl<'a, 'b, T> Matrix<T>
         return c;
     }
 }
+
+///
+/// Add scalar to matrix
+///
+impl<'a, 'b, T> Add<&'b T> for &'a Matrix<T>
+    where T: Add + Zero + Clone
+{
+    type Output = Matrix<T>;
+
+    /// Add a scalar to the matrix
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// extern crate mathru;
+    /// use mathru::algebra::linear::{Matrix};
+    ///
+    /// let a: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
+    /// let b: Matrix<f64> = Matrix::new(2, 2, vec![-3.0, -4.0, -1.0, -11.0]);
+    ///
+    /// assert_eq!(b, &a + &-4.0);
+    /// ```
+    fn add(self: Self, rhs: &T) -> Self::Output
+    {
+        return self.apply_mut(&|x: &T| -> T {x.clone() + rhs.clone()});
+    }
+}
+
+///
+/// Add scalar to matrix
+///
+impl<T> Add<T> for Matrix<T>
+    where T: Add + Zero + Clone
+{
+    type Output = Matrix<T>;
+
+    /// Add a scalar to the matrix
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// extern crate mathru;
+    /// use mathru::algebra::linear::{Matrix};
+    ///
+    /// let a: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
+    /// let b: Matrix<f64> = Matrix::new(2, 2, vec![-3.0, -4.0, -1.0, -11.0]);
+    ///
+    /// assert_eq!(b, a + -4.0);
+    /// ```
+    fn add(mut self: Self, rhs: T) -> Self::Output
+    {
+        return (&self).add(&rhs);
+    }
+}
+

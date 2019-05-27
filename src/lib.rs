@@ -34,23 +34,21 @@
 //! assert_eq!(l_ref, l);
 //!```
 
-#[cfg(feature = "blaslapack")]
-extern crate blas;
-#[cfg(feature = "blaslapack")]
-extern crate blas_src;
-#[cfg(feature = "blaslapack")]
-extern crate lapack;
+//#[cfg(feature = "blaslapack")]
+//extern crate blas;
+//#[cfg(feature = "blaslapack")]
+//extern crate blas_src;
+//#[cfg(feature = "blaslapack")]
+//extern crate lapack;
 
-#[macro_use]
-extern crate serde;
+//extern crate serde;
 
-#[macro_use]
 pub mod algebra;
 pub mod elementary;
-#[macro_use]
 pub mod num;
 pub mod special;
 pub mod stats;
+//pub mod analysis;
 //pub mod optim;
 
 

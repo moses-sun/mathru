@@ -1,4 +1,4 @@
-mod matrix;
+pub mod matrix;
 mod eigenvalue;
 mod hessenberg;
 mod lu;

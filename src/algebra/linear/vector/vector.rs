@@ -13,7 +13,7 @@ use std::fmt;
 use serde::{Serialize, Deserialize};
 
 
-/// Macro to construct vectores
+/// Macro to construct vectors
 ///
 /// ```
 /// #[macro_use]
@@ -722,7 +722,7 @@ impl<T> Display for Vector<T>
 }
 
 
-impl <T> Add for Vector<T>
+impl<T> Add<Self> for Vector<T>
     where T: Real
 {
     type Output = Vector<T>;
@@ -744,6 +744,58 @@ impl <T> Add for Vector<T>
     fn add(self: Self, rhs: Self) -> Self::Output
     {
         (&self).add(&rhs)
+    }
+}
+
+impl<T> Add<T> for Vector<T>
+    where T: Real
+{
+    type Output = Vector<T>;
+
+    /// Adds a scalar to the vector
+    ///
+    /// # Example
+	///
+	/// ```
+	/// extern crate mathru;
+	/// use mathru::algebra::linear::{Vector};
+	///
+	/// let a: Vector<f64> = Vector::new_column(4, vec![1.0, 2.0, 3.0, 4.0]);
+	/// let res_ref: Vector<f64> = Vector::new_column(4, vec![-4.0, -3.0, -2.0, -1.0]);
+	///
+	/// assert_eq!(res_ref, a + -5.0)
+    /// ```
+    fn add(mut self: Self, rhs: T) -> Self::Output
+    {
+        self.data = (&self.data).add(&rhs);
+        return self;
+    }
+}
+
+impl<'a, T> Add<&T> for &'a Vector<T>
+    where T: Real
+{
+    type Output = Vector<T>;
+
+    /// Adds a scalar to the vector
+    ///
+    /// # Example
+	///
+	/// ```
+	/// extern crate mathru;
+	/// use mathru::algebra::linear::{Vector};
+	///
+	/// let a: Vector<f64> = Vector::new_column(4, vec![1.0, 2.0, 3.0, 4.0]);
+	/// let res_ref: Vector<f64> = Vector::new_column(4, vec![-4.0, -3.0, -2.0, -1.0]);
+	///
+	/// assert_eq!(res_ref, a + -5.0)
+    /// ```
+    fn add(mut self: Self, rhs: &T) -> Self::Output
+    {
+        Vector
+        {
+            data : (&self.data).add(rhs)
+        }
     }
 }
 

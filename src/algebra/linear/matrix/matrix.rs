@@ -11,8 +11,7 @@ use std::fmt;
 use rand;
 use rand::Rng;
 
-//use serde::ser::{Serialize};
-///use serde::de::{Deserialize};
+use serde::{Deserialize, Serialize};
 
 
 /// Macro to construct matrices
@@ -28,7 +27,7 @@ use rand::Rng;
 ///     let mat: Matrix<f32> = matrix![1.0, 2.0, 3.0; 4.0, 5.0, 6.0];
 /// }
 /// ```
-#[macro_export]
+#[macro_export(local_inner_macros)]
 macro_rules! matrix
 {
     ($( $( $x: expr ),*);*) =>
@@ -59,6 +58,7 @@ pub struct Matrix<T>
 }
 
 impl<T> Matrix<T>
+    where T: Clone
 {
     /// Applies the function f on every element in the matrix
     ///
@@ -68,15 +68,12 @@ impl<T> Matrix<T>
         self
     }
 
-    //
-//    pub fn apply_indices(mut self: Matrix<T>, row: usize, column: usize, f: &Fn(&T) -> T) -> Matrix<T>
-//    {
-//
-//        self.data = self.data.iter().map(f()
-//
-//        self
-//    }
+    pub fn apply_mut(mut self: &Matrix<T>, f: &Fn(&T) -> T) -> Matrix<T>
+    {
+        (self.clone()).apply(f)
+    }
 }
+
 
 impl<T> Matrix<T>
     where T: Real
