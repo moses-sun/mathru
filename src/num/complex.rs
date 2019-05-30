@@ -241,14 +241,14 @@ impl<T> Lapack for Complex<T>
 #[cfg(feature = "blaslapack")]
 impl<T> Blas for Complex<T>
 {
-	fn xgemm(transa: u8, transb: u8, m: i32, n: i32, k: i32, alpha: Self,
-    a: &[Self],
-    lda: i32,
-    b: &[Self],
-    ldb: i32,
-    beta: Self,
-    c: &mut [Self],
-    ldc: i32 )
+	fn xgemm(_transa: u8, _transb: u8, _m: i32, _n: i32, _k: i32, _alpha: Self,
+    _a: &[Self],
+    _lda: i32,
+    _b: &[Self],
+    _ldb: i32,
+    _beta: Self,
+    _c: &mut [Self],
+    _ldc: i32 )
 	{
 		unimplemented!();
 	}

@@ -68,7 +68,7 @@ impl<T> Matrix<T>
         self
     }
 
-    pub fn apply_mut(mut self: &Matrix<T>, f: &Fn(&T) -> T) -> Matrix<T>
+    pub fn apply_mut(self: &Matrix<T>, f: &Fn(&T) -> T) -> Matrix<T>
     {
         (self.clone()).apply(f)
     }
@@ -407,7 +407,7 @@ impl<T> Matrix<T>
 
 
 
-
+#[cfg(feature = "native")]
 impl<T> Matrix<T>
     where T: Clone
 {
@@ -487,6 +487,7 @@ impl<T> Matrix<T>
         givens
     }
 
+    #[cfg(feature = "native")]
     /// function [c,s] = Givens(a,b)
     /// Givens rotation computation
     /// Determines cosine-sine pair (c,s) so that [c s;-s c]'*[a;b] = [r;0]

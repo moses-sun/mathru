@@ -141,7 +141,7 @@ impl<T> Add<T> for Matrix<T>
     ///
     /// assert_eq!(b, a + -4.0);
     /// ```
-    fn add(mut self: Self, rhs: T) -> Self::Output
+    fn add(self: Self, rhs: T) -> Self::Output
     {
         return (&self).add(&rhs);
     }

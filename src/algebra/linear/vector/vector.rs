@@ -790,11 +790,172 @@ impl<'a, T> Add<&T> for &'a Vector<T>
 	///
 	/// assert_eq!(res_ref, a + -5.0)
     /// ```
-    fn add(mut self: Self, rhs: &T) -> Self::Output
+    fn add(self: Self, rhs: &T) -> Self::Output
     {
         Vector
         {
             data : (&self.data).add(rhs)
+        }
+    }
+}
+
+
+impl<T> Sub<T> for Vector<T>
+    where T: Real
+{
+    type Output = Vector<T>;
+
+    /// Subtracts a scalar value from all vector elements
+    ///
+    /// # Example
+	///
+	/// ```
+	/// extern crate mathru;
+	/// use mathru::algebra::linear::{Vector};
+	///
+	/// let a: Vector<f64> = Vector::new_column(4, vec![1.0, 2.0, 3.0, 4.0]);
+	/// let res_ref: Vector<f64> = Vector::new_column(4, vec![6.0, 7.0, 8.0, 9.0]);
+	///
+	/// assert_eq!(res_ref, a - -5.0)
+    /// ```
+    fn sub(mut self: Self, rhs: T) -> Self::Output
+    {
+        self.data = (&self.data).sub(&rhs);
+        return self;
+    }
+}
+
+impl<'a, T> Sub<&T> for &'a Vector<T>
+    where T: Real
+{
+    type Output = Vector<T>;
+
+    /// Subtract a scalar from vector elements
+    ///
+    /// # Example
+	///
+	/// ```
+	/// extern crate mathru;
+	/// use mathru::algebra::linear::{Vector};
+	///
+	/// let a: Vector<f64> = Vector::new_column(4, vec![1.0, 2.0, 3.0, 4.0]);
+	/// let res_ref: Vector<f64> = Vector::new_column(4, vec![-4.0, -3.0, -2.0, -1.0]);
+	///
+	/// assert_eq!(res_ref, a - 5.0)
+    /// ```
+    fn sub(self: Self, rhs: &T) -> Self::Output
+    {
+        Vector
+        {
+            data : (&self.data).sub(rhs)
+        }
+    }
+}
+
+impl<T> Mul<T> for Vector<T>
+    where T: Real
+{
+    type Output = Vector<T>;
+
+    /// Multiplies the vector elements with a scalar value
+    ///
+    /// # Example
+	///
+	/// ```
+	/// extern crate mathru;
+	/// use mathru::algebra::linear::{Vector};
+	///
+	/// let a: Vector<f64> = Vector::new_column(4, vec![1.0, 2.0, 3.0, 4.0]);
+	/// let res_ref: Vector<f64> = Vector::new_column(4, vec![-5.0, -10.0, -15.0, -20.0]);
+	///
+	/// assert_eq!(res_ref, a * -5.0)
+    /// ```
+    fn mul(self: Self, rhs: T) -> Self::Output
+    {
+        Vector
+        {
+            data: &self.data * (&rhs)
+        }
+    }
+}
+
+impl<'a, T> Mul<&T> for &'a Vector<T>
+    where T: Real
+{
+    type Output = Vector<T>;
+
+    /// Multiplies the vector elements with the scalar value
+    ///
+    /// # Example
+	///
+	/// ```
+	/// extern crate mathru;
+	/// use mathru::algebra::linear::{Vector};
+	///
+	/// let a: Vector<f64> = Vector::new_column(4, vec![1.0, 2.0, 3.0, 4.0]);
+	/// let res_ref: Vector<f64> = Vector::new_column(4, vec![5.0, 10.0, 15.0, 20.0]);
+	///
+	/// assert_eq!(res_ref, a * 5.0)
+    /// ```
+    fn mul(self: Self, rhs: &T) -> Self::Output
+    {
+        Vector
+        {
+            data : (&self.data).mul(rhs)
+        }
+    }
+}
+
+impl<T> Div<T> for Vector<T>
+    where T: Real
+{
+    type Output = Vector<T>;
+
+    /// Divides the vector elements with scalar values
+    ///
+    /// # Example
+	///
+	/// ```
+	/// extern crate mathru;
+	/// use mathru::algebra::linear::{Vector};
+	///
+	/// let a: Vector<f64> = Vector::new_column(4, vec![-5.0, -10.0, -15.0, -20.0]);
+	/// let res_ref: Vector<f64> = Vector::new_column(4, vec![1.0, 2.0, 3.0, 4.0]);
+	///
+	/// assert_eq!(res_ref, a / -5.0)
+    /// ```
+    fn div(self: Self, rhs: T) -> Self::Output
+    {
+        Vector
+        {
+            data: &self.data / (&rhs)
+        }
+    }
+}
+
+impl<'a, T> Div<&T> for &'a Vector<T>
+    where T: Real
+{
+    type Output = Vector<T>;
+
+    /// Divides the elements of a vector with the scalar value
+    ///
+    /// # Example
+	///
+	/// ```
+	/// extern crate mathru;
+	/// use mathru::algebra::linear::{Vector};
+	///
+	/// let a: Vector<f64> = Vector::new_column(4, vec![5.0, 10.0, 15.0, 20.0]);
+	/// let res_ref: Vector<f64> = Vector::new_column(4, vec![1.0, 2.0, 3.0, 4.0]);
+	///
+	/// assert_eq!(res_ref, a / 5.0)
+    /// ```
+    fn div(self: Self, rhs: &T) -> Self::Output
+    {
+        Vector
+        {
+            data : (&self.data).div(rhs)
         }
     }
 }
@@ -883,43 +1044,6 @@ impl <'a, 'b, T> Sub<&'b Vector<T>> for &'a Vector<T>
 }
 
 
-//
-//impl<T> Mul<Vector<T>> for Vector<T>
-//    where T: Field
-//{
-//    type Output = Matrix<T>;
-//    fn mul(self: Self, rhs: Vector<T>) -> Self::Output
-//    {
-//        &(self.data) * &(rhs.data)
-//   }
-//}
-
-
-
-impl<T>  Mul<T> for Vector<T>
-  where T: Real
-{
-    type Output = Vector<T>;
-
-    fn mul(self: Self, rhs: T) -> Self::Output
-    {
-        &self * &rhs
-    }
-}
-
-impl<'a, 'b, T> Mul<&'b T> for &'a Vector<T>
-    where T: Real
-{
-    type Output = Vector<T>;
-
-    fn mul(self: Self, rhs: &'b T) -> Self::Output
-    {
-        Vector
-        {
-            data: &self.data * (rhs)
-        }
-    }
-}
 
 
 impl<T>  Mul<Matrix<T>> for Vector<T>

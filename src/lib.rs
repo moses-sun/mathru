@@ -34,12 +34,12 @@
 //! assert_eq!(l_ref, l);
 //!```
 
-//#[cfg(feature = "blaslapack")]
-//extern crate blas;
-//#[cfg(feature = "blaslapack")]
-//extern crate blas_src;
-//#[cfg(feature = "blaslapack")]
-//extern crate lapack;
+#[cfg(feature = "blaslapack")]
+extern crate blas;
+#[cfg(feature = "blaslapack")]
+extern crate blas_src;
+#[cfg(feature = "blaslapack")]
+extern crate lapack;
 
 //extern crate serde;
 

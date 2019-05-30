@@ -15,6 +15,8 @@ criterion_group!(
 	mat100_mul_mat100,
 	mat200_mul_mat200,
 	mat500_mul_mat500,
+	mat500_add_scalar_borrow,
+	mat500_add_scalar_ownership,
 	dec_lu_100x100,
 	dec_lu_200x200,
 	dec_lu_500x500,
@@ -66,6 +68,20 @@ fn mat500_mul_mat500(bench: &mut Criterion)
     let b: Matrix<f64> = Matrix::new_random(500, 500);
 
     bench.bench_function("mat500_mul_mat500", move |bh| bh.iter(|| &a * &b));
+}
+
+fn mat500_add_scalar_ownership(bench: &mut Criterion)
+{
+    let a: Matrix<f64> = Matrix::new_random(500, 500);
+
+    bench.bench_function("mat500_add_scalar_ownership", move |bh| bh.iter(|| a.clone() + 5.0));
+}
+
+fn mat500_add_scalar_borrow(bench: &mut Criterion)
+{
+    let a: Matrix<f64> = Matrix::new_random(500, 500);
+
+    bench.bench_function("mat500_add_scalar_borrow", move |bh| bh.iter(|| &a + &5.0));
 }
 
 fn dec_lu_100x100(bench: &mut Criterion)

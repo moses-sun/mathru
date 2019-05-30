@@ -61,6 +61,32 @@ impl<T> Mul<T> for Matrix<T>
     }
 }
 
+// Multiplies matrix by scalar
+impl<'a, 'b, T> Mul<&'b T> for &'a Matrix<T>
+    where T: Real
+{
+    type Output = Matrix<T>;
+
+    /// Multiplies a matrix with a scalar
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// extern crate mathru;
+    /// use mathru::algebra::linear::{Matrix};
+    ///
+    /// let a: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
+    /// let res_ref: Matrix<f64> = Matrix::new(2, 2, vec![4.0, 0.0, 12.0, -28.0]);
+    ///
+    /// assert_eq!(res_ref, &a * &4.0);
+    /// ```
+    fn mul(self, m: &'b T) -> Matrix<T>
+    {
+        return self.clone().mul_scalar(m);
+    }
+}
+
+
 // Multiplies matrix by vector.
 impl<T> Mul<Vector<T>> for Matrix<T>
     where T: Copy + Zero + Mul<T, Output = T> + Add<T, Output = T> + One + AddAssign
@@ -98,6 +124,7 @@ impl <T> Mul<Matrix<T>> for Matrix<T>
     }
 }
 
+
 impl<'a, 'b, T> Mul<&'b Matrix<T>> for &'a Matrix<T>
     where T: Real
 {
@@ -124,8 +151,6 @@ impl<'a, 'b, T> Mul<&'b Matrix<T>> for &'a Matrix<T>
 
         return self.mul_r(rhs);
 	}
-
-
 }
 
 impl<'a, 'b, T> Matrix<T>
@@ -175,24 +200,13 @@ impl<'a, 'b, T> Matrix<T>
     }
 }
 
-// Multiplies matrix by scalar
-impl<'a, 'b, T> Mul<&'b T> for &'a Matrix<T>
-    where T: Real
-{
-    type Output = Matrix<T>;
 
-    fn mul(self, m: &'b T) -> Matrix<T>
-    {
-        return self.clone().mul_scalar(m);
-    }
-
-}
 
 impl<'a, 'b, T> Matrix<T>
     where T: Real
 {
     #[cfg(feature = "native")]
-    fn mul_scalar(mut self: Self, m: &'b T) -> Matrix<T>
+    fn mul_scalar(self: Self, m: &'b T) -> Matrix<T>
     {
         self.apply(&|&x| x * *m)
     }
@@ -202,12 +216,12 @@ impl<'a, 'b, T> Matrix<T>
     {
         let (rows, cols) = self.dim();
 
-        let m = rows as i32;
-        let n = cols as i32;
-        let k = n;
+        let m: i32 = rows as i32;
+        let n: i32 = cols as i32;
+        let k: i32 = n;
 
-        let a = vec![T::zero(); rows * cols];
-        let b = vec![T::zero(); cols * rows];
+        let a: Vec<T>= vec![T::zero(); rows * cols];
+        let b: Vec<T>= vec![T::zero(); cols * rows];
 
         T::xgemm('N' as u8, 'N' as u8, m, n, k, T::zero(), &a, m, &b, k, *s, &mut self.data[..],
          m);

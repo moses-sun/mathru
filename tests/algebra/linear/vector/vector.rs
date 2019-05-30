@@ -131,6 +131,86 @@ mod vector_test
         }
     }
 
+     #[test]
+    fn scalar_sub_owner()
+    {
+        let dim: usize = 5;
+        let a : Vector<f32>  = Vector::new_column(dim, vec![1.0, 2.0, 3.0, 4.0, 5.0]);
+        let res_ref : Vector<f32>  = Vector::new_column(dim, vec![-4.0, -3.0, -2.0, -1.0, 0.0]);
+
+        let res : Vector<f32> = a - 5.0;
+
+        for i in 0..dim
+        {
+            assert_eq!(*(res.get(&i)), *(res_ref.get(&i)));
+        }
+    }
+
+    #[test]
+    fn scalar_sub_borrow()
+    {
+        let dim: usize = 5;
+        let a : Vector<f32>  = Vector::new_column(dim, vec![1.0, 2.0, 3.0, 4.0, 5.0]);
+        let res_ref : Vector<f32>  = Vector::new_column(dim, vec![-4.0, -3.0, -2.0, -1.0, 0.0]);
+
+        let res : Vector<f32> = &a - &5.0;
+
+        for i in 0..dim
+        {
+            assert_eq!(*(res.get(&i)), *(res_ref.get(&i)));
+        }
+    }
+
+    #[test]
+    fn scalar_mul_owner()
+    {
+        let dim: usize = 5;
+        let a : Vector<f32>  = Vector::new_column(dim, vec![1.0, 2.0, 3.0, 4.0, 5.0]);
+        let res_ref : Vector<f32>  = Vector::new_column(dim, vec![5.0, 10.0, 15.0, 20.0, 25.0]);
+
+        let res : Vector<f32> = a * 5.0;
+
+        assert_eq!(res, res_ref);
+    }
+
+    #[test]
+    fn scalar_mul_borrow()
+    {
+        let dim: usize = 5;
+        let a : Vector<f32>  = Vector::new_column(dim, vec![1.0, 2.0, 3.0, 4.0, -5.0]);
+        let res_ref : Vector<f32>  = Vector::new_column(dim, vec![-5.0, -10.0, -15.0, -20.0, 25.0]);
+
+        let res : Vector<f32> = &a * &-5.0;
+
+        assert_eq!(res, res_ref);
+
+    }
+
+      #[test]
+    fn scalar_div_owner()
+    {
+        let dim: usize = 5;
+        let a : Vector<f32>  = Vector::new_column(dim, vec![20.0, -10.0, 12.0, -4.0, -1.0]);
+        let res_ref : Vector<f32>  = Vector::new_column(dim, vec![-10.0, 5.0, -6.0, 2.0, 0.5]);
+
+        let res : Vector<f32> = a / -2.0;
+
+        assert_eq!(res, res_ref);
+    }
+
+    #[test]
+    fn scalar_div_borrow()
+    {
+        let a : Vector<f32>  = Vector::new_column(5, vec![20.0, -10.0, 12.0, -4.0, -1.0]);
+        let res_ref : Vector<f32>  = Vector::new_column(5, vec![-10.0, 5.0, -6.0, 2.0, 0.5]);
+
+        let res : Vector<f32> = &a / &-2.0;
+
+        assert_eq!(res, res_ref);
+    }
+
+
+
     #[test]
     fn sub()
     {
@@ -279,27 +359,6 @@ mod vector_test
         assert_eq!(p_norm_ref, p_norm);
     }
 
-    #[test]
-    fn scalar_mul_owner()
-    {
-        let v = vector![1.0; 2.0; 3.0; 4.0];
-        let prod_ref = vector![-0.5; -1.0; -1.5; -2.0];
-
-        let res = v * -0.5;
-
-        assert_eq!(prod_ref, res);
-    }
-
-    #[test]
-    fn scalar_mul_borrow()
-    {
-        let v = vector![1.0; 2.0; 3.0; 4.0];
-        let prod_ref = vector![-0.5; -1.0; -1.5; -2.0];
-
-        let res = &v * &-0.5;
-
-        assert_eq!(prod_ref, res);
-    }
 
     #[test]
     fn matrix_mul_owner()

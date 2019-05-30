@@ -85,3 +85,55 @@ impl<'a, 'b, T> Matrix<T>
         return c;
     }
 }
+
+
+///
+/// Subtracts scalar from all matrix elements
+///
+impl<'a, 'b, T> Sub<&'b T> for &'a Matrix<T>
+    where T: Real
+{
+    type Output = Matrix<T>;
+
+    /// Subtracts a scalar value from all matrix elements
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// extern crate mathru;
+    /// use mathru::algebra::linear::{Matrix};
+    ///
+    /// let a: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
+    /// let b: Matrix<f64> = Matrix::new(2, 2, vec![5.0, 4.0, 7.0, -3.0]);
+    ///
+    /// assert_eq!(b, &a - &-4.0);
+    /// ```
+    fn sub(self: Self, rhs: &T) -> Self::Output
+    {
+        return self.apply_mut(&|x: &T| -> T {x.clone() - rhs.clone()});
+    }
+}
+
+impl<T> Sub<T> for Matrix<T>
+    where T: Real
+{
+    type Output = Matrix<T>;
+
+    /// Subtracts a scalar from all matrix elements
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// extern crate mathru;
+    /// use mathru::algebra::linear::{Matrix};
+    ///
+    /// let a: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
+    /// let b: Matrix<f64> = Matrix::new(2, 2, vec![5.0, 4.0, 7.0, -3.0]);
+    ///
+    /// assert_eq!(b, a - -4.0);
+    /// ```
+    fn sub(self: Self, rhs: T) -> Self::Output
+    {
+        return (&self).sub(&rhs);
+    }
+}

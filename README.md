@@ -2,7 +2,7 @@
 
 [![crate](https://img.shields.io/crates/v/mathru.svg)](https://crates.io/crates/mathru)
 [![documentation](https://docs.rs/mathru/badge.svg)](https://docs.rs/mathru)
-![minimum rustc 1.32.0](https://img.shields.io/badge/rustc-1.32.0-green.svg)
+![minimum rustc 1.37.0](https://img.shields.io/badge/rustc-1.37.0-green.svg)
 
 ------------
 A simple mathematics library written in Rust and supports BLAS/LAPACK.
@@ -55,12 +55,12 @@ Add this to your `Cargo.toml` for the native Rust implementation:
 
 ```toml
 [dependencies.mathru]
-version = "0.1.3"
+version = "0.1.4"
 ```
 
 ```toml
 [dependencies.mathru]
-version = "0.1.3"
+version = "0.1.4"
 default-features = false
 features = ["blaslapack"]
 ```

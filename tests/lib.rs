@@ -7,4 +7,4 @@ pub mod num;
 pub mod special;
 pub mod stats;
 //pub mod analysis;
-pub mod optim;
+//pub mod optim;
