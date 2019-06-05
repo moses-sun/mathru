@@ -5,14 +5,11 @@
 ![minimum rustc 1.37.0](https://img.shields.io/badge/rustc-1.37.0-green.svg)
 
 ------------
-A simple mathematics library written in Rust and supports BLAS/LAPACK.
+mathru is a numeric library containing algorithms for linear algebra, analysis and statistics written in pure Rust with BLAS/LAPACK support.
 
-## Implementation
-
-This project is implemented entirely in Rust.
 
 ## Features
-    - linear algebra
+    - Linear algebra
         - Vector
         - Matrix
             - Basic matrix operations(+,-,*)
@@ -26,55 +23,50 @@ This project is implemented entirely in Rust.
             - Trace
             - Eigenvalue (native/lapack)
 
-    - complex numbers
-        - Complex<f32>
-        - Complex<f64>
+    - Ordinary differential equation (ODE)
+        - Heun's method
+        - Runge-Kutta 4th order
+        - Euler
 
-    - special functions
-        - gamma functions
-        - beta functions
-    - statistics
-        - distributions
-            - normal distribution
-            - gamma distribution
-            - binomial distribution
-            - poisson distribution
-            - exponential distribution
-            - chi squared distribution
-            - beta distribution
-            - bernoulli distribution
+    - Statistics
+        - probability distribution
+            - normal
+            - gamma
+            - binomial
+            - poisson
+            - exponential
+            - chi squared
+            - beta
+            - bernoulli
 
     - elementary functions
         - trigonometric functions
         - hyperbolic functions
-        - exponential
+        - exponential functions
 
+    - special functions
+        - gamma functions
+        - beta functions
 ## Usage
 
 Add this to your `Cargo.toml` for the native Rust implementation:
 
 ```toml
 [dependencies.mathru]
-version = "0.1.4"
+version = "0.1"
 ```
+Add the following lines to 'Cargo.toml' if the blas/lapack backend should be used:
 
 ```toml
 [dependencies.mathru]
-version = "0.1.4"
+version = "0.1"
 default-features = false
 features = ["blaslapack"]
-```
-
-
-And then import the library using:
-```rust
-extern crate mathru;
 ```
 
 Then import the modules and it is ready to be used:
 
 ``` rust
-extern crate mathru;
 use mathru::algebra::linear::{Matrix};
 
 // Compute the LU decomposition of a 2x2 matrix
