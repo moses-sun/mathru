@@ -3,10 +3,10 @@ use crate::algebra::abstr::Field;
 
 //use super::Function;
 
-pub enum Method{
-
-    RK4,
-}
+//pub enum Method{
+//
+//    RK4,
+//}
 
 
 pub trait Solver<T>
