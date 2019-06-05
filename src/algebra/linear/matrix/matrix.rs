@@ -442,8 +442,10 @@ impl<T> Matrix<T>
         v
     }
 
-    //
-    // return row vector
+    ///
+    /// return row vector
+    ///
+    /// i: row
     pub fn get_row<'a, 'b>(self: &'a Self, i: &'b usize) -> Vector<T>
     {
         let mut v: Vector<T> = Vector::zero(self.n);
@@ -457,14 +459,47 @@ impl<T> Matrix<T>
         v
     }
 
-    fn set_column(mut self: Self, row: &Vector<T>, i: &usize) -> Matrix<T>
+    /// set column
+    pub fn set_column(mut self: Self, column: &Vector<T>, i: &usize) -> Matrix<T>
     {
+        let (m, _n) = column.dim();
+        if m != self.m
+        {
+            panic!("Dimensions do not match");
+        }
+
         for k in 0..self.m
         {
-            *self.get_mut(&k, &i) = *row.get(&k);
+            *self.get_mut(&k, &i) = *column.get(&k);
         }
         self
     }
+
+    /// set row
+    ///
+    /// # Arguments
+    /// * 'row'
+    /// * 'i'
+    ///
+    /// # Panics
+    ///
+    ///
+    pub fn set_row(mut self: Self, row: &Vector<T>, i: &usize) -> Matrix<T>
+    {
+        let (_m, n): (usize, usize) = row.dim();
+        if n != self.n
+        {
+            panic!("Dimensions do not match");
+        }
+
+        for k in 0..self.n
+        {
+            *self.get_mut(&i, &k) = *row.get(&k);
+        }
+        self
+    }
+
+
 }
 
 impl<T> Matrix<T>
@@ -1015,7 +1050,6 @@ impl<T> Matrix<T>
     /// # Example
     ///
     /// ```
-    /// extern crate mathru;
     /// use mathru::algebra::linear::{Matrix};
     ///
     /// let mut a: Matrix<f64> = Matrix::new(2, 2, vec![1.0, -2.0, 3.0, -7.0]);
