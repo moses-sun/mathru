@@ -30,10 +30,34 @@ mod heun
 		// y = 2 * x
 		let (t, y): (Vector<f64>, Matrix<f64>) = solver.solve(f, init, 0.0, 2.0);
 
-		let (m, n): (usize, usize) = y.dim();
+		let (m, _n): (usize, usize) = y.dim();
 
+		//println!("{}",  &y.get(&(m-1), &0));
 		assert!(compare_real(&2.0, &t.get(&(m-1)), 0.00000001));
 		assert!(compare_real(&5.00, &y.get(&(m-1), &0), 0.00000001));
+	}
+
+	// x' = 1 + x^2
+	fn f(t: &f64, x: &Vector<f64>) -> Vector<f64>
+	{
+		let result  = vector![1.0] + x.clone().apply(&|e: &f64| -> f64 {return e * e;}) ;
+
+		return result;
+	}
+
+	#[test]
+	fn fn2()
+	{
+		let init: Vector<f64> = vector![0.0];
+		let solver: Heun<f64> = Heun::new(0.01);
+
+
+		let (t, y): (Vector<f64>, Matrix<f64>) = solver.solve(f, init, 0.0, 1.4);
+
+		let (m, _n): (usize, usize) = y.dim();
+
+		assert!(compare_real(&1.40, &t.get(&(m-1)), 0.00000001));
+		assert!(compare_real(&1.4_f64.tan(), &y.get(&(m-1), &0), 0.01));
 	}
 
 }

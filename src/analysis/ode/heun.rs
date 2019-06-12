@@ -71,12 +71,12 @@ impl<T> Solver<T> for Heun<T>
         let mut t_n: T = t_start;
 
         let limit = ((t_end - t_start) / self.step_size).ceil() + T::one();
-
-        let mut t_vec: Vector<T> = Vector::zero(limit.to_usize().unwrap());
+        let steps: usize = limit.to_usize().unwrap();
+        let mut t_vec: Vector<T> = Vector::zero(steps);
         let (m, _n) = init.dim();
-        let mut res_mat: Matrix<T> = Matrix::zero(limit.to_usize().unwrap(), m);
+        let mut res_mat: Matrix<T> = Matrix::zero(steps, m);
 
-        for i in 0..limit.to_usize().unwrap()
+        for i in 0..steps
         {
             *t_vec.get_mut(&i) = t_n;
             res_mat = res_mat.set_row(&x_n.transpose(), &i);
@@ -87,7 +87,7 @@ impl<T> Solver<T> for Heun<T>
             let slope_ideal: Vector<T> = (&slope_left + &slope_right) / T::from_f64(2.0).unwrap();
 
             // Update
-            x_n = &x_n + &(&slope_ideal * &(self.step_size * T::from_f64(0.5).unwrap()));
+            x_n = &x_n + &(&slope_ideal * &self.step_size);
             t_n = t_n + self.step_size;
         }
 
