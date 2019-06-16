@@ -38,7 +38,7 @@ mod rk4
 
 
 	// x' = 1 + x^2
-	fn f(t: &f64, x: &Vector<f64>) -> Vector<f64>
+	fn f(_t: &f64, x: &Vector<f64>) -> Vector<f64>
 	{
 		let result  = vector![1.0] + x.clone().apply(&|e: &f64| -> f64 {return e * e;}) ;
 
