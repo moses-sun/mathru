@@ -2,10 +2,9 @@ use crate::algebra::linear::{Vector, Matrix};
 use crate::algebra::abstr::Real;
 use super::Solver;
 
-/// Solves an ordinary differential equation using the 4th order Runge-Kutta algorithm.
+/// Solves an ordinary differential equation using the 4th order Runge-Kutta-Fehlberg algorithm.
 ///
-///<a href="https://en.wikipedia.org/wiki/Runge%E2%80%93Kutta_methods">https://en.wikipedia
-/// .org/wiki/Rung-Kutta_methods</a>
+///<a href="https://en.wikipedia.org/wiki/Runge%E2%80%93Kutta%E2%80%93Fehlberg_method">https://en.wikipedia.org/wiki/Runge%E2%80%93Kutta%E2%80%93Fehlberg_method</a>
 pub struct RKF45<T>
 {
     h_0: T,
@@ -16,9 +15,6 @@ pub struct RKF45<T>
     /// Step size max
     h_max: T,
 
-    /// Minimal error
-    e_min: T,
-
     /// Maximum error
     e_max: T,
 
@@ -28,24 +24,24 @@ pub struct RKF45<T>
 impl<T> RKF45<T>
     where T: Real
 {
-    /// Creates a RKF45 instance
+    /// Creates a RKF45 instance, also known as Runge-Kutta-Fehlberg
     ///
     /// # Argument
     ///
     /// * 'step_size'
+    /// * 'h_min': Minimum step size
+    /// * 'h_max': Maximum step size
+    /// * 'e_max': Maximum error
     ///
     /// # Panics
     ///
     /// 'h_min' <= 0.0
     /// 'h_max' <= 'h_min'
-    /// 'e_min' <= 0.0
-    /// 'e_max <= 'e_min'
     /// 'n_max' <= 0
     ///
-    pub fn new(h_0: T, h_min: T, h_max: T, e_min: T, e_max: T, n_max: u32) -> RKF45<T>
+    pub fn new(h_0: T, h_min: T, h_max: T, e_max: T, n_max: u32) -> RKF45<T>
     {
-        if h_0 < h_min || h_0 > h_max || h_min <= T::zero() || h_max <= h_min || e_min < T::zero() || e_max <= e_min
-        || n_max <= 0
+        if h_0 < h_min || h_0 > h_max || h_min <= T::zero() || h_max <= h_min || e_max <= T::zero() || n_max <= 0
         {
             panic!();
         }
@@ -55,7 +51,6 @@ impl<T> RKF45<T>
             h_0: h_0,
             h_min: h_min,
             h_max: h_max,
-            e_min: e_min,
             e_max: e_max,
             n_max: n_max
         }
@@ -66,7 +61,7 @@ impl<T> Solver<T> for RKF45<T>
     where T: Real
 {
 
-    /// Solves `func` using the 4th order Runge-Kutta algorithm.
+    /// Solves `func` using the 4th order Runge-Kutta-Fehlberg algorithm.
     ///
     /// # Arguments
     ///
@@ -90,7 +85,7 @@ impl<T> Solver<T> for RKF45<T>
     /// let f = |t: &f64, _x: &Vector<f64> | -> Vector<f64> { return Vector::new_row(1, vec![1.0]) * (t * &2.0f64); };
     ///
     ///	let init: Vector<f64> = vector![1.0];
-    ///	let solver: RKF45<f64> = RKF45::new(0.001, 0.001, 0.01, 0.01, 0.1, 3000);
+    ///	let solver: RKF45<f64> = RKF45::new(0.001, 0.001, 0.01, 0.1, 3000);
     ///
     ///	let (t, y): (Vector<f64>, Matrix<f64>) = solver.solve(f, init, 0.0, 2.0);
     ///
@@ -102,46 +97,51 @@ impl<T> Solver<T> for RKF45<T>
         let mut t_n: T = t_start;
         let mut h: T = self.h_0;
 
-        let limit = ((t_end - t_start) / self.h_min).ceil() + T::one();
-
         let mut t_vec: Vec<T> = Vec::new();
+        t_vec.push(t_n);
 
         let (m, _n) = init.dim();
         let mut res_mat: Vec<Vector<T>> = Vec::new();
+        res_mat.push(x_n.clone());
 
         let mut n: u32 = 0;
         while n < self.n_max && t_n < t_end
         {
-            t_vec.push(t_n);
-            res_mat.push(x_n.clone());
+            h = h.min(t_end - t_n);
+            //
+            let (rkf4, rkf5): (Vector<T>, Vector<T>) = RKF45::calc_rkf4_rkf5(&t_n, &x_n, &func, &h);
+            let e: T = (rkf4.clone() - rkf5.clone()).p_norm(&T::from_f64(2.0).unwrap());
+
+            let mut s: T = T::one();
+
+            if e != T::zero()
+            {
+                s = (self.e_max * h / (T::from_f64(2.0).unwrap() * e)).pow(&T::from_f64(0.25).unwrap());
+            }
+
+            if e <= self.e_max
+            {
+                t_n = t_n + h;
+                x_n = rkf4;
+                t_vec.push(t_n);
+                res_mat.push(x_n.clone());
+                println!("{}", s);
+				n = n + 1;
+				h = s * h;
+            }
+            else
+            {
+                h = s * h;
+            }
 
 
             if h < self.h_min
             {
-                h = self.h_min
-            } else if h > self.h_max
-            {
-                h = self.h_max
+                h = self.h_min;
             }
-
-            //
-            let (rkf4, rkf5): (Vector<T>, Vector<T>) = RKF45::calc_rkf4_rkf5(&t_n, &x_n, &func, &h);
-            let e: T = (rkf4.clone() - rkf5.clone()).p_norm(&T::from_f64(2.0).unwrap());
-            if (e > self.e_max) && (h > self.h_min)
+            if h > self.h_max
             {
-                h = h / T::from_f64(2.0).unwrap();
-            }
-            else
-            {
-                n = n + 1;
-                t_n = t_n + h;
-
-                x_n = rkf5;
-
-                if e < self.e_min
-                {
-                    h = h * T::from_f64(2.0).unwrap();
-                }
+                h = self.h_max;
             }
         }
 

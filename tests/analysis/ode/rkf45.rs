@@ -22,16 +22,23 @@ mod rkf45
 	#[test]
 	fn fn1()
 	{
+		let h_0: f64 = 0.02;
+		let h_min: f64 = 0.001;
+		let h_max: f64 = 1.0;
+		let e_max: f64 = 0.00001;
+		let n_max: u32 = 100;
+
 		let f = |t: &f64, _x: &Vector<f64> | -> Vector<f64> { return vector![1.0] * (t * &2.0f64); };
 
 		let init: Vector<f64> = vector![1.0];
-		let solver: RKF45<f64> = RKF45::new(0.0001, 0.0001, 0.001, 0.0001, 0.0005, 10000);
+		let solver: RKF45<f64> = RKF45::new(h_0, h_min, h_max, e_max, n_max);
 
 		let (t, y): (Vector<f64>, Matrix<f64>) = solver.solve(f, init, 0.0, 2.0);
 
 		let (m, _n): (usize, usize) = y.dim();
 
-
+		println!("{} {}", m, t);
+		println!("{}, {}, {}, ",  &y.get(&(m-1), &0), 1.4_f64.tan(), &t.get(&(m-1)));
 		assert!(compare_real(&2.0, &t.get(&(m-1)), 0.001));
 		assert!(compare_real(&5.0, &y.get(&(m-1), &0), 0.002));
 	}
@@ -39,7 +46,7 @@ mod rkf45
 
 
 	// x' = 1 + x^2
-	fn f(t: &f64, x: &Vector<f64>) -> Vector<f64>
+	fn f(_t: &f64, x: &Vector<f64>) -> Vector<f64>
 	{
 		let result  = vector![1.0] + x.clone().apply(&|e: &f64| -> f64 {return e * e;}) ;
 
@@ -49,16 +56,21 @@ mod rkf45
 	#[test]
 	fn fn2()
 	{
-		let init: Vector<f64> = vector![0.0];
-		let solver: RKF45<f64> = RKF45::new(0.0001, 0.0001, 0.001, 0.0001, 0.0005, 1500);
+		let h_0: f64 = 0.1;
+		let h_min: f64 = 0.01;
+		let h_max: f64 = 1.0;
+		let e_max: f64 = 0.00005;
+		let n_max: u32 = 100000000;
 
+		let init: Vector<f64> = vector![0.0];
+		let solver: RKF45<f64> = RKF45::new(h_0, h_min, h_max, e_max, n_max);
 
 		let (t, y): (Vector<f64>, Matrix<f64>) = solver.solve(f, init, 0.0, 1.4);
 
 		let (m, _n): (usize, usize) = y.dim();
 
-		//println!("{}, {}, {}, ",  &y.get(&(m-1), &0), 1.4_f64.tan(), &t.get(&(m-1)));
+		println!("{}, {}, {}, ",  &y.get(&(m-1), &0), 1.4_f64.tan(), &t.get(&(m-1)));
 		assert!(compare_real(&1.40, &t.get(&(m-1)), 0.001));
-		assert!(compare_real(&1.4_f64.tan(), &y.get(&(m-1), &0), 0.02));
+		assert!(compare_real(&1.4_f64.tan(), &y.get(&(m-1), &0), 0.005));
 	}
 }
