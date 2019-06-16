@@ -21,29 +21,7 @@ macro_rules! number_impl
     {
         impl Number for $t
         {
-//			fn min(self: Self, a: Self) -> Self
-//    		{
-//    			if self <= a
-//				{
-//					return self
-//				}
-//				else
-//				{
-//					return a
-//				}
-//            }
-//
-//    		fn max(self: Self, a: Self) -> Self
-//    		{
-//    			if self >= a
-//				{
-//					return self
-//				}
-//				else
-//				{
-//					return a
-//				}
-//    		}
+
         }
     };
 }
