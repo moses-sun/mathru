@@ -40,13 +40,13 @@ mod euler
 	fn fn2()
 	{
 		// x' = 1 + x^2
-		let f = |t: &f64, x: &Vector<f64> | -> Vector<f64> { return x.clone(); };
+		let f = |_t: &f64, x: &Vector<f64> | -> Vector<f64> { return x.clone(); };
 
 		let init: Vector<f64> = vector![1.0];
 		let solver: Euler<f64> = Euler::new(0.0001);
 
 
-		let (t, y): (Vector<f64>, Matrix<f64>) = solver.solve(f, init, 0.0, 1.5);
+		let (_t, y): (Vector<f64>, Matrix<f64>) = solver.solve(f, init, 0.0, 1.5);
 
 		let (m, _n): (usize, usize) = y.dim();
 		//println!("{}, {}",  &y.get(&(m-1), &0), 1.5_f64.exp());

@@ -56,10 +56,10 @@ mod rkf45
 	#[test]
 	fn fn2()
 	{
-		let h_0: f64 = 0.1;
-		let h_min: f64 = 0.01;
+		let h_0: f64 = 0.0001;
+		let h_min: f64 = 0.0001;
 		let h_max: f64 = 1.0;
-		let e_max: f64 = 0.00005;
+		let e_max: f64 = 0.00001;
 		let n_max: u32 = 100000000;
 
 		let init: Vector<f64> = vector![0.0];
@@ -70,7 +70,7 @@ mod rkf45
 		let (m, _n): (usize, usize) = y.dim();
 
 		println!("{}, {}, {}, ",  &y.get(&(m-1), &0), 1.4_f64.tan(), &t.get(&(m-1)));
-		assert!(compare_real(&1.40, &t.get(&(m-1)), 0.001));
-		assert!(compare_real(&1.4_f64.tan(), &y.get(&(m-1), &0), 0.005));
+		assert!(compare_real(&1.40, &t.get(&(m-1)), 0.0001));
+		assert!(compare_real(&1.4_f64.tan(), &y.get(&(m-1), &0), 0.001));
 	}
 }
