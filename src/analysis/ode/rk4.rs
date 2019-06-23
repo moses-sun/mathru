@@ -83,29 +83,31 @@ impl<T> Solver<T> for RK4<T>
         let (m, _n) = init.dim();
         let mut res_mat: Matrix<T> = Matrix::zero(limit.to_usize().unwrap(), m);
 
+        let h: T = self.step_size;
+
         for i in 0..limit.to_usize().unwrap()
         {
             *t_vec.get_mut(&i) = t_n;
             res_mat = res_mat.set_row(&x_n.transpose(), &i);
 
+
             // k1 = f(t_n, x_n)
             let k1: Vector<T> = func(&t_n, &x_n);
 
-            // k2 = func(t_n + dt/2, x_n + dt *k1/2)
-            let k2: Vector<T> = func(&(t_n + (self.step_size / T::from_f64(2.0).unwrap())), &(&x_n + &((&k1 * &self.step_size) /
+            // k2 = func(t_n + h / 2, x_n + h / 2 k1)
+            let k2: Vector<T> = func(&(t_n + (h / T::from_f64(2.0).unwrap())), &(&x_n + &((&k1 * &h) /
             T::from_f64(2.0).unwrap())));
 
-            // k3 = func(t + dt/2, x + dt * k2/2)
-            let k3: Vector<T> = func(&(t_n + self.step_size / T::from_f64(2.0).unwrap()), &(&x_n + &(&k2 * &(self.step_size /
+            // k3 = func(t_n + h / 2, x_n + h / 2 * k2)
+            let k3: Vector<T> = func(&(t_n + h / T::from_f64(2.0).unwrap()), &(&x_n + &(&k2 * &(h /
             T::from_f64(2.0).unwrap())))) ;
 
-            // k4 = dt * func(t + dt, x + dt * k3)
-            let k4: Vector<T> = func(&(t_n + self.step_size), &(&x_n + &(&k3 * &self.step_size)));
-
+            // k4 = h * func(t_n + h, x_n + h * k3)
+            let k4: Vector<T> = func(&(t_n + h), &(&x_n + &(&k3 * &h)));
 
             // x[n+1] = x[n] + h*(k1 + 2*k2 + 2*k3 + k4)/6
-            x_n = x_n + (k1 + ((k2 + k3) * T::from_f64(2.0).unwrap()) + k4) * self.step_size / T::from_f64(6.0).unwrap();
-            t_n = t_n + self.step_size;
+            x_n = x_n + (k1 + ((k2 + k3) * T::from_f64(2.0).unwrap()) + k4) * h / T::from_f64(6.0).unwrap();
+            t_n = t_n + h;
         }
 
         return (t_vec, res_mat);

@@ -57,7 +57,7 @@ mod rkf45
 		let h_min: f64 = 0.0001;
 		let h_max: f64 = 1.0;
 		let e_max: f64 = 0.00001;
-		let n_max: u32 = 100000000;
+		let n_max: u32 = 1000;
 
 		let init: Vector<f64> = vector![0.0];
 		let solver: RKF45<f64> = RKF45::new(h_0, h_min, h_max, e_max, n_max);
@@ -67,6 +67,6 @@ mod rkf45
 		let (m, _n): (usize, usize) = y.dim();
 
 		assert!(compare_real(&1.40, &t.get(&(m-1)), 0.0001));
-		assert!(compare_real(&1.4_f64.tan(), &y.get(&(m-1), &0), 0.001));
+		assert!(compare_real(&1.4_f64.tan(), &y.get(&(m-1), &0), 0.0007));
 	}
 }

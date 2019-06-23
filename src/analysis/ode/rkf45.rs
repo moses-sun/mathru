@@ -125,7 +125,6 @@ impl<T> Solver<T> for RKF45<T>
                 x_n = rkf4;
                 t_vec.push(t_n);
                 res_mat.push(x_n.clone());
-                println!("{}", s);
 				n = n + 1;
 				h = s * h;
             }
