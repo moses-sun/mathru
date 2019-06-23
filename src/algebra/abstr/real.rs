@@ -49,6 +49,30 @@ pub trait Real: Field + Exponential + Trigonometry + Power + Hyperbolic + Lapack
 
 	/// Returns the largest integer less than or equal to a number.
 	fn floor(self: &Self) -> Self;
+
+	fn min(self: Self, a: Self) -> Self
+    {
+    	if self <= a
+		{
+			return self
+		}
+		else
+		{
+			return a
+		}
+    }
+
+    fn max(self: Self, a: Self) -> Self
+    {
+    	if self >= a
+		{
+			return self
+		}
+		else
+		{
+			return a
+		}
+    }
 }
 
 #[cfg(feature = "blaslapack")]
