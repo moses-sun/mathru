@@ -183,7 +183,7 @@ impl <T> Vector<T>
         }
     }
 
-    pub fn apply(mut self: Vector<T>, f: &Fn(&T) -> T) -> Self
+    pub fn apply(mut self: Vector<T>, f: &dyn Fn(&T) -> T) -> Self
     {
         self.data = self.data.apply(f);
         self

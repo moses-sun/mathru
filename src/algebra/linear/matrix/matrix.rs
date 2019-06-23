@@ -62,13 +62,13 @@ impl<T> Matrix<T>
 {
     /// Applies the function f on every element in the matrix
     ///
-    pub fn apply(mut self: Matrix<T>, f: &Fn(&T) -> T) -> Matrix<T>
+    pub fn apply(mut self: Matrix<T>, f: &dyn Fn(&T) -> T) -> Matrix<T>
     {
         self.data = self.data.iter().map(f).collect();
         self
     }
 
-    pub fn apply_mut(self: &Matrix<T>, f: &Fn(&T) -> T) -> Matrix<T>
+    pub fn apply_mut(self: &Matrix<T>, f: &dyn Fn(&T) -> T) -> Matrix<T>
     {
         (self.clone()).apply(f)
     }
