@@ -610,7 +610,6 @@ impl<T> Vector<T>
         let (m, n): (usize, usize) = self.dim();
         if m == 1
         {
-            println!("n: {}, s: {}, e: {}", n, s, e);
             assert!(s < n);
             assert!(e < n);
         }
