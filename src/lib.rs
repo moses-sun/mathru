@@ -12,7 +12,7 @@
 //!
 //! ```toml
 //! [dependencies]
-//! mathru = "0.1.4"
+//! mathru = "0.2"
 //! ```
 //!
 //! And then import the library using:
@@ -49,7 +49,7 @@ pub mod num;
 pub mod special;
 pub mod stats;
 pub mod analysis;
-//pub mod optim;
+pub mod optim;
 
 
 

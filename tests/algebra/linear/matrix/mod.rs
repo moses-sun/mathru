@@ -1,3 +1,4 @@
+#[macro_export]
 mod matrix;
 //mod eigenvalue;
 //mod hessenberg;

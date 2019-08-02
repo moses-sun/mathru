@@ -36,10 +36,14 @@ macro_rules! matrix
             let data_nested_array = [ $( [ $($x),* ] ),* ];
             let rows = data_nested_array.len();
             let cols = data_nested_array[0].len();
-            let data_array: Vec<_> = data_nested_array.into_iter()
-                .flat_map(|row| row.into_iter())
-                .cloned()
-                .collect();
+            let mut data_array: Vec<_> = Vec::with_capacity(rows * cols);
+            for j in 0..cols
+            {
+                for i in 0..rows
+                {
+                    data_array.push(data_nested_array[i][j]);
+                }
+            }
             Matrix::new(rows, cols, data_array)
         }
     }
@@ -50,11 +54,11 @@ macro_rules! matrix
 pub struct Matrix<T>
 {
     /// Num of rows which the matrix has
-    pub(super) m: usize,
+    pub(crate) m: usize,
     /// Num of columns which the matrix ha
-    pub(super) n: usize,
+    pub(crate) n: usize,
     /// Matrix entries
-    pub(super) data:  Vec<T>
+    pub(crate) data:  Vec<T>
 }
 
 impl<T> Matrix<T>
@@ -128,7 +132,7 @@ impl<T> Matrix<T>
     /// Function to transpose a matrix without allocating memory for the transposed matrix
     ///
     /// catanzaro.name/papers/PPoPP-2014.pdf
-    ///
+    /// TODO
     /// # Example
 	///
 	/// ```
@@ -161,12 +165,12 @@ impl<T> Matrix<T>
             {
                 for i in 0..self.m
                 {
-                    temp[i] = self.data[self.gather(i, j, b) * self.n + j];
+                    temp[i] = self.data[j * self.m + self.gather(i, j, b)];
                 }
 
                 for i in 0..self.m
                 {
-                    self.data[i * self.n + j] = temp[i];
+                    self.data[j * self.m + i] = temp[i];
                 }
             }
         }
@@ -175,12 +179,12 @@ impl<T> Matrix<T>
         {
             for j in 0..self.n
             {
-                temp[self.scatter_da(i, j, b)] = self.data[i * self.n + j];
+                temp[self.scatter_da(i, j, b)] = self.data[j * self.m + i];
             }
 
             for j in 0..self.n
             {
-                self.data[i * self.n + j] = temp[j];
+                self.data[j * self.m + i] = temp[j];
             }
         }
 
@@ -188,12 +192,12 @@ impl<T> Matrix<T>
         {
             for i in 0..self.m
             {
-                temp[i] =  self.data[self.gather_sa(i, j, a) * self.n + j];
+                temp[i] =  self.data[j * self.m + self.gather_sa(i, j, a)];
             }
 
             for i in 0..self.m
             {
-                self.data[i * self.n + j] = temp[i];
+                self.data[j * self.m + i] = temp[i];
             }
         }
 
@@ -1052,7 +1056,7 @@ impl<T> Matrix<T>
     /// ```
     /// use mathru::algebra::linear::{Matrix};
     ///
-    /// let mut a: Matrix<f64> = Matrix::new(2, 2, vec![1.0, -2.0, 3.0, -7.0]);
+    /// let mut a: Matrix<f64> = matrix![1.0, -2.0; 3.0, -7.0];
     /// a = a.get_slice(0, 0, 1, 1);
     ///
     /// let a_ref: Matrix<f64> = Matrix::new(1, 1, vec![-2.0]);
@@ -1088,14 +1092,16 @@ impl<T> Matrix<T>
     /// # Example
     ///
     /// ```
-    /// extern crate mathru;
     /// use mathru::algebra::linear::{Matrix};
     ///
-    /// let mut a: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
-    /// let b: Matrix<f64> = Matrix::new(1, 2, vec![2.0, -1.0]);
+    /// let mut a: Matrix<f64> = matrix![   1.0, 0.0;
+    ///                                     3.0, -7.0];
+    ///
+    /// let b: Matrix<f64> = matrix![2.0, -1.0];
     /// a = a.set_slice(&b, 0, 0);
     ///
-    /// let a_updated: Matrix<f64> = Matrix::new(2, 2, vec![2.0, -1.0, 3.0, -7.0]);
+    /// let a_updated: Matrix<f64> = matrix![   2.0, -1.0;
+    ///                                         3.0, -7.0];
     ///
     /// assert_eq!(a_updated, a);
     /// ```
@@ -1128,7 +1134,7 @@ impl<T> Display for Matrix<T>
         {
             for j in 0..self.n
             {
-                write!(f, "{} ", self.data[(i * self.n + j)]).unwrap();
+                write!(f, "{} ", self.get(&i, &j)).unwrap();
             }
             write!(f, "\n").unwrap();
         }
@@ -1147,17 +1153,17 @@ impl<T> Matrix<T>
     /// extern crate mathru;
     /// use mathru::algebra::linear::{Matrix};
     ///
-    /// let mut a: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
+    /// let mut a: Matrix<f64> = matrix![1.0, 0.0; 3.0, -7.0];
     /// *a.get_mut(&1, &0) = -8.0;
     ///
-    /// let a_updated: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 0.0, -8.0, -7.0]);
+    /// let a_updated: Matrix<f64> = matrix![1.0, 0.0; -8.0, -7.0];
     /// assert_eq!(a_updated, a);
     /// ```
     pub fn get_mut<'a, 'b, 'c>(self: &'a mut Self, i: &'b usize, j: &'c usize) -> &'a mut T
     {
         assert!(*i < self.m);
         assert!(*j < self.n);
-        & mut(self.data[i * self.n + j])
+        & mut(self.data[j * self.m + i])
     }
 
 
@@ -1166,28 +1172,24 @@ impl<T> Matrix<T>
     /// # Example
     ///
     /// ```
-    /// extern crate mathru;
     /// use mathru::algebra::linear::{Matrix};
     ///
-    /// let a: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
+    /// let a: Matrix<f64> = matrix![   1.0, 0.0;
+    ///                                 3.0, -7.0];
+    ///
     /// let a_ref: f64 = 3.0;
     /// let element: f64 = *a.get(&1, &0);
     ///
     /// assert_eq!(a_ref, element);
     /// ```
-    pub fn get<'a, 'b, 'c>(self: &'a Self, i: &'b usize, j: &'c usize) -> &'a T
+    pub fn get(self: &Self, i: &usize, j: &usize) -> & T
     {
         assert!(*i < self.m);
         assert!(*j < self.n);
 
-        & self.data[i * self.n + j]
+        return & self.data[j * self.m + i];
     }
 }
-
-
-
-
-
 
 
 impl<T> PartialEq for Matrix<T>
@@ -1226,12 +1228,14 @@ impl<T> PartialEq for Matrix<T>
 impl<T> Matrix<T>
     where T: Clone + Copy + Zero + One
 {
+
+    ///
+    /// Fortran like, column wise
     pub fn new<'a, 'b>(m: usize, n: usize, data: Vec<T>) -> Self
     {
         assert_eq!(m * n, data.len());
         Matrix{m: m, n: n, data: data}
     }
-
 }
 
 impl<T> Matrix<T>

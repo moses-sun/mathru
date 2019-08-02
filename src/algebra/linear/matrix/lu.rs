@@ -88,7 +88,7 @@ impl<T> Matrix<T>
         {
             for j in 0..i
             {
-                l.data[i * a.n + j] = a.data[i * a.n + j].clone();
+                l.data[j * a.m + i] = a.data[j * a.m + i].clone();
             }
         }
 
@@ -96,7 +96,7 @@ impl<T> Matrix<T>
         {
             for k in i..a.n
             {
-                u.data[i * a.n + k] = a.data[i * a.n + k].clone();
+                u.data[k * a.m + i] = a.data[k * a.m + i].clone();
             }
         }
 
@@ -115,7 +115,7 @@ impl<T> Matrix<T>
 
         let mut info: i32 = 0;
 
-        let mut self_data = self.transpose().data;
+        let mut self_data = self.clone().data;
 
         T::xgetrf(
             m_i32,
@@ -128,7 +128,7 @@ impl<T> Matrix<T>
 
         assert!(info >= 0);
 
-        let mat: Matrix<T> = Matrix::new(m, n, self_data).transpose_inplace();
+        let mat: Matrix<T> = Matrix::new(m, n, self_data);
         let l: Matrix<T> = Matrix::l(mat.clone());
         let u: Matrix<T> = Matrix::u(mat.clone());
         let p: Matrix<T> = Matrix::p(ipiv);

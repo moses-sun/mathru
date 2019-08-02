@@ -9,4 +9,5 @@ mod add;
 mod sub;
 mod div;
 
+#[macro_use]
 pub use self::matrix::Matrix;

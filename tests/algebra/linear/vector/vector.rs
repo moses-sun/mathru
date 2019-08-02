@@ -4,6 +4,7 @@ mod vector
 {
     use mathru::algebra::linear::{Vector, Matrix};
     use mathru::elementary::Power;
+    use mathru::algebra::abstr::Sign;
 
 
     #[test]
@@ -340,9 +341,15 @@ mod vector
     #[test]
     fn dyadp()
     {
-        let x: Vector<f32> = Vector::new_column(3, vec![1.0, 3.0, 2.0]);
+        let x: Vector<f32> = vector![   1.0;
+                                        3.0;
+                                        2.0];
+
         let y: Vector<f32> = Vector::new_column(4, vec![2.0, 1.0, 0.0, 3.0]);
-        let dyadp_ref : Matrix<f32> = Matrix::new(3, 4, vec![2.0, 1.0, 0.0, 3.0, 6.0, 3.0, 0.0, 9.0, 4.0, 2.0, 0.0, 6.0]);
+
+        let dyadp_ref : Matrix<f32> = matrix![  2.0, 1.0, 0.0, 3.0;
+                                                6.0, 3.0, 0.0, 9.0;
+                                                4.0, 2.0, 0.0, 6.0];
 
         let p: Matrix<f32> =  x.dyadp(&y);
 
@@ -398,5 +405,16 @@ mod vector
         let m = vector![1.0, -2.0, 3.0, -4.0];
 
         assert_eq!(3, m.argmin());
+    }
+
+    #[test]
+    fn sgn()
+    {
+        let v = vector![1.0, -2.0, 0.0, -4.0];
+
+        let sgn = vector![1.0, -1.0, 0.0, -1.0];
+        let sgn_hat = v.sgn();
+
+        assert_eq!(sgn, sgn_hat);
     }
 }

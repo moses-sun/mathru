@@ -67,7 +67,7 @@ impl<T> Matrix<T>
         let (m, n) : (usize, usize) = self.dim();
 
         //lapack(fortran) uses column major order
-        let mut self_data = self.transpose().data;
+        let mut self_data = self.clone().data;
         let n_i32: i32 = n as i32;
 
         let mut tau: Vec<T> = vec![Zero::zero(); n - 1];
@@ -94,7 +94,7 @@ impl<T> Matrix<T>
 
         assert_eq!(0, info);
 
-        let h: Matrix<T> = Matrix::new(n, n, self_data.clone()).transpose_inplace().h();
+        let h: Matrix<T> = Matrix::new(n, n, self_data.clone()).h();
         let mut q = self_data;
 
         let mut info: i32 = 0;

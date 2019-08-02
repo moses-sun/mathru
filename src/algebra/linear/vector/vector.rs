@@ -5,7 +5,7 @@
 use crate::algebra::linear::Matrix;
 use crate::elementary::{Exponential, Power};
 use std::ops::{Add, AddAssign, Mul, Sub, Div};
-use crate::algebra::abstr::{Zero, One};
+use crate::algebra::abstr::{Zero, One, Sign};
 use crate::algebra::abstr::{Real, Number};
 use crate::algebra::abstr::cast::FromPrimitive;
 use std::fmt::Display;
@@ -1084,5 +1084,15 @@ impl<'a, 'b, T> Mul<&'b Matrix<T>> for &'a Vector<T>
         }
 
         Vector::new_row(n, res)
+    }
+}
+
+
+impl<T> Sign for Vector<T>
+    where T: Real
+{
+	fn sgn(self: &Self) -> Self
+    {
+        return (self.clone()).apply(&|x: &T| x.sgn() );
     }
 }

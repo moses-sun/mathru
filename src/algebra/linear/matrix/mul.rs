@@ -26,7 +26,7 @@ impl<'a, 'b, T> Mul<&'b Vector<T>> for &'a Matrix<T>
             let mut row_column_product: T = T::zero();
             for k in 0..self.n
             {
-                row_column_product += self.data[i * self.n + k] * *v.get( &k);
+                row_column_product += self.data[k * self.m + i] * *v.get( &k);
             }
             prod_data.push(row_column_product);
         }
@@ -182,16 +182,15 @@ impl<'a, 'b, T> Matrix<T>
     #[cfg(feature = "blaslapack")]
     fn mul_r(self: &'a Self, rhs: &'b Matrix<T>) -> Matrix<T>
     {
-        let (self_cols, _self_rows) = self.dim();
-        let (rhs_cols, rhs_rows) = rhs.dim();
+        let (self_rows, self_cols) = self.dim();
+        let (rhs_rows, rhs_cols) = rhs.dim();
 
+        let m = self_rows as i32;
+        let n = rhs_cols as i32;
+        let k = self_cols as i32;
+        let mut c: Matrix<T> = Matrix::zero(m as usize, n as usize);
 
-        let m = rhs_rows as i32;
-        let n = self_cols as i32;
-        let k = rhs_cols as i32;
-        let mut c: Matrix<T> = Matrix::zero(n as usize, m as usize);
-
-        T::xgemm('N' as u8, 'N' as u8, m, n, k, T::one(), &rhs.data[..], m, &self.data[..], k, T::zero(), &mut c.data[
+        T::xgemm('N' as u8, 'N' as u8, m, n, k, T::one(), &self.data[..], m, &rhs.data[..], k, T::zero(), &mut c.data[
         ..],
          m);
 

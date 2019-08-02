@@ -104,13 +104,20 @@ macro_rules! field_impl
 		{
 			fn sgn(self: &Self) -> Self
             {
-                if *self < 1.0
+                if *self < -1.0
                 {
                     return -1.0;
                 }
-                else
-                {
-                    return 1.0;
+				else
+				{
+                	if *self == 0.0
+					{
+						return 0.0;
+					}
+                	else
+                	{
+                    	return 1.0;
+                	}
                 }
             }
 		}

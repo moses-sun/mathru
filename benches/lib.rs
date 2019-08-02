@@ -1,4 +1,4 @@
-#![feature(test)]
+//#![feature(test)]
 #![allow(unused_macros)]
 
 extern crate mathru;

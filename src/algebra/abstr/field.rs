@@ -16,16 +16,21 @@ DivAssign<Self> + Abs
 
 
 /// Sign trait
-///
 pub trait Sign
 {
 	/// Returns the sign of a number
+	///
+	/// # Param
+	///
+	/// # Return
+	///
+	/// -1 if self < 0
+	/// 0 if self = 0
+	/// 1 if self > 0
 	fn sgn(self: &Self) -> Self;
 }
 
-///
 /// Abs trait
-///
 pub trait Abs
 {
 	/// returns the absolute value of a field

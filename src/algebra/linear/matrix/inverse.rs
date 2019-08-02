@@ -49,7 +49,7 @@ impl<T> Matrix<T>
 
                 for i in (k+1)..self.n
                 {
-                    sum += self.data[k * self.n + i] * self.data[i * self.n + l];
+                    sum += self.data[i * self.m + k] * self.data[l * self.m + i];
                 }
 
                 let b : T;
@@ -62,8 +62,8 @@ impl<T> Matrix<T>
                 {
                     b = T::zero();
                 }
-                let div : T = self.data[k * self.n + k];
-                self.data[k * self.n + l] = (b - sum) / div;
+                let div : T = self.data[k * self.m + k];
+                self.data[l * self.m + k] = (b - sum) / div;
 
             }
         }
@@ -85,7 +85,7 @@ impl<T> Matrix<T>
 
                 for i in 0..k
                 {
-                    sum += self.data[k * self.n + i] * self.data[i * self.n + l];
+                    sum += self.data[i * self.m + k] * self.data[l * self.m + i];
                 }
 
                 let b : T;
@@ -98,8 +98,8 @@ impl<T> Matrix<T>
                 {
                     b = T::zero();
                 }
-                let div : T = self.data[k * self.n + k];
-                self.data[k * self.n + l] = (b - sum) / div;
+                let div : T = self.data[k * self.m + k];
+                self.data[l * self.m + k] = (b - sum) / div;
 
             }
         }

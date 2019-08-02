@@ -59,13 +59,13 @@ impl<T> Matrix<T>
         (q, r)
     }
 
-    #[cfg(feature = "blaslapack")]
+#[cfg(feature = "blaslapack")]
     fn dec_qr_r<'a>(self: &'a Self) -> (Matrix<T>, Matrix<T>)
     {
         let (m, n) : (usize, usize) = self.dim();
 
         //lapack(fortran) uses column major order
-        let mut self_data = self.transpose().data;
+        let mut self_data = self.clone().data;
 
         let m_i32: i32 = m as i32;
         let n_i32: i32 = n as i32;
@@ -93,8 +93,8 @@ impl<T> Matrix<T>
         );
 
         assert_eq!(0, info);
-        let a: Matrix<T> = Matrix::new(n, m, self_data.clone());
-        let r: Matrix<T> = a.transpose_inplace().r();
+        let a: Matrix<T> = Matrix::new(m, n, self_data.clone());
+        let r: Matrix<T> = a.r();
 
         let lwork = T::xorgqr_work_size(
             m_i32,
@@ -123,8 +123,7 @@ impl<T> Matrix<T>
         );
         assert_eq!(0, info);
 
-
-        let q: Matrix<T> = Matrix::new(n, m, self_data).transpose();
+        let q: Matrix<T> = Matrix::new(m, n, self_data);
 
         return (q, r);
     }

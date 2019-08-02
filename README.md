@@ -3,7 +3,7 @@
 [![crate](https://img.shields.io/crates/v/mathru.svg)](https://crates.io/crates/mathru)
 [![documentation](https://docs.rs/mathru/badge.svg)](https://docs.rs/mathru)
 ![minimum rustc 1.37.0](https://img.shields.io/badge/rustc-1.37.0-green.svg)
-
+![maintenance](https://img.shields.io/badge/maintenance-actively--developed-brightgreen.svg)
 ------------
 mathru is a numeric library containing algorithms for linear algebra, analysis and statistics written in pure Rust with BLAS/LAPACK support.
 
