@@ -2,7 +2,7 @@ use crate::algebra::linear::{Vector, Matrix};
 use crate::optim::{OptimAlgorithm, Optimizable};
 
 extern crate rand;
-use self::rand::Rng;
+//use self::rand::Rng;
 
 
 const LEARNING_EPS: f64 = 1e-10;
