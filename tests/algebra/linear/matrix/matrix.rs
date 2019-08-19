@@ -294,7 +294,7 @@ mod matrix
         let l_ref: Matrix<f64> = matrix![1.0, 0.0; 1.0 / 3.0, 1.0];
         let u_ref: Matrix<f64> = matrix![3.0, -7.0; 0.0, 1.0/3.0];
 
-        let (l, u, p): (Matrix<f64>, Matrix<f64>, Matrix<f64>) = a.dec_lu();
+        let (l, u, _p): (Matrix<f64>, Matrix<f64>, Matrix<f64>) = a.dec_lu();
 
         assert!(compare_matrix_epsilon(&l_ref, &l, 1.0e-10));
         assert!(compare_matrix_epsilon(&u_ref, &u, 1.0e-10));
