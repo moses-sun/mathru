@@ -51,27 +51,27 @@ impl BatchGradientDesc
         }
     }
 
-    fn shuffle(mut vec: Vec<usize>) -> Vec<usize>
-    {
-        let mut rng = rand::thread_rng();
-        let n = vec.len();
-
-        if n > 0
-        {
-            for i in 0..(n - 1)
-            {
-                let j: usize = rng.gen_range(i, n);
-                let temp = vec[i];
-                vec[i] =  vec[j];
-                vec[j] = temp;
-            }
-            return vec;
-        }
-        else
-        {
-            vec
-        }
-    }
+//    fn shuffle(mut vec: Vec<usize>) -> Vec<usize>
+//    {
+//        let mut rng = rand::thread_rng();
+//        let n = vec.len();
+//
+//        if n > 0
+//        {
+//            for i in 0..(n - 1)
+//            {
+//                let j: usize = rng.gen_range(i, n);
+//                let temp = vec[i];
+//                vec[i] =  vec[j];
+//                vec[j] = temp;
+//            }
+//            return vec;
+//        }
+//        else
+//        {
+//            vec
+//        }
+//    }
 }
 
 impl<M> OptimAlgorithm<M> for BatchGradientDesc
