@@ -183,7 +183,7 @@ impl<'a, 'b, T> Matrix<T>
     fn mul_r(self: &'a Self, rhs: &'b Matrix<T>) -> Matrix<T>
     {
         let (self_rows, self_cols) = self.dim();
-        let (rhs_rows, rhs_cols) = rhs.dim();
+        let (_rhs_rows, rhs_cols) = rhs.dim();
 
         let m = self_rows as i32;
         let n = rhs_cols as i32;

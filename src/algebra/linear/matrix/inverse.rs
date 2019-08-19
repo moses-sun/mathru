@@ -38,7 +38,7 @@ impl<T> Matrix<T>
     ///
     /// inplace backward substitution
     ///
-    fn subst_backward<'a>(self: &'a mut Self)
+    pub fn subst_backward<'a>(self: &'a mut Self)
     {
         for k in (0..self.n).rev()
         {
@@ -73,7 +73,7 @@ impl<T> Matrix<T>
     ///
     /// inplace forward substitution
     ///
-    fn subst_forward<'a>(self: &'a mut Self)
+    pub fn subst_forward<'a>(self: &'a mut Self)
     {
 
         for k in 0..self.n

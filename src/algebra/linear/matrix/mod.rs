@@ -1,3 +1,4 @@
+#[macro_use]
 pub mod matrix;
 mod eigenvalue;
 mod hessenberg;
@@ -8,6 +9,6 @@ mod mul;
 mod add;
 mod sub;
 mod div;
+mod cholesky;
 
-#[macro_use]
 pub use self::matrix::Matrix;

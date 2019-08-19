@@ -236,6 +236,12 @@ impl<T> Lapack for Complex<T>
 	{
 		unimplemented!();
 	}
+
+
+	fn xpotrf(_uplo: char, _n: i32, _a: &mut [Self], _lda: i32, _info: &mut i32)
+	{
+		unimplemented!();
+	}
 }
 
 #[cfg(feature = "blaslapack")]

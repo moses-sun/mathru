@@ -1,7 +1,6 @@
 /// Matrix
 
 use std::clone::Clone;
-use std::ops::{Add, AddAssign, Mul, MulAssign, Sub, Neg, Div};
 use crate::algebra::abstr::{Number, Semiring, Zero, One, Sign};
 use crate::algebra::linear::Vector;
 use crate::algebra::abstr::Real;
@@ -27,7 +26,7 @@ use serde::{Deserialize, Serialize};
 ///     let mat: Matrix<f32> = matrix![1.0, 2.0, 3.0; 4.0, 5.0, 6.0];
 /// }
 /// ```
-#[macro_export(local_inner_macros)]
+#[macro_export]
 macro_rules! matrix
 {
     ($( $( $x: expr ),*);*) =>
@@ -389,8 +388,7 @@ impl<T> Matrix<T>
     /// assert_eq!(-6.0, tr);
     /// ```
     pub fn trace(self: &Self) -> T
-        where T: MulAssign + Add<Output = T> + Sub<Output = T> +  Mul<Output = T>  + Div<Output = T> + One + Zero  +
-        Clone + PartialOrd + Neg<Output = T> + AddAssign
+        where T: Real
     {
         let (m, n): (usize, usize) = self.dim();
         if m != n
@@ -1054,6 +1052,10 @@ impl<T> Matrix<T>
     /// # Example
     ///
     /// ```
+    /// # #[macro_use]
+    /// # extern crate mathru;
+    /// # fn main()
+    /// # {
     /// use mathru::algebra::linear::{Matrix};
     ///
     /// let mut a: Matrix<f64> = matrix![1.0, -2.0; 3.0, -7.0];
@@ -1062,6 +1064,7 @@ impl<T> Matrix<T>
     /// let a_ref: Matrix<f64> = Matrix::new(1, 1, vec![-2.0]);
     ///
     /// assert_eq!(a_ref, a);
+    /// # }
     /// ```
     pub fn get_slice(self: &Self, row_s: usize, row_e: usize, column_s: usize, column_e: usize) -> Matrix<T>
     {
@@ -1092,6 +1095,10 @@ impl<T> Matrix<T>
     /// # Example
     ///
     /// ```
+    /// # #[macro_use]
+    /// # extern crate mathru;
+    /// # fn main()
+    /// # {
     /// use mathru::algebra::linear::{Matrix};
     ///
     /// let mut a: Matrix<f64> = matrix![   1.0, 0.0;
@@ -1104,6 +1111,7 @@ impl<T> Matrix<T>
     ///                                         3.0, -7.0];
     ///
     /// assert_eq!(a_updated, a);
+    /// # }
     /// ```
     pub fn set_slice(mut self: Self, slice: &Self, row: usize, column: usize) -> Matrix<T>
     {
@@ -1150,7 +1158,10 @@ impl<T> Matrix<T>
     /// # Example
     ///
     /// ```
-    /// extern crate mathru;
+    /// # #[macro_use]
+    /// # extern crate mathru;
+    /// # fn main()
+    /// # {
     /// use mathru::algebra::linear::{Matrix};
     ///
     /// let mut a: Matrix<f64> = matrix![1.0, 0.0; 3.0, -7.0];
@@ -1158,6 +1169,7 @@ impl<T> Matrix<T>
     ///
     /// let a_updated: Matrix<f64> = matrix![1.0, 0.0; -8.0, -7.0];
     /// assert_eq!(a_updated, a);
+    /// # }
     /// ```
     pub fn get_mut<'a, 'b, 'c>(self: &'a mut Self, i: &'b usize, j: &'c usize) -> &'a mut T
     {
@@ -1172,6 +1184,10 @@ impl<T> Matrix<T>
     /// # Example
     ///
     /// ```
+    /// # #[macro_use]
+    /// # extern crate mathru;
+    /// # fn main()
+    /// # {
     /// use mathru::algebra::linear::{Matrix};
     ///
     /// let a: Matrix<f64> = matrix![   1.0, 0.0;
@@ -1181,6 +1197,7 @@ impl<T> Matrix<T>
     /// let element: f64 = *a.get(&1, &0);
     ///
     /// assert_eq!(a_ref, element);
+    /// # }
     /// ```
     pub fn get(self: &Self, i: &usize, j: &usize) -> & T
     {

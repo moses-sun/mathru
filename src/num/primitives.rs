@@ -1270,7 +1270,7 @@ impl_as_primitive!(bool => {});
 
 #[cfg(feature = "blaslapack")]
 macro_rules! lapack_impl(
-    ($T: ty, $xgehrd: path, $xorghr: path, $xgeev: path, $xgetrf: path, $xgeqrf: path, $xorgqr: path, $xgetri: path)
+    ($T: ty, $xgehrd: path, $xorghr: path, $xgeev: path, $xgetrf: path, $xgeqrf: path, $xorgqr: path, $xgetri: path, $xpotrf: path)
     => (
         impl Lapack for $T
        	{
@@ -1382,6 +1382,15 @@ macro_rules! lapack_impl(
 				work[0] as i32
 			}
 
+			//cholsky
+			fn xpotrf(uplo: char, n: i32, a: &mut [Self], lda: i32, info: &mut i32)
+			{
+				unsafe
+				{
+					$xpotrf(uplo as u8, n, a, lda, info);
+				}
+			}
+
       	}
     )
 );
@@ -1409,10 +1418,10 @@ macro_rules! blas_impl(
 
 #[cfg(feature = "blaslapack")]
 lapack_impl!(f32, lapack::sgehrd, lapack::sorghr, lapack::sgeev, lapack::sgetrf, lapack::sgeqrf, lapack::sorgqr,
-lapack::sgetri);
+lapack::sgetri, lapack::spotrf);
 #[cfg(feature = "blaslapack")]
 lapack_impl!(f64, lapack::dgehrd, lapack::dorghr, lapack::dgeev, lapack::dgetrf, lapack::dgeqrf, lapack::dorgqr,
-lapack::dgetri);
+lapack::dgetri, lapack::dpotrf);
 //hessenberg_scalar_impl!(Complex<f32>, lapack::cgehrd);
 //hessenberg_scalar_impl!(Complex<f64>, lapack::zgehrd);
 

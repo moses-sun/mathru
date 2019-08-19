@@ -288,6 +288,18 @@ mod matrix
     }
 
     #[test]
+    fn decompose_lu2()
+    {
+        let a: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 3.0, -2.0, -7.0]);
+        let l_ref: Matrix<f64> = matrix![1.0, 0.0; 1.0 / 3.0, 1.0];
+        let u_ref: Matrix<f64> = matrix![3.0, -7.0; 0.0, 1.0/3.0];
+
+        let (l, u, p): (Matrix<f64>, Matrix<f64>, Matrix<f64>) = a.dec_lu();
+
+        assert!(compare_matrix_epsilon(&l_ref, &l, 1.0e-10));
+        assert!(compare_matrix_epsilon(&u_ref, &u, 1.0e-10));
+    }
+    #[test]
     fn givens()
     {
         let m: usize = 4;
@@ -441,7 +453,7 @@ mod matrix
                                             0.0, 0.0;
                                             0.0, 0.0];
 
-        let _q_ref: Matrix<f64> =  matrix![  0.6, 0.35777087639996635, 0.0, -0.7155417527999327;
+        let q_ref: Matrix<f64> =  matrix![  0.6, 0.35777087639996635, 0.0, -0.7155417527999327;
                                             0.0, 0.8944271909999159, 0.0, 0.4472135954999579;
                                             0.0, 0.0, 1.0, 0.0;
                                             0.8, -0.2683281572999747, 0.0, 0.5366563145999494 ];
@@ -460,7 +472,7 @@ mod matrix
                                         0.0, 0.0;
                                         4.0, 5.0];
 
-        let (q,r) : (Matrix<f64>, Matrix<f64>) =  a.dec_qr();
+        let (_q,r) : (Matrix<f64>, Matrix<f64>) =  a.dec_qr();
 
         let r_ref : Matrix<f64> = matrix![  -5.0, -7.0;
                                             0.0, -5.0.pow(&0.5);
@@ -964,6 +976,22 @@ mod matrix
     }
 
     #[test]
+    fn cholesky_decomposition()
+    {
+        let a: Matrix<f64> = matrix![   2.0, -1.0, 0.0;
+                                        -1.0, 2.0, -1.0;
+                                        0.0, -1.0,  2.0];
+
+        let g_ref: Matrix<f64> = matrix![   1.414213562373095,   0.000000000000000,   0.000000000000000;
+                                            -7.071067811865475e-1,   1.224744871391589,   0.000000000000000;
+                                            0.000000000000000,  -8.164965809277261e-1,   1.154700538379251];
+
+        let g = a.dec_cholesky();
+
+        assert_eq!(true, compare_matrix_epsilon(&g_ref, &g, 1.0e-10));
+    }
+
+    #[test]
     fn apply_0()
     {
         let a: Matrix<f64> = matrix![   1.0, -3.0, 3.0;
@@ -981,22 +1009,21 @@ mod matrix
 
 
 
-    fn compare_matrix_epsilon<T: Real>(a: &Matrix<T>, b: &Matrix<T>, epsilon: T) -> bool
+    fn compare_matrix_epsilon<T: Real>(exp: &Matrix<T>, act: &Matrix<T>, epsilon: T) -> bool
     {
+        let (exp_m, exp_n): (usize, usize) = exp.dim();
+        let (act_m, act_n): (usize, usize) = act.dim();
 
-        let (a_m, a_n): (usize, usize) = a.dim();
-        let (b_m, b_n): (usize, usize) = b.dim();
+        assert!(exp_m == act_m);
+        assert!(exp_n == act_n);
 
-        assert!(a_m == b_m);
-        assert!(a_n == b_n);
-
-        for i in 0..a_m
+        for i in 0..exp_m
         {
-            for k in 0..a_n
+            for k in 0..exp_n
             {
-                if (*a.get(&i, &k) - *b.get(&i, &k)).abs() > epsilon
+                if (*exp.get(&i, &k) - *act.get(&i, &k)).abs() > epsilon
                 {
-                    println!("a: {}, b: {} a-b: {}", a, b, (a - b));
+                    println!("exp: {}, act: {} exp - act: {}", exp, act, (exp - act));
                     return false;
                 }
             }
