@@ -12,7 +12,7 @@
 //!
 //! ```toml
 //! [dependencies]
-//! mathru = "0.3"
+//! mathru = "0.2.1"
 //! ```
 //!
 //!
