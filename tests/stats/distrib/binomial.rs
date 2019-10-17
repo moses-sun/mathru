@@ -1,4 +1,3 @@
-extern crate mathru;
 
 #[cfg(test)]
 mod binomialdistrib

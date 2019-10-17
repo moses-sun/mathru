@@ -32,8 +32,8 @@ mod euler
 
 		let (m, _n): (usize, usize) = y.dim();
 
-		assert!(compare_real(&2.0, &t.get(&(m-1)), 0.00000001));
-		assert!(compare_real(&5.00, &y.get(&(m-1), &0), 0.00000001));
+		assert!(compare_real(&2.0, &t.get(m - 1 ), 0.00000001));
+		assert!(compare_real(&5.00, &y.get(m - 1, 0), 0.00000001));
 	}
 
 	#[test]
@@ -51,7 +51,7 @@ mod euler
 		let (m, _n): (usize, usize) = y.dim();
 		//println!("{}, {}",  &y.get(&(m-1), &0), 1.5_f64.exp());
 		//println!("{}",  &y.get(&(m-1), &0));
-		assert!(compare_real(&1.5_f64.exp(), &y.get(&(m-1), &0), 0.01));
+		assert!(compare_real(&1.5_f64.exp(), &y.get(m - 1, 0), 0.01));
 	}
 
 }

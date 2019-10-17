@@ -2,7 +2,7 @@
 //!
 //! <a href="https://en.wikipedia.org/wiki/Abstract_algebra">https://en.wikipedia.org/wiki/Abstract_algebra</a>
 
-mod number;
+mod scalar;
 pub mod cast;
 mod field;
 mod ring;
@@ -17,7 +17,7 @@ mod complex;
 pub use self::semiring::{Semiring, Zero, One};
 pub use self::ring::{Ring};
 pub use self::field::{Field, Sign, Abs};
-pub use self::number::Number;
+pub use self::scalar::Scalar;
 pub use self::natural::Natural;
 pub use self::integer::Integer;
 pub use self::real::Real;

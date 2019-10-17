@@ -50,7 +50,7 @@ mod vector
 
         for i in 0..rows
         {
-            assert_eq!(*(m_zero.get(&i)), 0.0);
+            assert_eq!(*(m_zero.get(i)), 0.0);
         }
     }
 
@@ -82,7 +82,7 @@ mod vector
 
         for i in 0..dim
         {
-            assert_eq!(*(res.get(&i)), *(res_ref.get(&i)));
+            assert_eq!(*(res.get(i)), *(res_ref.get(i)));
         }
     }
 
@@ -98,7 +98,7 @@ mod vector
 
         for i in 0..dim
         {
-            assert_eq!(*(res.get(&i)), *(res_ref.get(&i)));
+            assert_eq!(*(res.get(i)), *(res_ref.get(i)));
         }
     }
 
@@ -113,7 +113,7 @@ mod vector
 
         for i in 0..dim
         {
-            assert_eq!(*(res.get(&i)), *(res_ref.get(&i)));
+            assert_eq!(*(res.get(i)), *(res_ref.get(i)));
         }
     }
 
@@ -128,7 +128,7 @@ mod vector
 
         for i in 0..dim
         {
-            assert_eq!(*(res.get(&i)), *(res_ref.get(&i)));
+            assert_eq!(*(res.get(i)), *(res_ref.get(i)));
         }
     }
 
@@ -143,7 +143,7 @@ mod vector
 
         for i in 0..dim
         {
-            assert_eq!(*(res.get(&i)), *(res_ref.get(&i)));
+            assert_eq!(*(res.get(i)), *(res_ref.get(i)));
         }
     }
 
@@ -158,7 +158,7 @@ mod vector
 
         for i in 0..dim
         {
-            assert_eq!(*(res.get(&i)), *(res_ref.get(&i)));
+            assert_eq!(*(res.get(i)), *(res_ref.get(i)));
         }
     }
 
@@ -224,7 +224,7 @@ mod vector
 
         for i in 0..dim
         {
-            assert_eq!(*(res.get(&i)), *(res_ref.get(&i)));
+            assert_eq!(*(res.get(i)), *(res_ref.get(i)));
         }
     }
 
@@ -236,11 +236,11 @@ mod vector
         let b : Vector<f32> = Vector::new_column(dim, vec![1.0, 4.0, -1.0, 0.0, -7.0]);
         let res_ref : Vector<f32>  = Vector::new_column(dim, vec![0.0, -2.0, 4.0, 4.0, 12.0]);
 
-        let res : Vector<f32> = &a - &b;
+        let res: Vector<f32> = &a - &b;
 
         for i in 0..dim
         {
-            assert_eq!(*(res.get(&i)), *(res_ref.get(&i)));
+            assert_eq!(*(res.get(i)), *(res_ref.get(i)));
         }
     }
 
@@ -252,7 +252,7 @@ mod vector
         let res_ref : Vector<f32>  = Vector::new_column(dim, vec![1.0, 2.0, 3.0, 4.0, 5.0]);
         for i in 0..dim
         {
-            assert_eq!(*(res_ref.get(&i)), *(res.get(&i)));
+            assert_eq!(*(res_ref.get(i)), *(res.get(i)));
         }
     }
 
@@ -264,7 +264,7 @@ mod vector
         let res_ref : Vector<f32>  = Vector::new_column(dim, vec![1.0, 2.0, 3.0, 4.0, 5.0]);
         for i in 0..dim
         {
-            assert_eq!(*(res_ref.get(&i)), *(res.get(&i)));
+            assert_eq!(*(res_ref.get(i)), *(res.get(i)));
         }
     }
 

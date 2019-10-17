@@ -1,3 +1,15 @@
+use crate::algebra::linear::{Vector};
+pub trait Distribution
+{
+    fn random(self: &Self) -> f64;
+
+    fn random_vector(self: &Self, size: usize) -> Vector<f64>
+	{
+        let v: Vector<f64> = Vector::zero(size).transpose().apply(&|_x| self.random());
+
+        return v;
+	}
+}
 
 /// Continuous distribution
 pub trait Continuous<A, B>
@@ -26,6 +38,8 @@ pub trait Continuous<A, B>
 
 	/// Variance
 	fn variance<'a>(self: &'a Self) -> f64;
+
+
 
 }
 

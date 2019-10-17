@@ -2,11 +2,10 @@ use crate::stats::distrib::ChiSquared as ChiSquaredDistrib;
 use crate::stats::distrib::Continuous;
 use crate::stats::test::Test;
 
-/// Chi-Squared Ttest
+/// Chi-Squared Test
 ///
 /// Fore more information:
 /// <a href="https://en.wikipedia.org/wiki/Chi-squared_test">https://en.wikipedia.org/wiki/Chi-squared_test</a>
-///
 pub struct ChiSquared
 {
 	df: u32,

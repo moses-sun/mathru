@@ -30,7 +30,6 @@ impl Beta
     /// # Example
     ///
     /// ```
-    /// extern crate mathru;
     /// use mathru::stats::distrib::{Continuous, Beta};
     ///
     /// let distrib: Beta = Beta::new(&0.2, &0.3);
@@ -60,7 +59,6 @@ impl Continuous<f64, f64> for Beta
     /// # Example
     ///
     /// ```
-    /// extern crate mathru;
     /// use mathru::stats::distrib::{Continuous, Beta};
     ///
     /// let distrib: Beta = Beta::new(&0.2, &0.3);
@@ -85,7 +83,6 @@ impl Continuous<f64, f64> for Beta
     /// # Example
     ///
     /// ```
-    /// extern crate mathru;
     /// use mathru::stats::distrib::{Continuous, Beta};
     ///
     /// let distrib: Beta = Beta::new(&0.3, &0.2);
@@ -110,7 +107,6 @@ impl Continuous<f64, f64> for Beta
     /// # Example
     ///
     /// ```
-    /// extern crate mathru;
     /// use mathru::stats::distrib::{Continuous, Beta};
     ///
     /// let distrib: Beta = Beta::new(&0.2, &0.3);
@@ -126,7 +122,6 @@ impl Continuous<f64, f64> for Beta
     /// # Example
     ///
     /// ```
-    /// extern crate mathru;
     /// use mathru::stats::distrib::{Continuous, Beta};
     ///
     /// let distrib: Beta = Beta::new(&0.2, &0.3);

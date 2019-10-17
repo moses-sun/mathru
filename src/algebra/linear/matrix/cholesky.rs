@@ -35,7 +35,7 @@ impl<T> Matrix<T>
         self.dec_cholesky_r()
     }
 
-   #[cfg(feature = "native")]
+    #[cfg(feature = "native")]
     fn dec_cholesky_r<'a>(self: &'a Self) -> Matrix<T>
     {
         let (m, n) = self.dim();
@@ -49,20 +49,19 @@ impl<T> Matrix<T>
                 let mut sum = T::zero();
                 for k in 0..j
                 {
-                    sum += *l.get(&i, &k) * *l.get(&j, &k);
+                    sum += *l.get(i, k) * *l.get(j, k);
                 }
 
                 if i == j
                 {
-                    *l.get_mut(&i, &j) = (*self.get(&i, &i) - sum).pow(&exponent_sqrt)
+                    *l.get_mut(i, j) = (*self.get(i, i) - sum).pow(&exponent_sqrt)
                 }
                 else
                 {
-                    *l.get_mut(&i, &j) = (*self.get(&i, &j) - sum) / *l.get(&j, &j);
+                    *l.get_mut(i, j) = (*self.get(i, j) - sum) / *l.get(j, j);
                 }
             }
         }
-        println!("{}", l);
         return l;
     }
 
@@ -93,7 +92,7 @@ impl<T> Matrix<T>
         {
             for j in (i + 1)..n
             {
-                *l.get_mut(&i, &j) = T::zero();
+                *l.get_mut(i, j) = T::zero();
             }
         }
 

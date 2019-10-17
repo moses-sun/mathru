@@ -9,7 +9,8 @@ use mathru::algebra::linear::Matrix;
 
 criterion_group!(
 	matrix,
-	mat100_add_mat100,
+	mat1000_add_mat1000,
+	mat1000_add_mat1000_func,
 	mat200_add_mat200,
 	mat500_add_mat500,
 	mat100_mul_mat100,
@@ -22,12 +23,20 @@ criterion_group!(
 	dec_lu_500x500,
 );
 
-fn mat100_add_mat100(bench: &mut Criterion)
-{
-    let a: Matrix<f64> = Matrix::new_random(100, 100);
-    let b: Matrix<f64> = Matrix::new_random(100, 100);
 
-    bench.bench_function("mat100_add_mat100", move |bh| bh.iter(|| &a + &b));
+fn mat1000_add_mat1000(bench: &mut Criterion)
+{
+    let a: Matrix<f64> = Matrix::new_random(1000, 1000);
+    let b: Matrix<f64> = Matrix::new_random(1000, 1000);
+
+    bench.bench_function("mat1000_add_mat1000", move |bh| bh.iter(|| &a + &b));
+}
+fn mat1000_add_mat1000_func(bench: &mut Criterion)
+{
+    let a: Matrix<f64> = Matrix::new_random(1000, 1000);
+    let b: Matrix<f64> = Matrix::new_random(1000, 1000);
+
+    bench.bench_function("mat1000_add_mat1000_func", move |bh| bh.iter(|| a.add_func(&b)));
 }
 
 fn mat200_add_mat200(bench: &mut Criterion)

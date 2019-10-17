@@ -1,4 +1,3 @@
-extern crate mathru;
 
 #[cfg(test)]
 mod normal
@@ -10,7 +9,7 @@ mod normal
     {
         let mean : f64 = 0.0;
         let variance: f64 = 1.0;
-        let distrib : Normal = Normal::new(&mean, &variance);
+        let distrib : Normal = Normal::new(mean, variance);
         let x : f64 = 0.0;
         let prob : f64 = distrib.pdf(x);
 
@@ -44,7 +43,7 @@ mod normal
     {
         let mean: f64 = 0.0;
         let variance: f64 = 1.0;
-        let distrib: Normal = Normal::new(&mean, &variance);
+        let distrib: Normal = Normal::new(mean, variance);
 
         assert_eq!(0.5, distrib.cdf(0.0))
     }
@@ -54,18 +53,32 @@ mod normal
     {
         let mean: f64 = 0.0;
         let variance: f64 = 1.0;
-        let distrib: Normal = Normal::new(&mean, &variance);
+        let distrib: Normal = Normal::new(mean, variance);
 
         assert_eq!(1.2815515655446006, distrib.quantile(0.9));
     }
 
-       #[test]
+    #[test]
     fn quantile1()
     {
         let mean: f64 = 1.0;
         let variance: f64 = 0.5;
-        let distrib: Normal = Normal::new(&mean, &variance);
+        let distrib: Normal = Normal::new(mean, variance);
 
         assert_eq!(1.0, distrib.quantile(0.5));
     }
+
+//    #[test]
+//    fn from_data()
+//    {
+//        let mean: f64 = 5.0;
+//        let variance: f64 = 10.0;
+//        let num_samples: usize = 100;
+//        let data: Vector<f64> = Normal::new(mean, variance).random_vector(num_samples);
+//
+//        let distrib: Normal = Normal::from_data(&data);
+//
+//        assert!((mean - distrib.mean()).abs() < 0.5);
+//        assert!((variance - distrib.variance()) < 1.0);
+//    }
 }

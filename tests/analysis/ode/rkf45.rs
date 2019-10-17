@@ -37,8 +37,8 @@ mod rkf45
 
 		let (m, _n): (usize, usize) = y.dim();
 
-		assert!(compare_real(&2.0, &t.get(&(m-1)), 0.001));
-		assert!(compare_real(&5.0, &y.get(&(m-1), &0), 0.002));
+		assert!(compare_real(&2.0, &t.get(m - 1), 0.001));
+		assert!(compare_real(&5.0, &y.get(m - 1, 0), 0.002));
 	}
 
 
@@ -66,7 +66,7 @@ mod rkf45
 
 		let (m, _n): (usize, usize) = y.dim();
 
-		assert!(compare_real(&1.40, &t.get(&(m-1)), 0.0001));
-		assert!(compare_real(&1.4_f64.tan(), &y.get(&(m-1), &0), 0.0007));
+		assert!(compare_real(&1.40, &t.get(m - 1), 0.0001));
+		assert!(compare_real(&1.4_f64.tan(), &y.get(m - 1, 0), 0.0007));
 	}
 }

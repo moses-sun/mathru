@@ -11,7 +11,6 @@ impl<T> Matrix<T>
     /// # Example
     ///
     /// ```
-    /// extern crate mathru;
     /// use mathru::algebra::linear::{Matrix};
     ///
     /// let a: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
@@ -73,7 +72,7 @@ impl<T> Matrix<T>
     ///
     /// inplace forward substitution
     ///
-    pub fn subst_forward<'a>(self: &'a mut Self)
+    fn subst_forward<'a>(self: &'a mut Self)
     {
 
         for k in 0..self.n
@@ -117,7 +116,7 @@ impl<T> Matrix<T>
 
         let mut info: i32 = 0;
 
-        let mut self_data = self.transpose().data;
+        let mut self_data: Vec<T> = self.clone().transpose().data;
 
         T::xgetrf(
             m_i32,
@@ -143,6 +142,6 @@ impl<T> Matrix<T>
 
         let self_inv: Matrix<T> = Matrix::new(n, m, self_data);
 
-        return Ok(self_inv.transpose_inplace());
+        return Ok(self_inv.transpose());
     }
 }

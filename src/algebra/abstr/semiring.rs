@@ -1,11 +1,11 @@
 use std::ops::{Add, AddAssign, Mul, MulAssign};
 use std::marker::Sized;
-use crate::algebra::abstr::Number;
+use crate::algebra::abstr::Scalar;
 
 /// Semiring
 ///
 ///<a href="https://en.wikipedia.org/wiki/Semiring">https://en.wikipedia.org/wiki/Semiring</a>
-pub trait Semiring: Number + Zero + Add<Self, Output = Self> + One + Mul<Self, Output = Self> + AddAssign<Self>
+pub trait Semiring: Scalar + Zero + Add<Self, Output = Self> + One + Mul<Self, Output = Self> + AddAssign<Self>
 + MulAssign<Self>
 {
 

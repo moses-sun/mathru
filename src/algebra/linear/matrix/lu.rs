@@ -17,7 +17,6 @@ impl<T> Matrix<T>
     /// # Example
     ///
     /// ```
-    /// extern crate mathru;
     /// use mathru::algebra::linear::{Matrix};
     ///
     /// let a: Matrix<f64> = Matrix::new(2, 2, vec![1.0, -2.0, 3.0, -7.0]);
@@ -45,42 +44,42 @@ impl<T> Matrix<T>
         for i in 0..a.m
         {
             //pivoting
-            let mut max: T = a.get(&i, &i).clone();
+            let mut max: T = a.get(i, i).clone();
             let mut i_max: usize = i;
 
             for l in i + 1..a.m
             {
-                if *a.get(&l, &i) > max
+                if *a.get(l, i) > max
                 {
-                    max = a.get(&l, &i).clone();
+                    max = a.get(l, i).clone();
                     i_max = l;
                 }
             }
 
             if i != i_max
             {
-                a.swap_rows(&i, &i_max);
-                p.swap_rows(&i, &i_max);
+                a.swap_rows(i, i_max);
+                p.swap_rows(i, i_max);
             }
 
 
             for j in (i + 1)..a.n
             {
                 let f: T;
-                if a.get(&i, &i).clone() != T::zero()
+                if a.get(i, i).clone() != T::zero()
                 {
-                    f = (*(a.get(&(j), &i))).clone() / a.get(&i, &i).clone();
+                    f = (*(a.get(j, i))).clone() / a.get(i, i).clone();
                 }
                 else
                 {
-                    f = (*(a.get(&(j), &i))).clone();
+                    f = (*(a.get(j, i))).clone();
                 }
 
                 for k in (i + 1)..a.n
                 {
-                    *(a.get_mut(&(j), &k)) =  a.get(&(j), &k).clone() - f.clone() * a.get(&i, &k).clone();
+                    *(a.get_mut(j, k)) =  a.get(j, k).clone() - f.clone() * a.get(i, k).clone();
                 }
-                *(a.get_mut(&(j), &i)) = f.clone();
+                *(a.get_mut(j, i)) = f.clone();
             }
         }
 
@@ -146,14 +145,14 @@ impl<T> Matrix<T>
         {
             for k in i..n
             {
-                *mat.get_mut(&i, &k) = T::zero();
+                *mat.get_mut(i, k) = T::zero();
             }
         }
 
         //set diagonal to 1
         for i in 0..m
         {
-             *mat.get_mut(&i, &i) = T::one();
+             *mat.get_mut(i, i) = T::one();
         }
 
         mat
@@ -169,7 +168,7 @@ impl<T> Matrix<T>
         {
             for k in 0..i
             {
-                *mat.get_mut(&i, &k) = T::zero();
+                *mat.get_mut(i, k) = T::zero();
             }
         }
 
@@ -201,7 +200,7 @@ impl<T> Matrix<T>
         for i in 0..length
         {
             let k = perm[i];
-            *p.get_mut(&i, &k) = T::one();
+            *p.get_mut(i, k) = T::one();
         }
 
         p

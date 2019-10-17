@@ -22,7 +22,6 @@ impl<T> Matrix<T>
     /// # Example
     ///
     /// ```
-    /// extern crate mathru;
     /// use mathru::algebra::linear::{Vector, Matrix};
     ///
     /// let a: Matrix<f64> = Matrix::new(3, 3, vec![1.0, -3.0, 3.0, 3.0, -5.0, 3.0, 6.0, -6.0, 4.0]);
@@ -50,7 +49,7 @@ impl<T> Matrix<T>
 
         for i in 0..m
         {
-            *eig.get_mut(&i) = t.get(&i, &i).clone();
+            *eig.get_mut(i) = t.get(i, i).clone();
         }
 
         return eig;
@@ -73,15 +72,15 @@ impl<T> Matrix<T>
             q = p - 1;
 
             // Bulge generating
-            let s: T = *self.get(&(q - 1),&(q -1)) + *self.get(&(p -1),&(p -1));
-            let t: T = *self.get(&(q - 1),&(q -1)) * *self.get(&(p - 1),&(p - 1)) - *self.get(&(q -1),&(p -1)) * *self
-            .get(&(p - 1),&(q - 1));
+            let s: T = *self.get(q - 1,q - 1) + *self.get(p - 1,p -1);
+            let t: T = *self.get(q - 1,q - 1) * *self.get(p - 1,p - 1) - *self.get(q - 1,p - 1) * *self
+            .get(p - 1,q - 1);
 
             // compute first 3 elements of first column of M
-            let mut x: T = self.get(&0,&0).pow(&T::from_f64(2.0).unwrap()) + *self.get(&0,&1) * *self.get(&1,&0) - s *
-            *self.get(&0,&0) + t;
-            let mut y: T = *self.get(&1,&0) * (*self.get(&0,&0) + *self.get(&1, &1) - s);
-            let mut z: T = *self.get(&1,&0) * *self.get(&2,&1);
+            let mut x: T = self.get(0,0).pow(&T::from_f64(2.0).unwrap()) + *self.get(0,1) * *self.get(1,0) - s *
+            *self.get(0,0) + t;
+            let mut y: T = *self.get(1,0) * (*self.get(0,0) + *self.get(1, 1) - s);
+            let mut z: T = *self.get(1,0) * *self.get(2,1);
 
             for k in 0..(p - 2)
             {
@@ -98,7 +97,7 @@ impl<T> Matrix<T>
                 }
 
                 {
-                    let h_trans: Matrix<T> = h.transpose_inplace();
+                    let h_trans: Matrix<T> = h.transpose();
                     let r: usize = p.min(k + 4);
                     let temp: Matrix<T> = &self.get_slice(0, r - 1, k, k + 2) * &h_trans;
                     self = self.set_slice(&temp, 0, k);
@@ -108,17 +107,17 @@ impl<T> Matrix<T>
                     u = u.set_slice(&temp1, 0, k);
                 }
 
-                x  = *self.get(&(k + 1), &k);
-                y = *self.get(&(k + 2), &k);
+                x  = *self.get(k + 1, k);
+                y = *self.get(k + 2, k);
                 if k < (p - 3)
                 {
-                    z = *self.get(&(k + 3), &k);
+                    z = *self.get(k + 3, k);
                 }
             }
 
             // Determine the Givens rotation P with P [x; y]T = αe1 ;
             let (c, s): (T, T) = Matrix::givens_cosine_sine_pair(x, y);
-            let g: Matrix<T> = Matrix::givens(&2, &0, &1, &c, &s);
+            let g: Matrix<T> = Matrix::givens(2, 0, 1, c, s);
 
             {
                 let temp: Matrix<T> = &g * &self.get_slice(q - 1, p - 1, p - 3, n - 1);
@@ -126,7 +125,7 @@ impl<T> Matrix<T>
             }
 
             {
-                let g_trans: Matrix<T> = g.transpose_inplace();
+                let g_trans: Matrix<T> = g.transpose();
                 let temp: Matrix<T> = &self.get_slice(0, p - 1, p - 2, p - 1) * &g_trans;
                 self = self.set_slice(&temp, 0, p - 2);
 
@@ -135,20 +134,20 @@ impl<T> Matrix<T>
             }
 
             // check for convergence
-            let m: T = self.get(&(q - 1),&(q - 1)).abs();
-            let n: T = self.get(&(p - 1),&(p - 1)).abs();
-            if self.get(&(p - 1) ,&(q - 1)).abs() < epsilon.clone() * (m + n)
+            let m: T = self.get(q - 1,q - 1).abs();
+            let n: T = self.get(p - 1,p - 1).abs();
+            if self.get(p - 1 ,q - 1).abs() < epsilon.clone() * (m + n)
             {
-                *self.get_mut(&(p - 1), &(q - 1)) = T::zero();
+                *self.get_mut(p - 1, q - 1) = T::zero();
                 p = p - 1;
             }
             else
             {
-                let k: T = self.get(&(q - 2),&(q - 2)).abs();
-                let l: T = self.get(&(q - 1),&(q - 1)).abs();
-                if self.get(&(p - 2), &(q - 2)).abs() < epsilon.clone() * (k + l)
+                let k: T = self.get(q - 2,q - 2).abs();
+                let l: T = self.get(q - 1,q - 1).abs();
+                if self.get(p - 2, q - 2).abs() < epsilon.clone() * (k + l)
                 {
-                    *self.get_mut(&(p - 2), &(q - 2)) = T::zero();
+                    *self.get_mut(p - 2, q - 2) = T::zero();
                     p = p - 2;
                 }
             }
@@ -163,7 +162,7 @@ impl<T> Matrix<T>
     {
         let (m, n) : (usize, usize) = self.dim();
 
-        let mut self_data = self.transpose().data;
+        let mut self_data: Vec<T> = self.clone().transpose().data;
         let n_i32: i32 = n as i32;
 
         let mut info: i32 = 0;

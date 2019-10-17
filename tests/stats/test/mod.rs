@@ -7,6 +7,7 @@
 ///mod test;
 mod chisquared;
 mod g;
+mod t;
 
 //pub use self::test::Test;
 //pub use self::chisquared::ChiSquared;

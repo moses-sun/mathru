@@ -16,7 +16,6 @@ impl<T> Matrix<T>
     /// # Example
     ///
     /// ```
-    /// extern crate mathru;
     /// use mathru::algebra::linear::{Matrix};
     ///
     /// let a: Matrix<f64> = Matrix::new(2, 2, vec![1.0, -2.0, 3.0, -7.0]);
@@ -39,8 +38,8 @@ impl<T> Matrix<T>
         {
             for i in (j + 1..self.m).rev()
             {
-                let a_jj: T = r.get(&j, &j).clone();
-                let a_ij: T = r.get(&i, &j).clone();
+                let a_jj: T = r.get(j, j).clone();
+                let a_ij: T = r.get(i, j).clone();
                 //let k: T = a_jj.sgn();
                 let p: T = (a_jj.clone() * a_jj.clone() + a_ij.clone() * a_ij.clone()).pow(&T::from_f64
                 (0.5).unwrap());
@@ -48,7 +47,7 @@ impl<T> Matrix<T>
                 {
                     let c : T = a_jj / p.clone();
                     let s : T = -a_ij / p;
-                    let g_ij: Matrix<T> = Matrix::givens(&r.m, &i, &j, &c, &s);
+                    let g_ij: Matrix<T> = Matrix::givens(r.m, i, j, c, s);
 
                     r = &g_ij * &r;
                     q = &g_ij * &q;
@@ -59,7 +58,7 @@ impl<T> Matrix<T>
         (q, r)
     }
 
-#[cfg(feature = "blaslapack")]
+    #[cfg(feature = "blaslapack")]
     fn dec_qr_r<'a>(self: &'a Self) -> (Matrix<T>, Matrix<T>)
     {
         let (m, n) : (usize, usize) = self.dim();
@@ -135,7 +134,7 @@ impl<T> Matrix<T>
         {
             for k in 0..(i.min(self.n))
             {
-                *self.get_mut(&i, &k) = T::zero();
+                *self.get_mut(i, k) = T::zero();
             }
         }
 

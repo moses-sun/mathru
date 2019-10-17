@@ -28,7 +28,6 @@ impl Poisson
     /// # Example
     ///
     /// ```
-    /// extern crate mathru;
     /// use mathru::stats::distrib::Poisson;
     ///
     /// let distrib: Poisson = Poisson::new(&0.2);
@@ -58,7 +57,6 @@ impl Discrete<u32, u32> for Poisson
     /// # Example
     ///
     /// ```
-    /// extern crate mathru;
     /// use mathru::stats::distrib::{Discrete, Poisson};
     ///
     /// let distrib: Poisson = Poisson::new(&0.2);
@@ -80,7 +78,6 @@ impl Discrete<u32, u32> for Poisson
     /// # Example
     ///
     /// ```
-    /// extern crate mathru;
     /// use mathru::stats::distrib::{Discrete, Poisson};
     ///
     /// let distrib: Poisson = Poisson::new(&0.2);
@@ -97,7 +94,6 @@ impl Discrete<u32, u32> for Poisson
     /// # Example
     ///
     /// ```
-    /// extern crate mathru;
     /// use mathru::stats::distrib::{Discrete, Poisson};
     ///
     /// let distrib: Poisson = Poisson::new(&0.2);
@@ -113,7 +109,6 @@ impl Discrete<u32, u32> for Poisson
     /// # Example
     ///
     /// ```
-    /// extern crate mathru;
     /// use mathru::stats::distrib::{Discrete, Poisson};
     ///
     /// let distrib: Poisson = Poisson::new(&0.2);

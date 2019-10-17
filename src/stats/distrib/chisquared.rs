@@ -30,7 +30,6 @@ impl ChiSquared
     /// # Example
     ///
     /// ```
-    /// extern crate mathru;
     /// use mathru::stats::distrib::ChiSquared;
     ///
     /// let distrib: ChiSquared = ChiSquared::new(&3);
@@ -61,7 +60,6 @@ impl Continuous<f64, f64> for ChiSquared
     /// # Example
     ///
     /// ```
-    /// extern crate mathru;
     /// use mathru::stats::distrib::{Continuous, ChiSquared};
     ///
     /// let distrib: ChiSquared = ChiSquared::new(&2);
@@ -90,7 +88,6 @@ impl Continuous<f64, f64> for ChiSquared
     /// # Example
     ///
     /// ```
-    /// extern crate mathru;
     /// use mathru::stats::distrib::{Continuous, ChiSquared};
     ///
     /// let distrib: ChiSquared = ChiSquared::new(&3);
@@ -132,7 +129,7 @@ impl Continuous<f64, f64> for ChiSquared
     ///
     fn quantile<'a, 'b>(self: &'a Self, p: f64) -> f64
     {
-        let std_distrib: Normal = Normal::new(&0.0, &1.0);
+        let std_distrib: Normal = Normal::new(0.0, 1.0);
         let q: f64 = 0.5 * (std_distrib.quantile(p) + (2.0 * self.k as f64 - 1.0).sqrt()).powi(2);
         q
     }
@@ -142,7 +139,6 @@ impl Continuous<f64, f64> for ChiSquared
     /// # Example
     ///
     /// ```
-    /// extern crate mathru;
     /// use mathru::stats::distrib::{Discrete, Bernoulli};
     ///
     /// let distrib: Bernoulli = Bernoulli::new(0.2);
@@ -158,7 +154,6 @@ impl Continuous<f64, f64> for ChiSquared
     /// # Example
     ///
     /// ```
-    /// extern crate mathru;
     /// use mathru::stats::distrib::{Discrete, Bernoulli};
     ///
     /// let distrib: Bernoulli = Bernoulli::new(0.2);

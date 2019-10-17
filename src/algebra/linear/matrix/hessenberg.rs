@@ -25,7 +25,6 @@ impl<T> Matrix<T>
     /// # Example
     ///
     /// ```
-    /// extern crate mathru;
     /// use mathru::algebra::linear::{Matrix};
     ///
     /// let a: Matrix<f64> = Matrix::new(3, 3, vec![1.0, 5.0, 3.0, 1.0, 0.0, -7.0, 3.0, 8.0, 9.0]);
@@ -50,15 +49,15 @@ impl<T> Matrix<T>
 
         for k in 1..m
         {
-            let v: Vector<T> = h.get_column(&(k-1));
+            let v: Vector<T> = h.get_column(k - 1);
 
             let househ: Matrix<T> = Matrix::householder(&v, k);
             h = &househ * &h;
             q = &househ * &q;
-            h = &h.clone() * &househ.transpose_inplace();
+            h = &h.clone() * &househ.transpose();
         }
 
-        return (q.transpose_inplace(), h);
+        return (q.transpose(), h);
     }
 
     #[cfg(feature = "blaslapack")]
@@ -129,7 +128,7 @@ impl<T> Matrix<T>
         {
             for k in 0..(i-1)
             {
-                *self.get_mut(&i, &k) = T::zero();
+                *self.get_mut(i, k) = T::zero();
             }
         }
         self

@@ -32,8 +32,8 @@ mod heun
 
 		let (m, _n): (usize, usize) = y.dim();
 
-		assert!(compare_real(&2.0, &t.get(&(m-1)), 0.00000001));
-		assert!(compare_real(&5.00, &y.get(&(m-1), &0), 0.00000001));
+		assert!(compare_real(&2.0, &t.get(m - 1), 0.00000001));
+		assert!(compare_real(&5.00, &y.get(m - 1, 0), 0.00000001));
 	}
 
 	// x' = 1 + x^2
@@ -55,8 +55,8 @@ mod heun
 
 		let (m, _n): (usize, usize) = y.dim();
 
-		assert!(compare_real(&1.40, &t.get(&(m-1)), 0.00000001));
-		assert!(compare_real(&1.4_f64.tan(), &y.get(&(m-1), &0), 0.001));
+		assert!(compare_real(&1.40, &t.get(m - 1 ), 0.00000001));
+		assert!(compare_real(&1.4_f64.tan(), &y.get(m - 1, 0), 0.001));
 	}
 
 }

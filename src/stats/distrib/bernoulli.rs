@@ -1,11 +1,10 @@
 use crate::stats::distrib::Discrete;
 
-
 /// Bernoulli distribution
 ///
 /// Fore more information:
-/// <a href="https://en.wikipedia.org/wiki/Bernoulli_distribution">https://en.wikipedia.org/wiki/Bernoulli_distribution</a>
 ///
+/// <a href="https://en.wikipedia.org/wiki/Bernoulli_distribution">https://en.wikipedia.org/wiki/Bernoulli_distribution</a>
 pub struct Bernoulli
 {
     p: f64
@@ -26,7 +25,6 @@ impl Bernoulli
     /// # Example
     ///
     /// ```
-    /// extern crate mathru;
     /// use mathru::stats::distrib::Bernoulli;
     ///
     /// let distrib: Bernoulli = Bernoulli::new(0.2);
@@ -59,7 +57,6 @@ impl Discrete<u8, f64> for Bernoulli
     /// # Example
     ///
     /// ```
-    /// extern crate mathru;
     /// use mathru::stats::distrib::{Discrete, Bernoulli};
     ///
     /// let distrib: Bernoulli = Bernoulli::new(0.2);
@@ -94,7 +91,6 @@ impl Discrete<u8, f64> for Bernoulli
     /// # Example
     ///
     /// ```
-    /// extern crate mathru;
     /// use mathru::stats::distrib::{Discrete, Bernoulli};
     ///
     /// let distrib: Bernoulli = Bernoulli::new(0.2);
@@ -123,7 +119,6 @@ impl Discrete<u8, f64> for Bernoulli
     /// # Example
     ///
     /// ```
-    /// extern crate mathru;
     /// use mathru::stats::distrib::{Discrete, Bernoulli};
     ///
     /// let distrib: Bernoulli = Bernoulli::new(0.2);
@@ -139,7 +134,6 @@ impl Discrete<u8, f64> for Bernoulli
     /// # Example
     ///
     /// ```
-    /// extern crate mathru;
     /// use mathru::stats::distrib::{Discrete, Bernoulli};
     ///
     /// let distrib: Bernoulli = Bernoulli::new(0.2);

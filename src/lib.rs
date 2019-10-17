@@ -12,7 +12,7 @@
 //!
 //! ```toml
 //! [dependencies]
-//! mathru = "0.2.1"
+//! mathru = "0.3"
 //! ```
 //!
 //!
@@ -23,13 +23,20 @@
 //! # extern crate mathru;
 //! # fn main()
 //! # {
-//! use mathru::algebra::linear::{Matrix};
+//! use mathru::algebra::linear::{Vector, Matrix};
 //! // Compute the LU decomposition of a 2x2 matrix
-//! let a: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 3.0, -2.0, -7.0]);
+//! let a: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 2.0, -3.0, -7.0]);
+//! let b: Vector<f64> = vector![1.0; 3.0];
 //!
 //! let (l, u, p): (Matrix<f64>, Matrix<f64>, Matrix<f64>) = a.dec_lu();
 //!
-//! println!("{}", u);
+//! let b_hat = &p * &b;
+//!
+//! let y = u.subst_backward_vector(b_hat);
+//!
+//! let x = p * l.subst_forward_vector(y);
+//!
+//! println!("{}", x);
 //! # }
 //!```
 

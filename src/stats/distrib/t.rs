@@ -28,20 +28,19 @@ impl T
     /// # Example
     ///
     /// ```
-    /// extern crate mathru;
     /// use mathru::stats::distrib::{Continuous, T};
     ///
-    /// let distrib: T = T::new(&1.2);
+    /// let distrib: T = T::new(1.2);
     /// ```
-    pub fn new(n: &f64) -> T
+    pub fn new(n: f64) -> T
     {
-        if *n < 0.0_f64
+        if n < 0.0_f64
         {
             panic!()
         }
         T
         {
-            n: *n,
+            n: n,
         }
     }
 }
@@ -58,10 +57,9 @@ impl Continuous<f64, f64> for T
     /// # Example
     ///
     /// ```
-    /// extern crate mathru;
     /// use mathru::stats::distrib::{Continuous, T};
     ///
-    /// let distrib: T = T::new(&1.2);
+    /// let distrib: T = T::new(1.2);
     /// let x: f64 = 0.5;
     /// let p: f64 = distrib.pdf(x);
     /// ```
@@ -80,10 +78,9 @@ impl Continuous<f64, f64> for T
     /// # Example
     ///
     /// ```
-    /// extern crate mathru;
     /// use mathru::stats::distrib::{Continuous, T};
     ///
-    /// let distrib: T = T::new(&1.3);
+    /// let distrib: T = T::new(1.3);
     /// let x: f64 = 0.4;
     /// let p: f64 = distrib.cdf(x);
     /// ```
@@ -112,10 +109,9 @@ impl Continuous<f64, f64> for T
     /// # Example
     ///
     /// ```
-    /// extern crate mathru;
     /// use mathru::stats::distrib::{Continuous, T};
     ///
-    /// let distrib: T = T::new(&1.2);
+    /// let distrib: T = T::new(1.2);
     /// let mean: f64 = distrib.mean();
     /// ```
 	fn mean<'a>(self: &'a Self) -> f64
@@ -132,10 +128,9 @@ impl Continuous<f64, f64> for T
     /// # Example
     ///
     /// ```
-    /// extern crate mathru;
     /// use mathru::stats::distrib::{Continuous, T};
     ///
-    /// let distrib: T = T::new(&2.2);
+    /// let distrib: T = T::new(2.2);
     /// let var: f64 = distrib.variance();
     /// ```
 	fn variance<'a>(self: &'a Self) -> f64

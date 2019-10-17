@@ -28,10 +28,9 @@ impl Binomial
     /// # Example
     ///
     /// ```
-    /// extern crate mathru;
     /// use mathru::stats::distrib::Binomial;
     ///
-    /// let dsitrib: Binomial = Binomial::new(&5, &0.3);
+    /// let distrib: Binomial = Binomial::new(&5, &0.3);
     /// ```
     pub fn new(n: &u32, p: &f64) -> Binomial
     {
@@ -54,7 +53,6 @@ impl Discrete<u32, f64> for Binomial
     /// # Example
     ///
     /// ```
-    /// extern crate mathru;
     /// use mathru::stats::distrib::{Discrete, Binomial};
     ///
     /// let distrib: Binomial = Binomial::new(&5, &0.3);
@@ -82,7 +80,6 @@ impl Discrete<u32, f64> for Binomial
     /// # Example
     ///
     /// ```
-    /// extern crate mathru;
     /// use mathru::stats::distrib::{Discrete, Binomial};
     ///
     /// let distrib: Binomial = Binomial::new(&5, &0.3);
@@ -106,7 +103,6 @@ impl Discrete<u32, f64> for Binomial
     /// # Example
     ///
     /// ```
-    /// extern crate mathru;
     /// use mathru::stats::distrib::{Discrete, Binomial};
     ///
     /// let distrib: Binomial = Binomial::new(&5, &0.3);
@@ -122,7 +118,6 @@ impl Discrete<u32, f64> for Binomial
     /// # Example
     ///
     /// ```
-    /// extern crate mathru;
     /// use mathru::stats::distrib::{Discrete, Binomial};
     ///
     /// let distrib: Binomial = Binomial::new(&5, &0.3);

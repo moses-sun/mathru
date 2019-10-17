@@ -3,7 +3,7 @@ use std::fmt;
 use std::fmt::{Display};
 use crate::algebra::abstr::Complex as ComplexT;
 use crate::algebra::abstr::Real as RealT;
-use crate::algebra::abstr::{Number, Semiring, Sign, Abs, Ring, Field, Zero, One};
+use crate::algebra::abstr::{Scalar, Semiring, Sign, Abs, Ring, Field, Zero, One};
 use std::cmp::Ordering;
 use crate::algebra::abstr::cast::{ToPrimitive, FromPrimitive, NumCast};
 use crate::elementary::{Trigonometry, Exponential, Power, Hyperbolic};
@@ -242,6 +242,11 @@ impl<T> Lapack for Complex<T>
 	{
 		unimplemented!();
 	}
+
+	fn xgetrs(_n: i32, _nrhs: i32, _a: &mut [Self], _lda: i32, _ipiv: &mut [i32], _b: &mut [Self], _ldb: i32, _info: &mut i32)
+	{
+		unimplemented!();
+	}
 }
 
 #[cfg(feature = "blaslapack")]
@@ -331,7 +336,7 @@ impl<T> Semiring for Complex<T>
 
 }
 
-impl<T> Number for Complex<T>
+impl<T> Scalar for Complex<T>
 	where T: Field
 {
 
@@ -575,7 +580,7 @@ macro_rules! impl_to_primitive
 }
 
 /// Returns None if Complex part is non-zero
-impl<T: ToPrimitive + Number> ToPrimitive for Complex<T>
+impl<T: ToPrimitive + Scalar> ToPrimitive for Complex<T>
 	where T: ToPrimitive + Field
 {
     impl_to_primitive!(usize, to_usize);

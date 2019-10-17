@@ -1,17 +1,17 @@
 /// Matrix
 
 use std::clone::Clone;
-use crate::algebra::abstr::{Number, Semiring, Zero, One, Sign};
+use crate::algebra::abstr::{Scalar, Semiring, Zero, One, Sign};
 use crate::algebra::linear::Vector;
 use crate::algebra::abstr::Real;
 use std::fmt::Display;
 use std::fmt;
-
 use rand;
 use rand::Rng;
-
 use serde::{Deserialize, Serialize};
-
+use super::{MatrixIntoIterator, MatrixIterator, MatrixIteratorMut, MatrixRowIterator, MatrixRowIteratorMut, MatrixColumnIterator,
+MatrixColumnIteratorMut};
+use std::cmp::min;
 
 /// Macro to construct matrices
 ///
@@ -24,6 +24,10 @@ use serde::{Deserialize, Serialize};
 ///
 ///     // Construct a 2x3 matrix of f32
 ///     let mat: Matrix<f32> = matrix![1.0, 2.0, 3.0; 4.0, 5.0, 6.0];
+///     let (m, n) = mat.dim();
+///
+///     assert_eq!(m, 2);
+///     assert_eq!(n, 3);
 /// }
 /// ```
 #[macro_export]
@@ -60,33 +64,101 @@ pub struct Matrix<T>
     pub(crate) data:  Vec<T>
 }
 
-impl<T> Matrix<T>
-    where T: Clone
+impl<T> IntoIterator for Matrix<T>
+    where T: Real
 {
-    /// Applies the function f on every element in the matrix
-    ///
-    pub fn apply(mut self: Matrix<T>, f: &dyn Fn(&T) -> T) -> Matrix<T>
-    {
-        self.data = self.data.iter().map(f).collect();
-        self
-    }
+    type Item = T;
+    type IntoIter = MatrixIntoIterator<T>;
 
-    pub fn apply_mut(self: &Matrix<T>, f: &dyn Fn(&T) -> T) -> Matrix<T>
+    fn into_iter(self) -> Self::IntoIter
     {
-        (self.clone()).apply(f)
+        MatrixIntoIterator
+        {
+            iter: self.data.into_iter(),
+            //_phantom: PhantomData::default()
+        }
     }
 }
 
 
 impl<T> Matrix<T>
-    where T: Real
 {
+    pub fn iter(self: &Self) -> MatrixIterator<T>
+    {
+        MatrixIterator
+        {
+            iter: self.data.iter()
+        }
+    }
+
+    pub fn iter_mut(self: &mut Self) -> MatrixIteratorMut<T>
+    {
+        MatrixIteratorMut
+        {
+            iter: self.data.iter_mut()
+        }
+    }
+
+    pub fn row_iter(self: &Self) -> MatrixRowIterator<T>
+    {
+        MatrixRowIterator
+        {
+            iter: self.data.iter()
+        }
+    }
+
+    pub fn row_iter_mut(self: &mut Self) -> MatrixRowIteratorMut<T>
+    {
+        MatrixRowIteratorMut
+        {
+            iter: self.data.iter_mut()
+        }
+    }
+
+    pub fn column_iter(self: &Self) -> MatrixColumnIterator<T>
+    {
+        MatrixColumnIterator
+        {
+            iter: self.data.iter()
+        }
+    }
+
+    pub fn column_iter_mut(self: &mut Self) -> MatrixColumnIteratorMut<T>
+    {
+        MatrixColumnIteratorMut
+        {
+            iter: self.data.iter_mut()
+        }
+    }
+}
+
+
+impl<T> Matrix<T>
+    where T: Clone
+{
+    /// Applies the function f on every element in the matrix
+    ///
+    pub fn apply_mut(mut self: Matrix<T>, f: &dyn Fn(&T) -> T) -> Matrix<T>
+    {
+        self.data = self.data.iter().map(f).collect::<Vec<T>>();
+        self
+    }
+
+    pub fn apply(self: &Matrix<T>, f: &dyn Fn(&T) -> T) -> Matrix<T>
+    {
+        return (self.clone()).apply_mut(f);
+    }
+}
+
+
+//impl<T> Matrix<T>
+ //   where T: Real
+//{
     /// Returns the transposed matrix
     ///
     /// # Example
     ///
     /// ```
-    /// extern crate mathru;
     /// use mathru::algebra::linear::{Matrix};
     ///
     /// let mut a: Matrix<f64> = Matrix::new(2, 2, vec![1.0, -2.0, 3.0, -7.0]);
@@ -96,27 +168,27 @@ impl<T> Matrix<T>
     ///
     /// assert_eq!(a_trans, a);
     /// ```
-    pub fn transpose(self: &Self) -> Self
-    {
-        let mut trans : Matrix<T> = Matrix::zero(self.n, self.m);
-
-        for j in 0..self.n
-        {
-            for i in 0..self.m
-            {
-                *trans.get_mut(&j, &i) = self.get(&i, &j).clone()
-            }
-        }
-
-        trans
-    }
-}
+//    pub fn transpose(self: &Self) -> Self
+//    {
+//        let mut trans : Matrix<T> = Matrix::zero(self.n, self.m);
+//
+//        for j in 0..self.n
+//        {
+//            for i in 0..self.m
+//            {
+//                *trans.get_mut(j, i) = self.get(i, j).clone()
+//            }
+//        }
+//
+//        trans
+//    }
+//}
 
 impl<T> Matrix<T>
     where T: Semiring + Sign
 {
 
-    fn gcd(mut m: usize, mut n: usize) -> usize
+    pub fn gcd(mut m: usize, mut n: usize) -> usize
     {
         while m != 0
         {
@@ -124,7 +196,6 @@ impl<T> Matrix<T>
             m = n % m;
             n = old_m;
         }
-        //n.abs()
         n
     }
 
@@ -135,174 +206,187 @@ impl<T> Matrix<T>
     /// # Example
 	///
 	/// ```
-	/// extern crate mathru;
 	/// use mathru::algebra::linear::{Matrix};
 	///
 	/// let mut uut: Matrix<f64> = Matrix::new(4, 2, vec![1.0, 0.0, 3.0, 0.0, 1.0, -7.0, 0.5, 0.25]);
-    /// uut = uut.transpose_inplace();
+    /// uut = uut.transpose();
     ///
-    /// let refer: Matrix<f64> = Matrix::new(2, 4, vec![1.0, 3.0, 1.0, 0.5, 0.0, 0.0, -7.0, 0.25]);
+    /// let refer: Matrix<f64> = Matrix::new(2, 4, vec![1.0, 1.0, 0.0, -7.0, 3.0, 0.5, 0.0, 0.25]);
     /// assert_eq!(refer, uut);
     /// ```
-    pub fn transpose_inplace<'a>(mut self: Self) -> Matrix<T>
+    pub fn transpose(self: Self) -> Matrix<T>
     {
+        let (m, n) = self.dim();
+        let mut matrix_t: Matrix<T> = Matrix::zero(n, m);
 
-        let gcdiv: usize = Matrix::<T>::gcd(self.m, self.n);
-
-        let a: usize = self.m / gcdiv;
-        let b: usize = self.n / gcdiv;
-
-        let bigger: usize = self.m.max(self.n);
-
-        let mut temp : Vec<T> = Vec::with_capacity(bigger);
-        //Bad
-        unsafe {temp.set_len(bigger)};
-
-        if gcdiv > 1
+        for i in 0..m
         {
-            for j in 0..self.n
+            for j in 0..n
             {
-                for i in 0..self.m
-                {
-                    temp[i] = self.data[j * self.m + self.gather(i, j, b)];
-                }
-
-                for i in 0..self.m
-                {
-                    self.data[j * self.m + i] = temp[i];
-                }
+                *matrix_t.get_mut(j, i)  = *self.get(i, j);
             }
         }
 
-        for i in 0..self.m
-        {
-            for j in 0..self.n
-            {
-                temp[self.scatter_da(i, j, b)] = self.data[j * self.m + i];
-            }
-
-            for j in 0..self.n
-            {
-                self.data[j * self.m + i] = temp[j];
-            }
-        }
-
-        for j in 0..self.n
-        {
-            for i in 0..self.m
-            {
-                temp[i] =  self.data[j * self.m + self.gather_sa(i, j, a)];
-            }
-
-            for i in 0..self.m
-            {
-                self.data[j * self.m + i] = temp[i];
-            }
-        }
-
-        let temp_m : usize = self.m;
-        self.m = self.n;
-        self.n = temp_m;
-
-        return self;
+        return matrix_t;
     }
-
-    fn gather<'a>(self: &'a Self, i: usize, j: usize, b: usize) -> usize
-    {
-        (i + (j / b)) % (self.m)
-    }
-
-    fn gather_sa<'a>(self: &'a Self, i: usize, j: usize, a: usize) -> usize
-    {
-        (j + i * self.n - i / a) % self.m
-    }
-
-    fn scatter_da<'a>(self: &'a Self, i: usize, j: usize, b: usize) -> usize
-    {
-        (((i + j / b)) % (self.m) + j * self.m) % (self.n)
-    }
+//    pub fn transpose_r(mut self: Self) -> Matrix<T>
+//    {
+//        let gcdiv: usize = Matrix::<T>::gcd(self.m, self.n);
+//
+//        let a: usize = self.m / gcdiv;
+//        let b: usize = self.n / gcdiv;
+//
+//        let bigger: usize = self.m.max(self.n);
+//
+//        let mut temp : Vec<T> = Vec::with_capacity(bigger);
+//        //Bad
+//        unsafe {temp.set_len(bigger)};
+//
+//        if gcdiv > 1
+//        {
+//            for j in 0..self.n
+//            {
+//                for i in 0..self.m
+//                {
+//                    temp[i]  = *self.get(self.gather(i, j, b), j)
+//                    //temp[i] = self.data[self.gather(i, j, b) * self.n + j];
+//                }
+//
+//                for i in 0..self.m
+//                {
+//                    *self.get_mut(i, j) = temp[i];
+//                    //self.data[i * self.n + j] = temp[i];
+//                }
+//            }
+//        }
+//
+//        for i in 0..self.m
+//        {
+//            for j in 0..self.n
+//            {
+//                temp[self.scatter_da(i, j, b)] = *self.get(i, j);
+//                //temp[self.scatter_da(i, j, b)] = self.data[i * self.n + j];
+//            }
+//
+//            for j in 0..self.n
+//            {
+//                *self.get_mut(i, j) = temp[j];
+//                //self.data[i * self.n + j] = temp[j];
+//            }
+//        }
+//
+//        for j in 0..self.n
+//        {
+//            for i in 0..self.m
+//            {
+//                temp[i] = *self.get(self.gather_sa(i, j, a), j);
+//                //temp[i] =  self.data[self.gather_sa(i, j, a) * self.n + j];
+//            }
+//
+//            for i in 0..self.m
+//            {
+//                *self.get_mut(i, j) = temp[i];
+//                //self.data[i * self.n + j] = temp[i];
+//            }
+//        }
+//
+//        let temp_m : usize = self.m;
+//        self.m = self.n;
+//        self.n = temp_m;
+//
+//        return self;
+//    }
+//
+//    fn gather<'a>(self: &'a Self, i: usize, j: usize, b: usize) -> usize
+//    {
+//        return (i + (j / b)) % self.m;
+//    }
+//
+//    fn gather_sa<'a>(self: &'a Self, i: usize, j: usize, a: usize) -> usize
+//    {
+//        return (j + i * self.n - i / a) % self.m;
+//    }
+//
+//    fn scatter_da<'a>(self: &'a Self, i: usize, j: usize, b: usize) -> usize
+//    {
+//        return (((i + j / b) % self.m) + j * self.m) % self.n;
+//    }
 
 }
 
 
-//
-//impl<T> Matrix<T>
-//{
-//    /*
-//     * inplace backward substitution
-//     */
-//    fn subst_backward<'a>(self: &'a mut Self)
-//        where T: Clone + Add<Output = T> + Sub<Output = T> + Mul<Output = T> + Div<Output = T> + One + Zero + AddAssign
-//
-//    {
-//        for k in (0..self.n.get_primitive()).rev()
-//        {
-//            for l in (k..self.n.get_primitive()).rev()
-//            {
-//
-//                let mut sum : T = T::zero();
-//
-//                for i in (k+1)..self.n.get_primitive()
-//                {
-//                    sum += self.data[k * self.n.get_primitive() + i].clone() * self.data[i * self.n.get_primitive() +
-//                        l].clone();
-//                }
-//
-//                let b : T;
-//                if k == l
-//                {
-//                    b = T::one();
-//                }
-//                else
-//                {
-//                    b = T::zero();
-//                }
-//                let div : T = self.data[k * self.n.get_primitive() + k].clone();
-//                self.data[k * self.n.get_primitive() + l] = (b - sum) / div;
-//
-//            }
-//        }
-//    }
-//}
-//
-//impl<T> Matrix<T>
-//{
-//    /**
-//     * inplace forward substitution
-//     */
-//    fn subst_forward<'a>(self: &'a mut Self)
-//        where T: Clone + Add<Output = T> + Sub<Output = T> + Mul<Output = T> + Div<Output = T> + One + Zero + AddAssign
-//    {
-//
-//        for k in Interval::range(Natural::zero(), self.n)
-//        {
-//            for l in Interval::range(Natural::zero(), k)
-//            {
-//
-//                let mut sum : T = T::zero();
-//
-//                for i in Interval::range(Natural::zero(), k)
-//                {
-//                    sum += self.get(&k, &i).clone() * self.get(&i, &self.n).clone();
-//                }
-//
-//                let b : T;
-//                if k == l
-//                {
-//                    b = T::one();
-//
-//                }
-//                else
-//                {
-//                    b = T::zero();
-//                }
-//                let div: T = self.get(&k, &k).clone();
-//                *self.get_mut(&k, &l) =  (b - sum) / div;
-//            }
-//        }
-//
-//    }
-//}
+
+impl<T> Matrix<T>
+    where T: Real
+{
+    //
+    //
+    pub fn subst_backward_vector(self: &Self, mut b: Vector<T>) -> Vector<T>
+    {
+        for k in (0..self.n).rev()
+        {
+            for l in (k+1..self.n).rev()
+            {
+                *b.get_mut(k) = *b.get(k) - *self.get(k, l) * *b.get(l);
+            }
+            *b.get_mut(k) = *b.get(k) / *self.get(k, k);
+        }
+
+        return b;
+    }
+
+    pub fn subst_backward_matrix(self: &Self, mut b: Matrix<T>) -> Matrix<T>
+    {
+        println!("m: {}, n: {}, m: {}, n: {}", self.m, self.n, b.m, b.n);
+        let min = min(self.m, self.n);
+
+        for k in (0..min).rev()
+        {
+            for l in (k+1..min).rev()
+            {
+                b.set_row(&(b.get_row(k) - (b.get_row(l) * *self.get(k, l))), k);
+            }
+            b.set_row( &(b.get_row(k) / *self.get(k, k)), k);
+        }
+
+        return b;
+    }
+}
+
+impl<T> Matrix<T>
+    where T: Real
+{
+    //
+    //
+    pub fn subst_forward_vector(self: &Self, mut b: Vector<T>) -> Vector<T>
+    {
+        for k in 0..self.n
+        {
+            for l in 0..k
+            {
+                *b.get_mut(k) = *b.get(k) - *self.get(k, l) * *b.get(l);
+            }
+            *b.get_mut(k) = *b.get(k) / *self.get(k, k);
+        }
+
+        return b;
+    }
+
+    pub fn subst_forward_matrix(self: &Self, mut b: Matrix<T>) -> Matrix<T>
+    {
+        let min: usize = min(self.m, self.n);
+        for k in 0..min
+        {
+            for l in 0..k
+            {
+                b.set_row(&(b.get_row(k) - (b.get_row(l) * *self.get(k, l))), k);
+            }
+            b.set_row(&(b.get_row(k) / *self.get(k, k)), k);
+        }
+
+        return b;
+    }
+}
 
 
 impl<T> Matrix<T>
@@ -314,7 +398,6 @@ impl<T> Matrix<T>
     /// # Example
     ///
     /// ```
-    /// extern crate mathru;
     /// use mathru::algebra::linear::{Matrix};
     ///
     /// let a: Matrix<f64> = Matrix::new(2, 2, vec![1.0, -2.0, 3.0, -7.0]);
@@ -328,15 +411,15 @@ impl<T> Matrix<T>
 
         if self.m == 1
         {
-            return self.get(&0, &0).clone();
+            return self.get(0, 0).clone();
         }
 
         if self.m == 2
         {
-            let a_11: T = self.get(&0, &0).clone();
-            let a_12: T = self.get(&0, &1).clone();
-            let a_21: T = self.get(&1, &0).clone();
-            let a_22: T = self.get(&1, &1).clone();
+            let a_11: T = self.get(0, 0).clone();
+            let a_12: T = self.get(0, 1).clone();
+            let a_21: T = self.get(1, 0).clone();
+            let a_22: T = self.get(1, 1).clone();
             return a_11 * a_22 - a_12 * a_21;
         }
 
@@ -345,13 +428,13 @@ impl<T> Matrix<T>
 
         for i in 0..self.m
         {
-			det *= u.get(&i, &i).clone();
+			det *= u.get(i, i).clone();
         }
 
         let mut counter: usize = 0;
         for i in 0..self.m
         {
-            if *p.get(&i, &i) != T::one()
+            if *p.get(i, i) != T::one()
             {
                 counter += 1;
             }
@@ -379,7 +462,6 @@ impl<T> Matrix<T>
     /// # Example
     ///
     /// ```
-    /// extern crate mathru;
     /// use mathru::algebra::linear::{Matrix};
     ///
     /// let a: Matrix<f64> = Matrix::new(2, 2, vec![1.0, -2.0, 3.0, -7.0]);
@@ -399,7 +481,7 @@ impl<T> Matrix<T>
         let mut sum: T = T::zero();
         for i in 0..m
         {
-            sum += self.get(&i, &i).clone();
+            sum += self.get(i, i).clone();
         }
 
         return sum;
@@ -413,13 +495,13 @@ impl<T> Matrix<T>
 impl<T> Matrix<T>
     where T: Clone
 {
-    pub(super) fn swap_rows<'a, 'b, 'c>(self: &'a mut Self, i: &'b usize, j: &'c usize)
+    pub(super) fn swap_rows<'a>(self: &'a mut Self, i: usize, j: usize)
     {
         for k in 0..self.n
         {
-            let temp: T = self.get(&i, &k).clone();
-            *(self.get_mut(&i, &k)) = self.get(&j, &k).clone();
-            *(self.get_mut(&j, &k)) = temp;
+            let temp: T = self.get(i, k).clone();
+            *(self.get_mut(i, k)) = self.get(j, k).clone();
+            *(self.get_mut(j, k)) = temp;
         }
     }
 }
@@ -432,13 +514,13 @@ impl<T> Matrix<T>
 {
     //
     // returns column vector
-    pub fn get_column<'a, 'b>(self: &'a Self, i: &'b usize) -> Vector<T>
+    pub fn get_column<'a>(self: &'a Self, i: usize) -> Vector<T>
     {
         let mut v: Vector<T> = Vector::zero(self.m);
 
         for k in 0..self.m
         {
-            *(v.get_mut(&k)) = *(self.get( &k, &i));
+            *(v.get_mut(k)) = *(self.get(k, i));
         }
 
         v
@@ -448,21 +530,22 @@ impl<T> Matrix<T>
     /// return row vector
     ///
     /// i: row
-    pub fn get_row<'a, 'b>(self: &'a Self, i: &'b usize) -> Vector<T>
+    pub fn get_row<'a>(self: &'a Self, i: usize) -> Vector<T>
     {
         let mut v: Vector<T> = Vector::zero(self.n);
         v = v.transpose();
 
         for k in 0..self.n
         {
-            *(v.get_mut(&k)) = *(self.get(&i, &k));
+            *(v.get_mut(k)) = *(self.get(i, k));
         }
 
         v
     }
 
+
     /// set column
-    pub fn set_column(mut self: Self, column: &Vector<T>, i: &usize) -> Matrix<T>
+    pub fn set_column(mut self: Self, column: &Vector<T>, i: usize) -> Matrix<T>
     {
         let (m, _n) = column.dim();
         if m != self.m
@@ -472,7 +555,7 @@ impl<T> Matrix<T>
 
         for k in 0..self.m
         {
-            *self.get_mut(&k, &i) = *column.get(&k);
+            *self.get_mut(k, i) = *column.get(k);
         }
         self
     }
@@ -486,7 +569,7 @@ impl<T> Matrix<T>
     /// # Panics
     ///
     ///
-    pub fn set_row(mut self: Self, row: &Vector<T>, i: &usize) -> Matrix<T>
+    pub fn set_row(self: &mut Self, row: &Vector<T>, i: usize)
     {
         let (_m, n): (usize, usize) = row.dim();
         if n != self.n
@@ -496,9 +579,8 @@ impl<T> Matrix<T>
 
         for k in 0..self.n
         {
-            *self.get_mut(&i, &k) = *row.get(&k);
+            *(self.get_mut(i, k)) = *row.get(k);
         }
-        self
     }
 
 
@@ -510,17 +592,18 @@ impl<T> Matrix<T>
 
     ///
     ///
-    pub fn givens<'a, 'b, 'c, 'd, 'e>(m: &'a usize, i: &'b usize, j: &'c usize, c: &'d T, s: &'e T) -> Self
+    pub fn givens<'d, 'e>(m: usize, i: usize, j: usize, c: T, s: T) -> Self
     {
-        if *i >= *m || *j >= *m
+        if i >= m || j >= m
         {
             panic!("Index out of bounds");
         }
-        let mut givens: Matrix<T> = Matrix::one(*m);
+
+        let mut givens: Matrix<T> = Matrix::one(m);
         *(givens.get_mut(i,i)) = c.clone();
-        *(givens.get_mut(j,j)) = *c;
+        *(givens.get_mut(j,j)) = c;
         *(givens.get_mut(i,j)) = s.clone();
-        *(givens.get_mut(j,i)) = -*s;
+        *(givens.get_mut(j,i)) = -s;
         givens
     }
 
@@ -601,7 +684,7 @@ impl<T> Matrix<T>
 
         let alpha: T;
 
-        let d_0: T = *d.get(&0);
+        let d_0: T = *d.get(0);
 
         if  d_0 >= T::zero()
         {
@@ -622,8 +705,8 @@ impl<T> Matrix<T>
 
         let mut v: Vector<T> = Vector::zero(d_m);
 
-        * v.get_mut(&0) = (T::from_f64(0.5).unwrap() * (T::one() - d_0 / alpha)).pow(&T::from_f64(0.5).unwrap());
-        let p: T = -alpha * *v.get(&0);
+        * v.get_mut(0) = (T::from_f64(0.5).unwrap() * (T::one() - d_0 / alpha)).pow(&T::from_f64(0.5).unwrap());
+        let p: T = -alpha * *v.get(0);
 
 
         if d_m - 1 >= 1
@@ -661,7 +744,6 @@ impl<T> Matrix<T>
     /// # Example
     ///
     /// ```
-    /// extern crate mathru;
     /// use mathru::algebra::linear::{Matrix};
     ///
     /// let a: Matrix<f64> = Matrix::new(4, 4, vec![4.0, 1.0, -2.0, 2.0, 1.0, 2.0, 0.0, -2.0, 0.0, 3.0, -2.0, 2.0,
@@ -694,12 +776,12 @@ impl<T> Matrix<T>
         // check that all singular values are positive
         for l in 0..b_m
         {
-            if b.get(&l, &l) < &T::zero()
+            if b.get(l, l) < &T::zero()
             {
-                *b.get_mut(&l, &l) = - *b.get(&l, &l);
-                let mut column_l: Vector<T> = u.get_column(&l);
+                *b.get_mut(l, l) = - *b.get(l, l);
+                let mut column_l: Vector<T> = u.get_column(l);
                 column_l = &column_l * &-T::one();
-                u = u.set_column(&column_l, &l);
+                u = u.set_column(&column_l, l);
             }
         }
 
@@ -710,7 +792,7 @@ impl<T> Matrix<T>
             {
                 if k != l
                 {
-                    *b.get_mut(&k, &l) = T::zero();
+                    *b.get_mut(k, l) = T::zero();
                 }
             }
         }
@@ -730,27 +812,28 @@ impl<T> Matrix<T>
             // Construct matrix Q and multiply on the right by Q'.
             // Q annihilates both B(k-1,k+1) and B(k,k+1)
             // but makes B(k+1,k) non-zero.
-            let (c_r, s_r, _r_r): (T, T, T) = Matrix::rot(*b.get(&k,&k), *b.get(&k,&(k + 1)));
+            let (c_r, s_r, _r_r): (T, T, T) = Matrix::rot(*b.get(k, k), *b.get(k, k + 1));
 
-            *q.get_mut(&k, &k) = c_r;
-            *q.get_mut(&k, &(k +1)) = s_r;
-            *q.get_mut(&(k + 1), &k) = -s_r;
-            *q.get_mut(&(k + 1), &(k + 1)) = c_r;
+            *q.get_mut(k, k) = c_r;
+            *q.get_mut(k, k +1) = s_r;
+            *q.get_mut(k + 1, k) = -s_r;
+            *q.get_mut(k + 1, k + 1) = c_r;
 
-            b = &b * &q.transpose();
-            v = &v * &q.transpose();
+            let q_t: Matrix<T>= q.clone().transpose();
+            b = &b * &q_t;
+            v = &v * &q_t;
 
             //B(find(abs(B)<1.e-13))=0;
 
             // Construct matrix Q and multiply on the left by Q.
             // Q annihilates B(k+1,k) but makes B(k,k+1) and
             // B(k,k+2) non-zero.
-            let (c_l, s_l, _r_l): (T, T, T) = Matrix::rot(*b.get(&k,&k), *b.get(&(k + 1),&k));
+            let (c_l, s_l, _r_l): (T, T, T) = Matrix::rot(*b.get(k, k), *b.get(k + 1, k));
 
-            *q.get_mut(&k, &k) = c_l;
-            *q.get_mut(&k, &(k +1)) = s_l;
-            *q.get_mut(&(k + 1), &k) = -s_l;
-            *q.get_mut(&(k + 1), &(k + 1)) = c_l;
+            *q.get_mut(k, k) = c_l;
+            *q.get_mut(k, k + 1) = s_l;
+            *q.get_mut(k + 1, k) = -s_l;
+            *q.get_mut(k + 1, k + 1) = c_l;
 
             b = &q * &b;
 		    u = &q * &u;
@@ -815,7 +898,7 @@ impl<T> Matrix<T>
         {
             // eliminate non-zeros below the diagonal
             // Keep the product U*B unchanged
-            let u_x: Vector<T> = a_i.clone().get_column(&i);
+            let u_x: Vector<T> = a_i.clone().get_column(i);
             let u_slice: Vector<T> = u_x.get_slice(i, m - 1);
 
             let u_i: Matrix<T> = Matrix::householder(&u_slice, 0);
@@ -834,7 +917,7 @@ impl<T> Matrix<T>
             //B_T = B';
             if i < (n - 1)
             {
-                let v_x: Vector<T> = a_i.get_row(&i);
+                let v_x: Vector<T> = a_i.get_row(i);
                 let v_x_trans: Vector<T> = v_x.transpose();
                 let v_x_trans_slice: Vector<T> = v_x_trans.get_slice(i+1, n - 1);
 
@@ -858,7 +941,7 @@ impl<T> Matrix<T>
             {
                 if k != i && k != (i + 1)
                 {
-                    *a_i.get_mut(&i, &k)  = T::zero();
+                    *a_i.get_mut(i, k)  = T::zero();
                 }
             }
         }
@@ -867,170 +950,6 @@ impl<T> Matrix<T>
     }
 
 }
-//    pub fn golub_kahan_step<'a>(self: &'a Self) -> (Self, Self, Self)
-//    {
-//
-//        let mut b: Matrix<T> = self.clone();
-//        let (b_m, b_n): (usize, usize) = b.dim();
-//        let mut u: Matrix<T> = Matrix::one(&b_n);
-//        let mut v: Matrix<T> = Matrix::one(&b_n);
-//
-//
-//        //let t: Matrix<T> = &b.transpose() * &b;
-//
-//        //(t_{11} - \lambda)(t_{22} - \lambda) -(t_{21}*t_{12})
-//        //
-//        //\lambda^2 - \lambda(t_{11} + t_{22}) + t_{11}t_{22}) - t_{21}t_{12} = 0
-//        //
-//        // f = 1
-//        // g = -(t_{11} + t_{22})
-//        // h = t_{11}t_{22} - t_{21}t_{12}
-//        //
-//        // \lambda = \frac{-g +/- (g^2 - 4*fh)^{0.5}}{2*f)
-//
-//
-//        let d_m: T = *b.get(&(b_n - 2), &(b_n - 2));
-//        let f_m1: T = *b.get(&(b_n - 3), &(b_n - 2));
-//        let f_m: T = *b.get(&(b_n - 2), &(b_n - 1));
-//        let d_n: T = *b.get(&(b_n - 1), &(b_n - 1));
-//        let t_11: T = d_m * d_m + f_m1 * f_m1;
-//        let t_12: T = d_m * f_m;
-//        let t_21: T = d_m * f_m;
-//        let t_22: T = d_n * d_n + f_m * f_m;
-//
-//        let g: T = -(t_11 + t_22);
-//        let h: T = (t_11 * t_22)  - (t_21 * t_12);
-//        let k: T = (g.pow(&T::from_f64(2.0_f64).unwrap()) - T::from_f64(4.0).unwrap() * h).pow(&T::from_f64(0.5_f64)
-//        .unwrap());
-//        let eigv_1: T = (-g + k) / T::from_f64(2.0_f64).unwrap();
-//        let eigv_2: T = (-g - k) / T::from_f64(2.0_f64).unwrap();
-//
-//        let eigv: T;
-//        if (eigv_1 - t_22).abs() < (eigv_2 - t_22).abs()
-//        {
-//            eigv = eigv_1;
-//        }
-//        else
-//        {
-//            eigv = eigv_2;
-//        }
-//
-//        let mut y: T = t_11 - eigv;
-//        let mut z: T = t_12;
-//
-//        for i in 0..(b_n - 1)
-//        {
-//            //y*s + z + c = 0
-//            //s = \sin \theta
-//            //c = \cos \theta
-//            //\tan \theta = -z / y
-//
-//            let theta_1: T = (-z).arctan2(&y);
-//            let c_1: T = theta_1.cos();
-//            let s_1: T = theta_1.sin();
-//
-//            let g_1: Matrix<T> = Matrix::givens(&b_n, &i, &(i + 1), &c_1, &s_1);
-//            v = v * g_1.clone();
-//            b = b * g_1;
-//
-//            y = *b.get(&i, &i);
-//            z = *b.get(&(i + 1), &i);
-//
-//            let theta_2: T = (-z).arctan2(&y);
-//            let c_2: T = theta_2.cos();
-//            let s_2: T = -theta_2.sin();
-//
-//            let g_2: Matrix<T> = Matrix::givens(&b_n, &i, &(i + 1), &c_2, &s_2);
-//            b = g_2.clone() * b;
-//            u = g_2 * u;
-//
-//            if i < b_n - 2
-//            {
-//                y = *b.get(&i, &(i + 1));
-//                z = *b.get(&i, &(i + 2));
-//            }
-//
-//            //println!("b_i: {}", b);
-//        }
-//
-//        return (u, b, v)
-//    }
-//
-//    fn nullen(mut self: Self) -> Self
-//    {
-//        let epsilon: T = T::from_f64(std::f64::EPSILON).unwrap(); //It shoud be a multiple of the machine epsilon
-//        let (_m, n): (usize, usize) = self.dim();
-//
-//        for i in 0..(n - 1)
-//        {
-//            let b_ii: T = *self.get(&i, &i);
-//            let b_iip: T = *self.get(&i, &(i + 1));
-//            let b_ipip: T = *self.get(&(i + 1), &(i + 1));
-//
-//            if b_iip.abs() <= T::from_f64(0.000001).unwrap() //T::from_f64(1000.0).unwrap() * epsilon * (b_ii.abs() +
-//            // b_ipip
-//            // .abs())
-//            {
-//                *self.get_mut(&i, &(i + 1)) = T::zero()
-//            }
-//        }
-//        return self
-//    }
-//
-//    //
-//    //  q = 2
-//    //  a_11 a_12 a_13 a_14     x 0 0 0
-//    //  a_21 a_22 a_23 a_24     0 x x 0
-//    //  a_31 a_32 a_33 a_34 =   0 0 x 0 |
-//    //  a_41 a_42 a_43 a_44     0 0 0 x | q
-//    //								_ _
-//    //  x != 0						q
-//    pub fn find_nonzero_superdiagonal(self: &Self) -> usize
-//    {
-//        let (m, n): (usize, usize) = self.dim();
-//
-//        let mut q: usize = 0;
-//
-//        // a_{n-0}{n} does not have a superdiagnoal
-//        for i in 1..n
-//        {
-//            q = i;
-//            if *self.get(&(n - i - 1), &(n - i)) != T::zero()
-//            {
-//                break;
-//            }
-//        }
-//
-//        return q;
-//    }
-//
-//     //
-//    //  p = 3
-//    //  a_11 a_12 a_13 a_14     x x x x
-//    //  a_21 a_22 a_23 a_24     x x 0 x |
-//    //  a_31 a_32 a_33 a_34 =   x x x 0 |
-//    //  a_41 a_42 a_43 a_44     x x x x | p
-//    //							  _ _ _
-//    //  x != 0						p
-//    pub fn find_zero_superdiagonal(self: &Self) -> usize
-//    {
-//        let (m, n): (usize, usize) = self.dim();
-//
-//        let mut p: usize = 0;
-//
-//        // a_{n-0}{n} does not have a superdiagnoal
-//        for i in 1..n
-//        {
-//            p = i;
-//            if *self.get(&(n - i - 1), &(n - i)) == T::zero()
-//            {
-//                break;
-//            }
-//        }
-//
-//        return p;
-//    }
-//}
 
 impl<T> Matrix<T>
     where T: Real
@@ -1079,7 +998,7 @@ impl<T> Matrix<T>
         {
             for c in column_s..(column_e + 1)
             {
-                  *slice.get_mut(&(r - row_s), &(c - column_s)) = *self.get(&r, &c)
+                  *slice.get_mut(r - row_s, c - column_s) = *self.get(r, c)
             }
         }
         return slice;
@@ -1124,7 +1043,7 @@ impl<T> Matrix<T>
         {
             for c in column..(column + s_n)
             {
-                *self.get_mut(&r, &c) = *slice.get(&(r - row), &(c - column));
+                *self.get_mut(r, c) = *slice.get(r - row, c - column);
             }
         }
         self
@@ -1142,7 +1061,7 @@ impl<T> Display for Matrix<T>
         {
             for j in 0..self.n
             {
-                write!(f, "{} ", self.get(&i, &j)).unwrap();
+                write!(f, "{} ", self.get(i, j)).unwrap();
             }
             write!(f, "\n").unwrap();
         }
@@ -1165,16 +1084,16 @@ impl<T> Matrix<T>
     /// use mathru::algebra::linear::{Matrix};
     ///
     /// let mut a: Matrix<f64> = matrix![1.0, 0.0; 3.0, -7.0];
-    /// *a.get_mut(&1, &0) = -8.0;
+    /// *a.get_mut(1, 0) = -8.0;
     ///
     /// let a_updated: Matrix<f64> = matrix![1.0, 0.0; -8.0, -7.0];
     /// assert_eq!(a_updated, a);
     /// # }
     /// ```
-    pub fn get_mut<'a, 'b, 'c>(self: &'a mut Self, i: &'b usize, j: &'c usize) -> &'a mut T
+    pub fn get_mut<'a>(self: &'a mut Self, i: usize, j: usize) -> &'a mut T
     {
-        assert!(*i < self.m);
-        assert!(*j < self.n);
+        assert!(i < self.m);
+        assert!(j < self.n);
         & mut(self.data[j * self.m + i])
     }
 
@@ -1194,15 +1113,15 @@ impl<T> Matrix<T>
     ///                                 3.0, -7.0];
     ///
     /// let a_ref: f64 = 3.0;
-    /// let element: f64 = *a.get(&1, &0);
+    /// let element: f64 = *a.get(1, 0);
     ///
     /// assert_eq!(a_ref, element);
     /// # }
     /// ```
-    pub fn get(self: &Self, i: &usize, j: &usize) -> & T
+    pub fn get(self: &Self, i: usize, j: usize) -> & T
     {
-        assert!(*i < self.m);
-        assert!(*j < self.n);
+        assert!(i < self.m);
+        assert!(j < self.n);
 
         return & self.data[j * self.m + i];
     }
@@ -1217,7 +1136,6 @@ impl<T> PartialEq for Matrix<T>
     /// # Example
     ///
     /// ```
-    /// extern crate mathru;
     /// use mathru::algebra::linear::{Matrix};
     ///
     /// let a: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
@@ -1256,7 +1174,7 @@ impl<T> Matrix<T>
 }
 
 impl<T> Matrix<T>
-    where T: Number + Clone + Copy + Zero + One
+    where T: Scalar + Clone + Copy + Zero + One
 {
     pub fn new_random(m: usize, n: usize) -> Matrix<T>
     {
@@ -1276,7 +1194,6 @@ impl<T> Matrix<T>
     /// # Example
     ///
     /// ```
-    /// extern crate mathru;
     /// use mathru::algebra::linear::{Matrix};
     ///
     /// let a: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
@@ -1303,7 +1220,6 @@ impl<T> Matrix<T>
     /// # Example
     ///
     /// ```
-    /// extern crate mathru;
     /// use mathru::algebra::linear::{Matrix};
     ///
     /// let a: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
@@ -1341,13 +1257,27 @@ impl<T> Matrix<T>
 
 
 impl<T> Matrix<T>
+    where T: Real
+{
+    /// Calculates the pseudo inverse matrix
+    ///
+    /// A^+ = (A^TA)^-1A^T
+    pub fn pinv(self: &Self) -> Matrix<T>
+    {
+        let (_q, r): (Matrix<T>, Matrix<T>) = self.dec_qr();
+        let x: Matrix<T> = r.clone().transpose().subst_forward_matrix(self.clone().transpose());
+        let a_pinv: Matrix<T> = r.subst_backward_matrix(x);
+        return a_pinv;
+    }
+}
+
+impl<T> Matrix<T>
 {
     /// Returns the matrix dimension
     ///
     /// # Example
     ///
     /// ```
-    /// extern crate mathru;
     /// use mathru::algebra::linear::{Matrix};
     ///
     /// let a: Matrix<f64> = Matrix::new(4, 2, vec![1.0, 0.0, 3.0, 0.0, 1.0, -7.0, 0.5, 0.25]);

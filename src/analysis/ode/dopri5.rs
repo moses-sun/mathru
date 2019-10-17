@@ -90,8 +90,8 @@ impl<T> Solver<T> for Dopri5<T>
     ///
     /// let (m, _n): (usize, usize) = y.dim();
     ///
-    /// assert!((1.40_f64 - *t.get(&(m-1))).abs() < 0.0001);
-    ///	assert!((1.4_f64.tan() - *y.get(&(m-1), &0)).abs() < 0.0001);
+    /// assert!((1.40_f64 - *t.get(m - 1)).abs() < 0.0001);
+    ///	assert!((1.4_f64.tan() - *y.get(m - 1, 0)).abs() < 0.0001);
     ///
     /// ```
 	fn solve<F>(self: &Self, func: F, init: Vector<T>, t_start: T, t_end: T) -> (Vector<T>, Matrix<T>)
@@ -157,7 +157,7 @@ impl<T> Solver<T> for Dopri5<T>
 
         for i in 0..t_vec.len()
         {
-            *t_vector.get_mut(&i) = t_vec[i];
+            *t_vector.get_mut(i) = t_vec[i];
         }
 
         //
@@ -165,7 +165,8 @@ impl<T> Solver<T> for Dopri5<T>
 
         for i in 0..t_vec.len()
         {
-            res_matrix = res_matrix.set_row(&res_mat[i].transpose(), &i);
+            //res_matrix = res_matrix.set_row(&res_mat[i].clone().transpose(), i);
+            res_matrix.set_row(&res_mat[i].clone().transpose(), i);
         }
 
         return (t_vector, res_matrix);

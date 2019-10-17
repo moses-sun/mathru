@@ -26,7 +26,7 @@ impl<'a, 'b, T> Mul<&'b Vector<T>> for &'a Matrix<T>
             let mut row_column_product: T = T::zero();
             for k in 0..self.n
             {
-                row_column_product += self.data[k * self.m + i] * *v.get( &k);
+                row_column_product += self.data[k * self.m + i] * *v.get(k);
             }
             prod_data.push(row_column_product);
         }
@@ -46,7 +46,6 @@ impl<T> Mul<T> for Matrix<T>
     /// # Example
     ///
     /// ```
-    /// extern crate mathru;
     /// use mathru::algebra::linear::{Matrix};
     ///
     /// let a: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
@@ -72,7 +71,6 @@ impl<'a, 'b, T> Mul<&'b T> for &'a Matrix<T>
     /// # Example
     ///
     /// ```
-    /// extern crate mathru;
     /// use mathru::algebra::linear::{Matrix};
     ///
     /// let a: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
@@ -80,7 +78,7 @@ impl<'a, 'b, T> Mul<&'b T> for &'a Matrix<T>
     ///
     /// assert_eq!(res_ref, &a * &4.0);
     /// ```
-    fn mul(self, m: &'b T) -> Matrix<T>
+    fn mul(self: Self, m: &'b T) -> Matrix<T>
     {
         return self.clone().mul_scalar(m);
     }
@@ -110,7 +108,6 @@ impl <T> Mul<Matrix<T>> for Matrix<T>
     /// # Example
     ///
     /// ```
-    /// extern crate mathru;
     /// use mathru::algebra::linear::{Matrix};
     ///
     /// let a: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
@@ -135,7 +132,6 @@ impl<'a, 'b, T> Mul<&'b Matrix<T>> for &'a Matrix<T>
     /// # Example
     ///
     /// ```
-    /// extern crate mathru;
     /// use mathru::algebra::linear::{Matrix};
     ///
     /// let a: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
@@ -171,9 +167,9 @@ impl<'a, 'b, T> Matrix<T>
                 let mut sum: T = T::zero();
                 for k in 0..l_cols
                 {
-                    sum += self.get(&i, &k).clone() * rhs.get(&k, &j).clone();
+                    sum += self.get(i, k).clone() * rhs.get(k, j).clone();
                 }
-                *prod.get_mut(&i, &j) = sum;
+                *prod.get_mut(i, j) = sum;
             }
         }
         prod
@@ -207,7 +203,7 @@ impl<'a, 'b, T> Matrix<T>
     #[cfg(feature = "native")]
     fn mul_scalar(self: Self, m: &'b T) -> Matrix<T>
     {
-        self.apply(&|&x| x * *m)
+        self.apply_mut(&|&x| x * *m)
     }
 
     #[cfg(feature = "blaslapack")]

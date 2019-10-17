@@ -150,7 +150,7 @@ impl<T> Solver<T> for RKF45<T>
 
         for i in 0..t_vec.len()
         {
-            *t_vector.get_mut(&i) = t_vec[i];
+            *t_vector.get_mut(i) = t_vec[i];
         }
 
         //
@@ -158,7 +158,8 @@ impl<T> Solver<T> for RKF45<T>
 
         for i in 0..t_vec.len()
         {
-            res_matrix = res_matrix.set_row(&res_mat[i].transpose(), &i);
+            //res_matrix = res_matrix.set_row(&res_mat[i].clone().transpose(), i);
+            res_matrix.set_row(&res_mat[i].clone().transpose(), i);
         }
 
         return (t_vector, res_matrix);

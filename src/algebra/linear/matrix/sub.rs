@@ -20,7 +20,6 @@ impl <T> Sub for Matrix<T>
     /// # Example
     ///
     /// ```
-    /// extern crate mathru;
     /// use mathru::algebra::linear::{Matrix};
     ///
     /// let a: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
@@ -53,18 +52,13 @@ impl<'a, 'b, T> Matrix<T>
     #[cfg(feature = "native")]
     fn sub_r(self: &Self, rhs: &'b Matrix<T>) -> Matrix<T>
     {
-        assert_eq!(self.dim(), rhs.dim());
-
-        let mut sum: Matrix<T> = Matrix::zero(self.m, self.n);
-
-        for i in 0..sum.m
+        let (m, n) = rhs.dim();
+        Matrix
         {
-            for j in 0..sum.n
-            {
-                *sum.get_mut(&i, &j) = self.get(&i, &j).clone() - rhs.get(&i, &j).clone();
-            }
+            m: m,
+            n: n,
+            data: self.data.iter().zip(rhs.data.iter()).map(|(x, y)| *x - *y).collect::<Vec<T>>()
         }
-        sum
     }
 
     #[cfg(feature = "blaslapack")]
@@ -100,7 +94,6 @@ impl<'a, 'b, T> Sub<&'b T> for &'a Matrix<T>
     /// # Example
     ///
     /// ```
-    /// extern crate mathru;
     /// use mathru::algebra::linear::{Matrix};
     ///
     /// let a: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
@@ -110,7 +103,7 @@ impl<'a, 'b, T> Sub<&'b T> for &'a Matrix<T>
     /// ```
     fn sub(self: Self, rhs: &T) -> Self::Output
     {
-        return self.apply_mut(&|x: &T| -> T {x.clone() - rhs.clone()});
+        return self.apply(&|x: &T| -> T {x.clone() - rhs.clone()});
     }
 }
 
@@ -124,7 +117,6 @@ impl<T> Sub<T> for Matrix<T>
     /// # Example
     ///
     /// ```
-    /// extern crate mathru;
     /// use mathru::algebra::linear::{Matrix};
     ///
     /// let a: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);

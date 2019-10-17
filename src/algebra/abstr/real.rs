@@ -129,6 +129,8 @@ pub trait Lapack: Sized
 	fn xgetri_work_size(n: i32, a: &mut [Self], lda: i32, ipiv: &mut [i32], info: &mut i32) -> i32;
 
 	fn xpotrf(uplo: char, n: i32, a: &mut [Self], lda: i32, info: &mut i32);
+
+	fn xgetrs(n: i32, nrhs: i32, a: &mut [Self], lda: i32, ipiv: &mut [i32], b: &mut [Self], ldb: i32, info: &mut i32);
 }
 
 

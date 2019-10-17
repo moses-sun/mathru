@@ -4,14 +4,17 @@
 
 use crate::algebra::linear::Matrix;
 use crate::elementary::{Exponential, Power};
-use std::ops::{Add, AddAssign, Mul, Sub, Div};
+use std::ops::{Add, AddAssign, Mul, Sub, Div, Neg};
 use crate::algebra::abstr::{Zero, One, Sign};
-use crate::algebra::abstr::{Real, Number};
+use crate::algebra::abstr::{Real, Scalar};
 use crate::algebra::abstr::cast::FromPrimitive;
 use std::fmt::Display;
 use std::fmt;
 use serde::{Serialize, Deserialize};
-
+use std::iter::IntoIterator;
+use super::VectorIntoIterator;
+use super::VectorIterator;
+use super::VectorIteratorMut;
 
 /// Macro to construct vectors
 ///
@@ -22,8 +25,10 @@ use serde::{Serialize, Deserialize};
 /// {
 ///     use mathru::algebra::linear::Vector;
 ///
-///     // Construct a 2x3 matrix of f32
-///     let mat: Vector<f64> = vector![1.0; 2.0; 3.0];
+///     // Construct a column vector of f64
+///     let v1: Vector<f64> = vector![1.0; 2.0; 3.0];
+///     // Construct a row vector of f32
+///     let v2: Vector<f32> = vector![2.0, 3.0, 4.0];
 /// }
 /// ```
 #[macro_export]
@@ -61,6 +66,49 @@ pub struct Vector<T>
     data: Matrix<T>
 }
 
+impl<T> IntoIterator for Vector<T>
+    where T: Real
+{
+    type Item = T;
+    type IntoIter = VectorIntoIterator<T>;
+
+    fn into_iter(self: Self) -> Self::IntoIter
+    {
+        VectorIntoIterator
+        {
+            //_phantom: PhantomData::default()//
+            iter: self.data.into_iter(),
+        }
+    }
+}
+
+//impl<T> FromIterator for Matrix<T>
+//    where T: Real
+//{
+//    fn from_iter<T>(iter: T) -> Se
+//    T: IntoIterator<Item = A>,
+//}
+
+impl<T> Vector<T>
+{
+    pub fn iter(self: &Self) -> VectorIterator<T>
+    {
+        VectorIterator
+        {
+            iter: self.data.iter()
+        }
+    }
+
+    pub fn iter_mut(self: &mut Self) -> VectorIteratorMut<T>
+    {
+        VectorIteratorMut
+        {
+            iter: self.data.iter_mut()
+        }
+    }
+}
+
+
 
 impl<T> Vector<T>
     where T: AddAssign + Mul<T, Output = T> + Zero + One + Clone + Exponential + Div<T, Output = T> + Power + PartialOrd
@@ -78,7 +126,6 @@ impl<T> Vector<T>
     /// # Example
 	///
 	/// ```
-	/// extern crate mathru;
 	/// use mathru::algebra::linear::{Vector};
 	///
 	/// let a: Vector<f64> = Vector::new_column(4, vec![1.0, 0.0, 3.0, -2.0]);
@@ -97,11 +144,30 @@ impl<T> Vector<T>
         let mut sum: T = T::zero();
         for i in 0..(m *n)
         {
-            let b : T = (*a.get(&i)).clone();
+            let b : T = (*a.get(i)).clone();
             sum += b.clone().pow(p);
         }
         let norm: T = sum.pow(&(T::one() / p.clone()));
         norm
+    }
+}
+
+impl<T> Neg for Vector<T>
+    where T: Real
+{
+    type Output = Vector<T>;
+
+    fn neg(self: Self) -> Self::Output
+    {
+        return self.apply(&|&x| { -x});
+    }
+}
+
+impl<T> Vector<T>
+{
+    pub fn get_data(self: Self) -> Matrix<T>
+    {
+        return self.data;
     }
 }
 
@@ -114,7 +180,6 @@ impl<T> Vector<T>
     /// # Example
 	///
 	/// ```
-	/// extern crate mathru;
 	/// use mathru::algebra::linear::{Vector};
 	///
 	/// let a: Vector<f64> = Vector::new_column(4, vec![1.0, 0.0, 3.0, -2.0]);
@@ -144,7 +209,6 @@ impl <T> Vector<T>
     /// # Example
 	///
 	/// ```
-	/// extern crate mathru;
 	/// use mathru::algebra::linear::{Vector};
 	///
 	/// let a: Vector<f64> = Vector::new_row(4, vec![1.0, 0.0, 3.0, -2.0]);
@@ -168,7 +232,6 @@ impl <T> Vector<T>
     /// # Example
 	///
 	/// ```
-	/// extern crate mathru;
 	/// use mathru::algebra::linear::{Vector};
 	///
 	/// let a: Vector<f64> = Vector::new_column(4, vec![1.0, 0.0, 3.0, -2.0]);
@@ -191,14 +254,13 @@ impl <T> Vector<T>
 }
 
 impl <T> Vector<T>
-    where T: Number + Clone + Copy + Zero + One
+    where T: Scalar + Clone + Copy + Zero + One
 {
     /// Returns a row vector initialized with random numbers
     ///
     /// # Example
 	///
 	/// ```
-	/// extern crate mathru;
 	/// use mathru::algebra::linear::{Vector};
 	///
 	/// let a: Vector<f64> = Vector::new_row_random(4);
@@ -217,7 +279,6 @@ impl <T> Vector<T>
     /// # Example
 	///
 	/// ```
-	/// extern crate mathru;
 	/// use mathru::algebra::linear::{Vector};
 	///
 	/// let a: Vector<f64> = Vector::new_column_random(4);
@@ -244,17 +305,16 @@ impl<T> Vector<T>
     /// # Example
 	///
 	/// ```
-	/// extern crate mathru;
 	/// use mathru::algebra::linear::{Vector};
 	///
 	/// let a: Vector<f64> = Vector::new_column(4, vec![1.0, 0.0, 3.0, -2.0]);
     /// let b: Vector<f64> = a.transpose();
     /// ```
-    pub fn transpose<'a>(self: &'a Self) -> Self
+    pub fn transpose(mut self: Self) -> Self
     {
-        Vector {
-            data: self.data.transpose()
-        }
+        self.data = self.data.transpose();
+
+        return self;
     }
 
 }
@@ -270,7 +330,6 @@ impl<T> Vector<T>
     /// # Example
 	///
 	/// ```
-	/// extern crate mathru;
 	/// use mathru::algebra::linear::{Vector};
 	///
 	/// let a: Vector<f64> = Vector::new_column(4, vec![1.0, 0.0, 3.0, -2.0]);
@@ -290,9 +349,10 @@ impl<T> Vector<T>
         assert_eq!(lhs_m,rhs_m);
         assert_eq!(lhs_n, rhs_n);
 
-        let temp : Vector<T> = self.transpose();
+        let temp : Vector<T> = self.clone().transpose();
         let res : Matrix<T> = (&temp.data).mul( &(rhs.data));
-        (*res.get(&0, &0)).clone()
+
+        return (*res.get(0, 0)).clone();
     }
 
 
@@ -303,7 +363,6 @@ impl<T> Vector<T>
     /// # Examples
     ///
     /// ```
-    /// extern crate mathru;
     /// use mathru::algebra::linear::Vector;
     ///
     /// let a = Vector::new_column(4, vec![1.0, 2.0, -3.0, 5.0]);
@@ -315,7 +374,7 @@ impl<T> Vector<T>
         let (m, n) = self.dim();
 
         let mut max_index: usize = 0;
-        let mut max = *self.get(&max_index);;
+        let mut max = *self.get(max_index);;
 
         let limit: usize = m.max(n);
 
@@ -323,7 +382,7 @@ impl<T> Vector<T>
 
         for idx in 0..limit
         {
-            let element: T = *self.get(&idx);
+            let element: T = *self.get(idx);
             if  element > max
             {
                 max_index = idx;
@@ -341,7 +400,6 @@ impl<T> Vector<T>
     /// # Examples
     ///
     /// ```
-    /// extern crate mathru;
     /// use mathru::algebra::linear::Vector;
     ///
     /// let a = Vector::new_column(4, vec![1.0, -2.0, -6.0, 75.0]);
@@ -353,7 +411,7 @@ impl<T> Vector<T>
         let (m, n) = self.dim();
 
         let mut min_index: usize = 0;
-        let mut min: T = *self.get(&min_index);;
+        let mut min: T = *self.get(min_index);;
 
         let limit: usize = m.max(n);
 
@@ -361,7 +419,7 @@ impl<T> Vector<T>
 
         for idx in 0..limit
         {
-            let element: T = *self.get(&idx);
+            let element: T = *self.get(idx);
             if  element < min
             {
                 min_index = idx;
@@ -381,7 +439,6 @@ impl<T> Vector<T>
     /// # Example
 	///
 	/// ```
-	/// extern crate mathru;
 	/// use mathru::algebra::linear::{Vector, Matrix};
 	///
 	/// let a: Vector<f64> = Vector::new_row(4, vec![1.0, 0.0, 3.0, -2.0]);
@@ -399,7 +456,7 @@ impl<T> Vector<T>
         {
             for j in 0..y_m
             {
-                *c.get_mut(&i, &j) = self.get(&i).clone() * rhs.get(&j).clone();
+                *c.get_mut(i, j) = self.get(i).clone() * rhs.get(j).clone();
             }
         }
         c
@@ -419,7 +476,7 @@ impl<T> Vector<T>
 
 
 impl<T> Vector<T>
-    where T: One + Zero
+    //where T: One + Zero
 {
     /// Returns the mutual component
     ///
@@ -432,14 +489,13 @@ impl<T> Vector<T>
     /// # Example
 	///
 	/// ```
-	/// extern crate mathru;
 	/// use mathru::algebra::linear::{Vector};
 	///
 	/// let mut a: Vector<f64> = Vector::new_row(4, vec![1.0, 0.0, 3.0, -2.0]);
 	///
-	/// *a.get_mut(&1) = -4.0;
+	/// *a.get_mut(1) = -4.0;
     /// ```
-    pub fn get_mut<'a, 'b>(self: &'a mut Self, i: &'b usize) -> &'a mut T
+    pub fn get_mut<'a>(self: &'a mut Self, i: usize) -> &'a mut T
     {
         let (m, n) : (usize, usize) = self.data.dim();
         assert!(m == 1 || n == 1);
@@ -447,21 +503,21 @@ impl<T> Vector<T>
         if m == 1
         {
             //row vector
-            assert!(*i < n);
-            self.data.get_mut(&0, i)
+            assert!(i < n);
+            self.data.get_mut(0, i)
         }
         else
         {
             //column vector
-            assert!(*i < m);
-            self.data.get_mut(i, &0)
+            assert!(i < m);
+            self.data.get_mut(i, 0)
         }
 
     }
 }
 
 impl<T> Vector<T>
-    where T: One + Zero
+    //where T: One + Zero
 {
     /// Returns the component
     ///
@@ -472,14 +528,13 @@ impl<T> Vector<T>
     /// # Example
 	///
 	/// ```
-	/// extern crate mathru;
 	/// use mathru::algebra::linear::{Vector};
 	///
 	/// let mut a: Vector<f64> = Vector::new_row(4, vec![1.0, 0.0, 3.0, -2.0]);
 	///
-	/// assert_eq!(-2.0, *a.get_mut(&3))
+	/// assert_eq!(-2.0, *a.get_mut(3))
     /// ```
-    pub fn get<'a, 'b>(self: &'a Self, i: &'b usize) -> &'a T
+    pub fn get<'a>(self: &'a Self, i: usize) -> &'a T
     {
         let (m, n) : (usize, usize) = self.data.dim();
         assert!(m == 1 || n == 1);
@@ -487,14 +542,14 @@ impl<T> Vector<T>
         if m == 1
         {
             //row vector
-            assert!(*i < n);
-            self.data.get(&0, i)
+            assert!(i < n);
+            self.data.get(0, i)
         }
         else
         {
             //column vector
-            assert!(*i < m);
-            self.data.get(i, &0)
+            assert!(i < m);
+            self.data.get(i, 0)
         }
     }
 }
@@ -509,9 +564,9 @@ impl<T> Vector<T>
 
         let norm_x: T = self.p_norm(&two);
 
-        *x_temp.get_mut(&0) += self.get(&0).sgn() * norm_x;
+        *x_temp.get_mut(0) += self.get(0).sgn() * norm_x;
         let x_temp_norm: T = x_temp.p_norm(&two);
-        *x_temp.get_mut(&0) /= x_temp_norm;
+        *x_temp.get_mut(0) /= x_temp_norm;
 
         x_temp
     }
@@ -526,7 +581,6 @@ impl<T> Vector<T>
     /// # Example
 	///
 	/// ```
-	/// extern crate mathru;
 	/// use mathru::algebra::linear::{Vector};
 	///
 	/// let a: Vector<f64> = Vector::new_column(4, vec![0.0, 0.0, 0.0, 0.0]);
@@ -561,7 +615,6 @@ impl<T> Vector<T>
     /// # Example
 	///
 	/// ```
-	/// extern crate mathru;
 	/// use mathru::algebra::linear::{Vector};
 	///
 	/// let a: Vector<f64> = Vector::new_column(4, vec![1.0, 2.0, 3.0, 4.0]);
@@ -595,7 +648,6 @@ impl<T> Vector<T>
     /// # Example
     ///
     /// ```
-    /// extern crate mathru;
     /// use mathru::algebra::linear::{Vector};
     ///
     /// let mut a: Vector<f64> = Vector::new_column(4, vec![1.0, -2.0, 3.0, -7.0]);
@@ -623,7 +675,7 @@ impl<T> Vector<T>
 
         for r in s..(e + 1)
         {
-            *slice.get_mut(&(r - s)) = *self.get(&r)
+            *slice.get_mut(r - s) = *self.get(r)
         }
 
         return slice;
@@ -640,7 +692,6 @@ impl<T> Vector<T>
     /// # Example
     ///
     /// ```
-    /// extern crate mathru;
     /// use mathru::algebra::linear::{Vector};
     ///
     /// let mut a: Vector<f64> = Vector::new_column(4, vec![1.0, -2.0, 3.0, -7.0]);
@@ -659,7 +710,7 @@ impl<T> Vector<T>
 
         for r in s..(s + s_m)
         {
-            *self.get_mut(&r) = *rhs.get(&(r - s));
+            *self.get_mut(r) = *rhs.get(r - s);
         }
     }
 }
@@ -686,14 +737,13 @@ impl<T> Vector<T>
 
 
 impl<T> PartialEq<Self> for Vector<T>
-    where T: Number
+    where T: Scalar
 {
     /// Compares if two vectors are equal
     ///
     /// # Example
 	///
 	/// ```
-	/// extern crate mathru;
 	/// use mathru::algebra::linear::{Vector};
 	///
 	/// let a: Vector<f64> = Vector::new_column(4, vec![0.0, 0.0, 0.0, 0.0]);
@@ -731,7 +781,6 @@ impl<T> Add<Self> for Vector<T>
     /// # Example
 	///
 	/// ```
-	/// extern crate mathru;
 	/// use mathru::algebra::linear::{Vector};
 	///
 	/// let a: Vector<f64> = Vector::new_column(4, vec![1.0, 2.0, 3.0, 4.0]);
@@ -756,7 +805,6 @@ impl<T> Add<T> for Vector<T>
     /// # Example
 	///
 	/// ```
-	/// extern crate mathru;
 	/// use mathru::algebra::linear::{Vector};
 	///
 	/// let a: Vector<f64> = Vector::new_column(4, vec![1.0, 2.0, 3.0, 4.0]);
@@ -781,7 +829,6 @@ impl<'a, T> Add<&T> for &'a Vector<T>
     /// # Example
 	///
 	/// ```
-	/// extern crate mathru;
 	/// use mathru::algebra::linear::{Vector};
 	///
 	/// let a: Vector<f64> = Vector::new_column(4, vec![1.0, 2.0, 3.0, 4.0]);
@@ -809,7 +856,6 @@ impl<T> Sub<T> for Vector<T>
     /// # Example
 	///
 	/// ```
-	/// extern crate mathru;
 	/// use mathru::algebra::linear::{Vector};
 	///
 	/// let a: Vector<f64> = Vector::new_column(4, vec![1.0, 2.0, 3.0, 4.0]);
@@ -834,7 +880,6 @@ impl<'a, T> Sub<&T> for &'a Vector<T>
     /// # Example
 	///
 	/// ```
-	/// extern crate mathru;
 	/// use mathru::algebra::linear::{Vector};
 	///
 	/// let a: Vector<f64> = Vector::new_column(4, vec![1.0, 2.0, 3.0, 4.0]);
@@ -861,7 +906,6 @@ impl<T> Mul<T> for Vector<T>
     /// # Example
 	///
 	/// ```
-	/// extern crate mathru;
 	/// use mathru::algebra::linear::{Vector};
 	///
 	/// let a: Vector<f64> = Vector::new_column(4, vec![1.0, 2.0, 3.0, 4.0]);
@@ -888,7 +932,6 @@ impl<'a, T> Mul<&T> for &'a Vector<T>
     /// # Example
 	///
 	/// ```
-	/// extern crate mathru;
 	/// use mathru::algebra::linear::{Vector};
 	///
 	/// let a: Vector<f64> = Vector::new_column(4, vec![1.0, 2.0, 3.0, 4.0]);
@@ -915,7 +958,6 @@ impl<T> Div<T> for Vector<T>
     /// # Example
 	///
 	/// ```
-	/// extern crate mathru;
 	/// use mathru::algebra::linear::{Vector};
 	///
 	/// let a: Vector<f64> = Vector::new_column(4, vec![-5.0, -10.0, -15.0, -20.0]);
@@ -942,7 +984,6 @@ impl<'a, T> Div<&T> for &'a Vector<T>
     /// # Example
 	///
 	/// ```
-	/// extern crate mathru;
 	/// use mathru::algebra::linear::{Vector};
 	///
 	/// let a: Vector<f64> = Vector::new_column(4, vec![5.0, 10.0, 15.0, 20.0]);
@@ -970,7 +1011,6 @@ impl<'a, 'b, T> Add<&'b Vector<T>> for &'a Vector<T>
     /// # Example
 	///
 	/// ```
-	/// extern crate mathru;
 	/// use mathru::algebra::linear::{Vector};
 	///
 	/// let a: Vector<f64> = Vector::new_column(4, vec![1.0, 2.0, 3.0, 4.0]);
@@ -999,7 +1039,6 @@ impl <T> Sub for Vector<T>
     /// # Example
 	///
 	/// ```
-	/// extern crate mathru;
 	/// use mathru::algebra::linear::{Vector};
 	///
 	/// let a: Vector<f64> = Vector::new_column(4, vec![1.0, 2.0, 3.0, 4.0]);
@@ -1024,7 +1063,6 @@ impl <'a, 'b, T> Sub<&'b Vector<T>> for &'a Vector<T>
     /// # Example
 	///
 	/// ```
-	/// extern crate mathru;
 	/// use mathru::algebra::linear::{Vector};
 	///
 	/// let a: Vector<f64> = Vector::new_column(4, vec![1.0, 2.0, 3.0, 4.0]);
@@ -1078,7 +1116,7 @@ impl<'a, 'b, T> Mul<&'b Matrix<T>> for &'a Vector<T>
             let mut sum: T = T::zero();
             for k in 0..n
             {
-                sum = sum + *self.data.get(&0, &k) * *rhs.get(&k, &i);
+                sum = sum + *self.data.get(0, k) * *rhs.get(k, i);
             }
             res.push(sum.clone());
         }

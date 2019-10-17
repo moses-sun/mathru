@@ -8,6 +8,14 @@ mod matrix
     use mathru::algebra::abstr::Real;
 
     #[test]
+    fn gcd_0()
+    {
+        assert_eq!(1, Matrix::<f64>::gcd(1, 5));
+        assert_eq!(2, Matrix::<f64>::gcd(2, 4));
+        assert_eq!(3, Matrix::<f64>::gcd(6, 9));
+    }
+
+    #[test]
     fn macro_0()
     {
         //Construct a 2x3 matrix of f32
@@ -15,6 +23,17 @@ mod matrix
                                         4.0, 5.0, 6.0];
 
         let mat_ref: Matrix<f32> = Matrix::new(2, 3, vec![ 1.0, 4.0, 2.0, 5.0, 3.0, 6.0]);
+
+        assert_eq!(mat, mat_ref);
+    }
+
+    #[test]
+    fn macro_1()
+    {
+        //Construct a 2x3 matrix of f32
+        let mat: Matrix<f32> = matrix![ 1.0, 2.0, 3.0, 4.0, 5.0, 6.0];
+
+        let mat_ref: Matrix<f32> = Matrix::new(1, 6, vec![ 1.0, 2.0, 3.0, 4.0, 5.0, 6.0]);
 
         assert_eq!(mat, mat_ref);
     }
@@ -43,7 +62,7 @@ mod matrix
         {
             for k in 0..cols
             {
-                assert_eq!(*(m_zero.get(&i, &k)), 0.0);
+                assert_eq!(*(m_zero.get(i, k)), 0.0);
             }
         }
     }
@@ -62,11 +81,11 @@ mod matrix
             {
                 if i == k
                 {
-                    assert_eq!(*m_ones.get(&i, &k), 1.0);
+                    assert_eq!(*m_ones.get(i, k), 1.0);
                 }
                 else
                 {
-                    assert_eq!(*m_ones.get(&i, &k), 0.0);
+                    assert_eq!(*m_ones.get(i, k), 0.0);
                 }
             }
         }
@@ -78,13 +97,13 @@ mod matrix
         let a: Matrix<f32> = matrix![4.0, 1.0, -3.0, 2.0; 1.0, 2.0, 0.0, 1.0; -2.0, 0.0, 3.0, -2.0; 2.0, 1.0, -2.0,
         -1.0];
 
-        let x: Vector<f32> = a.get_column(&0);
+        let x: Vector<f32> = a.get_column(0);
 
         let x_ref : Vector<f32> = Vector::new_column(4, vec![4.0, 1.0, -2.0, 2.0]);
 
         for i in 0..4
         {
-            assert_eq!(*x.get(&i), *x_ref.get(&i));
+            assert_eq!(*x.get(i), *x_ref.get(i));
         }
     }
 
@@ -96,12 +115,12 @@ mod matrix
                                         -2.0, 0.0, 3.0, -2.0;
                                         2.0, 3.0, -2.0, -1.0];
 
-        let x: Vector<f64> = a.get_row(&1);
+        let x: Vector<f64> = a.get_row(1);
         let x_ref : Vector<f64> = Vector::new_row(4, vec![1.0, 2.0, 3.0, 1.0]);
 
         for i in 0..4
         {
-            assert_eq!(*(x.get(&i)), *(x_ref.get(&i)));
+            assert_eq!(*(x.get(i)), *(x_ref.get(i)));
         }
     }
 
@@ -299,6 +318,24 @@ mod matrix
         assert!(compare_matrix_epsilon(&l_ref, &l, 1.0e-10));
         assert!(compare_matrix_epsilon(&u_ref, &u, 1.0e-10));
     }
+
+    #[test]
+    fn decompose_lu3()
+    {
+        let a: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 2.0, -3.0, -7.0]);
+        let b: Vector<f64> = vector![1.0; 3.0];
+        let x_ref: Vector<f64> = vector![-2.25; 8.5];
+        let (l, u, p): (Matrix<f64>, Matrix<f64>, Matrix<f64>) = a.dec_lu();
+
+        let b_hat = &p * &b;
+
+        let y = u.subst_backward_vector(b_hat);
+
+        let x = p * l.subst_forward_vector(y);
+
+        assert!(compare_vector_epsilon(&x_ref, &x, 1.0e-10));
+    }
+
     #[test]
     fn givens()
     {
@@ -309,13 +346,13 @@ mod matrix
         let c : f32 = theta.cos();
         let s : f32 = theta.sin();
 
-        let givens : Matrix<f32> = Matrix::givens(&m, &i, &j, &c, &s);
+        let givens : Matrix<f32> = Matrix::givens(m, i, j, c, s);
 
-        assert_eq!(*(givens.get(&0, &0)), 1.0);
-        assert_eq!(*(givens.get(&i, &i)), theta.cos());
-        assert_eq!(*(givens.get(&j, &j)), theta.cos());
-        assert_eq!(*(givens.get(&j, &i)), -theta.sin());
-        assert_eq!(*(givens.get(&i, &j)), theta.sin());
+        assert_eq!(*(givens.get(0, 0)), 1.0);
+        assert_eq!(*(givens.get(i, i)), theta.cos());
+        assert_eq!(*(givens.get(j, j)), theta.cos());
+        assert_eq!(*(givens.get(j, i)), -theta.sin());
+        assert_eq!(*(givens.get(i, j)), theta.sin());
     }
 
     #[test]
@@ -327,7 +364,7 @@ mod matrix
         let theta : f64 = 1.0;
         let c : f64 = theta.cos();
         let s : f64 = theta.sin();
-        let givens : Matrix<f64> = Matrix::givens(&m, &i, &j, &c, &s);
+        let givens : Matrix<f64> = Matrix::givens(m, i, j, c, s);
         let givens_t : Matrix<f64> = givens.clone().transpose();
         let res_ref : Matrix<f64> = Matrix::one(m);
         let res : Matrix<f64> = givens_t * givens;
@@ -350,9 +387,7 @@ mod matrix
     {
         let m = matrix![1.0, 2.0; 3.0, 4.0];
 
-        println!("{}", m);
         let v = vector![2.0; 4.0];
-        println!("{}", v);
         let prod_ref = vector![10.0; 22.0];
 
         let res = m * v;
@@ -361,36 +396,124 @@ mod matrix
     }
 
     #[test]
-    fn transpose()
+    fn transpose_0()
+    {
+        let uut: Matrix<f32> = matrix![ 1.0, 0.0;
+                                        3.0, 0.0;
+                                        1.0, -7.0;
+                                       0.5, 0.25];
+
+        let res: Matrix<f32> = uut.clone().transpose();
+
+        let trans_ref: Matrix<f32> = matrix![   1.0, 3.0, 1.0, 0.5;
+                                                0.0, 0.0, -7.0, 0.25];
+
+          assert_eq!(res.clone().transpose(), uut);
+          assert_eq!(trans_ref, res);
+    }
+
+
+    #[test]
+    fn transpose_1()
+    {
+        let res: Matrix<f32> = Matrix::new(3, 2, vec![1.0, 2.0, 3.0, 4.0, 5.0, 6.0]).transpose();
+
+        let trans_ref: Matrix<f32> = Matrix::new(2, 3, vec![1.0, 4.0, 2.0, 5.0, 3.0, 6.0]);
+        assert_eq!(trans_ref, res);
+    }
+
+    #[test]
+    fn transpose_2()
     {
         let uut: Matrix<f32> = matrix![ 1.0, 0.0;
                                         3.0, 0.0;
                                         1.0, -7.0;
                                         0.5, 0.25];
 
-        let res: Matrix<f32> = uut.transpose();
+        let uut_ref: Matrix<f32> = Matrix::new(4, 2, vec![1.0, 3.0, 1.0, 0.5, 0.0, 0.0, -7.0, 0.25]);
 
-        let trans_ref: Matrix<f32> = matrix![   1.0, 3.0, 1.0, 0.5;
-                                                0.0, 0.0, -7.0, 0.25];
+        assert_eq!(uut_ref, uut);
 
-        assert_eq!(res, trans_ref);
+        let uut_t: Matrix<f32> = uut_ref.transpose();
+
+        let uut_t_ref: Matrix<f32> =  Matrix::new(2, 4, vec![1.0, 0.0, 3.0, 0.0, 1.0, -7.0, 0.5, 0.25]);
+
+        println!("{}", uut_t);
+
+        println!("{}", uut_t_ref);
+
+        assert_eq!(uut_t_ref, uut_t);
     }
 
-//    #[test]
-//    fn transpose_inplace()
-//    {
-//        let mut uut: Matrix<f32> = matrix![ 1.0, 0.0;
-//                                            3.0, 0.0;
-//                                            1.0, -7.0;
-//                                            0.5, 0.25];
-//
-//        uut = uut.transpose_inplace();
-//
-//        let trans_ref: Matrix<f32> = matrix![   1.0, 3.0, 1.0, 0.5;
-//                                                0.0, 0.0, -7.0, 0.25];
-//
-//        assert_eq!(uut, trans_ref);
-//    }
+    #[test]
+    fn transpose_3()
+    {
+        let uut: Matrix<f32> = matrix![ 1.0, 0.0;
+                                        3.0, 2.0];
+
+        let uut_t: Matrix<f32> = uut.transpose();
+
+        let uut_t_ref: Matrix<f32> =  Matrix::new(2, 2, vec![1.0, 0.0, 3.0, 2.0]);
+
+        assert_eq!(uut_t_ref, uut_t);
+    }
+
+
+    #[test]
+    fn transpose_4()
+    {
+        let uut: Matrix<f32> = matrix![ 1.0, 0.0;
+                                        3.0, 0.0;
+                                        1.0, -7.0;
+                                        0.5, 0.25];
+
+        let uut_ref: Matrix<f32> = Matrix::new(4, 2, vec![1.0, 3.0, 1.0, 0.5, 0.0, 0.0, -7.0, 0.25]);
+
+        assert_eq!(uut_ref, uut);
+
+        let uut_t: Matrix<f32> = uut.transpose();
+
+        let uut_t_ref: Matrix<f32> =  Matrix::new(2, 4, vec![1.0, 0.0, 3.0, 0.0, 1.0, -7.0, 0.5, 0.25]);
+
+        println!("{}", uut_t_ref);
+
+        assert_eq!(uut_t_ref, uut_t);
+    }
+
+    #[test]
+    fn transpose_5()
+    {
+        let uut: Matrix<f32> = matrix![ 1.0, 0.0, 4.0;
+                                        3.0, 2.0, 5.0;
+                                        7.0, -1.0, 8.0];
+
+        let uut_t: Matrix<f32> = uut.transpose();
+
+        let uut_t_ref: Matrix<f32> =  Matrix::new(3, 3, vec![1.0, 0.0, 4.0, 3.0, 2.0, 5.0, 7.0, -1.0, 8.0]);
+
+        assert_eq!(uut_t_ref, uut_t);
+    }
+
+    #[test]
+    fn transpose_6()
+    {
+        let uut: Matrix<f32> = matrix![ 1.0;
+                                        3.0;
+                                        1.0;
+                                        0.5];
+
+        let uut_ref: Matrix<f32> = Matrix::new(4, 1, vec![1.0, 3.0, 1.0, 0.5]);
+
+        assert_eq!(uut_ref, uut);
+
+        let uut_t: Matrix<f32> = uut.transpose();
+
+        let uut_t_ref: Matrix<f32> =  Matrix::new(1, 4, vec![1.0, 3.0, 1.0, 0.5,]);
+
+        println!("{}", uut_t_ref);
+
+        assert_eq!(uut_t_ref, uut_t);
+    }
 
     #[cfg(feature = "native")]
     #[test]
@@ -1007,7 +1130,36 @@ mod matrix
         assert_eq!(a_ref, b);
     }
 
+    #[test]
+    fn subst_backward()
+    {
+        let a: Matrix<f64> = matrix![   1.0, 2.0, 3.0;
+                                        0.0, 4.0, 5.0;
+                                        0.0, 0.0, 6.0];
+        let b: Vector<f64> = vector![7.0; 8.0; 9.0];
 
+		let c_ref: Vector<f64> = vector![2.25; 0.125; 1.5];
+
+        let c: Vector<f64> = a.subst_backward_vector(b);
+
+        assert!(compare_vector_epsilon(&c_ref, &c, 1.0e-10));
+    }
+
+    #[test]
+    fn subst_forward()
+    {
+        let a: Matrix<f64> = matrix![   6.0, 0.0, 0.0;
+                                        5.0, 4.0, 0.0;
+                                        3.0, 2.0, 1.0];
+
+        let b: Vector<f64> = vector![9.0; 8.0; 7.0];
+
+		let c_ref: Vector<f64> = vector![1.5; 0.125; 2.25];
+
+        let c: Vector<f64> = a.subst_forward_vector(b);
+
+        assert!(compare_vector_epsilon(&c_ref, &c, 1.0e-10));
+    }
 
     fn compare_matrix_epsilon<T: Real>(exp: &Matrix<T>, act: &Matrix<T>, epsilon: T) -> bool
     {
@@ -1021,7 +1173,7 @@ mod matrix
         {
             for k in 0..exp_n
             {
-                if (*exp.get(&i, &k) - *act.get(&i, &k)).abs() > epsilon
+                if (*exp.get(i, k) - *act.get(i, k)).abs() > epsilon
                 {
                     println!("exp: {}, act: {} exp - act: {}", exp, act, (exp - act));
                     return false;
@@ -1045,7 +1197,7 @@ mod matrix
 
         for i in 0..a_m
         {
-            if (*a.get(&i) - *b.get(&i)).abs() > epsilon
+            if (*a.get(i) - *b.get(i)).abs() > epsilon
             {
                 println!("a: {}, b: {} a-b: {}", a, b, a-b);
                 return false;
@@ -1055,4 +1207,26 @@ mod matrix
         return true;
     }
 
+    #[test]
+    fn solve_0()
+    {
+        let a: Matrix<f64> = matrix![6.0, 2.0, -1.0; -3.0, 5.0, 3.0; -2.0, 1.0, 3.0];
+        let b: Vector<f64> = vector![48.0; 49.0; 24.0];
+
+        let x: Vector<f64> = a.solve_vector(&b);
+        let x_ref: Vector<f64> = vector![7.0; 8.0; 10.000000000000002];
+
+        assert_eq!(x_ref, x);
+    }
+
+    #[test]
+    fn pinv_0()
+    {
+        let a: Matrix<f64> = matrix![1.0, 2.0, 3.0; 4.0, 5.0, 6.0; 8.0, 8.0, 9.0];
+        let a_pinv: Matrix<f64> = a.pinv();
+        let a_pinv_ref: Matrix<f64> = matrix![  0.999999999999988, -1.9999999999999634, 1.000000000000004;
+                                                -3.9999999999999662, 4.9999999999999005, -2.0000000000000133;
+                                                2.6666666666666474, -2.66666666666661, 1.0000000000000084];
+        assert_eq!(a_pinv_ref, a_pinv);
+    }
 }

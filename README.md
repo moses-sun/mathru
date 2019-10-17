@@ -2,7 +2,7 @@
 
 [![crate](https://img.shields.io/crates/v/mathru.svg)](https://crates.io/crates/mathru)
 [![documentation](https://docs.rs/mathru/badge.svg)](https://docs.rs/mathru)
-![minimum rustc 1.37.0](https://img.shields.io/badge/rustc-1.37.0-green.svg)
+![minimum rustc 1.38.0](https://img.shields.io/badge/rustc-1.38.0-green.svg)
 ![maintenance](https://img.shields.io/badge/maintenance-actively--developed-brightgreen.svg)
 ------------
 mathru is a numeric library containing algorithms for linear algebra, analysis and statistics written in pure Rust with BLAS/LAPACK support.
@@ -18,7 +18,8 @@ mathru is a numeric library containing algorithms for linear algebra, analysis a
             - QR decomposition (native/lapack)
             - Hessenberg decomposition (native/lapack)
             - Singular value decomposition
-            - Inverse matrix (native/lapack)
+            - Inverse (native/lapack)
+            - Pseudo inverse (native/lapack)
             - Determinant (native/lapack)
             - Trace
             - Eigenvalue (native/lapack)
@@ -30,17 +31,30 @@ mathru is a numeric library containing algorithms for linear algebra, analysis a
         - Runge-Kutta 4(5)
         - Runge-Kutta-Felhberg 4(5)
         - Dormand-Prince 4(5)
+        
+    - Optimization
+        - Gauss Newton Algorithm
+        - Gradient descent
 
     - Statistics
         - probability distribution
-            - normal
-            - gamma
-            - binomial
-            - poisson
-            - exponential
-            - chi squared
-            - beta
-            - bernoulli
+            - Bernoulli
+            - Beta
+            - Binomial
+            - Chisquared
+            - Exponential
+            - Gamma
+            - Chi-squared
+            - Multinomial
+            - Normal
+            - Poisson
+            - Raised cosine
+            - Student-t
+            - Uniform
+        - test
+            - Chi-squared 
+            - G
+            - Student-t
 
     - elementary functions
         - trigonometric functions
@@ -50,19 +64,20 @@ mathru is a numeric library containing algorithms for linear algebra, analysis a
     - special functions
         - gamma functions
         - beta functions
+        - hypergeometrical functions
 ## Usage
 
 Add this to your `Cargo.toml` for the native Rust implementation:
 
 ```toml
 [dependencies.mathru]
-version = "0.1"
+version = "0.3"
 ```
 Add the following lines to 'Cargo.toml' if the blas/lapack backend should be used:
 
 ```toml
 [dependencies.mathru]
-version = "0.1"
+version = "0.3"
 default-features = false
 features = ["blaslapack"]
 ```

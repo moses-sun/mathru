@@ -81,8 +81,9 @@ impl<T> Solver<T> for Heun<T>
             //Step size
             let h: T = self.step_size.min(t_end - t_n);
 
-            *t_vec.get_mut(&i) = t_n;
-            res_mat = res_mat.set_row(&x_n.transpose(), &i);
+            *t_vec.get_mut(i) = t_n;
+            //res_mat = res_mat.set_row(&x_n.clone().transpose(), i);
+            res_mat.set_row(&x_n.clone().transpose(), i);
 
             let slope_left: Vector<T> = func(&t_n, &x_n);
             let slope_right: Vector<T> = func(&(t_n + h), &(&x_n + &(&slope_left * &h)));

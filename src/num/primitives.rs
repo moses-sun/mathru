@@ -1,5 +1,5 @@
 use crate::algebra::abstr::{Natural, Integer, Real};
-use crate::algebra::abstr::{Number, Semiring, Ring, Sign, Abs, Field, Zero, One};
+use crate::algebra::abstr::{Scalar, Semiring, Ring, Sign, Abs, Field, Zero, One};
 use crate::algebra::abstr::cast::{NumCast, FromPrimitive, ToPrimitive, AsPrimitive};
 use crate::elementary::{Exponential, Trigonometry, Power, Hyperbolic};
 use crate::num::bound::Bound;
@@ -15,29 +15,29 @@ use lapack;
 use blas;
 
 
-macro_rules! number_impl
+macro_rules! scalar_impl
 {
     ($t:ty) =>
     {
-        impl Number for $t
+        impl Scalar for $t
         {
 
         }
     };
 }
 
-number_impl!(u8);
-number_impl!(u16);
-number_impl!(u32);
-number_impl!(u64);
-number_impl!(usize);
-number_impl!(i8);
-number_impl!(i16);
-number_impl!(i32);
-number_impl!(i64);
-number_impl!(isize);
-number_impl!(f32);
-number_impl!(f64);
+scalar_impl!(u8);
+scalar_impl!(u16);
+scalar_impl!(u32);
+scalar_impl!(u64);
+scalar_impl!(usize);
+scalar_impl!(i8);
+scalar_impl!(i16);
+scalar_impl!(i32);
+scalar_impl!(i64);
+scalar_impl!(isize);
+scalar_impl!(f32);
+scalar_impl!(f64);
 
 macro_rules! semiring_impl
 {
@@ -1270,7 +1270,8 @@ impl_as_primitive!(bool => {});
 
 #[cfg(feature = "blaslapack")]
 macro_rules! lapack_impl(
-    ($T: ty, $xgehrd: path, $xorghr: path, $xgeev: path, $xgetrf: path, $xgeqrf: path, $xorgqr: path, $xgetri: path, $xpotrf: path)
+    ($T: ty, $xgehrd: path, $xorghr: path, $xgeev: path, $xgetrf: path, $xgeqrf: path, $xorgqr: path, $xgetri: path, $xpotrf: path,
+    $xgetrs: path)
     => (
         impl Lapack for $T
        	{
@@ -1391,6 +1392,15 @@ macro_rules! lapack_impl(
 				}
 			}
 
+			// solve
+			fn xgetrs(n: i32, nrhs: i32, a: &mut [Self], lda: i32, ipiv: &mut [i32], b: &mut [Self], ldb: i32, info: &mut i32)
+			{
+				unsafe
+				{
+					$xgetrs('N' as u8, n, nrhs, a, lda, ipiv, b, ldb, info);
+				}
+			}
+
       	}
     )
 );
@@ -1418,10 +1428,10 @@ macro_rules! blas_impl(
 
 #[cfg(feature = "blaslapack")]
 lapack_impl!(f32, lapack::sgehrd, lapack::sorghr, lapack::sgeev, lapack::sgetrf, lapack::sgeqrf, lapack::sorgqr,
-lapack::sgetri, lapack::spotrf);
+lapack::sgetri, lapack::spotrf, lapack::sgetrs);
 #[cfg(feature = "blaslapack")]
 lapack_impl!(f64, lapack::dgehrd, lapack::dorghr, lapack::dgeev, lapack::dgetrf, lapack::dgeqrf, lapack::dorgqr,
-lapack::dgetri, lapack::dpotrf);
+lapack::dgetri, lapack::dpotrf, lapack::dgetrs);
 //hessenberg_scalar_impl!(Complex<f32>, lapack::cgehrd);
 //hessenberg_scalar_impl!(Complex<f64>, lapack::zgehrd);
 

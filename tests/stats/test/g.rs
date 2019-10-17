@@ -1,6 +1,4 @@
 
-extern crate mathru;
-
 #[cfg(test)]
 mod gtest
 {

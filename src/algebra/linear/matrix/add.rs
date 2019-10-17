@@ -13,7 +13,6 @@ impl<T> Add<Self> for Matrix<T>
     /// # Example
     ///
     /// ```
-    /// extern crate mathru;
     /// use mathru::algebra::linear::{Matrix};
     ///
     /// let a: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
@@ -41,7 +40,6 @@ impl<'a, 'b, T> Add<&'b Matrix<T>> for &'a Matrix<T>
     /// # Example
     ///
     /// ```
-    /// extern crate mathru;
     /// use mathru::algebra::linear::{Matrix};
     ///
     /// let a: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
@@ -62,17 +60,13 @@ impl<'a, 'b, T> Matrix<T>
     #[cfg(feature = "native")]
     fn add_r(self: &Self, rhs: &'b Matrix<T>) -> Matrix<T>
     {
-        let mut sum: Matrix<T> = self.clone();
-
-        for i in 0..sum.m
-        {
-            for j in 0..sum.n
+        let (m, n) = self.dim();
+        Matrix
             {
-                //*sum.get_mut(&i, &j) = self.get(&i, &j).clone() + rhs.get(&i, &j).clone();
-                *sum.get_mut(&i, &j) += rhs.get(&i, &j).clone();
-            }
+            m: m,
+            n: n,
+            data: self.data.iter().zip(rhs.data.iter()).map(|(x, y)| *x + *y).collect::<Vec<T>>()
         }
-        sum
     }
 
     #[cfg(feature = "blaslapack")]
@@ -93,6 +87,21 @@ impl<'a, 'b, T> Matrix<T>
     }
 }
 
+impl<T> Matrix<T>
+    where T: Real
+{
+    pub fn add_func(self: &Self, rhs: &Matrix<T>) -> Matrix<T>
+    {
+        let (m, n) = self.dim();
+        Matrix
+            {
+            m: m,
+            n: n,
+            data: self.data.iter().zip(rhs.data.iter()).map(|(x, y)| *x + *y).collect::<Vec<T>>()
+        }
+    }
+}
+
 ///
 /// Add scalar to matrix
 ///
@@ -106,7 +115,6 @@ impl<'a, 'b, T> Add<&'b T> for &'a Matrix<T>
     /// # Example
     ///
     /// ```
-    /// extern crate mathru;
     /// use mathru::algebra::linear::{Matrix};
     ///
     /// let a: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
@@ -116,7 +124,7 @@ impl<'a, 'b, T> Add<&'b T> for &'a Matrix<T>
     /// ```
     fn add(self: Self, rhs: &T) -> Self::Output
     {
-        return self.apply_mut(&|x: &T| -> T {x.clone() + rhs.clone()});
+        return self.apply(&|x: &T| -> T {x.clone() + rhs.clone()});
     }
 }
 
@@ -133,7 +141,6 @@ impl<T> Add<T> for Matrix<T>
     /// # Example
     ///
     /// ```
-    /// extern crate mathru;
     /// use mathru::algebra::linear::{Matrix};
     ///
     /// let a: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);

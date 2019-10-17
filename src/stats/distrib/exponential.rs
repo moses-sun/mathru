@@ -27,7 +27,6 @@ impl Exponential
     /// # Example
     ///
     /// ```
-    /// extern crate mathru;
     /// use mathru::stats::distrib::Exponential;
     ///
     /// let distrib: Exponential = Exponential::new(&0.3);
@@ -76,7 +75,6 @@ impl Continuous<f64, f64> for Exponential
     /// # Example
     ///
     /// ```
-    /// extern crate mathru;
     /// use mathru::stats::distrib::{Continuous, Exponential};
     ///
     /// let distrib: Exponential = Exponential::new(&0.3);
@@ -103,7 +101,6 @@ impl Continuous<f64, f64> for Exponential
     /// # Example
     ///
     /// ```
-    /// extern crate mathru;
     /// use mathru::stats::distrib::{Continuous, Exponential};
     ///
     /// let distrib: Exponential = Exponential::new(&0.3);
@@ -134,7 +131,6 @@ impl Continuous<f64, f64> for Exponential
     /// # Example
     ///
     /// ```
-    /// extern crate mathru;
     /// use mathru::stats::distrib::{Discrete, Bernoulli};
     ///
     /// let distrib: Bernoulli = Bernoulli::new(0.2);
@@ -150,7 +146,6 @@ impl Continuous<f64, f64> for Exponential
     /// # Example
     ///
     /// ```
-    /// extern crate mathru;
     /// use mathru::stats::distrib::{Discrete, Bernoulli};
     ///
     /// let distrib: Bernoulli = Bernoulli::new(0.2);

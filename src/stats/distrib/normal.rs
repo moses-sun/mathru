@@ -1,4 +1,5 @@
-use crate::stats::distrib::Continuous;
+use crate::stats::distrib::{Distribution, Continuous};
+use crate::algebra::linear::{Vector};
 use crate::special;
 use rand;
 use std::f64;
@@ -30,22 +31,21 @@ impl Normal
     /// # Example
     ///
     /// ```
-    /// extern crate mathru;
     /// use mathru::stats::distrib::Normal;
     ///
-    /// let distrib: Normal = Normal::new(&0.3, &0.2);
+    /// let distrib: Normal = Normal::new(0.3, 0.2);
     /// ```
-    pub fn new<'a, 'b>(mean: &'a f64, variance: &'b f64) -> Self
+    pub fn new(mean: f64, variance: f64) -> Self
     {
-        if *variance <= 0.0
+        if variance <= 0.0
         {
             panic!();
         }
 
         Normal
         {
-            mean: *mean,
-            variance: *variance
+            mean,
+            variance
         }
     }
 
@@ -54,41 +54,44 @@ impl Normal
     ///
     /// data.len() >= 2
     ///
-    pub fn from_data<'a>(data: &'a Vec<f64>) -> Self
+    pub fn from_data<'a>(data: &'a Vector<f64>) -> Self
     {
-        if data.len() < 2
+        let (_m, n): (usize, usize) = data.dim();
+        if n < 2
         {
                 panic!()
         }
 
-        let mean : f64 = Normal::calc_mean(data);
-        let variance : f64 = Normal::calc_variance(data, &mean);
+        let mean: f64 = Normal::calc_mean(data);
+        let variance: f64 = Normal::calc_variance(data, mean);
 
-        return Normal::new(&mean, &variance)
+        return Normal::new(mean, variance)
     }
 
-    fn calc_mean<'a>(data: &'a Vec<f64>) -> f64
+    fn calc_mean<'a>(data: &'a Vector<f64>) -> f64
     {
+        let (_m, n) = data.dim();
         let mut sum: f64 = 0.0;
 
         for x in data.iter()
         {
-            sum += x;
+            sum = sum + *x;
         }
 
-        return sum / (data.len() as f64)
+        return sum / (n as f64)
     }
 
-    fn calc_variance<'a>(data: &'a Vec<f64>, mean: &f64) -> f64
+    fn calc_variance<'a>(data: &'a Vector<f64>, mean: f64) -> f64
     {
+        let (_m, n): (usize, usize) = data.dim();
         let mut sum: f64 = 0.0;
 
         for x in data.iter()
         {
-            sum += (x - *mean).powi(2);
+            sum += (x - mean).powi(2);
         }
 
-        return sum / ((data.len() - 1) as f64)
+        return sum / ((n - 1) as f64)
     }
 }
 
@@ -105,10 +108,9 @@ impl Continuous<f64, f64> for Normal
     /// # Example
     ///
     /// ```
-    /// extern crate mathru;
     /// use mathru::stats::distrib::{Continuous, Normal};
     ///
-    /// let distrib: Normal = Normal::new(&0.3, &0.2);
+    /// let distrib: Normal = Normal::new(0.3, 0.2);
     /// let x: f64 = 5.0;
     /// let p: f64 = distrib.pdf(x);
     /// ```
@@ -128,10 +130,9 @@ impl Continuous<f64, f64> for Normal
     /// # Example
     ///
     /// ```
-    /// extern crate mathru;
     /// use mathru::stats::distrib::{Continuous, Normal};
     ///
-    /// let distrib: Normal = Normal::new(&0.3, &0.2);
+    /// let distrib: Normal = Normal::new(0.3, 0.2);
     /// let x: f64 = 0.4;
     /// let p: f64 = distrib.cdf(x);
     /// ```
@@ -209,10 +210,10 @@ impl Continuous<f64, f64> for Normal
     /// # Example
     ///
     /// ```
-    /// extern crate mathru;
+    /// use mathru;
     /// use mathru::stats::distrib::{Continuous, Normal};
     ///
-    /// let distrib: Normal = Normal::new(&0.0, &0.2);
+    /// let distrib: Normal = Normal::new(0.0, 0.2);
     /// let mean: f64 = distrib.mean();
     /// ```
 	fn mean<'a>(self: &'a Self) -> f64
@@ -225,11 +226,12 @@ impl Continuous<f64, f64> for Normal
     /// # Example
     ///
     /// ```
-    /// extern crate mathru;
+    /// use mathru;
     /// use mathru::stats::distrib::{Continuous, Normal};
     ///
-    /// let distrib: Normal = Normal::new(&0.0, &0.2);
+    /// let distrib: Normal = Normal::new(0.0, 0.2);
     /// let var: f64 = distrib.variance();
+    ///
     /// ```
 	fn variance<'a>(self: &'a Self) -> f64
     {
@@ -238,12 +240,12 @@ impl Continuous<f64, f64> for Normal
 }
 
 
-impl Normal
+impl Distribution for  Normal
 {
     ///
-    ///  Siehe Knuth The Art of Computer Programming Vol 3 3.4.1 C Algorithm P
-    /// //
-    pub fn random(self: &Self) -> f64
+    ///  See Knuth The Art of Computer Programming Vol 2 3.4.1 C Algorithm P
+    ///
+    fn random(self: &Self) -> f64
     {
         let mut s : f64 = 1.0;
         let mut v1 : f64 = 1.0;
@@ -256,10 +258,9 @@ impl Normal
             v2 = 2.0 * u2 - 1.0;
             s =  v1 * v1 + v2 * v2
         }
-        let x1 = v1 * (-2.0 * s.ln() / s).sqrt();
-        x1
+        let x1: f64 = v1 * (-2.0 * s.ln() / s).sqrt();
+        x1 * self.variance.sqrt() + self.mean
     }
-
 }
 
 

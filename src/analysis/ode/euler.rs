@@ -81,8 +81,9 @@ impl<T> Solver<T> for Euler<T>
         {
             let h: T = self.step_size.min(t_end - t_n);
 
-            *t_vec.get_mut(&i) = t_n;
-            res_mat = res_mat.set_row(&x_n.transpose(), &i);
+            *t_vec.get_mut(i) = t_n;
+            //res_mat = res_mat.set_row(&x_n.clone().transpose(), i);
+            res_mat.set_row(&x_n.clone().transpose(), i);
 
             let x_n_1_2: Vector<T> = &x_n + &(&func(&t_n, &x_n) * &(h / T::from_f64(2.0).unwrap()));
             x_n = &x_n + &(&func(&(t_n + h / T::from_f64(2.0).unwrap()), &x_n_1_2) * &h);

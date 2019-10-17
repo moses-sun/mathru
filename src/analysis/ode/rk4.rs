@@ -87,8 +87,9 @@ impl<T> Solver<T> for RK4<T>
 
         for i in 0..limit.to_usize().unwrap()
         {
-            *t_vec.get_mut(&i) = t_n;
-            res_mat = res_mat.set_row(&x_n.transpose(), &i);
+            *t_vec.get_mut(i) = t_n;
+            //res_mat = res_mat.set_row(&x_n.clone().transpose(), i);
+            res_mat.set_row(&x_n.clone().transpose(), i);
 
 
             // k1 = f(t_n, x_n)

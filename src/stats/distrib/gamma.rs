@@ -30,21 +30,20 @@ impl Gamma
     /// # Example
     ///
     /// ```
-    /// extern crate mathru;
     /// use mathru::stats::distrib::Gamma;
     ///
-    /// let distrib: Gamma = Gamma::new(&0.3, &0.2);
+    /// let distrib: Gamma = Gamma::new(0.3, 0.2);
     /// ```
-    pub fn new(p: &f64, b: &f64) -> Gamma
+    pub fn new(p: f64, b: f64) -> Gamma
     {
-        if *p <= 0.0_f64 || *b <= 0.0_f64
+        if p <= 0.0_f64 || b <= 0.0_f64
         {
             panic!()
         }
         Gamma
         {
-            p: *p,
-            b: *b
+            p: p,
+            b: b
         }
     }
 }
@@ -65,10 +64,9 @@ impl Continuous<f64, f64> for Gamma
     /// # Example
     ///
     /// ```
-    /// extern crate mathru;
     /// use mathru::stats::distrib::{Continuous, Gamma};
     ///
-    /// let distrib: Gamma = Gamma::new(&0.3, &0.2);
+    /// let distrib: Gamma = Gamma::new(0.3, 0.2);
     /// let x: f64 = 5.0;
     /// let p: f64 = distrib.pdf(x);
     /// ```
@@ -90,10 +88,9 @@ impl Continuous<f64, f64> for Gamma
     /// # Example
     ///
     /// ```
-    /// extern crate mathru;
     /// use mathru::stats::distrib::{Continuous, Gamma};
     ///
-    /// let distrib: Gamma = Gamma::new(&0.3, &0.2);
+    /// let distrib: Gamma = Gamma::new(0.3, 0.2);
     /// let x: f64 = 0.4;
     /// let p: f64 = distrib.cdf(x);
     /// ```
@@ -101,7 +98,7 @@ impl Continuous<f64, f64> for Gamma
     {
         if x == 0.0_f64
         {
-            return 0.0
+            return 0.0_f64
         }
         gamma::gamma_lr(self.p, self.b * x)
     }
@@ -116,18 +113,9 @@ impl Continuous<f64, f64> for Gamma
 
     /// Expected value
     ///
-    /// # Example
-    ///
-    /// ```
-    /// extern crate mathru;
-    /// use mathru::stats::distrib::{Discrete, Bernoulli};
-    ///
-    /// let distrib: Bernoulli = Bernoulli::new(0.2);
-    /// let mean: f64 = distrib.mean();
-    /// ```
 	fn mean<'a>(self: &'a Self) -> f64
     {
-        unimplemented!();
+        return self.p / self.b;
     }
 
     /// Variance
@@ -135,14 +123,13 @@ impl Continuous<f64, f64> for Gamma
     /// # Example
     ///
     /// ```
-    /// extern crate mathru;
-    /// use mathru::stats::distrib::{Discrete, Bernoulli};
+    /// use mathru::stats::distrib::{Continuous, Gamma};
     ///
-    /// let distrib: Bernoulli = Bernoulli::new(0.2);
+    /// let distrib: Gamma = Gamma::new(0.2, 0.5);
     /// let var: f64 = distrib.variance();
     /// ```
 	fn variance<'a>(self: &'a Self) -> f64
     {
-        self.p / self.b.powi(2)
+        return self.p / self.b.powi(2);
     }
 }

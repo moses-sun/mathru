@@ -31,8 +31,8 @@ mod rk4
 
 		let (m, _n): (usize, usize) = y.dim();
 
-		assert!(compare_real(&2.0, &t.get(&(m-1)), 0.000000001));
-		assert!(compare_real(&5.0, &y.get(&(m-1), &0), 0.000000001));
+		assert!(compare_real(&2.0, &t.get(m - 1), 0.000000001));
+		assert!(compare_real(&5.0, &y.get(m - 1, 0), 0.000000001));
 	}
 
 
@@ -56,7 +56,7 @@ mod rk4
 
 		let (m, _n): (usize, usize) = y.dim();
 
-		assert!(compare_real(&1.40, &t.get(&(m-1)), 0.00000001));
-		assert!(compare_real(&1.4_f64.tan(), &y.get(&(m-1), &0), 0.006));
+		assert!(compare_real(&1.40, &t.get(m - 1), 0.00000001));
+		assert!(compare_real(&1.4_f64.tan(), &y.get(m - 1, 0), 0.006));
 	}
 }
