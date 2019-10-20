@@ -23,8 +23,7 @@ impl<T> Matrix<T>
         let m_i32: i32 = m as i32;
         let n_i32: i32 = n as i32;
 
-        let (y_m, y_n): (usize, usize) = y.dim();
-        let y_n_i32: i32 = y_n as i32;
+        let (y_m, _y_n): (usize, usize) = y.dim();
         let y_m_i32: i32 = y_m as i32;
 
         let dim_min: i32= m_i32.min(n_i32);
