@@ -1,25 +1,29 @@
 use crate::algebra::linear::{Vector, Matrix};
 use crate::optim::{Jacobian};
+use std::marker::PhantomData;
+use crate::algebra::abstr::Real;
 
-
-pub struct GaussNewton
+pub struct GaussNewton<T>
 {
-    iters: u64
+    iters: u64,
+	__phantom: PhantomData<T>
 }
 
-impl GaussNewton
+impl<T> GaussNewton<T>
 {
-    pub fn new(iters: u64) -> GaussNewton
+    pub fn new(iters: u64) -> GaussNewton<T>
     {
         GaussNewton
         {
-            iters: iters
+            iters: iters,
+            __phantom: PhantomData
         }
     }
 
 }
 
-impl GaussNewton
+impl<T> GaussNewton<T>
+    where T: Real
 {
     /// Minimize function func
     ///
@@ -31,15 +35,15 @@ impl GaussNewton
     /// # Return
     ///
     /// local minimum
-    pub fn minimize<F: Jacobian<f64>>(self: &Self, func: &F, x_0: &Vector<f64>) -> Vector<f64>
+    pub fn minimize<F: Jacobian<T>>(self: &Self, func: &F, x_0: &Vector<T>) -> Vector<T>
     {
-        let mut x_n: Vector<f64> = x_0.clone();
+        let mut x_n: Vector<T> = x_0.clone();
 
         for _i in 0..self.iters
         {
-            let jacobian_x_n: Matrix<f64> = func.jacobian(&x_n);
-            let f_x_n: Vector<f64> = func.eval(&x_n);
-            let delta_x_n: Vector<f64> = jacobian_x_n.pinv() * f_x_n;
+            let jacobian_x_n: Matrix<T> = func.jacobian(&x_n);
+            let f_x_n: Vector<T> = func.eval(&x_n);
+            let delta_x_n: Vector<T> = jacobian_x_n.pinv() * f_x_n;
             x_n = x_n - delta_x_n;
 
         }
@@ -47,15 +51,15 @@ impl GaussNewton
         return x_n;
     }
 
-    pub fn maximize<F: Jacobian<f64>>(self: &Self, func: &F, x_0: &Vector<f64>) -> Vector<f64>
+    pub fn maximize<F: Jacobian<T>>(self: &Self, func: &F, x_0: &Vector<T>) -> Vector<T>
     {
-        let mut x_n: Vector<f64> = x_0.clone();
+        let mut x_n: Vector<T> = x_0.clone();
 
         for _i in 0..self.iters
         {
-            let jacobian_x_n: Matrix<f64> = func.jacobian(&x_n);
-            let f_x_n: Vector<f64> = func.eval(&x_n);
-            let delta_x_n: Vector<f64> = jacobian_x_n.pinv() * f_x_n;
+            let jacobian_x_n: Matrix<T> = func.jacobian(&x_n);
+            let f_x_n: Vector<T> = func.eval(&x_n);
+            let delta_x_n: Vector<T> = jacobian_x_n.pinv() * f_x_n;
 
             x_n = x_n + delta_x_n;
         }
