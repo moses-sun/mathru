@@ -17,8 +17,8 @@ name = "mathru"
 path = "src/lib.rs"
 
 [features]
-default = ["native"]
-#default = ["blaslapack"]
+#default = ["native"]
+default = ["blaslapack"]
 blaslapack = ["lapack", "blas", "lapack-src", "blas-src"]
 native = []
 

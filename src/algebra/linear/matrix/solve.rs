@@ -25,6 +25,7 @@ impl<T> Matrix<T>
 
         let (y_m, y_n): (usize, usize) = y.dim();
         let y_n_i32: i32 = y_n as i32;
+        let y_m_i32: i32 = y_m as i32;
 
         let dim_min: i32= m_i32.min(n_i32);
         let mut ipiv: Vec<i32> = vec![Zero::zero(); dim_min as usize];
@@ -46,13 +47,13 @@ impl<T> Matrix<T>
         assert!(info >= 0);
 
         T::xgetrs(
-            n_i32,
+            m_i32,
             1,
             self_data.as_mut_slice(),
-            m_i32,
+            n_i32,
             ipiv.as_mut_slice(),
             y_data.as_mut_slice(),
-            y_n_i32,
+            y_m_i32,
             &mut info
         );
 
