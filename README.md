@@ -33,8 +33,11 @@ mathru is a numeric library containing algorithms for linear algebra, analysis a
         - Dormand-Prince 4(5)
         
     - Optimization
-        - Gauss Newton Algorithm
+        - Gauss-Newton algorithm
         - Gradient descent
+        - Newton method
+        - Levenberg-Marquardt algorithm
+        - Conjugate gradient method
 
     - Statistics
         - probability distribution
@@ -71,7 +74,7 @@ Add this to your `Cargo.toml` for the native Rust implementation:
 
 ```toml
 [dependencies.mathru]
-version = "0.3"
+version = "0.4.0"
 ```
 Add the following lines to 'Cargo.toml' if the blas/lapack backend should be used:
 

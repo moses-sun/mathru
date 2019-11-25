@@ -17,19 +17,19 @@ impl<T> Matrix<T>
     /// let b_inv: Matrix<f64> = a.inv().unwrap();
     ///
     /// ```
-    pub fn inv<'a>(self: &'a Self) -> Result<Matrix<T>, ()>
+    pub fn inv<'a>(self: &'a Self) -> Option<Matrix<T>>
     {
-        self.inv_r()
+        return self.inv_r();
     }
 
     #[cfg(feature = "native")]
-    pub fn inv_r(self: & Self) -> Result<Matrix<T>, ()>
+    pub fn inv_r(self: & Self) -> Option<Matrix<T>>
     {
         let (mut l, mut u, p) : (Matrix<T>, Matrix<T>, Matrix<T>) = self.dec_lu();
 
         l.subst_forward();
         u.subst_backward();
-        return Ok(&(&u * &l) * &p);
+        return Some(&(&u * &l) * &p);
     }
 
 
@@ -105,7 +105,7 @@ impl<T> Matrix<T>
     }
 
     #[cfg(feature = "blaslapack")]
-    pub fn inv_r(self: & Self) -> Result<Matrix<T>, ()>
+    pub fn inv_r(self: & Self) -> Option<Matrix<T>>
     {
          let (m, n): (usize, usize) = self.dim();
         let m_i32: i32 = m as i32;
@@ -127,21 +127,30 @@ impl<T> Matrix<T>
             &mut info,
         );
 
-        assert_eq!(0, info);
+        if info != 0
+        {
+            return None;
+        }
 
         let lwork: i32 = T::xgetri_work_size(n_i32, &mut self_data[..], n_i32, &mut ipiv, &mut info);
 
-        assert_eq!(0, info);
+
+        if info != 0
+        {
+            return None;
+        }
 
        	let mut work: Vec<T> = vec![T::zero(); lwork as usize];
 
         T::xgetri(n_i32, &mut self_data[..], n_i32, &mut ipiv, &mut work, lwork, &mut info);
 
-        assert_eq!(0, info);
-
+        if info != 0
+        {
+            return None;
+        }
 
         let self_inv: Matrix<T> = Matrix::new(n, m, self_data);
 
-        return Ok(self_inv.transpose());
+        return Some(self_inv.transpose());
     }
 }

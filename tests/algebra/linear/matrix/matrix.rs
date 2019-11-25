@@ -438,9 +438,6 @@ mod matrix
 
         let uut_t_ref: Matrix<f32> =  Matrix::new(2, 4, vec![1.0, 0.0, 3.0, 0.0, 1.0, -7.0, 0.5, 0.25]);
 
-        println!("{}", uut_t);
-
-        println!("{}", uut_t_ref);
 
         assert_eq!(uut_t_ref, uut_t);
     }
@@ -475,7 +472,6 @@ mod matrix
 
         let uut_t_ref: Matrix<f32> =  Matrix::new(2, 4, vec![1.0, 0.0, 3.0, 0.0, 1.0, -7.0, 0.5, 0.25]);
 
-        println!("{}", uut_t_ref);
 
         assert_eq!(uut_t_ref, uut_t);
     }
@@ -510,7 +506,6 @@ mod matrix
 
         let uut_t_ref: Matrix<f32> =  Matrix::new(1, 4, vec![1.0, 3.0, 1.0, 0.5,]);
 
-        println!("{}", uut_t_ref);
 
         assert_eq!(uut_t_ref, uut_t);
     }
@@ -1213,10 +1208,10 @@ mod matrix
         let a: Matrix<f64> = matrix![6.0, 2.0, -1.0; -3.0, 5.0, 3.0; -2.0, 1.0, 3.0];
         let b: Vector<f64> = vector![48.0; 49.0; 24.0];
 
-        let x: Vector<f64> = a.solve_vector(&b);
-        let x_ref: Vector<f64> = vector![7.0; 8.0; 10.000000000000002];
+        let x: Vector<f64> = a.solve_vector(&b).unwrap();
+        let x_ref: Vector<f64> = vector![7.0; 8.0; 10.0];
 
-        assert_eq!(x_ref, x);
+        assert!(compare_vector_epsilon(&x_ref, &x, 10e-10))
     }
 
     #[test]
@@ -1224,9 +1219,10 @@ mod matrix
     {
         let a: Matrix<f64> = matrix![1.0, 2.0, 3.0; 4.0, 5.0, 6.0; 8.0, 8.0, 9.0];
         let a_pinv: Matrix<f64> = a.pinv();
-        let a_pinv_ref: Matrix<f64> = matrix![  0.999999999999988, -1.9999999999999634, 1.000000000000004;
-                                                -3.9999999999999662, 4.9999999999999005, -2.0000000000000133;
-                                                2.6666666666666474, -2.66666666666661, 1.0000000000000084];
-        assert_eq!(a_pinv_ref, a_pinv);
+        let a_pinv_ref: Matrix<f64> = matrix![  1.0, -2.0, 1.0;
+                                                -4.0, 5.0, -2.0;
+                                                2.6666666666666474, -2.66666666666661, 1.0];
+
+        assert!(compare_matrix_epsilon(&a_pinv_ref, &a_pinv, 10e-10));
     }
 }

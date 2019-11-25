@@ -165,9 +165,9 @@ impl<T> Neg for Vector<T>
 
 impl<T> Vector<T>
 {
-    pub fn get_data(self: Self) -> Matrix<T>
+    pub fn convert_to_vec(self: Self) -> Vec<T>
     {
-        return self.data;
+        return self.data.convert_to_vec();
     }
 }
 

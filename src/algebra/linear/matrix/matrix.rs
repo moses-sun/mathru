@@ -337,7 +337,6 @@ impl<T> Matrix<T>
 
     pub fn subst_backward_matrix(self: &Self, mut b: Matrix<T>) -> Matrix<T>
     {
-        println!("m: {}, n: {}, m: {}, n: {}", self.m, self.n, b.m, b.n);
         let min = min(self.m, self.n);
 
         for k in (0..min).rev()
@@ -1166,10 +1165,25 @@ impl<T> Matrix<T>
 
     ///
     /// Fortran like, column wise
+    ///
+    /// [
+    ///   0, 1, 2]
+    ///   3, 4, 5,
+    ///   6, 7, 8
+    /// ] => vec![ 0, 3, 6, 1, 4, 7, 2, 5, 8]
+    ///
     pub fn new<'a, 'b>(m: usize, n: usize, data: Vec<T>) -> Self
     {
         assert_eq!(m * n, data.len());
         Matrix{m: m, n: n, data: data}
+    }
+
+}
+impl<T> Matrix<T>
+{
+    pub fn convert_to_vec(self) -> Vec<T>
+    {
+        return self.data
     }
 }
 
