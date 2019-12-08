@@ -264,6 +264,12 @@ impl<T> Blas for Complex<T>
 		unimplemented!();
 	}
 
+	fn xtrsm(_side: char, _uplo: char, _transa: char, _diag: char, _m: i32, _n: i32, _alpha: Self, _a: &[Self], _lda: i32, _b: &mut
+			[Self], _ldb: i32)
+	{
+		unimplemented!();
+	}
+
 }
 
 

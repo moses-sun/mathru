@@ -74,13 +74,13 @@ Add this to your `Cargo.toml` for the native Rust implementation:
 
 ```toml
 [dependencies.mathru]
-version = "0.4.0"
+version = "0.4"
 ```
 Add the following lines to 'Cargo.toml' if the blas/lapack backend should be used:
 
 ```toml
 [dependencies.mathru]
-version = "0.3"
+version = "0.4"
 default-features = false
 features = ["blaslapack"]
 ```

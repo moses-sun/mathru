@@ -4,8 +4,8 @@
 mod matrix
 {
     use mathru::algebra::linear::{Vector, Matrix};
-    use mathru::elementary::{Power};
-    use mathru::algebra::abstr::Real;
+    use mathru::algebra::linear::matrix::{Solve, Inverse};
+    use crate::mathru::algebra::linear::matrix::Substitute;
 
     #[test]
     fn gcd_0()
@@ -124,217 +124,9 @@ mod matrix
         }
     }
 
-    #[test]
-    fn add()
-    {
-        let dim: usize = 5;
-        let m_zero : Matrix<f32> = Matrix::zero(dim, dim);
-        let m_one : Matrix<f32> = Matrix::one(dim);
-
-        let m_res : Matrix<f32> = &m_zero + &m_one;
-
-        assert!(compare_matrix_epsilon(&m_one, &m_res, 10e-10));
-
-    }
-
-     #[test]
-    fn add_1()
-    {
-        let a : Matrix<f32> = matrix![  1.0, -2.0, -3.0;
-                                            -4.0, -1.0, -2.5];
-
-        let b : Matrix<f32> = matrix![ -2.0, -7.0, 3.0;
-                                        -5.0, 3.5, 0.0];
-
-        let sum_ref : Matrix<f32> = matrix![    -1.0, -9.0, 0.0;
-                                                -9.0, 2.5, -2.5];
-
-        assert!(compare_matrix_epsilon(&sum_ref, &(&a + &b), 10e-10));
-
-    }
-
-    #[test]
-    fn mul_1()
-    {
-        let size: usize = 23;
-
-        let zero: Matrix<f32> = Matrix::zero(size, size);
-        let one: Matrix<f32> = Matrix::one(size);
-
-        let res: Matrix<f32> = zero * one;
-
-        assert_eq!(res, Matrix::zero(size, size));
-    }
-
-    #[test]
-    fn mul_2()
-    {
-        let size: usize= 23;
-
-        let i1: Matrix<f32> = Matrix::one(size);
-        let i2: Matrix<f32> = Matrix::one(size);
-
-        let res: Matrix<f32> = i1 * i2;
-
-        assert_eq!(res, Matrix::one(size));
-    }
-
-    #[test]
-    fn mul_3()
-    {
-        let a: Matrix<f64> = matrix![   1.0, 2.0, 5.0;
-                                        3.0, 4.0, 6.0];
-
-        let b: Matrix<f64> = matrix![   5.0, 8.0;
-                                        6.0, 9.0;
-                                        7.0, 10.0];
 
 
-        let reference: Matrix<f64> = matrix![   52.0, 76.0;
-                                                81.0, 120.0];
 
-        let res: Matrix<f64> = &a * &b;
-
-        assert_eq!(reference, res);
-    }
-
-    #[test]
-    fn mul_4()
-    {
-        let a: Matrix<f64> = matrix![1.0, 2.0, 5.0];
-        let b: Matrix<f64> = matrix![   5.0, 8.0;
-                                        6.0, 9.0;
-                                        7.0, 10.0];
-
-        let reference: Matrix<f64> = matrix![52.0, 76.0];
-
-        let res: Matrix<f64> = &a * &b;
-
-        assert_eq!(reference, res);
-    }
-
-    #[test]
-    fn mul_5()
-    {
-        let a: Matrix<f64> = matrix![1.0, 2.0, 5.0; 3.0, 4.0, 6.0];
-        let b: Matrix<f64> = matrix![5.0; 6.0; 7.0];
-        let reference: Matrix<f64> = matrix![52.0; 81.0];
-
-        let res: Matrix<f64> = &a * &b;
-
-        assert_eq!(reference, res);
-    }
-
-    #[test]
-    fn mul_6()
-    {
-        let a: Matrix<f64> = matrix![1.0, 2.0, 5.0; 3.0, 4.0, 6.0; 7.0, 8.0, 9.0];
-        let b: Matrix<f64> = matrix![5.0, 8.0; 6.0, 9.0; 7.0, 10.0];
-        let reference: Matrix<f64> = matrix![52.0, 76.0; 81.0, 120.0; 146.0, 218.0];
-
-        let res: Matrix<f64> = &a * &b;
-
-        assert!(compare_matrix_epsilon(&reference, &res, 10e-10));
-    }
-
-    #[test]
-    fn mul_scalar_0()
-    {
-        let a: Matrix<f64> = matrix![1.0, -2.0, 5.0; 3.0, 4.0, 6.0; 7.0, -8.0, 9.0];
-        let reference = matrix![-2.0, 4.0, -10.0; -6.0, -8.0, -12.0; -14.0, 16.0, -18.0];
-
-        let res: Matrix<f64> = &a * &-2.0;
-
-        assert_eq!(reference, res);
-    }
-
-    #[test]
-    fn decompose_lu_0()
-    {
-        let l_ref: Matrix<f64> = matrix![   1.0, 0.0, 0.0;
-                                            0.0, 1.0, 0.0;
-                                            0.5, 0.25, 1.0];
-
-        let u_ref: Matrix<f64> = matrix![   2.0, -5.0, 12.0;
-                                            0.0, 2.0, -10.0;
-                                            0.0, 0.0, -0.5];
-
-        let p_ref: Matrix<f64> = matrix![   0.0, 1.0, 0.0;
-                                            0.0, 0.0, 1.0;
-                                            1.0, 0.0, 0.0];
-
-        let a: Matrix<f64> = matrix![   1.0, -2.0, 3.0;
-                                        2.0, -5.0, 12.0;
-                                        0.0, 2.0, -10.0];
-
-        let (l, u, p) : (Matrix<f64>, Matrix<f64>, Matrix<f64>) = a.dec_lu();
-
-        assert!(compare_matrix_epsilon(&l_ref, &l, 1.0e-10));
-        assert!(compare_matrix_epsilon(&u_ref, &u, 1.0e-10));
-        assert!(compare_matrix_epsilon( &p_ref,&p, 1.0e-10));
-
-        assert_eq!(&p * &a, &l * &u);
-    }
-
-    #[test]
-    fn decompose_lu_1()
-    {
-        let a: Matrix<f64> = matrix![   4.0, 1.0, -2.0, 2.0;
-                                        1.0, 2.0, 0.0, -2.0;
-                                        0.0, 3.0, -2.0, 2.0;
-                                        2.0, 1.0, -2.0, -1.0];
-
-        let l_ref: Matrix<f64> = matrix![   1.0, 0.0, 0.0, 0.0;
-                                            0.0, 1.0, 0.0, 0.0;
-                                            0.25, 0.5833333333333334, 1.0, 0.0;
-                                            0.5, 0.16666666666666666, -0.4, 1.0 ];
-
-        let u_ref: Matrix<f64> = matrix![   4.0, 1.0, -2.0, 2.0;
-                                            0.0, 3.0, -2.0, 2.0;
-                                            0.0, 0.0, 1.6666666666666667, -3.666666666666667;
-                                            0.0, 0.0, 0.0, -3.8000000000000003 ];
-
-        let p_ref: Matrix<f64> = matrix![   1.0, 0.0, 0.0, 0.0;
-                                            0.0, 0.0, 1.0, 0.0;
-                                            0.0, 1.0, 0.0, 0.0;
-                                            0.0, 0.0, 0.0, 1.0];
-
-        let (l, u, p) : (Matrix<f64>, Matrix<f64>, Matrix<f64>) = a.dec_lu();
-
-        assert!(compare_matrix_epsilon(&l_ref, &l, 1.0e-10));
-        assert!(compare_matrix_epsilon(&u_ref, &u, 1.0e-10));
-        assert!(compare_matrix_epsilon( &p_ref,&p, 1.0e-10));
-    }
-
-    #[test]
-    fn decompose_lu2()
-    {
-        let a: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 3.0, -2.0, -7.0]);
-        let l_ref: Matrix<f64> = matrix![1.0, 0.0; 1.0 / 3.0, 1.0];
-        let u_ref: Matrix<f64> = matrix![3.0, -7.0; 0.0, 1.0/3.0];
-
-        let (l, u, _p): (Matrix<f64>, Matrix<f64>, Matrix<f64>) = a.dec_lu();
-
-        assert!(compare_matrix_epsilon(&l_ref, &l, 1.0e-10));
-        assert!(compare_matrix_epsilon(&u_ref, &u, 1.0e-10));
-    }
-
-    #[test]
-    fn decompose_lu3()
-    {
-        let a: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 2.0, -3.0, -7.0]);
-        let b: Vector<f64> = vector![1.0; 3.0];
-        let x_ref: Vector<f64> = vector![-2.25; 8.5];
-        let (l, u, p): (Matrix<f64>, Matrix<f64>, Matrix<f64>) = a.dec_lu();
-
-        let b_hat = &p * &b;
-
-        let y = u.subst_backward_vector(b_hat);
-
-        let x = p * l.subst_forward_vector(y);
-
-        assert!(compare_vector_epsilon(&x_ref, &x, 1.0e-10));
-    }
 
     #[test]
     fn givens()
@@ -369,30 +161,6 @@ mod matrix
         let res_ref : Matrix<f64> = Matrix::one(m);
         let res : Matrix<f64> = givens_t * givens;
         assert_eq!(res_ref, res);
-    }
-
-    #[test]
-    fn scalar_mul()
-    {
-        let m = matrix![1.0, 2.0; 3.0, 4.0];
-        let prod_ref = matrix![-0.5, -1.0; -1.5, -2.0];
-
-        let res = m * -0.5;
-
-        assert_eq!(prod_ref, res);
-    }
-
-    #[test]
-    fn vector_mul()
-    {
-        let m = matrix![1.0, 2.0; 3.0, 4.0];
-
-        let v = vector![2.0; 4.0];
-        let prod_ref = vector![10.0; 22.0];
-
-        let res = m * v;
-
-        assert_eq!(prod_ref, res);
     }
 
     #[test]
@@ -510,148 +278,6 @@ mod matrix
         assert_eq!(uut_t_ref, uut_t);
     }
 
-    #[cfg(feature = "native")]
-    #[test]
-    fn decompose_qr0()
-    {
-        let a : Matrix<f64> = matrix![  6.0, 5.0, 0.0;
-                                        5.0, 1.0, 4.0;
-                                        0.0, 4.0, 3.0];
-
-        let (q,r) : (Matrix<f64>, Matrix<f64>) =  a.dec_qr();
-
-        let q_ref: Matrix<f64> = matrix![   7.682212795973757e-01, 3.326541793600714e-01, 5.469709887444194e-01;
-                                            6.401843996644797e-01, -3.991850152320858e-01, -6.563651864933034e-01;
-                                            0.0, 8.543959975142890e-01, -5.196224393071984e-01];
-
-        let r_ref : Matrix<f64> = matrix![  7.810249675906654, 4.48129079765136, 2.5607375986579197;
-                                            0.0, 4.681669871625427, 0.9664479316145234;
-                                            0.0, 0.0, -4.184328063894809];
-
-        assert!(compare_matrix_epsilon(&q_ref, &q, 1.0e-10));
-        assert!(compare_matrix_epsilon(&r_ref, &r, 1.0e-10));
-    }
-
-    #[cfg(feature = "blaslapack")]
-    #[test]
-    fn decompose_qr0()
-    {
-        let a : Matrix<f64> = matrix![  6.0, 5.0, 0.0;
-                                        5.0, 1.0, 4.0;
-                                        0.0, 4.0, 3.0];
-
-        let (q,r) : (Matrix<f64>, Matrix<f64>) =  a.dec_qr();
-
-        let q_ref: Matrix<f64> = matrix![   -7.682212795973757e-01, 3.326541793600714e-01, -5.469709887444194e-01;
-                                            -6.401843996644797e-01, -3.991850152320858e-01, 6.563651864933034e-01;
-                                            -0.000000000000000e+00, 8.543959975142890e-01, 5.196224393071984e-01];
-
-        let r_ref : Matrix<f64> = matrix![  -7.810249675906654, -4.48129079765136, -2.5607375986579197;
-                                            0.0, 4.681669871625427, 0.9664479316145234;
-                                            0.0, 0.0, 4.184328063894809];
-
-        assert!(compare_matrix_epsilon(&q_ref, &q, 1.0e-10));
-        assert!(compare_matrix_epsilon(&r_ref, &r, 1.0e-10));
-    }
-
-    #[cfg(feature = "native")]
-    #[test]
-    fn decompose_qr1()
-    {
-        let a : Matrix<f64> = matrix![  3.0, 5.0;
-                                        0.0, 2.0;
-                                        0.0, 0.0;
-                                        4.0, 5.0];
-
-
-        let (q,r) : (Matrix<f64>, Matrix<f64>) =  a.dec_qr();
-
-        let r_ref : Matrix<f64> = matrix![  5.0, 7.0;
-                                            0.0, 5.0.pow(&0.5);
-                                            0.0, 0.0;
-                                            0.0, 0.0];
-
-        let q_ref: Matrix<f64> =  matrix![  0.6, 0.35777087639996635, 0.0, -0.7155417527999327;
-                                            0.0, 0.8944271909999159, 0.0, 0.4472135954999579;
-                                            0.0, 0.0, 1.0, 0.0;
-                                            0.8, -0.2683281572999747, 0.0, 0.5366563145999494 ];
-
-        assert!(compare_matrix_epsilon(&r_ref, &r, 1.0e-10));
-        assert!(compare_matrix_epsilon(&q_ref, &q, 1.0e-10));
-        assert!(compare_matrix_epsilon(&a, &(q * r), 1.0e-10));
-    }
-
-    #[cfg(feature = "blaslapack")]
-    #[test]
-    fn decompose_qr1()
-    {
-        let a : Matrix<f64> = matrix![  3.0, 5.0;
-                                        0.0, 2.0;
-                                        0.0, 0.0;
-                                        4.0, 5.0];
-
-        let (_q,r) : (Matrix<f64>, Matrix<f64>) =  a.dec_qr();
-
-        let r_ref : Matrix<f64> = matrix![  -5.0, -7.0;
-                                            0.0, -5.0.pow(&0.5);
-                                            0.0, 0.0;
-                                            0.0, 0.0];
-
-        let _q_ref: Matrix<f64> =  matrix![  0.6, 0.35777087639996635, 0.0, -0.7155417527999327;
-                                            0.0, 0.8944271909999159, 0.0, 0.4472135954999579;
-                                            0.0, 0.0, 1.0, 0.0;
-                                            0.8, -0.2683281572999747, 0.0, 0.5366563145999494 ];
-
-        assert!(compare_matrix_epsilon(&r_ref, &r, 1.0e-10));
-        //assert!(compare_matrix_epsilon(&q_ref, &q, 1.0e-10));
-        //assert!(compare_matrix_epsilon(&a, &(q * r), 1.0e-10));
-    }
-
-    #[cfg(feature = "native")]
-    #[test]
-    fn decompose_qr2()
-    {
-        let a : Matrix<f64> = matrix![  12.0, -51.0, 4.0;
-                                        6.0, 167.0, -68.0;
-                                        -4.0, 24.0, -41.0];
-
-        let (q, r) : (Matrix<f64>, Matrix<f64>) =  a.dec_qr();
-
-        let r_ref = matrix![    14.0, 21.0, -14.0;
-                                0.0, 175.0, -70.0;
-                                0.0, 0.0, -35.0];
-
-        let q_ref: Matrix<f64> = matrix![   8.571428571428572e-01, -3.942857142857143e-01, 3.314285714285715e-01;
-                                            4.285714285714286e-01, 9.028571428571428e-01, -3.428571428571425e-02;
-                                            -2.857142857142858e-01, 1.714285714285714e-01,  9.428571428571428e-01];
-
-        assert!(compare_matrix_epsilon(&q_ref, &q, 1.0e-10));
-        assert!(compare_matrix_epsilon(&r_ref, &r, 1.0e-10));
-        assert!(compare_matrix_epsilon(&(&q * &r), &a, 1.0e-10));
-    }
-
-    #[cfg(feature = "blaslapack")]
-    #[test]
-    fn decompose_qr2()
-    {
-        let a : Matrix<f64> = matrix![  12.0, -51.0, 4.0;
-                                        6.0, 167.0, -68.0;
-                                        -4.0, 24.0, -41.0];
-
-        let (q, r) : (Matrix<f64>, Matrix<f64>) =  a.dec_qr();
-
-        let q_ref: Matrix<f64> = matrix![   -8.571428571428572e-01, 3.942857142857143e-01, 3.314285714285715e-01;
-                                            -4.285714285714286e-01, -9.028571428571428e-01, -3.428571428571425e-02;
-                                            2.857142857142858e-01, -1.714285714285714e-01,  9.428571428571428e-01];
-
-        let r_ref = matrix![    -14.0, -21.0, 14.0;
-                                0.0, -175.0, 70.0;
-                                0.0, 0.0, -35.0];
-
-        assert!(compare_matrix_epsilon(&q_ref, &q, 1.0e-10));
-        assert!(compare_matrix_epsilon(&r_ref, &r, 1.0e-10));
-        assert!(compare_matrix_epsilon(&a, &(&q * &r), 1.0e-10));
-    }
 
     #[test]
     fn determinant_0()
@@ -994,7 +620,7 @@ mod matrix
 
         let a_inv: Matrix<f64> = a.inv().unwrap();
 
-        assert!(compare_matrix_epsilon(&a_inv_ref, &a_inv, 1.0e-10));
+        assert!(a_inv.compare_neighbourhood(&a_inv_ref, 1.0e-10));
     }
 
     #[test]
@@ -1010,7 +636,7 @@ mod matrix
 
         let a_inv: Matrix<f64> = a.inv().unwrap();
 
-        assert!(compare_matrix_epsilon(&a_inv_ref, &a_inv, 1.0e-10));
+        assert!(a_inv.compare_neighbourhood(&a_inv_ref, 1.0e-10));
     }
 
     #[test]
@@ -1031,54 +657,26 @@ mod matrix
 
         let a_inv: Matrix<f64> = a.inv().unwrap();
 
-        assert!(compare_matrix_epsilon(&a_inv_ref, &a_inv, 1.0e-10));
+        assert!(a_inv.compare_neighbourhood(&a_inv_ref, 1.0e-10));
     }
 
-    #[cfg(feature = "native")]
+
     #[test]
-    fn hessenberg_decomposition_0()
+    fn decompose_lu3()
     {
-        let a: Matrix<f64> = matrix![   1.0, 5.0, 3.0;
-                                        1.0, 0.0, -7.0;
-                                        3.0, 8.0, 9.0];
+        let a: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 2.0, -3.0, -7.0]);
+        let b: Vector<f64> = vector![1.0; 3.0];
+        let x_ref: Vector<f64> = vector![-2.25; 8.5];
+        let (l, u, p): (Matrix<f64>, Matrix<f64>, Matrix<f64>) = a.dec_lu().lup();
 
-        let h_ref: Matrix<f64> = matrix![1.0, -4.427188724235731, 3.7947331922020537;
-                                        -3.162277660168379, 8.4, -5.2;
-                                        0.0, 9.8, 0.6];
+        let b_hat = &p * &b;
 
-        let q_ref: Matrix<f64> = matrix![   1.0, 0.0, 0.0;
-                                            0.0, -0.316227766016838, 0.9486832980505137;
-                                            0.0, -0.9486832980505137, -0.3162277660168381];
+        let y = u.substitute_backward(b_hat);
 
-        let (q, h): (Matrix<f64>, Matrix<f64>) = a.dec_hessenberg();
+        let x = p * l.substitute_forward(y);
 
-        assert!(compare_matrix_epsilon(&q_ref, &q, 1.0e-10));
-        assert!(compare_matrix_epsilon(&h_ref, &h, 1.0e-10));
+        assert!(x.compare_neighbourhood(&x_ref, 1.0e-10));
     }
-
-
-    #[cfg(feature = "blaslapack")]
-    #[test]
-    fn hessenberg_decomposition_0()
-    {
-        let a: Matrix<f64> = matrix![   1.0, 5.0, 3.0;
-                                        1.0, 0.0, -7.0;
-                                        3.0, 8.0, 9.0];
-
-        let h_ref: Matrix<f64> = matrix![   1.0, -4.427188724235731, -3.7947331922020537;
-                                            -3.162277660168379, 8.4, 5.2;
-                                            0.0, -9.8, 0.6];
-
-        let q_ref: Matrix<f64> = matrix![   1.0, 0.0, 0.0;
-                                            0.0, -0.316227766016838, -0.9486832980505137;
-                                            0.0, -0.9486832980505137, 0.3162277660168381];
-
-        let (q, h): (Matrix<f64>, Matrix<f64>) = a.dec_hessenberg();
-
-        assert!(compare_matrix_epsilon(&q_ref, &q, 1.0e-10));
-        assert!(compare_matrix_epsilon(&h_ref, &h, 1.0e-10));
-    }
-
 
     #[test]
     fn eigenvalue_0()
@@ -1090,23 +688,7 @@ mod matrix
         let eig_ref: Vector<f64> = Vector::new_column(3, vec![3.9999999999999996, -2.0, -1.9999999999999982]);
         let eig: Vector<f64> = a.eigenvalue();
 
-        assert_eq!(true, compare_vector_epsilon(&eig_ref, &eig, 1.0e-10));
-    }
-
-    #[test]
-    fn cholesky_decomposition()
-    {
-        let a: Matrix<f64> = matrix![   2.0, -1.0, 0.0;
-                                        -1.0, 2.0, -1.0;
-                                        0.0, -1.0,  2.0];
-
-        let g_ref: Matrix<f64> = matrix![   1.414213562373095,   0.000000000000000,   0.000000000000000;
-                                            -7.071067811865475e-1,   1.224744871391589,   0.000000000000000;
-                                            0.000000000000000,  -8.164965809277261e-1,   1.154700538379251];
-
-        let g = a.dec_cholesky();
-
-        assert_eq!(true, compare_matrix_epsilon(&g_ref, &g, 1.0e-10));
+        assert_eq!(true, eig.compare_neighbourhood(&eig_ref, 1.0e-10));
     }
 
     #[test]
@@ -1135,9 +717,9 @@ mod matrix
 
 		let c_ref: Vector<f64> = vector![2.25; 0.125; 1.5];
 
-        let c: Vector<f64> = a.subst_backward_vector(b);
+        let c: Vector<f64> = a.substitute_backward(b);
 
-        assert!(compare_vector_epsilon(&c_ref, &c, 1.0e-10));
+        assert!(c.compare_neighbourhood(&c_ref, 1.0e-10));
     }
 
     #[test]
@@ -1151,55 +733,9 @@ mod matrix
 
 		let c_ref: Vector<f64> = vector![1.5; 0.125; 2.25];
 
-        let c: Vector<f64> = a.subst_forward_vector(b);
+        let c: Vector<f64> = a.substitute_forward(b);
 
-        assert!(compare_vector_epsilon(&c_ref, &c, 1.0e-10));
-    }
-
-    fn compare_matrix_epsilon<T: Real>(exp: &Matrix<T>, act: &Matrix<T>, epsilon: T) -> bool
-    {
-        let (exp_m, exp_n): (usize, usize) = exp.dim();
-        let (act_m, act_n): (usize, usize) = act.dim();
-
-        assert!(exp_m == act_m);
-        assert!(exp_n == act_n);
-
-        for i in 0..exp_m
-        {
-            for k in 0..exp_n
-            {
-                if (*exp.get(i, k) - *act.get(i, k)).abs() > epsilon
-                {
-                    println!("exp: {}, act: {} exp - act: {}", exp, act, (exp - act));
-                    return false;
-                }
-            }
-        }
-
-        return true;
-    }
-
-    fn compare_vector_epsilon<T: Real>(a: &Vector<T>, b: &Vector<T>, epsilon: T) -> bool
-    {
-        let (a_m, a_n): (usize, usize) = a.dim();
-        let (b_m, b_n): (usize, usize) = b.dim();
-
-        if a_m != b_m || a_n != b_n
-        {
-            println!("dimension mismatch");
-            return false;
-        }
-
-        for i in 0..a_m
-        {
-            if (*a.get(i) - *b.get(i)).abs() > epsilon
-            {
-                println!("a: {}, b: {} a-b: {}", a, b, a-b);
-                return false;
-            }
-        }
-
-        return true;
+        assert!(c.compare_neighbourhood(&c_ref, 1.0e-10));
     }
 
     #[test]
@@ -1208,10 +744,10 @@ mod matrix
         let a: Matrix<f64> = matrix![6.0, 2.0, -1.0; -3.0, 5.0, 3.0; -2.0, 1.0, 3.0];
         let b: Vector<f64> = vector![48.0; 49.0; 24.0];
 
-        let x: Vector<f64> = a.solve_vector(&b).unwrap();
+        let x: Vector<f64> = a.solve(&b).unwrap();
         let x_ref: Vector<f64> = vector![7.0; 8.0; 10.0];
 
-        assert!(compare_vector_epsilon(&x_ref, &x, 10e-10))
+        assert!(x.compare_neighbourhood(&x_ref, 10e-10))
     }
 
     #[test]
@@ -1223,6 +759,6 @@ mod matrix
                                                 -4.0, 5.0, -2.0;
                                                 2.6666666666666474, -2.66666666666661, 1.0];
 
-        assert!(compare_matrix_epsilon(&a_pinv_ref, &a_pinv, 10e-10));
+        assert!(a_pinv.compare_neighbourhood(&a_pinv_ref, 10e-10));
     }
 }

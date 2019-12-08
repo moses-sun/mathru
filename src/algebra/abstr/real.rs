@@ -146,4 +146,8 @@ pub trait Blas: Sized
     c: &mut [Self],
     ldc: i32 ) ;
 
+
+    fn xtrsm(side: char, uplo: char, transa: char, diag: char, m: i32, n: i32, alpha: Self, a: &[Self], lda: i32, b: &mut
+			[Self], ldb: i32);
+
 }

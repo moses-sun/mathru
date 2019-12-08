@@ -56,17 +56,18 @@ document.addEventListener(\"DOMContentLoaded\", function () {
 //! # fn main()
 //! # {
 //! use mathru::algebra::linear::{Vector, Matrix};
+//! use mathru::algebra::linear::matrix::{Substitute};
 //! // Compute the LU decomposition of a 2x2 matrix
 //! let a: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 2.0, -3.0, -7.0]);
 //! let b: Vector<f64> = vector![1.0; 3.0];
 //!
-//! let (l, u, p): (Matrix<f64>, Matrix<f64>, Matrix<f64>) = a.dec_lu();
+//! let (l, u, p): (Matrix<f64>, Matrix<f64>, Matrix<f64>) = a.dec_lu().lup();
 //!
 //! let b_hat = &p * &b;
 //!
-//! let y = u.subst_backward_vector(b_hat);
+//! let y = u.substitute_backward(b_hat);
 //!
-//! let x = p * l.subst_forward_vector(y);
+//! let x = p * l.substitute_forward(y);
 //!
 //! println!("{}", x);
 //! # }

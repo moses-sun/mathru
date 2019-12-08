@@ -462,18 +462,6 @@ impl<T> Vector<T>
         c
     }
 }
-//
-//impl<T> Vector<T>
-//    where T: Field<T>
-//{
-//    pub fn crossp<'a, 'b>(self: &'a Self, rhs: &'b Self) -> Vector<T>
-//    {
-//        unimplemented!()
-//    }
-//}
-
-
-
 
 impl<T> Vector<T>
     //where T: One + Zero
@@ -596,17 +584,6 @@ impl<T> Vector<T>
         }
     }
 }
-////
-////impl<T> One for Vector<T>
-////    where T: One
-////{
-////    fn one<'a>() -> Self
-////    {
-////        unimplemented!()
-////    }
-////}
-//
-
 
 impl<T> Vector<T>
 {
@@ -1132,5 +1109,33 @@ impl<T> Sign for Vector<T>
 	fn sgn(self: &Self) -> Self
     {
         return (self.clone()).apply(&|x: &T| x.sgn() );
+    }
+}
+
+
+impl<T> Vector<T>
+    where T: Real
+{
+    pub fn compare_neighbourhood(self: &Self, b: &Self, epsilon: T) -> bool
+    {
+        let (self_m, self_n): (usize, usize) = self.dim();
+        let (b_m, b_n): (usize, usize) = b.dim();
+
+        if self_m != b_m || self_n != b_n
+        {
+            println!("dimension mismatch");
+            return false;
+        }
+
+        for i in 0..self_m
+        {
+            if (*self.get(i) - *b.get(i)).abs() > epsilon
+            {
+                println!("a: {}, b: {} a-b: {}", self, b, self - b);
+                return false;
+            }
+        }
+
+        return true;
     }
 }

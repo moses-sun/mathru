@@ -1401,13 +1401,14 @@ macro_rules! lapack_impl(
 				}
 			}
 
+
       	}
     )
 );
 
 #[cfg(feature = "blaslapack")]
 macro_rules! blas_impl(
-    ($T: ty, $xgemm: path)
+    ($T: ty, $xgemm: path, $xtrsm: path)
     => (
         impl Blas for $T
        	{
@@ -1421,6 +1422,15 @@ macro_rules! blas_impl(
     		ldc: i32 )
 			{
 				unsafe { $xgemm(transa, transb, m, n , k, alpha, a, lda, b, ldb, beta, c, ldc)}
+			}
+
+			fn xtrsm(side: char, uplo: char, transa: char, diag: char, m: i32, n: i32, alpha: Self, a: &[Self], lda: i32, b: &mut
+			[Self], ldb: i32)
+			{
+				unsafe
+				{
+					$xtrsm(side as u8, uplo as u8, transa as u8, diag as u8, m, n, alpha, a, lda, b, ldb);
+				}
 			}
 		}
 	)
@@ -1436,6 +1446,6 @@ lapack::dgetri, lapack::dpotrf, lapack::dgetrs);
 //hessenberg_scalar_impl!(Complex<f64>, lapack::zgehrd);
 
 #[cfg(feature = "blaslapack")]
-blas_impl!(f32, blas::sgemm);
+blas_impl!(f32, blas::sgemm, blas::strsm);
 #[cfg(feature = "blaslapack")]
-blas_impl!(f64, blas::dgemm);
+blas_impl!(f64, blas::dgemm, blas::dtrsm);

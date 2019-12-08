@@ -1,4 +1,5 @@
 use crate::algebra::linear::{Vector, Matrix};
+use crate::algebra::linear::matrix::Solve;
 use crate::optimization::{OptimResult, Jacobian, Hessian};
 use std::marker::PhantomData;
 use crate::algebra::abstr::Real;
@@ -86,7 +87,7 @@ impl<T> Newton<T>
         {
             let hessian_x_n: Matrix<T> = func.hessian(&x_n);
             let grad_x_n: Vector<T> = func.jacobian(&x_n).get_row(0).transpose();
-            let res_solve: Option<Vector<T>> = hessian_x_n.solve_vector(&-grad_x_n.clone());
+            let res_solve: Option<Vector<T>> = hessian_x_n.solve(&-grad_x_n.clone());
             let d_k: Vector<T>;
 
             match res_solve

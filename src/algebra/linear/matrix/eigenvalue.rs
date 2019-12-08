@@ -6,7 +6,7 @@ use crate::algebra::abstr::{Zero};
 
 
 impl<T> Matrix<T>
-     where T: Real + 'static
+     where T: Real
 {
     /// Computes the eigenvalues of a real matrix
     ///
@@ -39,9 +39,9 @@ impl<T> Matrix<T>
     #[cfg(feature = "native")]
     pub fn eigenvalue_r(self: &Self) -> Vector<T>
     {
-        let (m, _n) : (usize, usize) = self.dim();
+        let (m, _n): (usize, usize) = self.dim();
 
-        let (_q, h): (Matrix<T>, Matrix<T>) = self.dec_hessenberg();
+        let h: Matrix<T> = self.dec_hessenberg().h();
 
         let (_u, t): (Matrix<T>, Matrix<T>) = h.clone().francis();
 

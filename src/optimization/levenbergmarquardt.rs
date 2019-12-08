@@ -1,5 +1,6 @@
 use crate::algebra::abstr::Real;
 use crate::algebra::linear::{Vector, Matrix};
+use crate::algebra::linear::matrix::Solve;
 use crate::optimization::{OptimResult, Jacobian};
 
 /// Levenberg-Marquardt method
@@ -65,7 +66,7 @@ impl<T> LevenbergMarquardt<T>
                 let p_n: Vector<T> =  -(jacobian_x_n.clone().transpose() * f_x_n.clone());
                 let (_j_m, j_n) = jacobian_x_n.dim();
                 let left_n: Matrix<T> = jacobian_x_n.clone().transpose() * jacobian_x_n.clone() + Matrix::one(j_n) * mu_n * mu_n;
-                d_n = left_n.solve_vector(&p_n).unwrap();
+                d_n = left_n.solve(&p_n).unwrap();
 
                 let x_n_1 = x_n.clone() + d_n.clone();
                 let f_x_n_1: Vector<T> = func.eval(&x_n_1);

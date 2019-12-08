@@ -12,6 +12,7 @@ use serde::{Deserialize, Serialize};
 use super::{MatrixIntoIterator, MatrixIterator, MatrixIteratorMut, MatrixRowIterator, MatrixRowIteratorMut, MatrixColumnIterator,
 MatrixColumnIteratorMut};
 use std::cmp::min;
+use crate::algebra::linear::matrix::{Substitute};
 
 /// Macro to construct matrices
 ///
@@ -314,14 +315,74 @@ impl<T> Matrix<T>
 
 }
 
+impl<T> Substitute<Vector<T>> for Matrix<T>
+    where T: Real
+{
 
+    fn substitute_forward(self: &Self, b: Vector<T>) -> Vector<T>
+    {
+        return self.substitute_forward_vector_r(b);
+    }
+
+    fn substitute_backward(self: &Self, b: Vector<T>) -> Vector<T>
+    {
+        return self.substitute_backward_vector_r(b);
+    }
+}
+
+impl<T> Substitute<Matrix<T>> for Matrix<T>
+    where T: Real
+{
+
+    fn substitute_forward(self: &Self, b: Matrix<T>) -> Matrix<T>
+    {
+        return self.substitute_forward_matrix_r(b);
+    }
+
+    fn substitute_backward(self: &Self, b: Matrix<T>) -> Matrix<T>
+    {
+        return self.substitute_backward_matrix_r(b);
+    }
+}
 
 impl<T> Matrix<T>
     where T: Real
 {
-    //
-    //
-    pub fn subst_backward_vector(self: &Self, mut b: Vector<T>) -> Vector<T>
+
+    #[cfg(feature = "native")]
+    pub fn substitute_forward_vector_r(self: &Self, mut b: Vector<T>) -> Vector<T>
+    {
+        for k in 0..self.n
+        {
+            for l in 0..k
+            {
+                *b.get_mut(k) = *b.get(k) - *self.get(k, l) * *b.get(l);
+            }
+            *b.get_mut(k) = *b.get(k) / *self.get(k, k);
+        }
+
+        return b;
+    }
+
+
+    #[cfg(feature = "native")]
+    pub fn substitute_forward_matrix_r(self: &Self, mut b: Matrix<T>) -> Matrix<T>
+    {
+        let min: usize = min(self.m, self.n);
+        for k in 0..min
+        {
+            for l in 0..k
+            {
+                b.set_row(&(b.get_row(k) - (b.get_row(l) * *self.get(k, l))), k);
+            }
+            b.set_row(&(b.get_row(k) / *self.get(k, k)), k);
+        }
+
+        return b;
+    }
+
+    #[cfg(feature = "native")]
+    pub fn substitute_backward_vector_r(self: &Self, mut b: Vector<T>) -> Vector<T>
     {
         for k in (0..self.n).rev()
         {
@@ -335,7 +396,8 @@ impl<T> Matrix<T>
         return b;
     }
 
-    pub fn subst_backward_matrix(self: &Self, mut b: Matrix<T>) -> Matrix<T>
+    #[cfg(feature = "native")]
+    pub fn substitute_backward_matrix_r(self: &Self, mut b: Matrix<T>) -> Matrix<T>
     {
         let min = min(self.m, self.n);
 
@@ -350,40 +412,42 @@ impl<T> Matrix<T>
 
         return b;
     }
-}
 
-impl<T> Matrix<T>
-    where T: Real
-{
-    //
-    //
-    pub fn subst_forward_vector(self: &Self, mut b: Vector<T>) -> Vector<T>
+
+    #[cfg(feature = "blaslapack")]
+    pub fn substitute_forward_matrix_r(self: &Self, mut b: Matrix<T>) -> Matrix<T>
     {
-        for k in 0..self.n
-        {
-            for l in 0..k
-            {
-                *b.get_mut(k) = *b.get(k) - *self.get(k, l) * *b.get(l);
-            }
-            *b.get_mut(k) = *b.get(k) / *self.get(k, k);
-        }
-
+        T::xtrsm('L', 'L', 'N', 'N', b.m as i32, b.n as i32, T::one(), self.data.as_slice(), self.m as i32, b.data.as_mut_slice(), b
+        .m as i32);
         return b;
     }
 
-    pub fn subst_forward_matrix(self: &Self, mut b: Matrix<T>) -> Matrix<T>
+    #[cfg(feature = "blaslapack")]
+    pub fn substitute_forward_vector_r(self: &Self, b: Vector<T>) -> Vector<T>
     {
-        let min: usize = min(self.m, self.n);
-        for k in 0..min
-        {
-            for l in 0..k
-            {
-                b.set_row(&(b.get_row(k) - (b.get_row(l) * *self.get(k, l))), k);
-            }
-            b.set_row(&(b.get_row(k) / *self.get(k, k)), k);
-        }
+        let (b_m, b_n): (usize, usize) = b.dim();
+        let mut b_data = b.convert_to_vec();
+        T::xtrsm('L', 'L', 'N', 'N', b_m as i32, b_n as i32, T::one(), self.data.as_slice(), self.m as i32, b_data
+        .as_mut_slice(), b_m as i32);
+        return Vector::new_column(b_m, b_data);
+    }
 
+    #[cfg(feature = "blaslapack")]
+    pub fn substitute_backward_matrix_r(self: &Self, mut b: Matrix<T>) -> Matrix<T>
+    {
+        T::xtrsm('L', 'U', 'N', 'N', b.m as i32, b.n as i32, T::one(), self.data.as_slice(), self.m as i32, b.data.as_mut_slice(), b
+        .m as i32);
         return b;
+    }
+
+    #[cfg(feature = "blaslapack")]
+    pub fn substitute_backward_vector_r(self: &Self, b: Vector<T>) -> Vector<T>
+    {
+        let (b_m, b_n): (usize, usize) = b.dim();
+        let mut b_data = b.convert_to_vec();
+        T::xtrsm('L', 'U', 'N', 'N', b_m as i32, b_n as i32, T::one(), self.data.as_slice(), self.m as i32, b_data
+        .as_mut_slice(), b_m as i32);
+        return Vector::new_column(b_m, b_data);
     }
 }
 
@@ -422,7 +486,7 @@ impl<T> Matrix<T>
             return a_11 * a_22 - a_12 * a_21;
         }
 
-        let (_l, u, p): (Matrix<T>, Matrix<T>, Matrix<T>) = self.dec_lu();
+        let (_l, u, p): (Matrix<T>, Matrix<T>, Matrix<T>) = self.dec_lu().lup();
         let mut det: T = T::one();
 
         for i in 0..self.m
@@ -717,7 +781,6 @@ impl<T> Matrix<T>
         let mut w: Vector<T> = Vector::zero(v_m);
 
         w.set_slice(&v, k);
-
 
         let ident : Matrix<T> = Matrix::one(v_m);
 
@@ -1162,7 +1225,7 @@ impl<T> PartialEq for Matrix<T>
 impl<T> Matrix<T>
     where T: Clone + Copy + Zero + One
 {
-
+    /// Creates a new Matrix object
     ///
     /// Fortran like, column wise
     ///
@@ -1179,6 +1242,7 @@ impl<T> Matrix<T>
     }
 
 }
+
 impl<T> Matrix<T>
 {
     pub fn convert_to_vec(self) -> Vec<T>
@@ -1278,9 +1342,9 @@ impl<T> Matrix<T>
     /// A^+ = (A^TA)^-1A^T
     pub fn pinv(self: &Self) -> Matrix<T>
     {
-        let (_q, r): (Matrix<T>, Matrix<T>) = self.dec_qr();
-        let x: Matrix<T> = r.clone().transpose().subst_forward_matrix(self.clone().transpose());
-        let a_pinv: Matrix<T> = r.subst_backward_matrix(x);
+        let r: Matrix<T> = self.dec_qr().r();
+        let x: Matrix<T> = r.clone().transpose().substitute_forward(self.clone().transpose());
+        let a_pinv: Matrix<T> = r.substitute_backward(x);
         return a_pinv;
     }
 }
@@ -1302,6 +1366,77 @@ impl<T> Matrix<T>
     /// ```
     pub fn dim(&self) -> (usize, usize)
     {
-        (self.m, self.n)
+        return (self.m, self.n)
+    }
+
+    /// Returns the number of rows
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// use mathru::algebra::linear::{Matrix};
+    ///
+    /// let a: Matrix<f64> = Matrix::new(4, 2, vec![1.0, 0.0, 3.0, 0.0, 1.0, -7.0, 0.5, 0.25]);
+    /// let m: usize = a.nrow();
+    ///
+    /// assert_eq!(4, m);
+    pub fn nrow(&self) -> usize
+    {
+        return self.m
+    }
+
+    /// Returns the number of columns
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// use mathru::algebra::linear::{Matrix};
+    ///
+    /// let a: Matrix<f64> = Matrix::new(4, 2, vec![1.0, 0.0, 3.0, 0.0, 1.0, -7.0, 0.5, 0.25]);
+    /// let n: usize = a.ncol();
+    ///
+    /// assert_eq!(2, n);
+    /// ```
+    pub fn ncol(&self) -> usize
+    {
+        return self.n
+    }
+}
+
+impl<T> Matrix<T>
+    where T: Real
+{
+    /// Compares to matrices
+    ///
+    /// Checks if all elememnts in the self matrix are in a epsilon neighbourhood of exp
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// use mathru::algebra::linear::{Matrix};
+    ///
+    /// let a: Matrix<f64> = Matrix::new(4, 2, vec![1.0, 0.0, 3.0, 0.0, 1.0, -7.0, 0.5, 0.25]);
+    ///
+    pub fn compare_neighbourhood(self: &Self, exp: &Self, epsilon: T) -> bool
+    {
+        let (exp_m, exp_n): (usize, usize) = exp.dim();
+        let (self_m, self_n): (usize, usize) = self.dim();
+
+        assert!(exp_m == self_m);
+        assert!(exp_n == self_n);
+
+        for i in 0..exp_m
+        {
+            for k in 0..exp_n
+            {
+                if (*exp.get(i, k) - *self.get(i, k)).abs() > epsilon
+                {
+                    println!("exp: {}, act: {} exp - act: {}", exp, self, (exp - self));
+                    return false;
+                }
+            }
+        }
+
+        return true;
     }
 }

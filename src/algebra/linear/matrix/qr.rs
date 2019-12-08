@@ -1,8 +1,54 @@
 use crate::algebra::linear::{Matrix};
 use crate::algebra::abstr::{Real};
+use std::clone::Clone;
+use serde::{Deserialize, Serialize};
 
 #[cfg(feature = "blaslapack")]
 use crate::algebra::abstr::{Zero};
+
+/// QR decomposition
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct QRDec<T>
+{
+    q: Matrix<T>,
+    r: Matrix<T>
+}
+
+impl<T> QRDec<T>
+{
+    pub(self) fn new(q: Matrix<T>, r: Matrix<T>) -> QRDec<T>
+    {
+        QRDec
+        {
+            q: q,
+            r: r
+        }
+    }
+
+    /// Return the q matrix of the QR decomposition
+    ///
+    /// # Arguments
+    ///
+    /// * `self`
+    ///
+    pub fn q(self: Self) -> Matrix<T>
+    {
+        return self.q;
+    }
+
+    /// Return the r matrix of the qr decomposition
+    ///
+    /// # Re
+    pub fn r(self: Self) -> Matrix<T>
+    {
+        return self.r;
+    }
+
+    pub fn qr(self: Self) -> (Matrix<T>, Matrix<T>)
+    {
+        return (self.q, self.r);
+    }
+}
 
 impl<T> Matrix<T>
     where T: Real
@@ -13,6 +59,10 @@ impl<T> Matrix<T>
     /// Q is an orthogonal matrix \
     /// R is an upper triangular matrix \
     ///
+    /// # Panics
+    ///
+    /// if A is not a square matrix
+    ///
     /// # Example
     ///
     /// ```
@@ -20,16 +70,19 @@ impl<T> Matrix<T>
     ///
     /// let a: Matrix<f64> = Matrix::new(2, 2, vec![1.0, -2.0, 3.0, -7.0]);
     ///
-    /// let (q, r): (Matrix<f64>, Matrix<f64>) = a.dec_qr();
+    /// let (q, r): (Matrix<f64>, Matrix<f64>) = a.dec_qr().qr();
     ///
     /// ```
-    pub fn dec_qr<'a>(self: &'a Self) -> (Matrix<T>, Matrix<T>)
+    pub fn dec_qr<'a>(self: &'a Self) -> QRDec<T>
     {
-        self.dec_qr_r()
+        let (m, n) = self.dim();
+        assert!(m >= n);
+
+        return self.dec_qr_r()
     }
 
     #[cfg(feature = "native")]
-    fn dec_qr_r<'a>(self: &'a Self) -> (Matrix<T>, Matrix<T>)
+    fn dec_qr_r<'a>(self: &'a Self) -> QRDec<T>
     {
         let mut q: Matrix<T> = Matrix::one(self.m);
         let mut r: Matrix<T> = self.clone();
@@ -38,8 +91,8 @@ impl<T> Matrix<T>
         {
             for i in (j + 1..self.m).rev()
             {
-                let a_jj: T = r.get(j, j).clone();
-                let a_ij: T = r.get(i, j).clone();
+                let a_jj: T = *r.get(j, j);
+                let a_ij: T = *r.get(i, j);
                 //let k: T = a_jj.sgn();
                 let p: T = (a_jj.clone() * a_jj.clone() + a_ij.clone() * a_ij.clone()).pow(&T::from_f64
                 (0.5).unwrap());
@@ -55,11 +108,11 @@ impl<T> Matrix<T>
             }
         }
         q = q.transpose();
-        (q, r)
+        return QRDec::new(q, r);
     }
 
     #[cfg(feature = "blaslapack")]
-    fn dec_qr_r<'a>(self: &'a Self) -> (Matrix<T>, Matrix<T>)
+    fn dec_qr_r<'a>(self: &'a Self) -> QRDec<T>
     {
         let (m, n) : (usize, usize) = self.dim();
 
@@ -124,7 +177,7 @@ impl<T> Matrix<T>
 
         let q: Matrix<T> = Matrix::new(m, n, self_data);
 
-        return (q, r);
+        return QRDec::new(q, r);
     }
 
     #[cfg(feature = "blaslapack")]

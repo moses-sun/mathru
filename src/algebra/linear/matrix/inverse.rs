@@ -2,8 +2,26 @@ use crate::algebra::linear::{Matrix};
 use crate::algebra::abstr::{Real};
 #[cfg(feature = "blaslapack")]
 use crate::algebra::abstr::{Zero};
+use crate::algebra::linear::matrix::{LUDec};
 
-impl<T> Matrix<T>
+pub trait Inverse<T>
+{
+    /// Inverse Matrix
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// use mathru::algebra::linear::{Matrix};
+    /// use mathru::algebra::linear::matrix::Inverse;
+    ///
+    /// let a: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
+    /// let b_inv: Matrix<f64> = a.inv().unwrap();
+    ///
+    /// ```
+    fn inv(self: &Self) -> Option<Matrix<T>>;
+}
+
+impl<T> Inverse<T> for Matrix<T>
      where T: Real
 {
     /// Inverse Matrix
@@ -12,102 +30,32 @@ impl<T> Matrix<T>
     ///
     /// ```
     /// use mathru::algebra::linear::{Matrix};
+    /// use mathru::algebra::linear::matrix::*;
     ///
     /// let a: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
     /// let b_inv: Matrix<f64> = a.inv().unwrap();
     ///
     /// ```
-    pub fn inv<'a>(self: &'a Self) -> Option<Matrix<T>>
+    fn inv(self: & Self) -> Option<Matrix<T>>
     {
         return self.inv_r();
     }
+}
 
+impl<T> Matrix<T>
+    where T: Real
+{
     #[cfg(feature = "native")]
-    pub fn inv_r(self: & Self) -> Option<Matrix<T>>
+    pub fn inv_r(self: &Self) -> Option<Matrix<T>>
     {
-        let (mut l, mut u, p) : (Matrix<T>, Matrix<T>, Matrix<T>) = self.dec_lu();
-
-        l.subst_forward();
-        u.subst_backward();
-        return Some(&(&u * &l) * &p);
-    }
-
-
-    #[cfg(feature = "native")]
-    ///
-    /// inplace backward substitution
-    ///
-    pub fn subst_backward<'a>(self: &'a mut Self)
-    {
-        for k in (0..self.n).rev()
-        {
-            for l in (k..self.n).rev()
-            {
-
-                let mut sum : T = T::zero();
-
-                for i in (k+1)..self.n
-                {
-                    sum += self.data[i * self.m + k] * self.data[l * self.m + i];
-                }
-
-                let b : T;
-                if k == l
-                {
-                    b = T::one();
-
-                }
-                else
-                {
-                    b = T::zero();
-                }
-                let div : T = self.data[k * self.m + k];
-                self.data[l * self.m + k] = (b - sum) / div;
-
-            }
-        }
-    }
-
-    #[cfg(feature = "native")]
-    ///
-    /// inplace forward substitution
-    ///
-    fn subst_forward<'a>(self: &'a mut Self)
-    {
-
-        for k in 0..self.n
-        {
-            for l in 0..k
-            {
-
-                let mut sum : T = T::zero();
-
-                for i in 0..k
-                {
-                    sum += self.data[i * self.m + k] * self.data[l * self.m + i];
-                }
-
-                let b : T;
-                if k == l
-                {
-                    b = T::one();
-
-                }
-                else
-                {
-                    b = T::zero();
-                }
-                let div : T = self.data[k * self.m + k];
-                self.data[l * self.m + k] = (b - sum) / div;
-
-            }
-        }
+        let lu_dec: LUDec<T> = self.dec_lu();
+        return lu_dec.inv();
     }
 
     #[cfg(feature = "blaslapack")]
     pub fn inv_r(self: & Self) -> Option<Matrix<T>>
     {
-         let (m, n): (usize, usize) = self.dim();
+        let (m, n): (usize, usize) = self.dim();
         let m_i32: i32 = m as i32;
         let n_i32: i32 = n as i32;
 
