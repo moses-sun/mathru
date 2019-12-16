@@ -169,69 +169,52 @@ zero_impl!(f32, 0.0);
 zero_impl!(f64, 0.0);
 
 
-macro_rules! one_impl {
-    ($t:ty, $v:expr) =>
+macro_rules! impl_one {
+    ($v:expr, $($t:ty),*) =>
     {
+    	$(
         impl One for $t {
             #[inline]
             fn one() -> $t {
                 $v
             }
         }
+        )*
     };
 }
 
-one_impl!(usize, 1);
-one_impl!(u8, 1);
-one_impl!(u16, 1);
-one_impl!(u32, 1);
-one_impl!(u64, 1);
-#[cfg(has_i128)]
-one_impl!(u128, 1);
+impl_one!(1, usize, u8, u16, u32, u64, u128, isize, i8, i16, i32, i64, i128);
+impl_one!(1.0, f32, f64);
 
-one_impl!(isize, 1);
-one_impl!(i8, 1);
-one_impl!(i16, 1);
-one_impl!(i32, 1);
-one_impl!(i64, 1);
-#[cfg(has_i128)]
-one_impl!(i128, 1);
-
-one_impl!(f32, 1.0);
-one_impl!(f64, 1.0);
-
-macro_rules! natural_impl
+macro_rules! impl_natural
 {
-	($t:ty) =>
+	($($t:ty),*) =>
     {
+    	$(
         impl Natural for $t
         {
 
         }
+        )*
     }
 }
 
-natural_impl!(u8);
-natural_impl!(u16);
-natural_impl!(u32);
-natural_impl!(u64);
-natural_impl!(usize);
+impl_natural!(u8, u16, u32, u64, usize);
 
-macro_rules! integer_impl
+macro_rules! impl_integer
 {
-    ($t:ty) =>
+    ($($t:ty),*) =>
     {
+    	$(
         impl Integer for $t
         {
 
         }
+        )*
     }
 }
 
-integer_impl!(i8);
-integer_impl!(i16);
-integer_impl!(i32);
-integer_impl!(i64);
+impl_integer!(i8, i16, i32, i64);
 
 macro_rules! real_impl
 {

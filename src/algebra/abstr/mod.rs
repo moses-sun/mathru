@@ -8,11 +8,27 @@ mod field;
 mod ring;
 mod semiring;
 
-
+mod identity;
 mod natural;
 mod integer;
 mod real;
 mod complex;
+mod magma;
+mod monoid;
+mod loop_;
+mod quasigroup;
+mod group;
+mod semigroup;
+mod operator;
+mod abeliangroup;
+
+pub use self::operator::{Operator, Addition, Multiplication};
+pub use self::identity::Identity;
+pub use self::magma::Magma;
+pub use self::loop_::Loop;
+pub use self::quasigroup::Quasigroup;
+pub use self::semigroup::Semigroup;
+pub use self::abeliangroup::AbelianGroup;
 
 pub use self::semiring::{Semiring, Zero, One};
 pub use self::ring::{Ring};
