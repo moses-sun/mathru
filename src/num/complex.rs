@@ -2,12 +2,12 @@ use std::ops::{Add, AddAssign, Sub, SubAssign, Mul, MulAssign, Div, DivAssign, N
 use std::fmt;
 use std::fmt::{Display};
 use crate::algebra::abstr::Complex as ComplexT;
-use crate::algebra::abstr::Real as RealT;
-use crate::algebra::abstr::{Scalar, Semiring, Sign, Abs, Ring, Field, Zero, One};
+use crate::algebra::abstr::{Magma, AbelianGroup, Identity, Monoid, Loop, Quasigroup, Scalar, ScalarOps, Sign, Ring, Field, Addition,
+Multiplication, CommutativeRing, Zero, One};
 use std::cmp::Ordering;
 use crate::algebra::abstr::cast::{ToPrimitive, FromPrimitive, NumCast};
 use crate::elementary::{Trigonometry, Exponential, Power, Hyperbolic};
-use crate::algebra::abstr::{cast, Real};
+use crate::algebra::abstr::{cast};
 #[cfg(feature = "blaslapack")]
 use crate::algebra::abstr::{Blas, Lapack};
 
@@ -54,7 +54,6 @@ pub struct Complex<T>
 }
 
 impl<T> Complex<T>
-	where T: Real
 {
 	/// Create a new complex
 	pub fn new(re: T, im: T) -> Complex<T>
@@ -70,7 +69,7 @@ impl<T> Complex<T>
 
 /// Returns -self = -Re(self) - i Im(self)
 impl<T> Neg for Complex<T>
-    where T: Ring
+    where T: Neg<Output = T>
 {
     type Output = Complex<T>;
 
@@ -102,7 +101,7 @@ impl<T> PartialOrd for Complex<T>
 }
 
 impl<T> ComplexT for Complex<T>
-	where T: Real
+	where T: Scalar + Neg<Output = T> + Trigonometry + Hyperbolic + Power + Exponential + Sign
 {
 	/// Returns the complex conjuagte
 	/// conj(self) = Re(self) - i Im(self)
@@ -126,21 +125,21 @@ impl<T> ComplexT for Complex<T>
 	}
 }
 
-impl<T> RealT for Complex<T>
-	where T: RealT
-{
-	/// Returns the smallest integer greater than or equal to a number.
-	fn ceil(self: &Self) -> Self
-	{
-		unimplemented!();
-	}
-
-	/// Returns the largest integer less than or equal to a number.
-	fn floor(self: &Self) -> Self
-	{
-		unimplemented!();
-	}
-}
+//impl<T> Real for Complex<T>
+//	where T: Real + Copy + Add<T, Output = T> + Mul<T, Output = T>
+//{
+//	/// Returns the smallest integer greater than or equal to a number.
+//	fn ceil(self: &Self) -> Self
+//	{
+//		unimplemented!();
+//	}
+//
+//	/// Returns the largest integer less than or equal to a number.
+//	fn floor(self: &Self) -> Self
+//	{
+//		unimplemented!();
+//	}
+//}
 
 #[cfg(feature = "blaslapack")]
 impl<T> Lapack for Complex<T>
@@ -274,33 +273,26 @@ impl<T> Blas for Complex<T>
 
 
 
-impl<T> Field for Complex<T>
-	where T: Real
-{
-	fn epsilon() -> Complex<T>
-	{
-		Complex
-		{
-			re: T::epsilon(),
-			im: T::epsilon()
-		}
-	}
-}
+//impl<T> Field for Complex<T>
+//	where T: Real
+//{
+//	fn epsilon() -> Complex<T>
+//	{
+//		Complex
+//		{
+//			re: T::epsilon(),
+//			im: T::epsilon()
+//		}
+//	}
+//}
 
 impl<T> Sign for Complex<T>
-	where T: Field
+	where T: Scalar + Power + Neg<Output = T>
 {
-	fn sgn(self: &Self) -> Self
+	fn sign(self: &Self) -> Self
 	{
 		unimplemented!()
 	}
-
-
-}
-
-impl<T> Abs for Complex<T>
-	where T: Field + Power
-{
 
 	/// Absolute value of the complex number
 	///
@@ -308,7 +300,7 @@ impl<T> Abs for Complex<T>
 	///
 	/// ```
 	/// extern crate mathru;
-	/// use mathru::algebra::abstr::{Ring, Abs};
+	/// use mathru::algebra::abstr::{Sign};
 	/// use mathru::num::Complex;
 	/// use mathru::algebra::abstr::cast::ToPrimitive;
 	///
@@ -318,32 +310,40 @@ impl<T> Abs for Complex<T>
     /// ```
 	fn abs(self: &Self) -> Self
 	{
-		let root: T = T::one() + T::one();
+		let root: T = T::from_f64(2.0).unwrap();
 		Complex
 		{
 			re: (self.re * self.re + self.im * self.im).root(&root),
 			im: T::zero()
 		}
 	}
+
+	fn is_positive(self: &Self) -> bool
+  	{
+    	unimplemented!();
+   	}
+
+  	fn is_negative(&self) -> bool
+  	{
+  		unimplemented!();
+  	}
 }
 
-impl<T> Ring for Complex<T>
-	where T: Real
-{
 
-
-}
-
-
-
-impl<T> Semiring for Complex<T>
-	where T: Field
-{
-
-}
+//impl<T> Semiring for Complex<T>
+//	where T: Field
+//{
+//
+//}
 
 impl<T> Scalar for Complex<T>
-	where T: Field
+	where T: Scalar + Neg<Output = T>
+{
+
+}
+
+impl<T> ScalarOps for Complex<T>
+	where T: Scalar + Neg<Output = T>
 {
 
 }
@@ -376,14 +376,10 @@ impl<T> Display for Complex<T>
 impl<T> Zero for Complex<T>
 	where T: Zero
 {
-	 fn zero() -> Self
-	 {
-	 	Complex
-		{
-			re: T::zero(),
-			im: T::zero(),
-		}
-	 }
+	fn zero() -> Self
+	{
+		return Complex::new(T::zero(), T::zero());
+	}
 }
 
 /// Adds two complex numbers
@@ -433,15 +429,11 @@ impl<T> AddAssign for Complex<T>
 
 /// Returns 1 + i0
 impl<T> One for Complex<T>
-    where T: One + Mul<T, Output = T> + Add<T, Output = T> + Sub<T, Output = T> + Copy + Zero
+    where T: Scalar
 {
     fn one() -> Self
     {
-        Complex
-      	{
-         	re: T::one(),
-            im: T::zero()
-     	}
+    	return Complex::new(T::one(), T::zero());
     }
 }
 
@@ -530,7 +522,7 @@ impl<T> SubAssign for Complex<T>
 
 /// Divides two complex numbers
 impl<T> Div for Complex<T>
-    where T: Real
+    where T: Scalar + Neg<Output = T>
 {
     type Output = Complex<T>;
 
@@ -541,25 +533,27 @@ impl<T> Div for Complex<T>
 }
 
 impl<'a, 'b, T> Div<&'b Complex<T>> for &'a Complex<T>
-    where T: Real
+    where T: Scalar + Neg<Output = T>
 {
     type Output = Complex<T>;
 
     fn div(self: Self, rhs: &'b Complex<T>) -> Self::Output
     {
         let divisor: T = rhs.re * rhs.re + rhs.im * rhs.im;
-        let mut quot: Complex<T> = self * &((*rhs).conj());
 
-        quot.re = quot.re / divisor;
-        quot.im = quot.im / divisor;
+        if divisor == T::zero()
+		{
+			panic!("rhs * rhs.conj() == 0")
+		}
+        let quot: Complex<T> = self * &Complex::new(rhs.re, -rhs.im);
 
-        quot
+		return 	Complex::new(quot.re / divisor, quot.im / divisor);
     }
 }
 
 
 impl<T> DivAssign for Complex<T>
-    where T: Real
+    where T: Scalar + Neg<Output = T>
 {
     fn div_assign<'a>(self: &'a mut Self, other: Self)
     {
@@ -586,29 +580,25 @@ macro_rules! impl_to_primitive
 }
 
 /// Returns None if Complex part is non-zero
-impl<T: ToPrimitive + Scalar> ToPrimitive for Complex<T>
-	where T: ToPrimitive + Field
+impl<T: ToPrimitive> ToPrimitive for Complex<T>
+	where T: Scalar
 {
-    impl_to_primitive!(usize, to_usize);
-    impl_to_primitive!(isize, to_isize);
     impl_to_primitive!(u8, to_u8);
     impl_to_primitive!(u16, to_u16);
     impl_to_primitive!(u32, to_u32);
     impl_to_primitive!(u64, to_u64);
+    impl_to_primitive!(u128, to_u128);
     impl_to_primitive!(i8, to_i8);
     impl_to_primitive!(i16, to_i16);
     impl_to_primitive!(i32, to_i32);
     impl_to_primitive!(i64, to_i64);
-    #[cfg(has_i128)]
-    impl_to_primitive!(u128, to_u128);
-    #[cfg(has_i128)]
     impl_to_primitive!(i128, to_i128);
     impl_to_primitive!(f32, to_f32);
     impl_to_primitive!(f64, to_f64);
 }
 
 impl<T> Exponential for Complex<T>
-	where T: Real
+	where T: Scalar + Exponential + Trigonometry + Sign + Power + Hyperbolic
 {
 	/// Returns the euler number represented as a complex number
 	fn e() -> Self
@@ -667,7 +657,7 @@ impl<T> Exponential for Complex<T>
 }
 
 impl<T> Trigonometry for Complex<T>
-	where T: Real
+	where T: Scalar + Power + Exponential + Trigonometry + Sign + Hyperbolic
 {
 	/// Returns the mathematic constant PI, represented as a complex number
 	fn pi() -> Self
@@ -765,15 +755,7 @@ impl<T> Trigonometry for Complex<T>
 	/// ```
 	fn tan(self: &Self) -> Self
 	{
-		if self.im == T::zero()
-		{
-			if self.re / T::pi().ceil() == self.re / T::pi()
-			{
-				panic!();
-			}
-		}
-
-		self.sin() / self.cos()
+		return self.sin() / self.cos();
 	}
 
 	/// Cotangens function
@@ -1073,7 +1055,7 @@ impl<T> Trigonometry for Complex<T>
 }
 
 impl<T> Power for Complex<T>
-	where T: Real
+	where T: Scalar + Neg<Output = T> + Trigonometry + Exponential + Power + Hyperbolic + Sign
 {
 
 	/// Power
@@ -1109,7 +1091,7 @@ impl<T> Power for Complex<T>
 }
 
 impl<T> Hyperbolic for Complex<T>
-	where T: Real
+	where T: Scalar + Trigonometry + Hyperbolic + Power + Exponential + Neg<Output = T> + Sign
 {
 	/// Hyperbolic sine
 	fn sinh(self: &Self) -> Self
@@ -1213,7 +1195,7 @@ impl<T> Hyperbolic for Complex<T>
 
 /// A generic trait for converting a number to a value.
 impl<T> FromPrimitive for Complex<T>
-	where T: FromPrimitive + NumCast + Zero
+	where T: FromPrimitive + NumCast + Scalar
 {
 
 	/// Convert an `i64` to return an optional value of this type. If the
@@ -1223,9 +1205,30 @@ impl<T> FromPrimitive for Complex<T>
 		None
 	}
 
+	/// Convert an `i128` to return an optional value of this type. If the
+	/// type cannot be represented by this value, the `None` is returned.
+	fn from_i128(_n: i128) -> Option<Self>
+	{
+		None
+	}
+
 	/// Convert an `u64` to return an optional value of this type. If the
 	/// type cannot be represented by this value, the `None` is returned.
 	fn from_u64(n: u64) -> Option<Self>
+	{
+		Some
+		(
+			Complex
+			{
+				re: cast::cast(n).unwrap(),
+				im: T::zero()
+			}
+		)
+	}
+
+	/// Convert an `u128` to return an optional value of this type. If the
+	/// type cannot be represented by this value, the `None` is returned.
+	fn from_u128(n: u128) -> Option<Self>
 	{
 		Some
 		(
@@ -1254,7 +1257,7 @@ impl<T> FromPrimitive for Complex<T>
 
 /// An interface for casting between machine scalars.
 impl<T> NumCast for Complex<T>
-	where T: ToPrimitive + Zero + Field
+	where T: Scalar
 {
 	/// Creates a number from another value that can be converted into
 	/// a primitive via the `ToPrimitive` trait.
@@ -1268,4 +1271,93 @@ impl<T> NumCast for Complex<T>
 			}
 		)
 	}
+}
+
+impl<T> Identity<Addition> for Complex<T>
+	where T: Identity<Addition>
+{
+	fn id() -> Self
+	{
+		return Complex::new(Identity::<Addition>::id(), Identity::<Addition>::id());
+	}
+}
+
+impl<T> Identity<Multiplication> for Complex<T>
+	where T: Identity<Multiplication> + Identity<Addition>
+{
+	fn id() -> Self
+	{
+		return Complex::new(Identity::<Multiplication>::id(), Identity::<Addition>::id());
+	}
+}
+
+impl<T> Magma<Addition> for Complex<T>
+	where T: Magma<Addition> + Scalar
+{
+	fn operate(self, rhs: Self) -> Self
+    {
+  		return Complex::new(self.re + rhs.re, self.im + rhs.im);
+	}
+}
+
+impl<T> Magma<Multiplication> for Complex<T>
+	where T: Scalar
+{
+	fn operate(self, rhs: Self) -> Self
+  	{
+		return Complex::new(self.re * rhs.re - self.im * rhs.im, self.re * rhs.im + self.im * rhs.re);
+   	}
+}
+
+impl<T> Quasigroup<Addition> for Complex<T>
+	where  T: Quasigroup<Addition> + Scalar
+{
+
+}
+
+impl<T> Quasigroup<Multiplication> for Complex<T>
+	where T: Quasigroup<Multiplication> + Identity<Addition> + Scalar
+{
+
+}
+
+impl<T> AbelianGroup<Addition> for Complex<T>
+	where T: AbelianGroup<Addition> + Add<T, Output = T> + Scalar
+{
+
+}
+
+impl<T> AbelianGroup<Multiplication> for Complex<T>
+	where T: AbelianGroup<Multiplication> + Mul<T, Output = T> + Identity<Addition> + Scalar
+{
+
+}
+
+impl<T> Loop<Addition> for Complex<T>
+	where T: Loop<Addition> + Add<T, Output = T> + Scalar
+{
+
+}
+
+impl<T> Loop<Multiplication> for Complex<T>
+	where T: Loop<Multiplication> + Mul<T, Output = T> + Identity<Addition> + Scalar
+{
+
+}
+
+impl<T> CommutativeRing for Complex<T>
+	where T: Ring + Add<T, Output = T> + Scalar
+{
+
+}
+
+impl<T> Ring for Complex<T>
+	where T: AbelianGroup<Addition> + Monoid<Multiplication> + Add<T, Output = T> + Scalar
+{
+
+}
+
+impl<T> Field for Complex<T>
+	where T: CommutativeRing<Addition, Multiplication> + AbelianGroup<Multiplication> + Mul<T, Output = T> + Add<T, Output = T> + Scalar
+{
 }

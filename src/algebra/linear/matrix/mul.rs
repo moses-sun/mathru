@@ -1,11 +1,11 @@
 use crate::algebra::linear::{Vector, Matrix};
-use crate::algebra::abstr::{Zero, One, Real};
-use std::ops::{Add, AddAssign, Mul};
+use crate::algebra::abstr::{Scalar};
+use std::ops::{Mul};
 
 
 /// Multiplies matrix by vector.
 impl<'a, 'b, T> Mul<&'b Vector<T>> for &'a Matrix<T>
-    where T: Copy + Zero + Mul<T, Output = T> + Add<T, Output = T> + One + AddAssign
+    where T: Scalar
 {
     type Output = Vector<T>;
 
@@ -37,7 +37,7 @@ impl<'a, 'b, T> Mul<&'b Vector<T>> for &'a Matrix<T>
 
 //Multiplies matrix by scalar
 impl<T> Mul<T> for Matrix<T>
-    where T: Real
+    where T: Scalar
 {
     type Output = Matrix<T>;
 
@@ -62,7 +62,7 @@ impl<T> Mul<T> for Matrix<T>
 
 // Multiplies matrix by scalar
 impl<'a, 'b, T> Mul<&'b T> for &'a Matrix<T>
-    where T: Real
+    where T: Scalar
 {
     type Output = Matrix<T>;
 
@@ -87,7 +87,7 @@ impl<'a, 'b, T> Mul<&'b T> for &'a Matrix<T>
 
 // Multiplies matrix by vector.
 impl<T> Mul<Vector<T>> for Matrix<T>
-    where T: Copy + Zero + Mul<T, Output = T> + Add<T, Output = T> + One + AddAssign
+    where T: Scalar
 {
     type Output = Vector<T>;
 
@@ -99,7 +99,7 @@ impl<T> Mul<Vector<T>> for Matrix<T>
 
 
 impl <T> Mul<Matrix<T>> for Matrix<T>
-    where T: Real
+    where T: Scalar
 {
     type Output = Matrix<T>;
 
@@ -123,7 +123,7 @@ impl <T> Mul<Matrix<T>> for Matrix<T>
 
 
 impl<'a, 'b, T> Mul<&'b Matrix<T>> for &'a Matrix<T>
-    where T: Real
+    where T: Scalar
 {
     type Output = Matrix<T>;
 
@@ -150,7 +150,7 @@ impl<'a, 'b, T> Mul<&'b Matrix<T>> for &'a Matrix<T>
 }
 
 impl<'a, 'b, T> Matrix<T>
-    where T: Real
+    where T: Scalar
 {
 
     #[cfg(feature = "native")]
@@ -198,7 +198,7 @@ impl<'a, 'b, T> Matrix<T>
 
 
 impl<'a, 'b, T> Matrix<T>
-    where T: Real
+    where T: Scalar
 {
     #[cfg(feature = "native")]
     fn mul_scalar(self: Self, m: &'b T) -> Matrix<T>

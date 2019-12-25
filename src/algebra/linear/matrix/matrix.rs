@@ -1,7 +1,7 @@
 /// Matrix
 
 use std::clone::Clone;
-use crate::algebra::abstr::{Scalar, Semiring, Zero, One, Sign};
+use crate::algebra::abstr::{Scalar, Identity, Addition, Multiplication};
 use crate::algebra::linear::Vector;
 use crate::algebra::abstr::Real;
 use std::fmt::Display;
@@ -186,7 +186,7 @@ impl<T> Matrix<T>
 //}
 
 impl<T> Matrix<T>
-    where T: Semiring + Sign
+    where T: Scalar
 {
 
     pub fn gcd(mut m: usize, mut n: usize) -> usize
@@ -506,7 +506,7 @@ impl<T> Matrix<T>
         let mut perm: T = T::one();
         if counter != 0
         {
-            perm = (-T::one()).pow( &T::from_usize(counter - 1).unwrap());
+            perm = (-T::one()).pow( &T::from_u128(counter as u128 - 1).unwrap());
         }
 
         perm * det
@@ -1223,7 +1223,7 @@ impl<T> PartialEq for Matrix<T>
 }
 
 impl<T> Matrix<T>
-    where T: Clone + Copy + Zero + One
+    where T: Clone + Copy
 {
     /// Creates a new Matrix object
     ///
@@ -1252,7 +1252,7 @@ impl<T> Matrix<T>
 }
 
 impl<T> Matrix<T>
-    where T: Scalar + Clone + Copy + Zero + One
+    where T: Scalar + Clone + Copy
 {
     pub fn new_random(m: usize, n: usize) -> Matrix<T>
     {
@@ -1265,7 +1265,7 @@ impl<T> Matrix<T>
 
 
 impl<T> Matrix<T>
-    where T: Zero + Clone
+    where T: Scalar
 {
     /// Returns the zero matrix(additive neutral element)
     ///
@@ -1281,17 +1281,44 @@ impl<T> Matrix<T>
     /// ```
     pub fn zero(m: usize, n: usize) -> Self
     {
-        Matrix {
+        return Matrix {
             m: m,
             n: n,
             data: vec![T::zero(); m * n],
-        }
+        };
+    }
+}
+
+impl<T> Identity<Addition> for Matrix<T>
+    where T: Identity<Addition>
+{
+    /// Returns the additive neutral element)
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// use mathru::algebra::linear::{Matrix};
+    ///
+    /// let a: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
+    /// let b: Matrix<f64> = &a + &Matrix::zero(2, 2);
+    ///
+    /// assert_eq!(a, b);
+    /// ```
+    fn id() -> Self
+    {
+//        Matrix {
+//            m: m,
+//            n: n,
+//            data: vec![Identity::<Addition>::id(); m * n],
+//        }
+
+        unimplemented!();
     }
 }
 
 
 impl<T> Matrix<T>
-    where T: One + Zero + Clone
+    where T: Identity<Addition> + Identity<Multiplication> + Clone
 {
     /// Returns the eye matrix(multiplicative neutral element)
     ///
@@ -1307,11 +1334,11 @@ impl<T> Matrix<T>
     /// ```
     pub fn one(size: usize) -> Self
     {
-        let mut data = vec![T::zero(); size * size];
+        let mut data = vec![Identity::<Addition>::id(); size * size];
 
         for i in 0..size
         {
-            data[i * size + i] = T::one();
+            data[i * size + i] = Identity::<Multiplication>::id();
         }
 
         Matrix
@@ -1328,11 +1355,10 @@ impl<T> Matrix<T>
         {
             m: m,
             n: n,
-            data: vec![T::one(); m * n]
+            data: vec![Identity::<Multiplication>::id(); m * n]
         }
     }
 }
-
 
 impl<T> Matrix<T>
     where T: Real

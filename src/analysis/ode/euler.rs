@@ -73,11 +73,12 @@ impl<T> Solver<T> for Euler<T>
 
         let limit = ((t_end - t_start) / self.step_size).ceil() + T::one();
 
-        let mut t_vec: Vector<T> = Vector::zero(limit.to_usize().unwrap());
+        let steps: usize = limit.to_u64().unwrap() as usize;
+        let mut t_vec: Vector<T> = Vector::zero(steps);
         let (m, _n) = init.dim();
-        let mut res_mat: Matrix<T> = Matrix::zero(limit.to_usize().unwrap(), m);
+        let mut res_mat: Matrix<T> = Matrix::zero(steps, m);
 
-        for i in 0..limit.to_usize().unwrap()
+        for i in 0..steps
         {
             let h: T = self.step_size.min(t_end - t_n);
 

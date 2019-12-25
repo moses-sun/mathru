@@ -5,12 +5,6 @@
 /// A generic trait for converting a value to a number.
 pub trait ToPrimitive
 {
-	/// Converts the value of `self` to an `isize`.
-	fn to_isize(&self) -> Option<isize>
-	{
-		self.to_i64().and_then(|x| x.to_isize())
-	}
-
 	/// Converts the value of `self` to an `i8`.
 	fn to_i8(&self) -> Option<i8>
 	{
@@ -32,11 +26,8 @@ pub trait ToPrimitive
 	/// Converts the value of `self` to an `i64`.
 	fn to_i64(&self) -> Option<i64>;
 
-	/// Converts the value of `self` to a `usize`.
-	fn to_usize(&self) -> Option<usize>
-	{
-		self.to_u64().and_then(|x| x.to_usize())
-	}
+	/// Converts the value of `self` to an `i128`.
+	fn to_i128(&self) -> Option<i128>;
 
 	/// Converts the value of `self` to an `u8`.
 	fn to_u8(&self) -> Option<u8>
@@ -59,6 +50,9 @@ pub trait ToPrimitive
 	/// Converts the value of `self` to an `u64`.
 	fn to_u64(&self) -> Option<u64>;
 
+	/// Converts the value of `self` to an `u128`.
+	fn to_u128(&self) -> Option<u128>;
+
 	/// Converts the value of `self` to an `f32`.
 	fn to_f32(&self) -> Option<f32>
 	{
@@ -75,13 +69,6 @@ pub trait ToPrimitive
 /// A generic trait for converting a number to a value.
 pub trait FromPrimitive: Sized
 {
-	/// Convert an `isize` to return an optional value of this type. If the
-	/// value cannot be represented by this value, the `None` is returned.
-	fn from_isize(n: isize) -> Option<Self>
-	{
-		FromPrimitive::from_i64(n as i64)
-	}
-
 	/// Convert an `i8` to return an optional value of this type. If the
 	/// type cannot be represented by this value, the `None` is returned.
 	fn from_i8(n: i8) -> Option<Self>
@@ -107,12 +94,9 @@ pub trait FromPrimitive: Sized
 	/// type cannot be represented by this value, the `None` is returned.
 	fn from_i64(n: i64) -> Option<Self>;
 
-	/// Convert a `usize` to return an optional value of this type. If the
+	/// Convert an `i128` to return an optional value of this type. If the
 	/// type cannot be represented by this value, the `None` is returned.
-	fn from_usize(n: usize) -> Option<Self>
-	{
-		FromPrimitive::from_u64(n as u64)
-	}
+	fn from_i128(n: i128) -> Option<Self>;
 
 	/// Convert an `u8` to return an optional value of this type. If the
 	/// type cannot be represented by this value, the `None` is returned.
@@ -139,6 +123,10 @@ pub trait FromPrimitive: Sized
 	/// Convert an `u64` to return an optional value of this type. If the
 	/// type cannot be represented by this value, the `None` is returned.
 	fn from_u64(n: u64) -> Option<Self>;
+
+	/// Convert an `u128` to return an optional value of this type. If the
+	/// type cannot be represented by this value, the `None` is returned.
+	fn from_u128(n: u128) -> Option<Self>;
 
 	/// Convert a `f32` to return an optional value of this type. If the
 	/// type cannot be represented by this value, the `None` is returned.
@@ -178,4 +166,117 @@ where
     fn as_(self) -> T;
 }
 
+macro_rules! impl_from_primitive
+{
+    ($T:ty, $to_ty:ident) => (
+        impl FromPrimitive for $T
+        {
 
+            fn from_i8(n: i8) -> Option<$T>
+            {
+            	n.$to_ty()
+            }
+
+
+            fn from_i16(n: i16) -> Option<$T>
+            {
+            	n.$to_ty()
+            }
+
+
+            fn from_i32(n: i32) -> Option<$T>
+            {
+            	n.$to_ty()
+            }
+
+
+            fn from_i64(n: i64) -> Option<$T>
+            {
+            	n.$to_ty()
+            }
+
+            fn from_i128(n: i128) -> Option<$T>
+            {
+            	n.$to_ty()
+           	}
+
+            fn from_u8(n: u8) -> Option<$T>
+            {
+            	n.$to_ty()
+            }
+
+
+            fn from_u16(n: u16) -> Option<$T>
+            {
+            	n.$to_ty()
+            }
+
+
+            fn from_u32(n: u32) -> Option<$T>
+            {
+            	n.$to_ty()
+            }
+
+
+            fn from_u64(n: u64) -> Option<$T>
+            {
+            	n.$to_ty()
+            }
+
+			fn from_u128(n: u128) -> Option<$T>
+            {
+            	n.$to_ty()
+            }
+
+            fn from_f32(n: f32) -> Option<$T>
+            {
+            	n.$to_ty()
+            }
+
+
+            fn from_f64(n: f64) -> Option<$T>
+            {
+            	n.$to_ty()
+            }
+        }
+    )
+}
+
+impl_from_primitive!(i8, to_i8);
+impl_from_primitive!(i16, to_i16);
+impl_from_primitive!(i32, to_i32);
+impl_from_primitive!(i64, to_i64);
+impl_from_primitive!(i128, to_i128);
+impl_from_primitive!(u8, to_u8);
+impl_from_primitive!(u16, to_u16);
+impl_from_primitive!(u32, to_u32);
+impl_from_primitive!(u64, to_u64);
+impl_from_primitive!(u128, to_u128);
+impl_from_primitive!(f32, to_f32);
+impl_from_primitive!(f64, to_f64);
+
+macro_rules! impl_num_cast
+{
+    ($T:ty, $conv:ident) => (
+        impl NumCast for $T
+        {
+            fn from<N: ToPrimitive>(n: N) -> Option<$T>
+            {
+                n.$conv()
+            }
+        }
+    )
+}
+
+impl_num_cast!(u8, to_u8);
+impl_num_cast!(u16, to_u16);
+impl_num_cast!(u32, to_u32);
+impl_num_cast!(u64, to_u64);
+impl_num_cast!(u128, to_u128);
+impl_num_cast!(i8, to_i8);
+impl_num_cast!(i16, to_i16);
+impl_num_cast!(i32, to_i32);
+impl_num_cast!(i64, to_i64);
+impl_num_cast!(i128, to_i128);
+impl_num_cast!(f32, to_f32);
+impl_num_cast!(f64, to_f64);

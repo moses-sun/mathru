@@ -1,5 +1,5 @@
 //! AbelianGroup
-use super::operator::{Operator, Addition};
+use super::operator::{Operator, Addition, Multiplication};
 use super::monoid::Monoid;
 use super::Loop;
 
@@ -39,4 +39,5 @@ macro_rules! impl_abeliangroup(
     }
 );
 
-impl_abeliangroup!(Addition, i8, i16, i32, i64, i128);
+impl_abeliangroup!(Addition, i8, i16, i32, i64, i128, f32, f64);
+impl_abeliangroup!(Multiplication, f32, f64);

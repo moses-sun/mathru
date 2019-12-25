@@ -1,39 +1,30 @@
 /// Field
 
-use crate::algebra::abstr::Ring;
-use std::ops::{Sub, SubAssign, Div, DivAssign};
-
+use crate::algebra::abstr::{Operator, Addition, Multiplication, AbelianGroup, CommutativeRing};
+use std::{f32, f64};
 
 /// Field
 ///
-/// <a href="https://en.wikipedia.org/wiki/Field_(mathematics)">https://en.wikipedia.org/wiki/Field_(mathematics)</a>
+/// A field is a commutative ring, and an Abelian group under both operators.
 ///
-pub trait Field : Ring + Sub<Self, Output = Self> + SubAssign<Self> + Sign + Div<Self, Output = Self> +
-DivAssign<Self> + Abs
+///
+pub trait Field<A: Operator = Addition, M: Operator = Multiplication>:
+    CommutativeRing<A, M> + AbelianGroup<M>
 {
-	fn epsilon() -> Self;
+
 }
 
-
-/// Sign trait
-pub trait Sign
+macro_rules! impl_field
 {
-	/// Returns the sign of a number
-	///
-	/// # Param
-	///
-	/// # Return
-	///
-	/// -1 if self < 0
-	/// 0 if self = 0
-	/// 1 if self > 0
-	fn sgn(self: &Self) -> Self;
+    ($($t:ty),*) =>
+    {
+        $(
+        impl Field for $t
+        {
+
+        }
+        )*
+    };
 }
 
-/// Abs trait
-pub trait Abs
-{
-	/// returns the absolute value of a field
-	fn abs(self: &Self) -> Self;
-}
-
+impl_field!(f32, f64);

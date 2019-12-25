@@ -1,6 +1,8 @@
 use crate::algebra::linear::{Vector, Matrix};
-use crate::algebra::linear::matrix::{Substitute};
 use crate::algebra::abstr::{Real};
+
+#[cfg(feature = "native")]
+use crate::algebra::linear::matrix::{Substitute};
 
 #[cfg(feature = "blaslapack")]
 use crate::algebra::abstr::{Zero};

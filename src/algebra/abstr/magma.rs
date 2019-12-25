@@ -17,21 +17,21 @@ pub trait Magma<O: Operator>: Sized + PartialEq + Clone
 
 }
 
-impl<T> Magma<Addition> for T
-	where T: Add<T, Output=T> + PartialEq + Clone
-{
-	fn operate(self: Self, rhs: Self) -> Self
+macro_rules! impl_magma
+(
+    ($O:ty; $op: ident; $($T:ty),*) =>
     {
-   		return self + rhs;
+        $(
+            impl Magma<$O> for $T
+            {
+                fn operate(self, rhs: Self) -> Self
+                {
+                    self.$op(rhs)
+                }
+            }
+        )*
     }
-}
+);
 
-impl<T> Magma<Multiplication> for T
-	where T: Mul<T, Output=T> + PartialEq + Clone
-{
-	fn operate(self: Self, rhs: Self) -> Self
-    {
-   		return self * rhs;
-    }
-}
-
+impl_magma!(Addition; add; u8, u16, u32, u64, u128, i8, i16, i32, i64, i128, f32, f64);
+impl_magma!(Multiplication; mul; u8, u16, u32, u64, u128, i8, i16, i32, i64, i128, f32, f64);

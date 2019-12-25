@@ -19,12 +19,13 @@ pub trait Semigroup<O: Operator + Copy>: Magma<O>
     }
 }
 
-
+/// Blanket implementation
 impl<T> Semigroup<Addition> for T
     where T: Magma<Addition>
 {
 }
 
+/// Blanket implementation
 impl<T> Semigroup<Multiplication> for T
     where T: Magma<Multiplication>
 {

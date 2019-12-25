@@ -16,25 +16,20 @@ use super::identity::Identity;
 /// $`\forall x \in \mathbb{M}`$: $`x \circ e = e \circ x = x`$
 pub trait Monoid<O: Operator>: Semigroup<O> + Identity<O>
 {
-	fn id() ->  Self;
+
 }
 
-
+/// Blanked implementation
 impl<T> Monoid<Addition> for T
     where T: Semigroup<Addition> + Identity<Addition>
 {
-	fn id() -> Self
-	{
-		return Identity::<Addition>::id();
-	}
+
 }
 
+/// Blanket implementation
 impl<T> Monoid<Multiplication> for T
     where T: Semigroup<Multiplication> + Identity<Multiplication>
 {
-	fn id() -> Self
-	{
-		return Identity::<Multiplication>::id();
-	}
+
 }
 

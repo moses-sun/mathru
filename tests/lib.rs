@@ -8,4 +8,3 @@ pub mod optimization;
 pub mod special;
 pub mod statistics;
 pub mod analysis;
-//pub mod optim;

@@ -1,6 +1,8 @@
 use std::f64::consts::PI;
 
-use crate::algebra::abstr::Real;
+use crate::algebra::abstr::{Field, Scalar, Lattice, Sign};
+use crate::elementary::{Exponential, Trigonometry, Power, Hyperbolic};
+use std::ops::Neg;
 
 /// Gamma function
 ///
@@ -24,7 +26,7 @@ use crate::algebra::abstr::Real;
 /// The following approximation is implemented
 /// https://en.wikipedia.org/wiki/Lanczos_approximation
 pub fn gamma<T>(z: T) -> T
-    where T: Real
+    where T: Field + Scalar + Exponential + Trigonometry + Power + Hyperbolic + Neg<Output = T>
 {
     if z < T::from_f64(0.5_f64).unwrap()
     {
@@ -67,7 +69,7 @@ pub fn gamma<T>(z: T) -> T
 /// let ln_gamma: f64 = gamma::ln_gamma(x);
 /// ```
 pub fn ln_gamma<T>(x: T) -> T
-    where T: Real
+    where T: Field + Scalar + Exponential + Trigonometry + Power + Hyperbolic + Neg<Output = T>
 {
     // Auxiliary variable when evaluating the `gamma_ln` function
     let gamma_r: T = T::from_f64(10.900511).unwrap();
@@ -93,7 +95,7 @@ pub fn ln_gamma<T>(x: T) -> T
             .iter()
             .enumerate()
             .skip(1)
-            .fold(gamma_dk[0], |s, t| s + *t.1 / (T::from_usize(t.0).unwrap() - x));
+            .fold(gamma_dk[0], |s, t| s + *t.1 / (T::from_u64(t.0 as u64).unwrap() - x));
 
         T::pi().ln()
             - (T::pi() * x).sin().ln()
@@ -108,7 +110,7 @@ pub fn ln_gamma<T>(x: T) -> T
             .iter()
             .enumerate()
             .skip(1)
-            .fold(gamma_dk[0], |s, t| s + *t.1 / (x + T::from_usize(t.0).unwrap() - T::one()));
+            .fold(gamma_dk[0], |s, t| s + *t.1 / (x + T::from_u64(t.0 as u64).unwrap() - T::one()));
 
         s.ln()
             + (T::from_f64(2.0).unwrap() * (T::e() / T::pi()).pow(&T::from(0.5).unwrap())).ln()
@@ -137,7 +139,7 @@ pub fn ln_gamma<T>(x: T) -> T
 /// let digamma: f64 = gamma::digamma(x);
 /// ```
 pub fn digamma<T>(x: T) -> T
-    where T: Real
+    where T: Field + Scalar + Exponential + Trigonometry + Power + Hyperbolic + Neg<Output = T>
 {
   	let c: T = T::from_f64(8.5).unwrap();
  // 	let euler_mascheroni: T = T::from_f64(0.57721566490153286060).unwrap();
@@ -221,7 +223,7 @@ pub fn digamma<T>(x: T) -> T
 /// let gamma_u: f64 = gamma::gamma_u(a, x);
 /// ```
 pub fn gamma_u<T>(a: T, x: T) -> T
-    where T: Real
+    where T: Field + Scalar + Exponential + Trigonometry + Power + Hyperbolic + Neg<Output = T> + Sign
 {
     gamma_ur(a, x) * gamma(a)
 }
@@ -253,7 +255,7 @@ pub fn gamma_u<T>(a: T, x: T) -> T
 /// let gamma_u: f64 = gamma::gamma_ur(a, x);
 /// ```
 pub fn gamma_ur<T>(a: T, x: T) -> T
-    where T: Real
+    where T: Field + Scalar + Exponential + Trigonometry + Power + Hyperbolic + Neg<Output = T> + Sign
 {
     T::one() - gamma_lr(a, x)
 }
@@ -285,7 +287,7 @@ pub fn gamma_ur<T>(a: T, x: T) -> T
 /// let gamma_u: f64 = gamma::gamma_ur(a, x);
 /// ```
 pub fn gamma_l<T>(a: T, x: T) -> T
-    where T: Real
+    where T: Field + Scalar + Exponential + Trigonometry + Power + Hyperbolic + Neg<Output = T> + Sign
 {
     gamma_lr(a, x) * gamma(a)
 }
@@ -318,7 +320,7 @@ pub fn gamma_l<T>(a: T, x: T) -> T
 /// let gamma_u: f64 = gamma::gamma_ur(a, x);
 /// ```
 pub fn gamma_lr<T>(a: T, x: T) -> T
-    where T: Real
+    where T: Field + Scalar + Exponential + Trigonometry + Power + Hyperbolic + Neg<Output = T> + Sign
 {
 //    if a.is_nan() || x.is_nan()
 //    {

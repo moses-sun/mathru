@@ -71,7 +71,7 @@ impl<T> Solver<T> for Heun<T>
         let mut t_n: T = t_start;
 
         let limit = ((t_end - t_start) / self.step_size).ceil() + T::one();
-        let steps: usize = limit.to_usize().unwrap();
+        let steps: usize = limit.to_u64().unwrap() as usize;
         let mut t_vec: Vector<T> = Vector::zero(steps);
         let (m, _n) = init.dim();
         let mut res_mat: Matrix<T> = Matrix::zero(steps, m);

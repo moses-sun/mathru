@@ -1,6 +1,6 @@
 //! Loop
 
-use super::operator::{Operator, Addition};
+use super::operator::{Operator, Addition, Multiplication};
 use super::identity::Identity;
 use super::quasigroup::Quasigroup;
 
@@ -28,4 +28,5 @@ macro_rules! impl_loop(
     }
 );
 
-impl_loop!(Addition, i8, i16, i32, i64, i128);
+impl_loop!(Addition, i8, i16, i32, i64, i128, f32, f64);
+impl_loop!(Multiplication, f32, f64);

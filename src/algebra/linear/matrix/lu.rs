@@ -7,6 +7,7 @@ use serde::{Deserialize, Serialize};
 #[cfg(feature = "blaslapack")]
 use crate::algebra::abstr::{Zero};
 
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct LUDec<T>
 {

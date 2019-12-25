@@ -77,15 +77,17 @@ impl<T> Solver<T> for RK4<T>
         let mut x_n: Vector<T> = init.clone();
         let mut t_n: T = t_start;
 
-        let limit = ((t_end - t_start) / self.step_size).ceil() + T::one();
+        let limit: T = ((t_end - t_start) / self.step_size).ceil() + T::one();
 
-        let mut t_vec: Vector<T> = Vector::zero(limit.to_usize().unwrap());
+        let steps: usize = limit.to_u64().unwrap() as usize;
+
+        let mut t_vec: Vector<T> = Vector::zero(steps);
         let (m, _n) = init.dim();
-        let mut res_mat: Matrix<T> = Matrix::zero(limit.to_usize().unwrap(), m);
+        let mut res_mat: Matrix<T> = Matrix::zero(steps, m);
 
         let h: T = self.step_size;
 
-        for i in 0..limit.to_usize().unwrap()
+        for i in 0..steps
         {
             *t_vec.get_mut(i) = t_n;
             //res_mat = res_mat.set_row(&x_n.clone().transpose(), i);

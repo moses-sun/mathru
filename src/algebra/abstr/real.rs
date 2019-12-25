@@ -1,11 +1,43 @@
-use super::field::Field;
+use super::{Field, Lattice, Scalar, Sign};
 use crate::elementary::{Exponential, Trigonometry, Power, Hyperbolic};
+use std::ops::Neg;
+
+macro_rules! impl_real
+{
+    ($($t:ty, $id:ident);*) =>
+    {
+    	$(
+        impl Real for $t
+        {
+			/// Returns the smallest integer greater than or equal to a number.
+			fn ceil(self: &Self) -> Self
+			{
+				(*self).ceil()
+			}
+
+			/// Returns the largest integer less than or equal to a number.
+			fn floor(self: &Self) -> Self
+			{
+				(*self).floor()
+			}
+
+			fn epsilon() -> Self
+			{
+				return std::$id::EPSILON;
+			}
+        }
+        )*
+    }
+}
+
+impl_real!(f32, f32; f64, f64);
+
 
 #[cfg(feature = "native")]
 /// Real number
 ///
 ///<a href="https://en.wikipedia.org/wiki/Real_number">https://en.wikipedia.org/wiki/Real_number</a>
-pub trait Real: Field + Exponential + Trigonometry + Power + Hyperbolic
+pub trait Real: Field + Lattice + Scalar + Exponential + Trigonometry + Power + Hyperbolic + Neg<Output = Self> + Sign
 {
 	/// Returns the smallest integer greater than or equal to a number.
 	fn ceil(self: &Self) -> Self;
@@ -36,13 +68,15 @@ pub trait Real: Field + Exponential + Trigonometry + Power + Hyperbolic
 			return a
 		}
     }
+
+    fn epsilon() -> Self;
 }
 
 #[cfg(feature = "blaslapack")]
-/// Real number
-///
-///<a href="https://en.wikipedia.org/wiki/Real_number">https://en.wikipedia.org/wiki/Real_number</a>
-pub trait Real: Field + Exponential + Trigonometry + Power + Hyperbolic + Lapack + Blas
+// Real number
+//
+//<a href="https://en.wikipedia.org/wiki/Real_number">https://en.wikipedia.org/wiki/Real_number</a>
+pub trait Real: Field + Lattice + Scalar //+ Exponential + Trigonometry + Power + Hyperbolic + Lapack + Blas
 {
 	/// Returns the smallest integer greater than or equal to a number.
 	fn ceil(self: &Self) -> Self;
@@ -73,6 +107,8 @@ pub trait Real: Field + Exponential + Trigonometry + Power + Hyperbolic + Lapack
 			return a
 		}
     }
+
+    fn epsilon() -> Self;
 }
 
 #[cfg(feature = "blaslapack")]

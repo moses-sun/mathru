@@ -1,8 +1,12 @@
 use crate::algebra::linear::{Matrix};
 use crate::algebra::abstr::{Real};
+
 #[cfg(feature = "blaslapack")]
 use crate::algebra::abstr::{Zero};
-use crate::algebra::linear::matrix::{LUDec};
+
+#[cfg(feature = "native")]
+use crate::algebra::linear::matrix::lu::{LUDec};
+
 
 pub trait Inverse<T>
 {

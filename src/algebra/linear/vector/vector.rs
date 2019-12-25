@@ -5,9 +5,8 @@
 use crate::algebra::linear::Matrix;
 use crate::elementary::{Exponential, Power};
 use std::ops::{Add, AddAssign, Mul, Sub, Div, Neg};
-use crate::algebra::abstr::{Zero, One, Sign};
+use crate::algebra::abstr::{Sign};
 use crate::algebra::abstr::{Real, Scalar};
-use crate::algebra::abstr::cast::FromPrimitive;
 use std::fmt::Display;
 use std::fmt;
 use serde::{Serialize, Deserialize};
@@ -111,7 +110,7 @@ impl<T> Vector<T>
 
 
 impl<T> Vector<T>
-    where T: AddAssign + Mul<T, Output = T> + Zero + One + Clone + Exponential + Div<T, Output = T> + Power + PartialOrd
+    where T: Scalar + Power
 {
     /// Computes the p norm
     ///
@@ -172,8 +171,7 @@ impl<T> Vector<T>
 }
 
 impl<T> Vector<T>
-    where T: Power + Zero + One + Exponential + AddAssign + Add<T, Output = T> + Clone + Copy + FromPrimitive +
-    Div<T, Output = T> + PartialOrd
+    where T: Power + Exponential + Scalar
 {
     /// Computes the euclidean norm
     ///
@@ -197,7 +195,7 @@ impl<T> Vector<T>
 }
 
 impl <T> Vector<T>
-    where T: Clone + Copy + Zero + One
+    where T: Clone + Copy
 {
 
     /// Returns a row vector
@@ -254,7 +252,7 @@ impl <T> Vector<T>
 }
 
 impl <T> Vector<T>
-    where T: Scalar + Clone + Copy + Zero + One
+    where T: Scalar + Clone + Copy
 {
     /// Returns a row vector initialized with random numbers
     ///
@@ -432,7 +430,7 @@ impl<T> Vector<T>
 }
 
 impl<T> Vector<T>
-    where T: Zero + Mul<T, Output = T> + Clone + One + Display
+    where T: Scalar
 {
     /// Computes the dyadic product of two vectors
     ///
@@ -552,7 +550,7 @@ impl<T> Vector<T>
 
         let norm_x: T = self.p_norm(&two);
 
-        *x_temp.get_mut(0) += self.get(0).sgn() * norm_x;
+        *x_temp.get_mut(0) += self.get(0).sign() * norm_x;
         let x_temp_norm: T = x_temp.p_norm(&two);
         *x_temp.get_mut(0) /= x_temp_norm;
 
@@ -562,7 +560,7 @@ impl<T> Vector<T>
 
 
 impl<T> Vector<T>
-    where T: Zero + Clone + Copy
+    where T: Scalar
 {
     /// Returns the zero vector
     ///
@@ -1061,7 +1059,7 @@ impl <'a, 'b, T> Sub<&'b Vector<T>> for &'a Vector<T>
 
 
 impl<T>  Mul<Matrix<T>> for Vector<T>
-  where T: Copy + Zero + Mul<T, Output = T> + Add<T, Output = T> + One + Display
+  where T: Scalar
 {
     type Output = Vector<T>;
 
@@ -1072,7 +1070,7 @@ impl<T>  Mul<Matrix<T>> for Vector<T>
 }
 
 impl<'a, 'b, T> Mul<&'b Matrix<T>> for &'a Vector<T>
-    where T: Copy + Zero + Mul<T, Output = T> + Add<T, Output = T> + One + Display
+    where T: Scalar
 {
     type Output = Vector<T>;
 
@@ -1106,9 +1104,31 @@ impl<'a, 'b, T> Mul<&'b Matrix<T>> for &'a Vector<T>
 impl<T> Sign for Vector<T>
     where T: Real
 {
-	fn sgn(self: &Self) -> Self
+	fn sign(self: &Self) -> Self
     {
-        return (self.clone()).apply(&|x: &T| x.sgn() );
+        return (self.clone()).apply(&|x: &T| x.sign() );
+    }
+
+    fn abs(self: &Self) -> Self
+    {
+        unimplemented!();
+//        if self.is_negative()
+//        {
+//            return -*self;
+//        }
+//        return *self;
+    }
+
+    fn is_positive(self: &Self) -> bool
+    {
+        unimplemented!();
+        //return *self > $zero;
+    }
+
+    fn is_negative(&self) -> bool
+    {
+        unimplemented!();
+        //return *self < $zero;
     }
 }
 

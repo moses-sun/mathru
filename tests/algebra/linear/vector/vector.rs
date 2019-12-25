@@ -187,7 +187,7 @@ mod vector
 
     }
 
-      #[test]
+    #[test]
     fn scalar_div_owner()
     {
         let dim: usize = 5;
@@ -320,22 +320,19 @@ mod vector
     fn dotp_1()
     {
         let a: Vector<f32> = Vector::new_column(4, vec![-1.0, -3.0, 6.0, -1.0]);
-        let dotp_ref : f32 = 47.0;
-        let dotp : f32 = a.dotp(&a);
+        let dotp_ref: f32 = 47.0;
+        let dotp: f32 = a.dotp(&a);
         assert_eq!(dotp_ref, dotp);
     }
 
 //    #[test]
 //    fn crossp()
 //    {
-//        let a: Vector<f32> = Vector::new_column(&3, vec![-1.0), -3.0),
-//                                                                              6.0)]);
-//        let b: Vector<f32> = Vector::new_column(&3, vec![-2.0), -5.0),
-//                                                                              Real::new
-//            (-3.0)]);
-//        let crossp_ref : f32 = -3.0);
+//        let a: Vector<f32> = Vector::new_column(3, vec![-1.0, -3.0, 6.0]);
+//        let b: Vector<f32> = Vector::new_column(3, vec![-2.0, -5.0,-3.0]);
+//        let crossp_ref : f32 = -3.0;
 //        let cross : Vector<f32> = a.crossp(&b);
-//        assert_eq!(crossp_ref, croossp);
+//        assert_eq!(crossp_ref, crossp);
 //    }
 
     #[test]
@@ -359,10 +356,10 @@ mod vector
     #[test]
     fn p_norm()
     {
-        let p : f32 = 2.0;
-        let v : Vector<f32> = Vector::new_column(4, vec![-2.0, -5.0, -3.0, 2.0]);
-        let p_norm_ref : f32 = 42.0.pow(&0.5);
-        let p_norm : f32 =  v.p_norm(&p);
+        let p: f32 = 2.0;
+        let v: Vector<f32> = Vector::new_column(4, vec![-2.0, -5.0, -3.0, 2.0]);
+        let p_norm_ref: f32 = 42.0.pow(&0.5);
+        let p_norm: f32 =  v.p_norm(&p);
         assert_eq!(p_norm_ref, p_norm);
     }
 
@@ -382,9 +379,9 @@ mod vector
     #[test]
     fn matrix_mul_borrow()
     {
-        let m = matrix![1.0, 2.0; 3.0, 4.0];
-        let v = vector![1.0, 2.0];
-        let prod_ref = vector![7.0, 10.0];
+        let m: Matrix<f64> = matrix![1.0, 2.0; 3.0, 4.0];
+        let v: Vector<f64> = vector![1.0, 2.0];
+        let prod_ref: Vector<f64> = vector![7.0, 10.0];
 
         let res = &v * &m;
 
@@ -394,7 +391,7 @@ mod vector
     #[test]
     fn argmax()
     {
-        let m = vector![1.0, -2.0, 3.0, -4.0];
+        let m: Vector<f64> = vector![1.0, -2.0, 3.0, -4.0];
 
         assert_eq!(2, m.argmax());
     }
@@ -402,19 +399,19 @@ mod vector
     #[test]
     fn argmin()
     {
-        let m = vector![1.0, -2.0, 3.0, -4.0];
+        let m: Vector<f64> = vector![1.0, -2.0, 3.0, -4.0];
 
         assert_eq!(3, m.argmin());
     }
 
     #[test]
-    fn sgn()
+    fn sign()
     {
-        let v = vector![1.0, -2.0, 0.0, -4.0];
+        let v: Vector<f64> = vector![1.0, -2.0, 0.0, -4.0];
 
-        let sgn = vector![1.0, -1.0, 0.0, -1.0];
-        let sgn_hat = v.sgn();
+        let sign: Vector<f64> = vector![1.0, -1.0, 0.0, -1.0];
+        let sign_hat: Vector<f64> = v.sign();
 
-        assert_eq!(sgn, sgn_hat);
+        assert_eq!(sign, sign_hat);
     }
 }

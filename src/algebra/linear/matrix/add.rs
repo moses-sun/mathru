@@ -1,10 +1,9 @@
 use crate::algebra::linear::{Matrix};
-use crate::algebra::abstr::{Real};
-use crate::algebra::abstr::Zero;
+use crate::algebra::abstr::{Scalar};
 use std::ops::{Add};
 
 impl<T> Add<Self> for Matrix<T>
-    where T: Real
+    where T: Scalar
 {
     type Output = Matrix<T>;
 
@@ -31,7 +30,7 @@ impl<T> Add<Self> for Matrix<T>
 ///Adds two matrices
 ///
 impl<'a, 'b, T> Add<&'b Matrix<T>> for &'a Matrix<T>
-    where T: Real
+    where T: Scalar
 {
     type Output = Matrix<T>;
 
@@ -55,7 +54,7 @@ impl<'a, 'b, T> Add<&'b Matrix<T>> for &'a Matrix<T>
 }
 
 impl<'a, 'b, T> Matrix<T>
-    where T: Real
+    where T: Scalar
 {
     #[cfg(feature = "native")]
     fn add_r(self: &Self, rhs: &'b Matrix<T>) -> Matrix<T>
@@ -88,7 +87,7 @@ impl<'a, 'b, T> Matrix<T>
 }
 
 impl<T> Matrix<T>
-    where T: Real
+    where T: Scalar
 {
     pub fn add_func(self: &Self, rhs: &Matrix<T>) -> Matrix<T>
     {
@@ -106,7 +105,7 @@ impl<T> Matrix<T>
 /// Add scalar to matrix
 ///
 impl<'a, 'b, T> Add<&'b T> for &'a Matrix<T>
-    where T: Add + Zero + Clone
+    where T: Scalar
 {
     type Output = Matrix<T>;
 
@@ -132,7 +131,7 @@ impl<'a, 'b, T> Add<&'b T> for &'a Matrix<T>
 /// Add scalar to matrix
 ///
 impl<T> Add<T> for Matrix<T>
-    where T: Add + Zero + Clone
+    where T: Scalar
 {
     type Output = Matrix<T>;
 

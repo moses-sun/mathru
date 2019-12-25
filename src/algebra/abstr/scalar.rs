@@ -1,13 +1,111 @@
 use std::fmt::Display;
 use std::fmt::Debug;
 use crate::algebra::abstr::cast::{ToPrimitive , FromPrimitive, NumCast};
-
+use core::ops::{Add, Div, Mul, Rem, Sub};
+use core::ops::{AddAssign, DivAssign, MulAssign, RemAssign, SubAssign};
 
 
 /// comparisons, basic numeric operations, and string conversion.
-pub trait Scalar: Sized + PartialEq<Self> + PartialOrd + Display + ToPrimitive + FromPrimitive + NumCast + Copy +
-Clone +
-Debug
+pub trait Scalar<Rhs = Self, Output = Self>: Sized + ScalarOps + PartialEq<Rhs> + PartialOrd + Display + ToPrimitive +
+FromPrimitive +
+NumCast +
+Copy +
+Clone + Debug
++ Zero + One
 {
 }
 
+macro_rules! impl_scalar
+{
+    ($($t:ty),+) =>
+    {
+    	$(
+        impl Scalar for $t
+        {
+
+        }
+        )*
+    };
+}
+
+impl_scalar!(u8, u16, u32, u64, u128, i8, i16, i32, i64, i128, f32, f64);
+
+
+/// The trait for types implementing basic numeric operations
+pub trait ScalarOps<Rhs = Self, Output = Self>:
+    Add<Rhs, Output = Output>
+    + Sub<Rhs, Output = Output>
+    + Mul<Rhs, Output = Output>
+    + Div<Rhs, Output = Output>
+    //+ Rem<Rhs, Output = Output>
+    + AddAssign<Rhs>
+    + SubAssign<Rhs>
+    + MulAssign<Rhs>
+    + DivAssign<Rhs>
+    //+ RemAssign<Rhs>
+{
+}
+
+
+macro_rules! impl_scalar_ops
+{
+    ($($t:ty),+) =>
+    {
+    	$(
+        impl ScalarOps for $t
+        {
+
+        }
+        )*
+    };
+}
+
+impl_scalar_ops!(u8, u16, u32, u64, u128, i8, i16, i32, i64, i128, f32, f64);
+
+pub trait One
+{
+    fn one() -> Self;
+}
+
+macro_rules! impl_one
+{
+    ($v:expr; $($t:ty),+) =>
+    {
+    	$(
+        impl One for $t
+        {
+            fn one() -> Self
+            {
+                return $v;
+            }
+        }
+        )*
+    };
+}
+
+impl_one!(1; u8, u16, u32, u64, u128, i8, i16, i32, i64, i128);
+impl_one!(1.0; f32, f64);
+
+pub trait Zero
+{
+    fn zero() -> Self;
+}
+
+macro_rules! impl_zero
+{
+    ($v:expr; $($t:ty),*) =>
+    {
+    	$(
+        impl Zero for $t
+        {
+            fn zero() -> Self
+            {
+                return $v;
+            }
+        }
+        )*
+    };
+}
+
+impl_zero!(0; u8, u16, u32, u64, u128, i8, i16, i32, i64, i128);
+impl_zero!(0.0; f32, f64);
