@@ -1,3 +1,5 @@
+//! Hypergeometrical functions
+
 use crate::special::gamma;
 
 

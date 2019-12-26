@@ -1,6 +1,6 @@
 //! Monoid
 use super::operator::{Operator, Addition, Multiplication};
-use super::semigroup::Semigroup;
+use super::semigroup::{Semigroup, SemigroupAdd, SemigroupMul};
 use super::identity::Identity;
 
 /// A Monoid is a triple $`(\mathbb{M}, \circ, e)`$, composed by a set $`\mathbb{M}`$ and a binary inner operation $`\circ`$
@@ -19,17 +19,107 @@ pub trait Monoid<O: Operator>: Semigroup<O> + Identity<O>
 
 }
 
-/// Blanked implementation
-impl<T> Monoid<Addition> for T
-    where T: Semigroup<Addition> + Identity<Addition>
+macro_rules! impl_monoid
+(
+    ($O:ty; $op: ident; $($T:ty),*) =>
+    {
+        $(
+            impl Monoid<$O> for $T
+            {
+            }
+        )*
+    }
+);
+
+impl_monoid!(Addition; add; u8, u16, u32, u64, u128, i8, i16, i32, i64, i128, f32, f64);
+impl_monoid!(Multiplication; mul; u8, u16, u32, u64, u128, i8, i16, i32, i64, i128, f32, f64);
+
+pub trait MonoidAdd: Monoid<Addition> + SemigroupAdd + Zero
 {
 
 }
 
-/// Blanket implementation
-impl<T> Monoid<Multiplication> for T
-    where T: Semigroup<Multiplication> + Identity<Multiplication>
+macro_rules! impl_monoidadd
+(
+    ($($T:ty),*) =>
+    {
+        $(
+            impl MonoidAdd for $T
+            {
+
+            }
+        )*
+    }
+);
+
+impl_monoidadd!(u8, u16, u32, u64, u128, i8, i16, i32, i64, i128, f32, f64);
+
+pub trait MonoidMul: Monoid<Multiplication> + SemigroupMul + One
 {
 
 }
+
+macro_rules! impl_monoidmul
+(
+    ($($T:ty),*) =>
+    {
+        $(
+            impl MonoidMul for $T
+            {
+
+            }
+        )*
+    }
+);
+
+impl_monoidmul!(u8, u16, u32, u64, u128, i8, i16, i32, i64, i128, f32, f64);
+
+
+pub trait One
+{
+    fn one() -> Self;
+}
+
+macro_rules! impl_one
+{
+    ($v:expr; $($t:ty),+) =>
+    {
+    	$(
+        impl One for $t
+        {
+            fn one() -> Self
+            {
+                return $v;
+            }
+        }
+        )*
+    };
+}
+
+impl_one!(1; u8, u16, u32, u64, u128, i8, i16, i32, i64, i128);
+impl_one!(1.0; f32, f64);
+
+pub trait Zero
+{
+    fn zero() -> Self;
+}
+
+macro_rules! impl_zero
+{
+    ($v:expr; $($t:ty),*) =>
+    {
+    	$(
+        impl Zero for $t
+        {
+            fn zero() -> Self
+            {
+                return $v;
+            }
+        }
+        )*
+    };
+}
+
+impl_zero!(0; u8, u16, u32, u64, u128, i8, i16, i32, i64, i128);
+impl_zero!(0.0; f32, f64);
 

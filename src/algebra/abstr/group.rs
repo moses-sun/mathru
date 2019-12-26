@@ -1,7 +1,8 @@
 //! Group
 use super::operator::{Operator, Addition, Multiplication};
-use super::monoid::Monoid;
+use super::monoid::{Monoid, MonoidAdd, MonoidMul};
 use super::Loop;
+use std::ops::{Sub, SubAssign, Neg, Div, DivAssign};
 
 /// A Group is a triple $`(\mathbb{M}, \circ, e)`$, composed by a set $`\mathbb{M}`$ and a binary inner operation $`\circ`$
 /// and the element $`e \in \mathbb{M}`$
@@ -21,7 +22,6 @@ pub trait Group<O: Operator>: Loop<O> + Monoid<O>
 
 }
 
-
 macro_rules! impl_group(
     ($T:ty, $($S:ty),*) =>
     {
@@ -33,5 +33,46 @@ macro_rules! impl_group(
     }
 );
 
-impl_group!(Addition, i8, i16, i32, i64, i128);
+impl_group!(Addition, i8, i16, i32, i64, i128, f32, f64);
 impl_group!(Multiplication, f32, f64);
+
+pub trait GroupAdd: Group<Addition> + MonoidAdd + Sub + SubAssign + Neg<Output = Self>
+{
+
+}
+
+macro_rules! impl_groupadd
+(
+    ($($T:ty),*) =>
+    {
+        $(
+            impl GroupAdd for $T
+            {
+
+            }
+        )*
+    }
+);
+
+impl_groupadd!(i8, i16, i32, i64, i128, f32, f64);
+
+
+pub trait GroupMul: Group<Multiplication> + MonoidMul + Div + DivAssign
+{
+
+}
+
+macro_rules! impl_groupmul
+(
+    ($($T:ty),*) =>
+    {
+        $(
+            impl GroupMul for $T
+            {
+
+            }
+        )*
+    }
+);
+
+impl_groupmul!(f32, f64);

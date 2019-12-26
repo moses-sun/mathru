@@ -3,6 +3,7 @@ use std::fmt::Debug;
 use crate::algebra::abstr::cast::{ToPrimitive , FromPrimitive, NumCast};
 use core::ops::{Add, Div, Mul, Rem, Sub};
 use core::ops::{AddAssign, DivAssign, MulAssign, RemAssign, SubAssign};
+use super::{Zero, One};
 
 
 /// comparisons, basic numeric operations, and string conversion.
@@ -62,50 +63,4 @@ macro_rules! impl_scalar_ops
 
 impl_scalar_ops!(u8, u16, u32, u64, u128, i8, i16, i32, i64, i128, f32, f64);
 
-pub trait One
-{
-    fn one() -> Self;
-}
 
-macro_rules! impl_one
-{
-    ($v:expr; $($t:ty),+) =>
-    {
-    	$(
-        impl One for $t
-        {
-            fn one() -> Self
-            {
-                return $v;
-            }
-        }
-        )*
-    };
-}
-
-impl_one!(1; u8, u16, u32, u64, u128, i8, i16, i32, i64, i128);
-impl_one!(1.0; f32, f64);
-
-pub trait Zero
-{
-    fn zero() -> Self;
-}
-
-macro_rules! impl_zero
-{
-    ($v:expr; $($t:ty),*) =>
-    {
-    	$(
-        impl Zero for $t
-        {
-            fn zero() -> Self
-            {
-                return $v;
-            }
-        }
-        )*
-    };
-}
-
-impl_zero!(0; u8, u16, u32, u64, u128, i8, i16, i32, i64, i128);
-impl_zero!(0.0; f32, f64);

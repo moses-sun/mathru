@@ -26,19 +26,20 @@ mod lattice;
 
 pub use self::operator::{Operator, Addition, Multiplication};
 pub use self::identity::Identity;
-pub use self::monoid::Monoid;
-pub use self::magma::Magma;
+pub use self::monoid::{Monoid, Zero, One};
+pub use self::magma::{Magma, MagmaAdd, MagmaMul};
+pub use self::group::{Group, GroupAdd, GroupMul};
 pub use self::loop_::Loop;
 pub use self::quasigroup::Quasigroup;
-pub use self::semigroup::Semigroup;
-pub use self::abeliangroup::AbelianGroup;
+pub use self::semigroup::{Semigroup, SemigroupAdd, SemigroupMul};
+pub use self::abeliangroup::{AbelianGroup, AbelianGroupAdd, AbelianGroupMul};
 pub use self::lattice::Lattice;
 
 //pub use self::semiring::{Semiring, Zero, One};
 pub use self::ring::{Ring, CommutativeRing};
 pub use self::sign::{Sign};
 pub use self::field::{Field};
-pub use self::scalar::{Scalar, ScalarOps, Zero, One};
+pub use self::scalar::{Scalar, ScalarOps};
 pub use self::natural::Natural;
 pub use self::integer::Integer;
 pub use self::real::Real;

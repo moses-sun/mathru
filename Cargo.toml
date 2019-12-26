@@ -14,6 +14,9 @@ documentation = "https://docs.rs/crate/mathru/latest/"
 autobenches = false
 edition = "2018"
 
+[badges]
+maintenance = { status = "actively-developed" }
+
 [package.metadata.docs.rs]
 rustdoc-args = [
     "--html-in-header",
@@ -32,7 +35,8 @@ native = []
 
 [dependencies]
 
-rand = "0.7.2"
+[dependencies.rand]
+version = "0.7.2"
 
 [dependencies.serde]
 version =  "1.0"

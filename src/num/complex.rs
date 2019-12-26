@@ -3,7 +3,7 @@ use std::fmt;
 use std::fmt::{Display};
 use crate::algebra::abstr::Complex as ComplexT;
 use crate::algebra::abstr::{Magma, AbelianGroup, Identity, Monoid, Loop, Quasigroup, Scalar, ScalarOps, Sign, Ring, Field, Addition,
-Multiplication, CommutativeRing, Zero, One};
+Multiplication, CommutativeRing, Zero, One, Semigroup, Group};
 use std::cmp::Ordering;
 use crate::algebra::abstr::cast::{ToPrimitive, FromPrimitive, NumCast};
 use crate::elementary::{Trigonometry, Exponential, Power, Hyperbolic};
@@ -1357,7 +1357,43 @@ impl<T> Ring for Complex<T>
 
 }
 
+impl<T> Monoid<Addition> for Complex<T>
+	where T: Monoid<Addition> + Scalar + Identity<Addition>
+{
+
+}
+
+impl<T> Monoid<Multiplication> for Complex<T>
+	where T: Monoid<Multiplication> + Scalar + Identity<Multiplication> + Identity<Addition>
+{
+
+}
+
+impl<T> Semigroup<Addition> for Complex<T>
+	where T: Semigroup<Addition> + Scalar
+{
+
+}
+
+impl<T> Semigroup<Multiplication> for Complex<T>
+	where T: Semigroup<Multiplication> + Scalar
+{
+
+}
+
 impl<T> Field for Complex<T>
 	where T: CommutativeRing<Addition, Multiplication> + AbelianGroup<Multiplication> + Mul<T, Output = T> + Add<T, Output = T> + Scalar
 {
+}
+
+impl<T> Group<Addition> for Complex<T>
+	where T: Monoid<Addition> + Loop<Addition> + Scalar
+{
+
+}
+
+impl<T> Group<Multiplication> for Complex<T>
+	where T: Monoid<Multiplication> + Loop<Multiplication> + Identity<Addition> + Scalar
+{
+
 }

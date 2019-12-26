@@ -1,3 +1,4 @@
+//! Gamma functions
 use std::f64::consts::PI;
 
 use crate::algebra::abstr::{Field, Scalar, Lattice, Sign};

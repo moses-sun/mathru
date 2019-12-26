@@ -19,15 +19,58 @@ pub trait Semigroup<O: Operator + Copy>: Magma<O>
     }
 }
 
-/// Blanket implementation
-impl<T> Semigroup<Addition> for T
-    where T: Magma<Addition>
+
+macro_rules! impl_semigroup
+(
+    ($O:ty; $op: ident; $($T:ty),*) =>
+    {
+        $(
+            impl Semigroup<$O> for $T
+            {
+            }
+        )*
+    }
+);
+
+impl_semigroup!(Addition; add; u8, u16, u32, u64, u128, i8, i16, i32, i64, i128, f32, f64);
+impl_semigroup!(Multiplication; mul; u8, u16, u32, u64, u128, i8, i16, i32, i64, i128, f32, f64);
+
+pub trait SemigroupAdd: Semigroup<Addition>
 {
+
 }
 
-/// Blanket implementation
-impl<T> Semigroup<Multiplication> for T
-    where T: Magma<Multiplication>
+macro_rules! impl_semigroupadd
+(
+    ($($T:ty),*) =>
+    {
+        $(
+            impl SemigroupAdd for $T
+            {
+
+            }
+        )*
+    }
+);
+
+impl_semigroupadd!(u8, u16, u32, u64, u128, i8, i16, i32, i64, i128, f32, f64);
+
+pub trait SemigroupMul: Semigroup<Multiplication>
 {
+
 }
 
+macro_rules! impl_semigroupmul
+(
+    ($($T:ty),*) =>
+    {
+        $(
+            impl SemigroupMul for $T
+            {
+
+            }
+        )*
+    }
+);
+
+impl_semigroupmul!(u8, u16, u32, u64, u128, i8, i16, i32, i64, i128, f32, f64);
