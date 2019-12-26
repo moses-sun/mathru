@@ -2,8 +2,15 @@ use std::ops::{Add, AddAssign, Sub, SubAssign, Mul, MulAssign, Div, DivAssign, N
 use std::fmt;
 use std::fmt::{Display};
 use crate::algebra::abstr::Complex as ComplexT;
-use crate::algebra::abstr::{Magma, AbelianGroup, Identity, Monoid, Loop, Quasigroup, Scalar, ScalarOps, Sign, Ring, Field, Addition,
-Multiplication, CommutativeRing, Zero, One, Semigroup, Group};
+use crate::algebra::abstr::{Magma, MagmaAdd, MagmaMul} ;
+use crate::algebra::abstr::{Monoid, MonoidAdd, MonoidMul};
+use crate::algebra::abstr::{Group, GroupAdd, GroupMul};
+use crate::algebra::abstr::{AbelianGroup, AbelianGroupAdd, AbelianGroupMul};
+use crate::algebra::abstr::{Semigroup, SemigroupAdd, SemigroupMul};
+use crate::algebra::abstr::{Identity, Quasigroup, Scalar, ScalarOps, Sign, Ring,
+Field,
+Addition,
+Multiplication, CommutativeRing, Zero, One, Loop};
 use std::cmp::Ordering;
 use crate::algebra::abstr::cast::{ToPrimitive, FromPrimitive, NumCast};
 use crate::elementary::{Trigonometry, Exponential, Power, Hyperbolic};
@@ -1327,8 +1334,19 @@ impl<T> AbelianGroup<Addition> for Complex<T>
 
 }
 
+impl<T> AbelianGroupAdd for Complex<T>
+	where T: AbelianGroupAdd + Scalar
+{
+
+}
+
 impl<T> AbelianGroup<Multiplication> for Complex<T>
 	where T: AbelianGroup<Multiplication> + Mul<T, Output = T> + Identity<Addition> + Scalar
+{
+
+}
+impl<T> AbelianGroupMul for Complex<T>
+	where T: AbelianGroupMul + Scalar + Identity<Addition> + Neg<Output = T>
 {
 
 }
@@ -1352,7 +1370,7 @@ impl<T> CommutativeRing for Complex<T>
 }
 
 impl<T> Ring for Complex<T>
-	where T: AbelianGroup<Addition> + Monoid<Multiplication> + Add<T, Output = T> + Scalar
+	where T: AbelianGroupAdd + MonoidMul + Scalar
 {
 
 }
@@ -1363,8 +1381,19 @@ impl<T> Monoid<Addition> for Complex<T>
 
 }
 
+impl<T> MonoidAdd for Complex<T>
+	where T: MonoidAdd + Scalar
+{
+
+}
+
 impl<T> Monoid<Multiplication> for Complex<T>
 	where T: Monoid<Multiplication> + Scalar + Identity<Multiplication> + Identity<Addition>
+{
+
+}
+impl<T> MonoidMul for Complex<T>
+	where T: MonoidMul + Scalar + Identity<Addition>
 {
 
 }
@@ -1375,14 +1404,26 @@ impl<T> Semigroup<Addition> for Complex<T>
 
 }
 
+impl<T> SemigroupAdd for Complex<T>
+	where T: SemigroupAdd + Scalar
+{
+
+}
+
 impl<T> Semigroup<Multiplication> for Complex<T>
 	where T: Semigroup<Multiplication> + Scalar
 {
 
 }
 
+impl<T> SemigroupMul for Complex<T>
+	where T: SemigroupMul + Scalar
+{
+
+}
+
 impl<T> Field for Complex<T>
-	where T: CommutativeRing<Addition, Multiplication> + AbelianGroup<Multiplication> + Mul<T, Output = T> + Add<T, Output = T> + Scalar
+	where T: CommutativeRing + AbelianGroupMul + Mul<T, Output = T> + Add<T, Output = T> + Scalar
 {
 }
 
@@ -1392,8 +1433,20 @@ impl<T> Group<Addition> for Complex<T>
 
 }
 
+impl<T> GroupAdd for Complex<T>
+	where T: GroupAdd + Scalar
+{
+
+}
+
 impl<T> Group<Multiplication> for Complex<T>
 	where T: Monoid<Multiplication> + Loop<Multiplication> + Identity<Addition> + Scalar
+{
+
+}
+
+impl<T> GroupMul for Complex<T>
+	where T: GroupMul + Scalar + Identity<Addition> + Neg<Output = T>
 {
 
 }

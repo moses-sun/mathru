@@ -1,6 +1,5 @@
-use super::operator::{Operator, Addition, Multiplication};
-use super::monoid::{Monoid};
-use super::abeliangroup::AbelianGroup;
+use super::monoid::{MonoidMul};
+use super::abeliangroup::{AbelianGroupAdd};
 
 /// Ring
 ///
@@ -20,7 +19,7 @@ use super::abeliangroup::AbelianGroup;
 /// - $`(b + c) * a = (b * a) + (c * a), \forall a, b, c \in \mathbb{R}`$ (right distributivity)
 ///
 /// <a href="https://en.wikipedia.org/wiki/Ring_(mathematics)">https://en.wikipedia.org/wiki/Ring_(mathematics)</a>
-pub trait Ring<A: Operator = Addition, M: Operator = Multiplication>: AbelianGroup<A> + Monoid<M>
+pub trait Ring: AbelianGroupAdd + MonoidMul
 {
 
 }
@@ -41,7 +40,7 @@ macro_rules! impl_ring
 impl_ring!(i8, i16, i32, i64, i128, f32, f64);
 
 
-pub trait CommutativeRing<A: Operator = Addition, M: Operator = Multiplication>: Ring<A, M>
+pub trait CommutativeRing: Ring
 {
 
 }

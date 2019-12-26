@@ -26,7 +26,7 @@ mod lattice;
 
 pub use self::operator::{Operator, Addition, Multiplication};
 pub use self::identity::Identity;
-pub use self::monoid::{Monoid, Zero, One};
+pub use self::monoid::{Monoid, MonoidAdd, MonoidMul, Zero, One};
 pub use self::magma::{Magma, MagmaAdd, MagmaMul};
 pub use self::group::{Group, GroupAdd, GroupMul};
 pub use self::loop_::Loop;

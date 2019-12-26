@@ -1,6 +1,6 @@
 /// Field
 
-use crate::algebra::abstr::{Operator, Addition, Multiplication, AbelianGroup, CommutativeRing};
+use crate::algebra::abstr::{AbelianGroupMul, CommutativeRing};
 use std::{f32, f64};
 
 /// Field
@@ -8,8 +8,8 @@ use std::{f32, f64};
 /// A field is a commutative ring, and an Abelian group under both operators.
 ///
 ///
-pub trait Field<A: Operator = Addition, M: Operator = Multiplication>:
-    CommutativeRing<A, M> + AbelianGroup<M>
+pub trait Field:
+    CommutativeRing + AbelianGroupMul
 {
 
 }
