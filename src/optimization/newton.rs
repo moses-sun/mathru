@@ -98,7 +98,6 @@ impl<T> Newton<T>
                     let grad_d_k_temp: T = grad_x_n.dotp(&d_k_temp);
                     if grad_d_k_temp <= -self.rho * grad_x_n_abs
                     {
-                        println!("IN");
                         d_k = d_k_temp;
                     }
                     else
@@ -115,11 +114,9 @@ impl<T> Newton<T>
             //Backtracking line search
             //Armijo–Goldstein condition
             let mut r: Vector<T> = &x_n + &(&d_k * &alpha);
-            println!("d_k: {} x_n: {}, r: {}", d_k, x_n, r);
             let mut f_r: T = *func.eval(&r).get(0);
             let f_x_n: T = *func.eval(&x_n).get(0);
             let temp: T = grad_x_n.dotp(&d_k);
-            println!("{}", d_k);
             while f_r > f_x_n + temp * (self.sigma * alpha)
             {
                 alpha = alpha / T::from_f64(2.0).unwrap();
@@ -128,12 +125,10 @@ impl<T> Newton<T>
             }
 
             //Make step
-            println!("{}, {}", d_k, alpha);
             x_n = x_n + d_k * alpha;
 
         }
 
         return OptimResult::new(x_n);
     }
-
 }
