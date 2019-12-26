@@ -130,32 +130,42 @@ mod matrix
         let m: usize = 4;
         let i: usize = 1;
         let j: usize = 2;
-        let theta : f32 = 1.0;
-        let c : f32 = theta.cos();
-        let s : f32 = theta.sin();
+        let theta: f32 = 1.0;
+        let c: f32 = theta.cos();
+        let s: f32 = theta.sin();
 
         let givens : Matrix<f32> = Matrix::givens(m, i, j, c, s);
 
         assert_eq!(*(givens.get(0, 0)), 1.0);
-        assert_eq!(*(givens.get(i, i)), theta.cos());
-        assert_eq!(*(givens.get(j, j)), theta.cos());
-        assert_eq!(*(givens.get(j, i)), -theta.sin());
-        assert_eq!(*(givens.get(i, j)), theta.sin());
+        assert_eq!(*(givens.get(i, i)), c);
+        assert_eq!(*(givens.get(j, j)), c);
+        assert_eq!(*(givens.get(j, i)), -s);
+        assert_eq!(*(givens.get(i, j)), s);
+    }
+
+    #[test]
+    fn givens2()
+    {
+        let (c, s): (f64, f64) = Matrix::givens_cosine_sine_pair(3.0, 5.0);
+
+        assert_eq!(-0.5144957554275266, c);
+        assert_eq!(0.8574929257125443, s);
     }
 
     #[test]
     fn mul3()
     {
-        let m : usize = 4;
-        let i : usize = 1;
-        let j : usize = 2;
-        let theta : f64 = 1.0;
-        let c : f64 = theta.cos();
-        let s : f64 = theta.sin();
-        let givens : Matrix<f64> = Matrix::givens(m, i, j, c, s);
-        let givens_t : Matrix<f64> = givens.clone().transpose();
-        let res_ref : Matrix<f64> = Matrix::one(m);
-        let res : Matrix<f64> = givens_t * givens;
+        let m: usize = 4;
+        let i: usize = 1;
+        let j: usize = 2;
+        let theta: f64 = 1.0;
+        let c: f64 = theta.cos();
+        let s: f64 = theta.sin();
+        let givens: Matrix<f64> = Matrix::givens(m, i, j, c, s);
+        let givens_t: Matrix<f64> = givens.clone().transpose();
+        let res_ref: Matrix<f64> = Matrix::one(m);
+        let res: Matrix<f64> = givens_t * givens;
+
         assert_eq!(res_ref, res);
     }
 
