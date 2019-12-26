@@ -65,8 +65,8 @@ mod vector
      #[test]
     fn partial_eq1()
     {
-        let lhs: Vector<u32> = Vector::new_column(2, vec![1, 2]);
-        let rhs: Vector<u32> = Vector::new_column(2, vec![1, 2]);
+        let lhs: Vector<f32> = Vector::new_column(2, vec![1.0, 2.0]);
+        let rhs: Vector<f32> = Vector::new_column(2, vec![1.0, 2.0]);
         assert_eq!(lhs, rhs);
     }
 

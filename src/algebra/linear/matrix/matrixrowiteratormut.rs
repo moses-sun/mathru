@@ -1,5 +1,5 @@
 use std::slice::IterMut;
-use crate::algebra::abstr::Real;
+use crate::algebra::abstr::{Field, Scalar};
 
 pub struct MatrixRowIteratorMut<'a, T>
 {
@@ -8,7 +8,7 @@ pub struct MatrixRowIteratorMut<'a, T>
 }
 
 impl<'a, T> Iterator for MatrixRowIteratorMut<'a, T>
-    where T: Real
+    where T: Field + Scalar
 {
     type Item = T;
 

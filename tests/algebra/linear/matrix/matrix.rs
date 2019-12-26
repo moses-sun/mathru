@@ -124,10 +124,6 @@ mod matrix
         }
     }
 
-
-
-
-
     #[test]
     fn givens()
     {

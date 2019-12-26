@@ -1,9 +1,8 @@
 /// Matrix
 
 use std::clone::Clone;
-use crate::algebra::abstr::{Scalar, Identity, Addition, Multiplication};
+use crate::algebra::abstr::{Scalar, Identity, Addition, Multiplication, Field};
 use crate::algebra::linear::Vector;
-use crate::algebra::abstr::Real;
 use std::fmt::Display;
 use std::fmt;
 use rand;
@@ -13,6 +12,7 @@ use super::{MatrixIntoIterator, MatrixIterator, MatrixIteratorMut, MatrixRowIter
 MatrixColumnIteratorMut};
 use std::cmp::min;
 use crate::algebra::linear::matrix::{Substitute};
+use crate::elementary::Power;
 
 /// Macro to construct matrices
 ///
@@ -66,7 +66,7 @@ pub struct Matrix<T>
 }
 
 impl<T> IntoIterator for Matrix<T>
-    where T: Real
+    where T: Field + Scalar
 {
     type Item = T;
     type IntoIter = MatrixIntoIterator<T>;
@@ -153,7 +153,7 @@ impl<T> Matrix<T>
 
 
 //impl<T> Matrix<T>
- //   where T: Real
+ //   where T: Field + Scalar
 //{
     /// Returns the transposed matrix
     ///
@@ -186,7 +186,7 @@ impl<T> Matrix<T>
 //}
 
 impl<T> Matrix<T>
-    where T: Scalar
+    where T: Field + Scalar
 {
 
     pub fn gcd(mut m: usize, mut n: usize) -> usize
@@ -316,7 +316,7 @@ impl<T> Matrix<T>
 }
 
 impl<T> Substitute<Vector<T>> for Matrix<T>
-    where T: Real
+    where T: Field + Scalar
 {
 
     fn substitute_forward(self: &Self, b: Vector<T>) -> Vector<T>
@@ -331,7 +331,7 @@ impl<T> Substitute<Vector<T>> for Matrix<T>
 }
 
 impl<T> Substitute<Matrix<T>> for Matrix<T>
-    where T: Real
+    where T: Field + Scalar
 {
 
     fn substitute_forward(self: &Self, b: Matrix<T>) -> Matrix<T>
@@ -346,7 +346,7 @@ impl<T> Substitute<Matrix<T>> for Matrix<T>
 }
 
 impl<T> Matrix<T>
-    where T: Real
+    where T: Field + Scalar
 {
 
     #[cfg(feature = "native")]
@@ -453,7 +453,7 @@ impl<T> Matrix<T>
 
 
 impl<T> Matrix<T>
-    where T: Real
+    where T: Field + Scalar + Power
 {
 
     /// Calculates the determinant
@@ -533,7 +533,7 @@ impl<T> Matrix<T>
     /// assert_eq!(-6.0, tr);
     /// ```
     pub fn trace(self: &Self) -> T
-        where T: Real
+        where T: Field + Scalar
     {
         let (m, n): (usize, usize) = self.dim();
         if m != n
@@ -573,7 +573,7 @@ impl<T> Matrix<T>
 
 
 impl<T> Matrix<T>
-    where T: Real
+    where T: Field + Scalar
 {
     //
     // returns column vector
@@ -650,7 +650,7 @@ impl<T> Matrix<T>
 }
 
 impl<T> Matrix<T>
-    where T: Real
+    where T: Field + Scalar + Power
 {
 
     ///
@@ -675,7 +675,7 @@ impl<T> Matrix<T>
     /// Givens rotation computation
     /// Determines cosine-sine pair (c,s) so that [c s;-s c]'*[a;b] = [r;0]
     /// GVL4: Algorithm 5.1.3
-    pub(super) fn givens_cosine_sine_pair(a: T,b: T) -> (T, T)
+    pub fn givens_cosine_sine_pair(a: T,b: T) -> (T, T)
     {
         let exponent: T = T::from_f64(2.0).unwrap();
         let exponent_sqrt: T = T::from_f64(0.5).unwrap();
@@ -711,7 +711,7 @@ impl<T> Matrix<T>
 
 
 impl<T> Matrix<T>
-    where T: Real
+    where T: Field + Scalar + Power
 {
     /// Returns the householder matrix
     ///
@@ -793,7 +793,7 @@ impl<T> Matrix<T>
 }
 
 impl<T> Matrix<T>
-    where T: Real
+    where T: Field + Scalar + Power
 {
     /// Computes the singular value decomposition
     ///
@@ -1014,7 +1014,7 @@ impl<T> Matrix<T>
 }
 
 impl<T> Matrix<T>
-    where T: Real
+    where T: Field + Scalar
 {
     /// Returns a slice of the matrix
     ///
@@ -1265,7 +1265,7 @@ impl<T> Matrix<T>
 
 
 impl<T> Matrix<T>
-    where T: Scalar
+    where T: Field + Scalar
 {
     /// Returns the zero matrix(additive neutral element)
     ///
@@ -1318,7 +1318,7 @@ impl<T> Identity<Addition> for Matrix<T>
 
 
 impl<T> Matrix<T>
-    where T: Identity<Addition> + Identity<Multiplication> + Clone
+    where T: Field + Scalar
 {
     /// Returns the eye matrix(multiplicative neutral element)
     ///
@@ -1361,7 +1361,7 @@ impl<T> Matrix<T>
 }
 
 impl<T> Matrix<T>
-    where T: Real
+    where T: Field + Scalar + Power
 {
     /// Calculates the pseudo inverse matrix
     ///
@@ -1430,7 +1430,7 @@ impl<T> Matrix<T>
 }
 
 impl<T> Matrix<T>
-    where T: Real
+    where T: Field + Scalar
 {
     /// Compares to matrices
     ///

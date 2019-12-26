@@ -1,4 +1,4 @@
-use crate::algebra::abstr::Real;
+use crate::algebra::abstr::{Field, Scalar};
 use crate::algebra::linear::matrix::MatrixIterator;
 
 pub struct VectorIterator<'a, T>
@@ -7,7 +7,7 @@ pub struct VectorIterator<'a, T>
 }
 
 impl<'a, T> Iterator for VectorIterator<'a, T>
-    where T: Real
+    where T: Field + Scalar
 {
     type Item = &'a T;
 

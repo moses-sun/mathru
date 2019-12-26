@@ -36,7 +36,7 @@ macro_rules! impl_group(
 impl_group!(Addition, i8, i16, i32, i64, i128, f32, f64);
 impl_group!(Multiplication, f32, f64);
 
-pub trait GroupAdd: Group<Addition> + MonoidAdd + Sub + SubAssign + Neg<Output = Self>
+pub trait GroupAdd: Group<Addition> + MonoidAdd + Sub<Self, Output = Self> + SubAssign<Self> + Neg<Output = Self>
 {
 
 }
@@ -57,7 +57,7 @@ macro_rules! impl_groupadd
 impl_groupadd!(i8, i16, i32, i64, i128, f32, f64);
 
 
-pub trait GroupMul: Group<Multiplication> + MonoidMul + Div + DivAssign
+pub trait GroupMul: Group<Multiplication> + MonoidMul + Div<Self, Output = Self> + DivAssign<Self>
 {
 
 }

@@ -7,7 +7,7 @@ use crate::algebra::abstr::{Monoid, MonoidAdd, MonoidMul};
 use crate::algebra::abstr::{Group, GroupAdd, GroupMul};
 use crate::algebra::abstr::{AbelianGroup, AbelianGroupAdd, AbelianGroupMul};
 use crate::algebra::abstr::{Semigroup, SemigroupAdd, SemigroupMul};
-use crate::algebra::abstr::{Identity, Quasigroup, Scalar, ScalarOps, Sign, Ring,
+use crate::algebra::abstr::{Identity, Quasigroup, Scalar, Sign, Ring,
 Field,
 Addition,
 Multiplication, CommutativeRing, Zero, One, Loop};
@@ -108,7 +108,7 @@ impl<T> PartialOrd for Complex<T>
 }
 
 impl<T> ComplexT for Complex<T>
-	where T: Scalar + Neg<Output = T> + Trigonometry + Hyperbolic + Power + Exponential + Sign
+	where T: Field + Scalar + Trigonometry + Hyperbolic + Power + Exponential + Sign
 {
 	/// Returns the complex conjuagte
 	/// conj(self) = Re(self) - i Im(self)
@@ -294,7 +294,7 @@ impl<T> Blas for Complex<T>
 //}
 
 impl<T> Sign for Complex<T>
-	where T: Scalar + Power + Neg<Output = T>
+	where T: Field + Scalar + Power
 {
 	fn sign(self: &Self) -> Self
 	{
@@ -344,13 +344,7 @@ impl<T> Sign for Complex<T>
 //}
 
 impl<T> Scalar for Complex<T>
-	where T: Scalar + Neg<Output = T>
-{
-
-}
-
-impl<T> ScalarOps for Complex<T>
-	where T: Scalar + Neg<Output = T>
+	where T: Field + Scalar + Power
 {
 
 }
@@ -436,7 +430,7 @@ impl<T> AddAssign for Complex<T>
 
 /// Returns 1 + i0
 impl<T> One for Complex<T>
-    where T: Scalar
+    where T: Field + Scalar
 {
     fn one() -> Self
     {
@@ -529,7 +523,7 @@ impl<T> SubAssign for Complex<T>
 
 /// Divides two complex numbers
 impl<T> Div for Complex<T>
-    where T: Scalar + Neg<Output = T>
+    where T: Field + Scalar
 {
     type Output = Complex<T>;
 
@@ -540,7 +534,7 @@ impl<T> Div for Complex<T>
 }
 
 impl<'a, 'b, T> Div<&'b Complex<T>> for &'a Complex<T>
-    where T: Scalar + Neg<Output = T>
+    where T: Field + Scalar
 {
     type Output = Complex<T>;
 
@@ -560,7 +554,7 @@ impl<'a, 'b, T> Div<&'b Complex<T>> for &'a Complex<T>
 
 
 impl<T> DivAssign for Complex<T>
-    where T: Scalar + Neg<Output = T>
+    where T: Field + Scalar
 {
     fn div_assign<'a>(self: &'a mut Self, other: Self)
     {
@@ -574,14 +568,15 @@ macro_rules! impl_to_primitive
     {
         fn $to(&self) -> Option<$ty>
         {
-            if self.im == T::zero()
-            {
-            	self.re.$to()
-            }
-            else
-            {
-            	None
-            }
+        	return self.re.$to();
+//            if self.im == T::zero()
+//            {
+//            	self.re.$to()
+//            }
+//            else
+//            {
+//            	None
+//            }
         }
     }
 }
@@ -605,7 +600,7 @@ impl<T: ToPrimitive> ToPrimitive for Complex<T>
 }
 
 impl<T> Exponential for Complex<T>
-	where T: Scalar + Exponential + Trigonometry + Sign + Power + Hyperbolic
+	where T: Field + Scalar + Exponential + Trigonometry + Sign + Power + Hyperbolic
 {
 	/// Returns the euler number represented as a complex number
 	fn e() -> Self
@@ -664,7 +659,7 @@ impl<T> Exponential for Complex<T>
 }
 
 impl<T> Trigonometry for Complex<T>
-	where T: Scalar + Power + Exponential + Trigonometry + Sign + Hyperbolic
+	where T: Field + Scalar + Power + Exponential + Trigonometry + Sign + Hyperbolic
 {
 	/// Returns the mathematic constant PI, represented as a complex number
 	fn pi() -> Self
@@ -1062,7 +1057,7 @@ impl<T> Trigonometry for Complex<T>
 }
 
 impl<T> Power for Complex<T>
-	where T: Scalar + Neg<Output = T> + Trigonometry + Exponential + Power + Hyperbolic + Sign
+	where T: Field + Scalar + Trigonometry + Exponential + Power + Hyperbolic + Sign
 {
 
 	/// Power
@@ -1098,7 +1093,7 @@ impl<T> Power for Complex<T>
 }
 
 impl<T> Hyperbolic for Complex<T>
-	where T: Scalar + Trigonometry + Hyperbolic + Power + Exponential + Neg<Output = T> + Sign
+	where T: Field + Scalar + Trigonometry + Hyperbolic + Power + Exponential + Sign
 {
 	/// Hyperbolic sine
 	fn sinh(self: &Self) -> Self
@@ -1202,7 +1197,7 @@ impl<T> Hyperbolic for Complex<T>
 
 /// A generic trait for converting a number to a value.
 impl<T> FromPrimitive for Complex<T>
-	where T: FromPrimitive + NumCast + Scalar
+	where T: Field + Scalar
 {
 
 	/// Convert an `i64` to return an optional value of this type. If the
@@ -1264,7 +1259,7 @@ impl<T> FromPrimitive for Complex<T>
 
 /// An interface for casting between machine scalars.
 impl<T> NumCast for Complex<T>
-	where T: Scalar
+	where T: Field + Scalar
 {
 	/// Creates a number from another value that can be converted into
 	/// a primitive via the `ToPrimitive` trait.
@@ -1299,7 +1294,7 @@ impl<T> Identity<Multiplication> for Complex<T>
 }
 
 impl<T> Magma<Addition> for Complex<T>
-	where T: Magma<Addition> + Scalar
+	where T: Field + Scalar
 {
 	fn operate(self, rhs: Self) -> Self
     {
@@ -1307,8 +1302,13 @@ impl<T> Magma<Addition> for Complex<T>
 	}
 }
 
+impl<T> MagmaAdd for Complex<T>
+	where T: Field + Scalar
+{
+}
+
 impl<T> Magma<Multiplication> for Complex<T>
-	where T: Scalar
+	where T: Field + Scalar
 {
 	fn operate(self, rhs: Self) -> Self
   	{
@@ -1316,137 +1316,143 @@ impl<T> Magma<Multiplication> for Complex<T>
    	}
 }
 
+impl<T> MagmaMul for Complex<T>
+	where T: Field + Scalar
+{
+
+}
+
 impl<T> Quasigroup<Addition> for Complex<T>
-	where  T: Quasigroup<Addition> + Scalar
+	where  T: Field + Scalar
 {
 
 }
 
 impl<T> Quasigroup<Multiplication> for Complex<T>
-	where T: Quasigroup<Multiplication> + Identity<Addition> + Scalar
+	where T: Field + Scalar
 {
 
 }
 
 impl<T> AbelianGroup<Addition> for Complex<T>
-	where T: AbelianGroup<Addition> + Add<T, Output = T> + Scalar
+	where T: Field + Scalar
 {
 
 }
 
 impl<T> AbelianGroupAdd for Complex<T>
-	where T: AbelianGroupAdd + Scalar
+	where T: Field + Scalar
 {
 
 }
 
 impl<T> AbelianGroup<Multiplication> for Complex<T>
-	where T: AbelianGroup<Multiplication> + Mul<T, Output = T> + Identity<Addition> + Scalar
+	where T: Field + Scalar
 {
 
 }
 impl<T> AbelianGroupMul for Complex<T>
-	where T: AbelianGroupMul + Scalar + Identity<Addition> + Neg<Output = T>
+	where T: Field + Scalar
 {
 
 }
 
 impl<T> Loop<Addition> for Complex<T>
-	where T: Loop<Addition> + Add<T, Output = T> + Scalar
+	where T: Field + Scalar
 {
 
 }
 
 impl<T> Loop<Multiplication> for Complex<T>
-	where T: Loop<Multiplication> + Mul<T, Output = T> + Identity<Addition> + Scalar
+	where T: Field + Scalar
 {
 
 }
 
 impl<T> CommutativeRing for Complex<T>
-	where T: Ring + Add<T, Output = T> + Scalar
+	where T: Field + Scalar
 {
 
 }
 
 impl<T> Ring for Complex<T>
-	where T: AbelianGroupAdd + MonoidMul + Scalar
+	where T: Field + Scalar
 {
 
 }
 
 impl<T> Monoid<Addition> for Complex<T>
-	where T: Monoid<Addition> + Scalar + Identity<Addition>
+	where T: Field + Scalar
 {
 
 }
 
 impl<T> MonoidAdd for Complex<T>
-	where T: MonoidAdd + Scalar
+	where T: Field + Scalar
 {
 
 }
 
 impl<T> Monoid<Multiplication> for Complex<T>
-	where T: Monoid<Multiplication> + Scalar + Identity<Multiplication> + Identity<Addition>
+	where T: Field + Scalar
 {
 
 }
 impl<T> MonoidMul for Complex<T>
-	where T: MonoidMul + Scalar + Identity<Addition>
+	where T: Field + Scalar
 {
 
 }
 
 impl<T> Semigroup<Addition> for Complex<T>
-	where T: Semigroup<Addition> + Scalar
+	where T: Field + Scalar
 {
 
 }
 
 impl<T> SemigroupAdd for Complex<T>
-	where T: SemigroupAdd + Scalar
+	where T: Field + Scalar
 {
 
 }
 
 impl<T> Semigroup<Multiplication> for Complex<T>
-	where T: Semigroup<Multiplication> + Scalar
+	where T: Field + Scalar
 {
 
 }
 
 impl<T> SemigroupMul for Complex<T>
-	where T: SemigroupMul + Scalar
+	where T: Field + Scalar
 {
 
 }
 
 impl<T> Field for Complex<T>
-	where T: CommutativeRing + AbelianGroupMul + Mul<T, Output = T> + Add<T, Output = T> + Scalar
+	where T: Field + Scalar
 {
 }
 
 impl<T> Group<Addition> for Complex<T>
-	where T: Monoid<Addition> + Loop<Addition> + Scalar
+	where T: Field + Scalar
 {
 
 }
 
 impl<T> GroupAdd for Complex<T>
-	where T: GroupAdd + Scalar
+	where T: Field + Scalar
 {
 
 }
 
 impl<T> Group<Multiplication> for Complex<T>
-	where T: Monoid<Multiplication> + Loop<Multiplication> + Identity<Addition> + Scalar
+	where T: Field + Scalar
 {
 
 }
 
 impl<T> GroupMul for Complex<T>
-	where T: GroupMul + Scalar + Identity<Addition> + Neg<Output = T>
+	where T: Field + Scalar
 {
 
 }

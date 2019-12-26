@@ -1,10 +1,10 @@
 use crate::algebra::linear::{Matrix};
-use crate::algebra::abstr::{Real};
+use crate::algebra::abstr::{Field, Scalar};
 use std::ops::{Div};
 
 //Divides all  matrix elements with a scalar
 impl<T> Div<T> for Matrix<T>
-    where T: Real
+    where T: Field + Scalar
 {
     type Output = Matrix<T>;
 
@@ -28,7 +28,7 @@ impl<T> Div<T> for Matrix<T>
 }
 
 impl<'a, 'b, T> Div<&'b T> for &'a Matrix<T>
-    where T: Real
+    where T: Field + Scalar
 {
     type Output = Matrix<T>;
 

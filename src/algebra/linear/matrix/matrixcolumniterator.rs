@@ -1,5 +1,5 @@
 use std::slice::Iter;
-use crate::algebra::abstr::Real;
+use crate::algebra::abstr::{Field, Scalar};
 
 pub struct MatrixColumnIterator<'a, T>
 {
@@ -8,7 +8,7 @@ pub struct MatrixColumnIterator<'a, T>
 }
 
 impl<'a, T> Iterator for MatrixColumnIterator<'a, T>
-    where T: Real
+    where T: Field + Scalar
 {
     type Item = T;
 

@@ -1,5 +1,5 @@
 //! Semigroup
-use super::magma::Magma;
+use super::magma::{Magma, MagmaAdd, MagmaMul};
 use super::operator::{Operator, Addition, Multiplication};
 
 /// A Semigroup is a pair $`(\mathbb{S}, \circ)`$, composed by a set $`\mathbb{S}`$ and a binary inner operation $`\circ`$:
@@ -35,7 +35,7 @@ macro_rules! impl_semigroup
 impl_semigroup!(Addition; add; u8, u16, u32, u64, u128, i8, i16, i32, i64, i128, f32, f64);
 impl_semigroup!(Multiplication; mul; u8, u16, u32, u64, u128, i8, i16, i32, i64, i128, f32, f64);
 
-pub trait SemigroupAdd: Semigroup<Addition>
+pub trait SemigroupAdd: Semigroup<Addition> + MagmaAdd
 {
 
 }
@@ -55,7 +55,7 @@ macro_rules! impl_semigroupadd
 
 impl_semigroupadd!(u8, u16, u32, u64, u128, i8, i16, i32, i64, i128, f32, f64);
 
-pub trait SemigroupMul: Semigroup<Multiplication>
+pub trait SemigroupMul: Semigroup<Multiplication> + MagmaMul
 {
 
 }

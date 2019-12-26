@@ -1,7 +1,8 @@
 use crate::algebra::linear::{Matrix};
-use crate::algebra::abstr::{Real};
+use crate::algebra::abstr::{Field, Scalar};
 use std::clone::Clone;
 use serde::{Deserialize, Serialize};
+use crate::elementary::Power;
 
 #[cfg(feature = "blaslapack")]
 use crate::algebra::abstr::{Zero};
@@ -51,7 +52,7 @@ impl<T> QRDec<T>
 }
 
 impl<T> Matrix<T>
-    where T: Real
+    where T: Field + Scalar + Power
 {
     /// QR Decomposition with Givens rotations
     ///

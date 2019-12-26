@@ -34,7 +34,7 @@ macro_rules! impl_sign
  				match *self
  				{
                     n if n > $zero => $pos,
-                    $zero => $zero,
+                    n if n >= $zero && n <= $zero => $zero, //float comparing is not allowed anymore
                     _ => $neg,
                 }
 			}

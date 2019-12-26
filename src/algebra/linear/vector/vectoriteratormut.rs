@@ -1,5 +1,5 @@
 use crate::algebra::linear::matrix::MatrixIteratorMut;
-use crate::algebra::abstr::Real;
+use crate::algebra::abstr::{Field, Scalar};
 
 pub struct VectorIteratorMut<'a, T>
 {
@@ -7,7 +7,7 @@ pub struct VectorIteratorMut<'a, T>
 }
 
 impl<'a, T> Iterator for VectorIteratorMut<'a, T>
-    where T: Real
+    where T: Field + Scalar
 {
     type Item = T;
 

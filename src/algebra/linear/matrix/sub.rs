@@ -1,9 +1,9 @@
 use crate::algebra::linear::{Matrix};
-use crate::algebra::abstr::{Real};
+use crate::algebra::abstr::{Scalar, Field};
 use std::ops::{Sub};
 
 impl <T> Sub for Matrix<T>
-    where T: Real
+    where T: Field + Scalar
 {
     type Output = Matrix<T>;
 
@@ -35,7 +35,7 @@ impl <T> Sub for Matrix<T>
 
 
 impl<'a, 'b, T> Sub<&'b Matrix<T>> for &'a Matrix<T>
-    where T: Real
+    where T: Field + Scalar
 {
     type Output = Matrix<T>;
 
@@ -47,7 +47,7 @@ impl<'a, 'b, T> Sub<&'b Matrix<T>> for &'a Matrix<T>
 }
 
 impl<'a, 'b, T> Matrix<T>
-    where T: Real
+    where T: Field + Scalar
 {
     #[cfg(feature = "native")]
     fn sub_r(self: &Self, rhs: &'b Matrix<T>) -> Matrix<T>
@@ -85,7 +85,7 @@ impl<'a, 'b, T> Matrix<T>
 /// Subtracts scalar from all matrix elements
 ///
 impl<'a, 'b, T> Sub<&'b T> for &'a Matrix<T>
-    where T: Real
+    where T: Field + Scalar
 {
     type Output = Matrix<T>;
 
@@ -108,7 +108,7 @@ impl<'a, 'b, T> Sub<&'b T> for &'a Matrix<T>
 }
 
 impl<T> Sub<T> for Matrix<T>
-    where T: Real
+    where T: Field + Scalar
 {
     type Output = Matrix<T>;
 

@@ -1,12 +1,10 @@
 //! Vector
-//!
-//!
 
 use crate::algebra::linear::Matrix;
 use crate::elementary::{Exponential, Power};
-use std::ops::{Add, AddAssign, Mul, Sub, Div, Neg};
+use std::ops::{Add, Mul, Sub, Div, Neg};
 use crate::algebra::abstr::{Sign};
-use crate::algebra::abstr::{Real, Scalar};
+use crate::algebra::abstr::{Scalar, Field};
 use std::fmt::Display;
 use std::fmt;
 use serde::{Serialize, Deserialize};
@@ -66,7 +64,7 @@ pub struct Vector<T>
 }
 
 impl<T> IntoIterator for Vector<T>
-    where T: Real
+    where T: Field + Scalar
 {
     type Item = T;
     type IntoIter = VectorIntoIterator<T>;
@@ -82,7 +80,7 @@ impl<T> IntoIterator for Vector<T>
 }
 
 //impl<T> FromIterator for Matrix<T>
-//    where T: Real
+//    where T: Field + Scalar
 //{
 //    fn from_iter<T>(iter: T) -> Se
 //    T: IntoIterator<Item = A>,
@@ -110,7 +108,7 @@ impl<T> Vector<T>
 
 
 impl<T> Vector<T>
-    where T: Scalar + Power
+    where T: Field + Scalar + Power
 {
     /// Computes the p norm
     ///
@@ -152,7 +150,7 @@ impl<T> Vector<T>
 }
 
 impl<T> Neg for Vector<T>
-    where T: Real
+    where T: Field + Scalar
 {
     type Output = Vector<T>;
 
@@ -171,7 +169,7 @@ impl<T> Vector<T>
 }
 
 impl<T> Vector<T>
-    where T: Power + Exponential + Scalar
+    where T: Field + Scalar + Power + Exponential
 {
     /// Computes the euclidean norm
     ///
@@ -252,7 +250,7 @@ impl <T> Vector<T>
 }
 
 impl <T> Vector<T>
-    where T: Scalar + Clone + Copy
+    where T: Scalar
 {
     /// Returns a row vector initialized with random numbers
     ///
@@ -294,7 +292,7 @@ impl <T> Vector<T>
 
 
 impl<T> Vector<T>
-    where T: Real
+    where T: Field + Scalar
 {
 
     /// Returns the transposed vector
@@ -320,7 +318,7 @@ impl<T> Vector<T>
 
 
 impl<T> Vector<T>
-    where T: Real
+    where T: Field + Scalar
 {
     /// Computes the dot product of two vectors
     ///
@@ -430,7 +428,7 @@ impl<T> Vector<T>
 }
 
 impl<T> Vector<T>
-    where T: Scalar
+    where T: Field + Scalar
 {
     /// Computes the dyadic product of two vectors
     ///
@@ -541,7 +539,7 @@ impl<T> Vector<T>
 }
 
 impl<T> Vector<T>
-    where T: Real
+    where T: Field + Scalar + Power
 {
     pub fn reflector(self: &Self) -> Vector<T>
     {
@@ -560,7 +558,7 @@ impl<T> Vector<T>
 
 
 impl<T> Vector<T>
-    where T: Scalar
+    where T: Field + Scalar
 {
     /// Returns the zero vector
     ///
@@ -604,7 +602,7 @@ impl<T> Vector<T>
 }
 
 impl<T> Vector<T>
-    where T: Real
+    where T: Field + Scalar
 {
     /// Returns a slice of the vector
     ///
@@ -747,7 +745,7 @@ impl<T> Display for Vector<T>
 
 
 impl<T> Add<Self> for Vector<T>
-    where T: Real
+    where T: Field + Scalar
 {
     type Output = Vector<T>;
 
@@ -771,7 +769,7 @@ impl<T> Add<Self> for Vector<T>
 }
 
 impl<T> Add<T> for Vector<T>
-    where T: Real
+    where T: Field + Scalar
 {
     type Output = Vector<T>;
 
@@ -795,7 +793,7 @@ impl<T> Add<T> for Vector<T>
 }
 
 impl<'a, T> Add<&T> for &'a Vector<T>
-    where T: Real
+    where T: Field + Scalar
 {
     type Output = Vector<T>;
 
@@ -822,7 +820,7 @@ impl<'a, T> Add<&T> for &'a Vector<T>
 
 
 impl<T> Sub<T> for Vector<T>
-    where T: Real
+    where T: Field + Scalar
 {
     type Output = Vector<T>;
 
@@ -846,7 +844,7 @@ impl<T> Sub<T> for Vector<T>
 }
 
 impl<'a, T> Sub<&T> for &'a Vector<T>
-    where T: Real
+    where T: Field + Scalar
 {
     type Output = Vector<T>;
 
@@ -872,7 +870,7 @@ impl<'a, T> Sub<&T> for &'a Vector<T>
 }
 
 impl<T> Mul<T> for Vector<T>
-    where T: Real
+    where T: Field + Scalar
 {
     type Output = Vector<T>;
 
@@ -898,7 +896,7 @@ impl<T> Mul<T> for Vector<T>
 }
 
 impl<'a, T> Mul<&T> for &'a Vector<T>
-    where T: Real
+    where T: Field + Scalar
 {
     type Output = Vector<T>;
 
@@ -924,7 +922,7 @@ impl<'a, T> Mul<&T> for &'a Vector<T>
 }
 
 impl<T> Div<T> for Vector<T>
-    where T: Real
+    where T: Field + Scalar
 {
     type Output = Vector<T>;
 
@@ -950,7 +948,7 @@ impl<T> Div<T> for Vector<T>
 }
 
 impl<'a, T> Div<&T> for &'a Vector<T>
-    where T: Real
+    where T: Field + Scalar
 {
     type Output = Vector<T>;
 
@@ -977,7 +975,7 @@ impl<'a, T> Div<&T> for &'a Vector<T>
 
 //c = a + b, a,b,c E T^m
 impl<'a, 'b, T> Add<&'b Vector<T>> for &'a Vector<T>
-    where T: Real
+    where T: Field + Scalar
 {
     type Output = Vector<T>;
 
@@ -1005,7 +1003,7 @@ impl<'a, 'b, T> Add<&'b Vector<T>> for &'a Vector<T>
 
 //c = a - b , a,b,c E T^m
 impl <T> Sub for Vector<T>
-    where T: Real
+    where T: Field + Scalar
 {
     type Output = Vector<T>;
 
@@ -1029,7 +1027,7 @@ impl <T> Sub for Vector<T>
 }
 
 impl <'a, 'b, T> Sub<&'b Vector<T>> for &'a Vector<T>
-    where T: Real
+    where T: Field + Scalar
 {
     type Output = Vector<T>;
 
@@ -1059,7 +1057,7 @@ impl <'a, 'b, T> Sub<&'b Vector<T>> for &'a Vector<T>
 
 
 impl<T>  Mul<Matrix<T>> for Vector<T>
-  where T: Scalar
+  where T: Field + Scalar
 {
     type Output = Vector<T>;
 
@@ -1070,7 +1068,7 @@ impl<T>  Mul<Matrix<T>> for Vector<T>
 }
 
 impl<'a, 'b, T> Mul<&'b Matrix<T>> for &'a Vector<T>
-    where T: Scalar
+    where T: Field + Scalar
 {
     type Output = Vector<T>;
 
@@ -1102,7 +1100,7 @@ impl<'a, 'b, T> Mul<&'b Matrix<T>> for &'a Vector<T>
 
 
 impl<T> Sign for Vector<T>
-    where T: Real
+    where T: Field + Scalar
 {
 	fn sign(self: &Self) -> Self
     {
@@ -1134,7 +1132,7 @@ impl<T> Sign for Vector<T>
 
 
 impl<T> Vector<T>
-    where T: Real
+    where T: Field + Scalar
 {
     pub fn compare_neighbourhood(self: &Self, b: &Self, epsilon: T) -> bool
     {

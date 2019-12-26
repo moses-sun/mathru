@@ -39,7 +39,7 @@ pub use self::lattice::Lattice;
 pub use self::ring::{Ring, CommutativeRing};
 pub use self::sign::{Sign};
 pub use self::field::{Field};
-pub use self::scalar::{Scalar, ScalarOps};
+pub use self::scalar::{Scalar};
 pub use self::natural::Natural;
 pub use self::integer::Integer;
 pub use self::real::Real;

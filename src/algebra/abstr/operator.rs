@@ -1,10 +1,8 @@
-///
-///
-use std::ops::{Add, AddAssign, Mul, MulAssign};
+//! Operator Trait
 
 ///
 ///
-pub trait Operator : Copy
+pub trait Operator: Copy
 {
 	fn operator() -> Self;
 }

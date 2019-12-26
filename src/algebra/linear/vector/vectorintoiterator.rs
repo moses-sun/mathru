@@ -1,4 +1,4 @@
-use crate::algebra::abstr::{Real};
+use crate::algebra::abstr::{Field, Scalar};
 use std::iter::Iterator;
 use crate::algebra::linear::matrix::MatrixIntoIterator;
 
@@ -8,7 +8,7 @@ pub struct VectorIntoIterator<T>
 }
 
 impl<T> Iterator for VectorIntoIterator<T>
-    where T: Real
+    where T: Field + Scalar
 {
     type Item = T;
 

@@ -1,8 +1,8 @@
 use crate::algebra::linear::{Vector, Matrix};
 use crate::algebra::linear::matrix::{Inverse, Solve, Substitute};
-use crate::algebra::abstr::{Real};
 use std::clone::Clone;
 use serde::{Deserialize, Serialize};
+use crate::algebra::abstr::{Field, Scalar};
 
 #[cfg(feature = "blaslapack")]
 use crate::algebra::abstr::{Zero};
@@ -54,7 +54,7 @@ impl<T>  LUDec<T>
 }
 
 impl<T> Solve<Vector<T>> for LUDec<T>
-    where T: Real
+    where T: Field + Scalar
 {
     /// Solves Ax = y
     ///  where A \in R^{m * n}, x \in R^n, y \in R^m
@@ -74,7 +74,7 @@ impl<T> Solve<Vector<T>> for LUDec<T>
 }
 
 impl<T> Inverse<T> for LUDec<T>
-    where T: Real
+    where T: Field + Scalar
 {
     /// Inverse Matrix
     ///
@@ -104,7 +104,7 @@ impl<T> Inverse<T> for LUDec<T>
 
 
 impl<T> Solve<Matrix<T>> for LUDec<T>
-    where T: Real
+    where T: Field + Scalar
 {
     fn solve(self: &Self, rhs: &Matrix<T>) -> Option<Matrix<T>>
     {
@@ -118,7 +118,7 @@ impl<T> Solve<Matrix<T>> for LUDec<T>
 }
 
 impl<T> Matrix<T>
-    where T: Real
+    where T: Field + Scalar
 {
     /// Decomposes the matrix into a upper and a lower matrix
     ///

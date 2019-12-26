@@ -1,7 +1,7 @@
 //! Gamma functions
 use std::f64::consts::PI;
 
-use crate::algebra::abstr::{Field, Scalar, Lattice, Sign};
+use crate::algebra::abstr::{Field, Scalar, Sign};
 use crate::elementary::{Exponential, Trigonometry, Power, Hyperbolic};
 use std::ops::Neg;
 
