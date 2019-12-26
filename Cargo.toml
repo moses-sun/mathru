@@ -33,6 +33,23 @@ default = ["native"]
 blaslapack = ["lapack", "blas", "lapack-src", "blas-src"]
 native = []
 
+[profile.dev]
+opt-level = 0
+debug = true
+
+[profile.release]
+opt-level = 3
+debug = false
+
+[profile.test]
+opt-level = 0
+debug = true
+
+[profile.bench]
+opt-level = 3
+debug = false
+
+
 [dependencies]
 
 [dependencies.rand]
@@ -68,3 +85,5 @@ criterion = "0.3"
 name = "benchmark"
 path = "benches/lib.rs"
 harness = false
+
+
