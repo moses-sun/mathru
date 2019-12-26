@@ -150,6 +150,7 @@ impl<T> ComplexT for Complex<T>
 
 #[cfg(feature = "blaslapack")]
 impl<T> Lapack for Complex<T>
+	where T: Sized + Zero + Field + Scalar + Power
 {
 	fn xgehrd(_n: i32, _ilo: i32, _ihi: i32, _a: &mut [Self], _lda: i32, _tau: &mut [Self], _work: &mut [Self], _lwork:
 	i32,
@@ -257,6 +258,7 @@ impl<T> Lapack for Complex<T>
 
 #[cfg(feature = "blaslapack")]
 impl<T> Blas for Complex<T>
+	where T: Sized + Zero + Field + Scalar + Power
 {
 	fn xgemm(_transa: u8, _transb: u8, _m: i32, _n: i32, _k: i32, _alpha: Self,
     _a: &[Self],
@@ -346,7 +348,10 @@ impl<T> Sign for Complex<T>
 impl<T> Scalar for Complex<T>
 	where T: Field + Scalar + Power
 {
-
+	fn epsilon() -> Self
+	{
+		unimplemented!();
+	}
 }
 
 /// Compares to complex numbers

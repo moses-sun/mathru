@@ -1,5 +1,6 @@
 use crate::algebra::linear::{Matrix};
-use crate::algebra::abstr::{Real};
+use crate::elementary::Power;
+use crate::algebra::abstr::{Field, Scalar};
 use std::clone::Clone;
 use serde::{Deserialize, Serialize};
 
@@ -12,7 +13,7 @@ pub struct CholeskyDec<T>
 }
 
 impl<T> CholeskyDec<T>
-    where T: Real
+    where T: Field + Scalar
 {
     pub fn new(m: Matrix<T>) -> CholeskyDec<T>
     {
@@ -33,7 +34,7 @@ impl<T> CholeskyDec<T>
 }
 
 impl<T> Matrix<T>
-    where T: Real
+    where T: Field + Scalar + Power
 {
     /// Decomposes the symetric, positive definite quadractic matrix A into a lower triangular matrix L
     /// A = L L^T

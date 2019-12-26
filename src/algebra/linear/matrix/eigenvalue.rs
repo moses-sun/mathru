@@ -1,12 +1,9 @@
 use crate::algebra::linear::{Vector, Matrix};
-use crate::algebra::abstr::{Real};
-
-#[cfg(feature = "blaslapack")]
-use crate::algebra::abstr::{Zero};
-
+use crate::algebra::abstr::{Field, Scalar};
+use crate::elementary::Power;
 
 impl<T> Matrix<T>
-     where T: Real
+     where T: Field + Scalar + Power
 {
     /// Computes the eigenvalues of a real matrix
     ///
@@ -167,11 +164,11 @@ impl<T> Matrix<T>
 
         let mut info: i32 = 0;
 
-        let mut wr: Vec<T> = vec![Zero::zero(); n];
-        let mut wi: Vec<T> = vec![Zero::zero(); n];
+        let mut wr: Vec<T> = vec![T::zero(); n];
+        let mut wi: Vec<T> = vec![T::zero(); n];
 
-        let mut temp1 = [Zero::zero()];
-        let mut temp2 = [Zero::zero()];
+        let mut temp1 = [T::zero()];
+        let mut temp2 = [T::zero()];
 
         let lwork = T::xgeev_work_size(
             'N' as u8,
@@ -188,7 +185,7 @@ impl<T> Matrix<T>
             &mut info,
         );
 
-        let mut work: Vec<T> = vec![Zero::zero(); lwork as usize];
+        let mut work: Vec<T> = vec![T::zero(); lwork as usize];
 
         T::xgeev(
             'N' as u8,

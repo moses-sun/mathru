@@ -143,6 +143,7 @@ mod matrix
         assert_eq!(*(givens.get(i, j)), s);
     }
 
+    #[cfg(feature = "native")]
     #[test]
     fn givens2()
     {

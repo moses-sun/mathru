@@ -1,9 +1,9 @@
 use crate::algebra::linear::{Matrix};
-use crate::algebra::abstr::Real;
+use crate::algebra::abstr::{Field, Scalar};
+use crate::elementary::Power;
+
 #[cfg(feature = "native")]
 use crate::algebra::linear::Vector;
-#[cfg(feature = "blaslapack")]
-use crate::algebra::abstr::Zero;
 
 
 pub struct HessenbergDec<T>
@@ -42,7 +42,7 @@ impl<T> HessenbergDec<T>
 
 
 impl<T> Matrix<T>
-     where T: Real
+     where T: Field + Scalar + Power
 {
     /// Decomposes self in to the M
     ///
@@ -105,7 +105,7 @@ impl<T> Matrix<T>
         let mut self_data = self.clone().data;
         let n_i32: i32 = n as i32;
 
-        let mut tau: Vec<T> = vec![Zero::zero(); n - 1];
+        let mut tau: Vec<T> = vec![T::zero(); n - 1];
 
         let mut info: i32 = 0;
 
@@ -113,7 +113,7 @@ impl<T> Matrix<T>
 
         assert_eq!(0, info);
 
-        let mut work_xgehrd: Vec<T> = vec![Zero::zero(); lwork as usize];
+        let mut work_xgehrd: Vec<T> = vec![T::zero(); lwork as usize];
 
         T::xgehrd(
             n_i32,

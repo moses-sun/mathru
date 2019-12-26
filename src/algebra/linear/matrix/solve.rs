@@ -1,6 +1,5 @@
 use crate::algebra::linear::{Vector, Matrix};
-use crate::algebra::abstr::{Real};
-
+use crate::algebra::abstr::{Field, Scalar};
 #[cfg(feature = "native")]
 use crate::algebra::linear::matrix::{Substitute};
 
@@ -17,7 +16,7 @@ pub trait Solve<T>
 }
 
 impl<T> Solve<Vector<T>> for  Matrix<T>
-    where T: Real
+    where T: Field + Scalar
 {
     /// Solves Ax = y
     ///  where A \in R^{m * n}, x \in R^n, y \in R^m
@@ -31,7 +30,7 @@ impl<T> Solve<Vector<T>> for  Matrix<T>
 }
 
 impl<T> Solve<Matrix<T>> for Matrix<T>
-    where T: Real
+    where T: Field + Scalar
 {
     fn solve(self: &Self, rhs: &Matrix<T>) -> Option<Matrix<T>>
     {
@@ -40,7 +39,7 @@ impl<T> Solve<Matrix<T>> for Matrix<T>
 }
 
 impl<T> Matrix<T>
-    where T: Real
+    where T: Field + Scalar
 {
 
     #[cfg(feature = "blaslapack")]
@@ -113,7 +112,7 @@ impl<T> Matrix<T>
 
 
 impl<T> Matrix<T>
-    where T: Real
+    where T: Field + Scalar
 {
     #[cfg(feature = "blaslapack")]
     pub fn solve_matrix_r(self: &Self, y: &Matrix<T>) -> Option<Matrix<T>>

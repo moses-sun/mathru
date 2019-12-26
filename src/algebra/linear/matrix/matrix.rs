@@ -10,7 +10,7 @@ use rand::Rng;
 use serde::{Deserialize, Serialize};
 use super::{MatrixIntoIterator, MatrixIterator, MatrixIteratorMut, MatrixRowIterator, MatrixRowIteratorMut, MatrixColumnIterator,
 MatrixColumnIteratorMut};
-use std::cmp::min;
+//use std::cmp::min;
 use crate::algebra::linear::matrix::{Substitute};
 use crate::elementary::Power;
 
@@ -315,6 +315,7 @@ impl<T> Matrix<T>
 
 }
 
+// # TODO conditinal comppilation
 impl<T> Substitute<Vector<T>> for Matrix<T>
     where T: Field + Scalar
 {
@@ -331,7 +332,7 @@ impl<T> Substitute<Vector<T>> for Matrix<T>
 }
 
 impl<T> Substitute<Matrix<T>> for Matrix<T>
-    where T: Field + Scalar
+    where T: Field + Scalar 
 {
 
     fn substitute_forward(self: &Self, b: Matrix<T>) -> Matrix<T>
@@ -346,7 +347,7 @@ impl<T> Substitute<Matrix<T>> for Matrix<T>
 }
 
 impl<T> Matrix<T>
-    where T: Field + Scalar
+    where T: Field + Scalar 
 {
 
     #[cfg(feature = "native")]
@@ -368,7 +369,7 @@ impl<T> Matrix<T>
     #[cfg(feature = "native")]
     pub fn substitute_forward_matrix_r(self: &Self, mut b: Matrix<T>) -> Matrix<T>
     {
-        let min: usize = min(self.m, self.n);
+        let min: usize = std::cmp::min(self.m, self.n);
         for k in 0..min
         {
             for l in 0..k
@@ -399,7 +400,8 @@ impl<T> Matrix<T>
     #[cfg(feature = "native")]
     pub fn substitute_backward_matrix_r(self: &Self, mut b: Matrix<T>) -> Matrix<T>
     {
-        let min = min(self.m, self.n);
+
+        let min = std::cmp::min(self.m, self.n);
 
         for k in (0..min).rev()
         {
@@ -1361,7 +1363,7 @@ impl<T> Matrix<T>
 }
 
 impl<T> Matrix<T>
-    where T: Field + Scalar + Power
+    where T: Field + Scalar + Power 
 {
     /// Calculates the pseudo inverse matrix
     ///

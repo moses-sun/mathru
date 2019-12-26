@@ -73,6 +73,7 @@ impl<T> Solve<Vector<T>> for LUDec<T>
     }
 }
 
+// TOOD
 impl<T> Inverse<T> for LUDec<T>
     where T: Field + Scalar
 {
@@ -102,7 +103,7 @@ impl<T> Inverse<T> for LUDec<T>
     }
 }
 
-
+// TOOD
 impl<T> Solve<Matrix<T>> for LUDec<T>
     where T: Field + Scalar
 {

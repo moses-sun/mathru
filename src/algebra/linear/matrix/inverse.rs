@@ -1,5 +1,5 @@
 use crate::algebra::linear::{Matrix};
-use crate::algebra::abstr::{Real};
+use crate::algebra::abstr::{Field, Scalar};
 
 #[cfg(feature = "blaslapack")]
 use crate::algebra::abstr::{Zero};
@@ -26,7 +26,7 @@ pub trait Inverse<T>
 }
 
 impl<T> Inverse<T> for Matrix<T>
-     where T: Real
+     where T: Field + Scalar
 {
     /// Inverse Matrix
     ///
@@ -47,7 +47,7 @@ impl<T> Inverse<T> for Matrix<T>
 }
 
 impl<T> Matrix<T>
-    where T: Real
+    where T: Field + Scalar
 {
     #[cfg(feature = "native")]
     pub fn inv_r(self: &Self) -> Option<Matrix<T>>

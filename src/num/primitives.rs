@@ -7,7 +7,7 @@ use std::{u8, u16, u32, u64, u128, i8, i16, i32, i64, i128, f32, f64};
 
 
 #[cfg(feature = "blaslapack")]
-use crate::algebra::abstr::{Blas, Lapack};
+use crate::algebra::abstr::{Zero, Blas, Lapack};
 #[cfg(feature = "blaslapack")]
 use lapack;
 #[cfg(feature = "blaslapack")]
@@ -976,7 +976,7 @@ macro_rules! lapack_impl(
             fn xgehrd_work_size(n: i32, ilo: i32, ihi: i32, a: &mut [Self], lda: i32,
                                 tau: &mut [Self], info: &mut i32) -> i32
             {
-                let mut work = [Zero::zero()];
+                let mut work = [<$T>::zero()];
                 let lwork = -1 as i32;
 
                 unsafe { $xgehrd(n, ilo, ihi, a, lda, tau, &mut work, lwork, info) };
@@ -992,7 +992,7 @@ macro_rules! lapack_impl(
 
             fn xorghr_work_size(n: i32, ilo: i32, ihi: i32, a: &mut [Self], lda: i32,
                                 tau: &[Self], info: &mut i32) -> i32 {
-                let mut work = [ Zero::zero() ];
+                let mut work = [<$T>::zero() ];
                 let lwork = -1 as i32;
 
                 unsafe { $xorghr(n, ilo, ihi, a, lda, tau, &mut work, lwork, info) };
@@ -1013,7 +1013,7 @@ macro_rules! lapack_impl(
                                wr: &mut [Self], wi: &mut [Self], vl: &mut [Self], ldvl: i32,
                                vr: &mut [Self], ldvr: i32, info: &mut i32) -> i32
           	{
-                let mut work = [ Zero::zero() ];
+                let mut work = [ <$T>::zero() ];
                 let lwork = -1 as i32;
 
                 unsafe { $xgeev(jobvl, jobvr, n, a, lda, wr, wi, vl, ldvl, vr, ldvr, &mut work, lwork, info) };
@@ -1034,7 +1034,7 @@ macro_rules! lapack_impl(
 
   			fn xgeqrf_work_size(m: i32, n: i32, a: &mut [Self], lda: i32, tau: &mut [Self], info: &mut i32) -> i32
 			{
-				let mut work = [ Zero::zero() ];
+				let mut work = [<$T>::zero() ];
                 let lwork = -1 as i32;
 
                 unsafe { $xgeqrf(m, n, a, lda, tau, &mut work, lwork, info) };
@@ -1051,7 +1051,7 @@ macro_rules! lapack_impl(
   			fn xorgqr_work_size(m: i32, n: i32, k: i32, a: &mut [Self], lda: i32, tau: &mut [Self], info: &mut i32) ->
   			 i32
 			{
-				let mut work = [ Zero::zero() ];
+				let mut work = [<$T>::zero() ];
                 let lwork = -1 as i32;
 
                 unsafe { $xorgqr(m, n, k, a, lda, tau, &mut work, lwork, info) };
@@ -1066,7 +1066,7 @@ macro_rules! lapack_impl(
 
 			fn xgetri_work_size(n: i32, a: &mut [Self], lda: i32, ipiv: &mut [i32], info: &mut i32) -> i32
 			{
-				let mut work = [ Zero::zero() ];
+				let mut work = [ <$T>::zero() ];
                 let lwork = -1 as i32;
 				unsafe { $xgetri(n, a, lda, ipiv, &mut work, lwork, info) };
 
