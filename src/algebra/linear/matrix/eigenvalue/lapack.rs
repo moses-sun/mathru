@@ -1,0 +1,85 @@
+use crate::algebra::linear::{Vector, Matrix};
+use crate::algebra::abstr::{Field, Scalar};
+use crate::elementary::Power;
+
+impl<T> Matrix<T>
+     where T: Field + Scalar + Power
+{
+    /// Computes the eigenvalues of a real matrix
+    ///
+    ///
+    /// # Arguments
+    ///
+    ///
+    ///
+    /// # Return
+    ///
+    /// Vector with unsorted eigenvalues
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// use mathru::algebra::linear::{Vector, Matrix};
+    ///
+    /// let a: Matrix<f64> = Matrix::new(3, 3, vec![1.0, -3.0, 3.0, 3.0, -5.0, 3.0, 6.0, -6.0, 4.0]);
+    /// let eig: Vector<f64> = a.eigenvalue();
+    ///
+    /// ```
+    pub fn eigenvalue(self: &Self) -> Vector<T>
+    {
+        let (m, n) : (usize, usize) = self.dim();
+        assert!(m == n, "Unable to compute the eigen value of a non-square matrix");
+        assert!(m != 0, "Unable to compute the eigen vlaue of an empty matrix.");
+
+        let (m, n) : (usize, usize) = self.dim();
+
+        let mut self_data: Vec<T> = self.clone().transpose().data;
+        let n_i32: i32 = n as i32;
+
+        let mut info: i32 = 0;
+
+        let mut wr: Vec<T> = vec![T::zero(); n];
+        let mut wi: Vec<T> = vec![T::zero(); n];
+
+        let mut temp1 = [T::zero()];
+        let mut temp2 = [T::zero()];
+
+        let lwork = T::xgeev_work_size(
+            'N' as u8,
+            'N' as u8,
+            n_i32,
+            &mut self_data[..],
+            n_i32,
+            wr.as_mut_slice(),
+            wi.as_mut_slice(),
+            &mut temp1,
+            n_i32,
+            &mut temp2,
+            n_i32,
+            &mut info,
+        );
+
+        let mut work: Vec<T> = vec![T::zero(); lwork as usize];
+
+        T::xgeev(
+            'N' as u8,
+            'N' as u8,
+                    n_i32,
+                    &mut self_data[..],
+                    n_i32,
+                    wr.as_mut_slice(),
+                    wi.as_mut_slice(),
+                    &mut temp1,
+                    1 as i32,
+                    &mut temp2,
+                    1 as i32,
+                    &mut work,
+                    lwork,
+                    &mut info,
+        );
+
+        assert_eq!(0, info);
+
+        return Vector::new_column(m, wr);
+    }
+}

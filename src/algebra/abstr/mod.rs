@@ -44,5 +44,5 @@ pub use self::natural::Natural;
 pub use self::integer::Integer;
 pub use self::real::Real;
 #[cfg(feature = "blaslapack")]
-pub use self::real::{Blas, Lapack};
+pub use self::scalar::{Blas, Lapack};
 pub use self::complex::Complex;

@@ -13,58 +13,6 @@ use lapack;
 #[cfg(feature = "blaslapack")]
 use blas;
 
-
-
-//macro_rules! zero_impl {
-//    ($t:ty, $v:expr) =>
-//    {
-//        impl Zero for $t
-//        {
-//            #[inline]
-//            fn zero() -> $t
-//            {
-//                $v
-//            }
-//        }
-//    };
-//}
-//
-//zero_impl!(usize, 0);
-//zero_impl!(u8, 0);
-//zero_impl!(u16, 0);
-//zero_impl!(u32, 0);
-//zero_impl!(u64, 0);
-//zero_impl!(u128, 0);
-//
-//zero_impl!(isize, 0);
-//zero_impl!(i8, 0);
-//zero_impl!(i16, 0);
-//zero_impl!(i32, 0);
-//zero_impl!(i64, 0);
-//zero_impl!(i128, 0);
-//
-//zero_impl!(f32, 0.0);
-//zero_impl!(f64, 0.0);
-//
-//
-//macro_rules! impl_one {
-//    ($v:expr, $($t:ty),*) =>
-//    {
-//    	$(
-//        impl One for $t {
-//            #[inline]
-//            fn one() -> $t {
-//                $v
-//            }
-//        }
-//        )*
-//    };
-//}
-//
-//impl_one!(1, usize, u8, u16, u32, u64, u128, isize, i8, i16, i32, i64, i128);
-//impl_one!(1.0, f32, f64);
-
-
 macro_rules! impl_to_primitive_int_to_int
 {
     ($SrcT:ty, $DstT:ty, $slf:expr) => (
@@ -1132,8 +1080,6 @@ lapack::sgetri, lapack::spotrf, lapack::sgetrs);
 #[cfg(feature = "blaslapack")]
 lapack_impl!(f64, lapack::dgehrd, lapack::dorghr, lapack::dgeev, lapack::dgetrf, lapack::dgeqrf, lapack::dorgqr,
 lapack::dgetri, lapack::dpotrf, lapack::dgetrs);
-//hessenberg_scalar_impl!(Complex<f32>, lapack::cgehrd);
-//hessenberg_scalar_impl!(Complex<f64>, lapack::zgehrd);
 
 #[cfg(feature = "blaslapack")]
 blas_impl!(f32, blas::sgemm, blas::strsm);

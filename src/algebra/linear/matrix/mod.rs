@@ -10,21 +10,26 @@ mod matrixcolumniteratormut;
 
 mod eigenvalue;
 mod hessenberg;
+
 mod lu;
+pub use self::lu::LUDec;
+
 mod qr;
 mod inverse;
 mod mul;
 mod add;
 mod sub;
 mod div;
+
 mod cholesky;
+pub use self::cholesky::CholeskyDec;
+
+
 mod solve;
 mod substitute;
 
 
 pub use self::substitute::Substitute;
-pub use self::cholesky::CholeskyDec;
-pub use self::lu::LUDec;
 pub use self::solve::Solve;
 pub use self::inverse::Inverse;
 pub use self::matrix::Matrix;

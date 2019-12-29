@@ -1,8 +1,6 @@
 use crate::algebra::linear::{Matrix};
 use crate::algebra::abstr::{Field, Scalar};
 use crate::elementary::Power;
-
-#[cfg(feature = "native")]
 use crate::algebra::linear::Vector;
 
 
@@ -75,7 +73,6 @@ impl<T> Matrix<T>
         return self.dec_hessenberg_r();
     }
 
-    #[cfg(feature = "native")]
     fn dec_hessenberg_r(self: &Self) -> HessenbergDec<T>
     {
         let (m, _n) : (usize, usize) = self.dim();
@@ -96,79 +93,6 @@ impl<T> Matrix<T>
         return HessenbergDec::new(q.transpose(), h);
     }
 
-    #[cfg(feature = "blaslapack")]
-    fn dec_hessenberg_r(self: &Self) -> HessenbergDec<T>
-    {
-        let (m, n) : (usize, usize) = self.dim();
-
-        //lapack(fortran) uses column major order
-        let mut self_data = self.clone().data;
-        let n_i32: i32 = n as i32;
-
-        let mut tau: Vec<T> = vec![T::zero(); n - 1];
-
-        let mut info: i32 = 0;
-
-        let lwork: i32 = T::xgehrd_work_size(n_i32, 1, n_i32, & mut self_data[..], n_i32, tau.as_mut(), &mut info);
-
-        assert_eq!(0, info);
-
-        let mut work_xgehrd: Vec<T> = vec![T::zero(); lwork as usize];
-
-        T::xgehrd(
-            n_i32,
-            1,
-            n_i32,
-            &mut self_data[..],
-            n_i32,
-            tau.as_mut(),
-            &mut work_xgehrd[..],
-            lwork,
-            &mut info,
-        );
-
-        assert_eq!(0, info);
-
-        let h: Matrix<T> = Matrix::new(n, n, self_data.clone()).h();
-        let mut q = self_data;
-
-        let mut info: i32 = 0;
-
-        let lwork: i32 = T::xorghr_work_size(n_i32, 1, n_i32, &mut q[..], n_i32, tau.as_mut(), &mut info);
-        let mut work_xorghr = vec![T::zero(); lwork as usize];
-
-        assert_eq!(0, info);
-
-        T::xorghr(
-            n_i32,
-            1,
-            n_i32,
-            &mut q[..],
-            n_i32,
-            &tau[..],
-            &mut work_xorghr[..],
-            lwork,
-            &mut info,
-        );
-
-        assert_eq!(0, info);
-
-        return HessenbergDec::new(Matrix::new(m, n, q), h)
-    }
-
-    #[cfg(feature = "blaslapack")]
-    fn h(mut self: Self) -> Self
-    {
-        let (m, _n) = self.dim();
-        for i in 2..m
-        {
-            for k in 0..(i-1)
-            {
-                *self.get_mut(i, k) = T::zero();
-            }
-        }
-        self
-    }
 }
 
 

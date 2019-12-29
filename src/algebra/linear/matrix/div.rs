@@ -46,6 +46,6 @@ impl<'a, 'b, T> Div<&'b T> for &'a Matrix<T>
     /// ```
     fn div(self, m: &'b T) -> Matrix<T>
     {
-        return self.clone() *  (T::one() / *m);
+        return self.clone() * (T::one() / *m);
     }
 }

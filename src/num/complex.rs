@@ -15,6 +15,7 @@ use std::cmp::Ordering;
 use crate::algebra::abstr::cast::{ToPrimitive, FromPrimitive, NumCast};
 use crate::elementary::{Trigonometry, Exponential, Power, Hyperbolic};
 use crate::algebra::abstr::{cast};
+
 #[cfg(feature = "blaslapack")]
 use crate::algebra::abstr::{Blas, Lapack};
 

@@ -4,8 +4,6 @@ use std::clone::Clone;
 use serde::{Deserialize, Serialize};
 use crate::elementary::Power;
 
-#[cfg(feature = "blaslapack")]
-use crate::algebra::abstr::{Zero};
 
 /// QR decomposition
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -82,7 +80,6 @@ impl<T> Matrix<T>
         return self.dec_qr_r()
     }
 
-    #[cfg(feature = "native")]
     fn dec_qr_r<'a>(self: &'a Self) -> QRDec<T>
     {
         let mut q: Matrix<T> = Matrix::one(self.m);
@@ -110,88 +107,5 @@ impl<T> Matrix<T>
         }
         q = q.transpose();
         return QRDec::new(q, r);
-    }
-
-    #[cfg(feature = "blaslapack")]
-    fn dec_qr_r<'a>(self: &'a Self) -> QRDec<T>
-    {
-        let (m, n) : (usize, usize) = self.dim();
-
-        //lapack(fortran) uses column major order
-        let mut self_data = self.clone().data;
-
-        let m_i32: i32 = m as i32;
-        let n_i32: i32 = n as i32;
-        let m_n_min: usize = m.min(n);
-
-        let mut tau: Vec<T> = vec![Zero::zero(); m_n_min];
-
-        let mut info: i32 = 0;
-
-        let lwork: i32 = T::xgeqrf_work_size(m_i32, n_i32, & mut self_data[..], m_i32, &mut tau[..], &mut info);
-
-        assert_eq!(0, info);
-
-       	let mut work: Vec<T> = vec![T::zero(); lwork as usize];
-
-        T::xgeqrf(
-            m_i32,
-            n_i32,
-            &mut self_data[..],
-            m_i32,
-            tau.as_mut(),
-            &mut work,
-            lwork,
-            &mut info,
-        );
-
-        assert_eq!(0, info);
-        let a: Matrix<T> = Matrix::new(m, n, self_data.clone());
-        let r: Matrix<T> = a.r();
-
-        let lwork = T::xorgqr_work_size(
-            m_i32,
-            m_n_min as i32,
-            tau.len() as i32,
-            &mut self_data[..],
-            m_i32,
-            &mut tau[..],
-            &mut info,
-        );
-
-        assert_eq!(0, info);
-
-        let mut work = vec![T::zero(); lwork as usize];
-
-        T::xorgqr(
-            m_i32,
-            m_n_min as i32,
-            tau.len() as i32,
-            &mut self_data[..],
-            m_i32,
-            &mut tau[..],
-            &mut work,
-            lwork,
-            &mut info,
-        );
-        assert_eq!(0, info);
-
-        let q: Matrix<T> = Matrix::new(m, n, self_data);
-
-        return QRDec::new(q, r);
-    }
-
-    #[cfg(feature = "blaslapack")]
-    fn r(mut self: Self) -> Self
-    {
-        for i in 1..self.m
-        {
-            for k in 0..(i.min(self.n))
-            {
-                *self.get_mut(i, k) = T::zero();
-            }
-        }
-
-        self
     }
 }

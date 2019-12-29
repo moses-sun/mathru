@@ -141,23 +141,10 @@ impl<'a, 'b, T> Mul<&'b Matrix<T>> for &'a Matrix<T>
     /// ```
     fn mul(self: Self, rhs: &'b Matrix<T>) -> Self::Output
 	{
-     	let (_l_rows, l_cols) = self.dim();
-        let (r_rows, _r_cols): (usize, usize) = rhs.dim();
+     	let (l_rows, l_cols) = self.dim();
+        let (r_rows, r_cols): (usize, usize) = rhs.dim();
         assert_eq!(l_cols, r_rows);
 
-        return self.mul_r(rhs);
-	}
-}
-
-impl<'a, 'b, T> Matrix<T>
-    where T: Field + Scalar
-{
-
-    #[cfg(feature = "native")]
-    fn mul_r(self: &'a Self, rhs: &'b Matrix<T>) -> Matrix<T>
-    {
-        let (l_rows, l_cols) = self.dim();
-        let (_r_rows, r_cols): (usize, usize) = rhs.dim();
         let mut prod: Matrix<T> = Matrix::zero(l_rows, r_cols);
 
         for i in 0..l_rows
@@ -172,55 +159,15 @@ impl<'a, 'b, T> Matrix<T>
                 *prod.get_mut(i, j) = sum;
             }
         }
-        prod
-    }
-
-    #[cfg(feature = "blaslapack")]
-    fn mul_r(self: &'a Self, rhs: &'b Matrix<T>) -> Matrix<T>
-    {
-        let (self_rows, self_cols) = self.dim();
-        let (_rhs_rows, rhs_cols) = rhs.dim();
-
-        let m = self_rows as i32;
-        let n = rhs_cols as i32;
-        let k = self_cols as i32;
-        let mut c: Matrix<T> = Matrix::zero(m as usize, n as usize);
-
-        T::xgemm('N' as u8, 'N' as u8, m, n, k, T::one(), &self.data[..], m, &rhs.data[..], k, T::zero(), &mut c.data[
-        ..],
-         m);
-
-        return c;
-
-    }
+        return prod
+	}
 }
-
-
 
 impl<'a, 'b, T> Matrix<T>
     where T: Field + Scalar
 {
-    #[cfg(feature = "native")]
     fn mul_scalar(self: Self, m: &'b T) -> Matrix<T>
     {
         self.apply_mut(&|&x| x * *m)
-    }
-
-    #[cfg(feature = "blaslapack")]
-    fn mul_scalar(mut self: Self, s: &'b T) -> Matrix<T>
-    {
-        let (rows, cols) = self.dim();
-
-        let m: i32 = rows as i32;
-        let n: i32 = cols as i32;
-        let k: i32 = n;
-
-        let a: Vec<T>= vec![T::zero(); rows * cols];
-        let b: Vec<T>= vec![T::zero(); cols * rows];
-
-        T::xgemm('N' as u8, 'N' as u8, m, n, k, T::zero(), &a, m, &b, k, *s, &mut self.data[..],
-         m);
-
-        return self;
     }
 }

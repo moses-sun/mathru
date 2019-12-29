@@ -1,12 +1,6 @@
 use crate::algebra::linear::{Matrix};
 use crate::algebra::abstr::{Field, Scalar};
-
-#[cfg(feature = "blaslapack")]
 use crate::algebra::abstr::{Zero};
-
-#[cfg(feature = "native")]
-use crate::algebra::linear::matrix::lu::{LUDec};
-
 
 pub trait Inverse<T>
 {
@@ -49,14 +43,6 @@ impl<T> Inverse<T> for Matrix<T>
 impl<T> Matrix<T>
     where T: Field + Scalar
 {
-    #[cfg(feature = "native")]
-    pub fn inv_r(self: &Self) -> Option<Matrix<T>>
-    {
-        let lu_dec: LUDec<T> = self.dec_lu();
-        return lu_dec.inv();
-    }
-
-    #[cfg(feature = "blaslapack")]
     pub fn inv_r(self: & Self) -> Option<Matrix<T>>
     {
         let (m, n): (usize, usize) = self.dim();

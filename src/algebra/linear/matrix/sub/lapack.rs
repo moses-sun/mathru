@@ -49,19 +49,6 @@ impl<'a, 'b, T> Sub<&'b Matrix<T>> for &'a Matrix<T>
 impl<'a, 'b, T> Matrix<T>
     where T: Field + Scalar
 {
-    #[cfg(feature = "native")]
-    fn sub_r(self: &Self, rhs: &'b Matrix<T>) -> Matrix<T>
-    {
-        let (m, n) = rhs.dim();
-        Matrix
-        {
-            m: m,
-            n: n,
-            data: self.data.iter().zip(rhs.data.iter()).map(|(x, y)| *x - *y).collect::<Vec<T>>()
-        }
-    }
-
-    #[cfg(feature = "blaslapack")]
     fn sub_r(self: &Self, rhs: &'b Matrix<T>) -> Matrix<T>
     {
         let mut c: Matrix<T> = rhs.clone();

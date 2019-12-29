@@ -1,9 +1,5 @@
 use crate::algebra::linear::{Vector, Matrix};
 use crate::algebra::abstr::{Field, Scalar};
-#[cfg(feature = "native")]
-use crate::algebra::linear::matrix::{Substitute};
-
-#[cfg(feature = "blaslapack")]
 use crate::algebra::abstr::{Zero};
 
 
@@ -15,7 +11,7 @@ pub trait Solve<T>
     fn solve(self: &Self, rhs: &T) -> Option<T>;
 }
 
-impl<T> Solve<Vector<T>> for  Matrix<T>
+impl<T> Solve<Vector<T>> for Matrix<T>
     where T: Field + Scalar
 {
     /// Solves Ax = y
@@ -42,7 +38,6 @@ impl<T> Matrix<T>
     where T: Field + Scalar
 {
 
-    #[cfg(feature = "blaslapack")]
     fn solve_vector_r(self: &Self, y: &Vector<T>) -> Option<Vector<T>>
     {
         let (m, n): (usize, usize) = self.dim();
@@ -93,20 +88,6 @@ impl<T> Matrix<T>
         return Some(Vector::new_column(y_m, y_data));
     }
 
-    #[cfg(feature = "native")]
-    fn solve_vector_r(self: &Self, y: &Vector<T>) -> Option<Vector<T>>
-    {
-        let (l, u, p): (Matrix<T>, Matrix<T>, Matrix<T>) = self.dec_lu().lup();
-
-        let b_hat: Vector<T> = &p * y;
-
-        let y: Vector<T> = l.substitute_forward(b_hat);
-
-        let x: Vector<T> = u.substitute_backward(y);
-
-        return Some(x);
-    }
-
 }
 
 
@@ -114,7 +95,6 @@ impl<T> Matrix<T>
 impl<T> Matrix<T>
     where T: Field + Scalar
 {
-    #[cfg(feature = "blaslapack")]
     pub fn solve_matrix_r(self: &Self, y: &Matrix<T>) -> Option<Matrix<T>>
     {
         let (m, n): (usize, usize) = self.dim();
@@ -165,9 +145,4 @@ impl<T> Matrix<T>
         return Some(Matrix::new(y_m, y_n, y_data));
     }
 
-    #[cfg(feature = "native")]
-    pub fn solve_matrix_r(self: &Self, y: &Matrix<T>) -> Option<Matrix<T>>
-    {
-        return self.dec_lu().solve(y);
-    }
 }
