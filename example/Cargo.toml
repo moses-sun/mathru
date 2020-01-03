@@ -1,0 +1,19 @@
+[package]
+name = "mathru_example"
+version = "0.0.1"
+authors = ["matthias.eiholzer@gmail.com"]
+edition = "2018"
+
+[[bin]]
+name = "ode_simple"
+path = "ode_simple3.rs"
+
+[dependencies.mathru]
+#version = "0.5"
+path = "../"
+default-features = false
+features = ["native"]
+
+[dependencies.mathru-plot]
+path = "../../mathru-plot"
+version = "0.0.1"

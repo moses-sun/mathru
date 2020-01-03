@@ -5,17 +5,13 @@ mod rkdp
 {
 	extern crate mathru;
 
-	use mathru::algebra::abstr::{Real};
-	use mathru::algebra::linear::{Vector, Matrix};
-	use mathru::analysis::ode::Solver;
-	use mathru::analysis::ode::Dopri5;
+	use mathru::algebra::linear::{Vector};
+	use mathru::analysis::ode::{Solver, Dopri5};
 
-
-	fn compare_real<T: Real>(a: &T, b: &T, epsilon: T) -> bool
+	fn compare_epsilon(a: f64, b: f64, epsilon: f64) -> bool
     {
-    	if (*a - *b).abs() > epsilon
+    	if (a - b).abs() > epsilon
         {
-        	println!("{}, {}", a, b);
         	return false;
         }
 
@@ -33,13 +29,15 @@ mod rkdp
 
 		let init: Vector<f64> = vector![1.0];
 		let solver: Dopri5<f64> = Dopri5::new(h_0, e_max, n_max);
+		let t_start: f64 = 0.0;
+		let t_stop: f64 = 2.0;
 
-		let (t, y): (Vector<f64>, Matrix<f64>) = solver.solve(f, init, 0.0, 2.0);
+		let (t, y): (Vec<f64>, Vec<Vector<f64>>) = solver.solve(f, init, (t_start, t_stop)).unwrap();
 
-		let (m, _n): (usize, usize) = y.dim();
+		let len: usize = y.len();
 
-		assert!(compare_real(&2.0, &t.get(m - 1), 0.001));
-		assert!(compare_real(&5.0, &y.get(m - 1, 0), 0.002));
+		assert!(compare_epsilon(t_stop, t[len - 1], 0.001));
+		assert!(compare_epsilon(5.0, *y[len - 1].get(0), 0.002));
 	}
 
 
@@ -60,12 +58,14 @@ mod rkdp
 
 		let init: Vector<f64> = vector![0.0];
 		let solver: Dopri5<f64> = Dopri5::new(h_0, e_max, n_max);
+		let t_start: f64 = 0.0;
+		let t_stop: f64 = 1.4;
 
-		let (t, y): (Vector<f64>, Matrix<f64>) = solver.solve(f, init, 0.0, 1.4);
+		let (t, y): (Vec<f64>, Vec<Vector<f64>>) = solver.solve(f, init, (t_start, t_stop)).unwrap();
 
-		let (m, _n): (usize, usize) = y.dim();
+		let len: usize = y.len();
 
-		assert!(compare_real(&1.40, &t.get(m - 1), 0.0001));
-		assert!(compare_real(&1.4_f64.tan(), &y.get(m - 1, 0), 0.0001));
+		assert!(compare_epsilon(t_stop, t[len - 1], 0.001));
+		assert!(compare_epsilon(t_stop.tan(), *y[len - 1].get(0), 0.0001));
 	}
 }

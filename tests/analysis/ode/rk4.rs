@@ -2,16 +2,14 @@
 mod rk4
 {
 	extern crate mathru;
-
-	use mathru::algebra::abstr::{Real};
-	use mathru::algebra::linear::{Vector, Matrix};
+	use mathru::algebra::linear::{Vector};
 	use mathru::analysis::ode::Solver;
 	use mathru::analysis::ode::RK4;
 
 
-	fn compare_real<T: Real>(a: &T, b: &T, epsilon: T) -> bool
+	fn compare_epsilon(a: f64, b: f64, epsilon: f64) -> bool
     {
-    	if (*a - *b).abs() > epsilon
+    	if (a - b).abs() > epsilon
         {
         	return false;
         }
@@ -27,12 +25,12 @@ mod rk4
 		let init: Vector<f64> = vector![1.0];
 		let solver: RK4<f64> = RK4::new(0.01);
 
-		let (t, y): (Vector<f64>, Matrix<f64>) = solver.solve(f, init, 0.0, 2.0);
+		let (t, y): (Vec<f64>, Vec<Vector<f64>>) = solver.solve(f, init, (0.0f64, 2.0f64)).unwrap();
 
-		let (m, _n): (usize, usize) = y.dim();
+		let len: usize = y.len();
 
-		assert!(compare_real(&2.0, &t.get(m - 1), 0.000000001));
-		assert!(compare_real(&5.0, &y.get(m - 1, 0), 0.000000001));
+		assert!(compare_epsilon(2.0, t[len - 1], 0.000000001));
+		assert!(compare_epsilon(5.0, *y[len - 1].get(0), 0.000000001));
 	}
 
 
@@ -51,12 +49,11 @@ mod rk4
 		let init: Vector<f64> = vector![0.0];
 		let solver: RK4<f64> = RK4::new(0.1);
 
+		let (t, y): (Vec<f64>, Vec<Vector<f64>>) = solver.solve(f, init, (0.0, 1.4)).unwrap();
 
-		let (t, y): (Vector<f64>, Matrix<f64>) = solver.solve(f, init, 0.0, 1.4);
+		let len: usize = y.len();
 
-		let (m, _n): (usize, usize) = y.dim();
-
-		assert!(compare_real(&1.40, &t.get(m - 1), 0.00000001));
-		assert!(compare_real(&1.4_f64.tan(), &y.get(m - 1, 0), 0.006));
+		assert!(compare_epsilon(1.40, t[len - 1], 0.00000001));
+		assert!(compare_epsilon(1.4_f64.tan(), *y[len - 1].get(0), 0.006));
 	}
 }

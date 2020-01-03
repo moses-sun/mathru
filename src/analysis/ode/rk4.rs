@@ -1,4 +1,4 @@
-use crate::algebra::linear::{Vector, Matrix};
+use crate::algebra::linear::{Vector};
 use crate::algebra::abstr::Real;
 use super::Solver;
 
@@ -63,36 +63,39 @@ impl<T> Solver<T> for RK4<T>
     /// use mathru::algebra::linear::{Vector, Matrix};
     /// use mathru::analysis::ode::{Solver, RK4};
     ///
-    /// let f = |t: &f64, _x: &Vector<f64> | -> Vector<f64> { return Vector::new_row(1, vec![1.0]) * (t * &2.0f64); };
+    /// let f = |_x: &f64, y: &Vector<f64> | -> Vector<f64> { return y * &2.0f64; };
     ///
     ///	let init: Vector<f64> = vector![1.0];
     ///	let solver: RK4<f64> = RK4::new(0.01);
+    /// let t_start: f64 = 0.0;
+    /// let t_stop: f64 = 2.0;
     ///
-    ///	let (t, y): (Vector<f64>, Matrix<f64>) = solver.solve(f, init, 0.0, 2.0);
+    ///	let (t, y): (Vec<f64>, Vec<Vector<f64>>) = solver.solve(f, init, (t_start, t_stop)).unwrap();
     ///
     /// ```
-	fn solve<F>(self: &Self, func: F, init: Vector<T>, t_start: T, t_end: T) -> (Vector<T>, Matrix<T>)
-        where F: Fn(&T, &Vector<T>) -> Vector<T>
+	fn solve<F>(self: &Self, func: F, init: Vector<T>, t_span: (T, T)) -> Result<(Vec<T>, Vec<Vector<T>>), ()>
+        where   F: Fn(&T, &Vector<T>) -> Vector<T>
     {
         let mut x_n: Vector<T> = init.clone();
+
+        let t_start: T = t_span.0;
+        let t_stop: T = t_span.1;
+
         let mut t_n: T = t_start;
 
-        let limit: T = ((t_end - t_start) / self.step_size).ceil() + T::one();
+        let limit: T = ((t_stop - t_start) / self.step_size).ceil() + T::one();
 
         let steps: usize = limit.to_u64().unwrap() as usize;
 
-        let mut t_vec: Vector<T> = Vector::zero(steps);
-        let (m, _n) = init.dim();
-        let mut res_mat: Matrix<T> = Matrix::zero(steps, m);
+        let mut t_vec: Vec<T> = Vec::with_capacity(steps);
+        let mut res_vec: Vec<Vector<T>> = Vec::with_capacity(steps);
 
         let h: T = self.step_size;
 
-        for i in 0..steps
+        for _i in 0..steps
         {
-            *t_vec.get_mut(i) = t_n;
-            //res_mat = res_mat.set_row(&x_n.clone().transpose(), i);
-            res_mat.set_row(&x_n.clone().transpose(), i);
-
+            t_vec.push(t_n);
+            res_vec.push(x_n.clone());
 
             // k1 = f(t_n, x_n)
             let k1: Vector<T> = func(&t_n, &x_n);
@@ -113,6 +116,6 @@ impl<T> Solver<T> for RK4<T>
             t_n = t_n + h;
         }
 
-        return (t_vec, res_mat);
+        return Ok((t_vec, res_vec));
     }
 }

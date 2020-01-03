@@ -1,17 +1,13 @@
 #[cfg(test)]
-mod heun
+mod euler
 {
 	extern crate mathru;
+	use mathru::algebra::linear::{Vector};
+	use mathru::analysis::ode::{Solver, Heun};
 
-	use mathru::algebra::abstr::{Real};
-	use mathru::algebra::linear::{Vector, Matrix};
-	use mathru::analysis::ode::Solver;
-	use mathru::analysis::ode::Heun;
-
-
-	fn compare_real<T: Real>(a: &T, b: &T, epsilon: T) -> bool
+	fn compare_epsilon(a: f64, b: f64, epsilon: f64) -> bool
     {
-    	if (*a - *b).abs() > epsilon
+    	if (a - b).abs() > epsilon
         {
         	return false;
         }
@@ -22,19 +18,23 @@ mod heun
 	#[test]
 	fn fn1()
 	{
+		let t_start: f64 = 0.0;
+		let t_stop: f64 = 2.0;
+
 		let f = |t: &f64, _x: &Vector<f64> | -> Vector<f64> { return vector![1.0] * (t * &2.0f64); };
 
 		let init: Vector<f64> = vector![1.0];
 		let solver: Heun<f64> = Heun::new(0.01);
 
-		// y = 2 * x
-		let (t, y): (Vector<f64>, Matrix<f64>) = solver.solve(f, init, 0.0, 2.0);
+		let (t, y): (Vec<f64>, Vec<Vector<f64>>) = solver.solve(f, init, (t_start, t_stop)).unwrap();
 
-		let (m, _n): (usize, usize) = y.dim();
+		let len: usize = y.len();
 
-		assert!(compare_real(&2.0, &t.get(m - 1), 0.00000001));
-		assert!(compare_real(&5.00, &y.get(m - 1, 0), 0.00000001));
+		assert!(compare_epsilon(t_stop, t[len - 1], 0.000000001));
+		assert!(compare_epsilon(5.0, *y[len - 1].get(0), 0.000000001));
 	}
+
+
 
 	// x' = 1 + x^2
 	fn f(_t: &f64, x: &Vector<f64>) -> Vector<f64>
@@ -47,16 +47,16 @@ mod heun
 	#[test]
 	fn fn2()
 	{
+		let t_start: f64 = 0.0;
+		let t_stop: f64 = 1.0;
 		let init: Vector<f64> = vector![0.0];
-		let solver: Heun<f64> = Heun::new(0.001);
+		let solver: Heun<f64> = Heun::new(0.01);
 
+		let (t, y): (Vec<f64>, Vec<Vector<f64>>) = solver.solve(f, init, (t_start, t_stop)).unwrap();
 
-		let (t, y): (Vector<f64>, Matrix<f64>) = solver.solve(f, init, 0.0, 1.4);
+		let len: usize = y.len();
 
-		let (m, _n): (usize, usize) = y.dim();
-
-		assert!(compare_real(&1.40, &t.get(m - 1 ), 0.00000001));
-		assert!(compare_real(&1.4_f64.tan(), &y.get(m - 1, 0), 0.001));
+		assert!(compare_epsilon(t_stop, t[len - 1], 0.00000001));
+		assert!(compare_epsilon(t_stop.tan(), *y[len - 1].get(0), 0.001));
 	}
-
 }

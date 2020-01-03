@@ -1,4 +1,4 @@
-use crate::algebra::linear::{Vector, Matrix};
+use crate::algebra::linear::{Vector};
 use crate::algebra::abstr::Real;
 use super::Solver;
 
@@ -56,13 +56,16 @@ impl<T> Solver<T> for Dopri5<T>
     ///
     /// * 'func' is an explict oridnary diffential equation
     /// * 'init' is the initial value at the time 't_start'
-    /// * 't_start' initial time
-    /// * 't_end'
+    /// * 't_span'
     ///
     /// # Return
     ///
     /// The solver returns a vector and a matrix, containing the times used in each step of the
     /// algorithm and the respectful values for that time.
+    ///
+    /// # Panic
+    ///
+    /// t_span.0 > t_span 1
     ///
     /// # Example
     ///
@@ -84,19 +87,23 @@ impl<T> Solver<T> for Dopri5<T>
     ///
     ///	let init: Vector<f64> = vector![0.0];
     ///	let solver: Dopri5<f64> = Dopri5::new(h_0, e_max, n_max);
+    /// let t_start: f64 = 0.0;
+    /// let t_stop: f64 = 1.4;
     ///
-    ///	let (t, y): (Vector<f64>, Matrix<f64>) = solver.solve(f, init, 0.0, 1.4);
-    ///
-    ///
-    /// let (m, _n): (usize, usize) = y.dim();
-    ///
-    /// assert!((1.40_f64 - *t.get(m - 1)).abs() < 0.0001);
-    ///	assert!((1.4_f64.tan() - *y.get(m - 1, 0)).abs() < 0.0001);
+    ///	let (t, y): (Vec<f64>, Vec<Vector<f64>>) = solver.solve(f, init, (t_start, t_stop)).unwrap();
     ///
     /// ```
-	fn solve<F>(self: &Self, func: F, init: Vector<T>, t_start: T, t_end: T) -> (Vector<T>, Matrix<T>)
+	fn solve<F>(self: &Self, func: F, init: Vector<T>, t_span: (T, T)) -> Result<(Vec<T>, Vec<Vector<T>>),()>
         where F: Fn(&T, &Vector<T>) -> Vector<T>
     {
+        let t_start = t_span.0;
+        let t_stop = t_span.1;
+
+        if t_start > t_stop
+        {
+            panic!()
+        }
+
         let mut x_n: Vector<T> = init.clone();
         let mut t_n: T = t_start;
         let mut h: T = self.h_0;
@@ -104,14 +111,13 @@ impl<T> Solver<T> for Dopri5<T>
         let mut t_vec: Vec<T> = Vec::new();
         t_vec.push(t_n);
 
-        let (m, _n) = init.dim();
-        let mut res_mat: Vec<Vector<T>> = Vec::new();
-        res_mat.push(x_n.clone());
+        let mut res_vec: Vec<Vector<T>> = Vec::new();
+        res_vec.push(x_n.clone());
 
         let mut n: u32 = 0;
-        while n < self.n_max && t_n < t_end
+        while n < self.n_max && t_n < t_stop
         {
-            h = h.min(t_end - t_n);
+            h = h.min(t_stop - t_n);
             //
             let (rkf4, rkf5): (Vector<T>, Vector<T>) = Dopri5::calc_rkf4_rkf5(&t_n, &x_n, &func, &h);
             let error: T = (rkf4.clone() - rkf5.clone()).p_norm(&T::from_f64(2.0).unwrap());
@@ -121,7 +127,7 @@ impl<T> Solver<T> for Dopri5<T>
                 t_n = t_n + h;
                 x_n = rkf4;
                 t_vec.push(t_n);
-                res_mat.push(x_n.clone());
+                res_vec.push(x_n.clone());
 				n = n + 1;
             }
 
@@ -153,23 +159,23 @@ impl<T> Solver<T> for Dopri5<T>
 
 
         //
-        let mut t_vector: Vector<T> = Vector::zero(t_vec.len());
+//        let mut t_vector: Vector<T> = Vector::zero(t_vec.len());
+//
+//        for i in 0..t_vec.len()
+//        {
+//            *t_vector.get_mut(i) = t_vec[i];
+//        }
+//
+//        //
+//        let mut res_matrix: Matrix<T> = Matrix::zero(t_vec.len(), m);
+//
+//        for i in 0..t_vec.len()
+//        {
+//            //res_matrix = res_matrix.set_row(&res_mat[i].clone().transpose(), i);
+//            res_matrix.set_row(&res_mat[i].clone().transpose(), i);
+//        }
 
-        for i in 0..t_vec.len()
-        {
-            *t_vector.get_mut(i) = t_vec[i];
-        }
-
-        //
-        let mut res_matrix: Matrix<T> = Matrix::zero(t_vec.len(), m);
-
-        for i in 0..t_vec.len()
-        {
-            //res_matrix = res_matrix.set_row(&res_mat[i].clone().transpose(), i);
-            res_matrix.set_row(&res_mat[i].clone().transpose(), i);
-        }
-
-        return (t_vector, res_matrix);
+        return Ok((t_vec, res_vec));
     }
 }
 

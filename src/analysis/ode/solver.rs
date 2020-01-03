@@ -1,4 +1,4 @@
-use crate::algebra::linear::{Vector, Matrix};
+use crate::algebra::linear::{Vector};
 use crate::algebra::abstr::Field;
 
 
@@ -6,11 +6,9 @@ use crate::algebra::abstr::Field;
 pub trait Solver<T>
     where T: Field,
 {
-    ///
     ///Solve the ordinary diffential equation, returning the results of the calculation.
-    ///
-    ///
-    fn solve<F>(self: &Self, function: F, initial_cond: Vector<T>, t_start: T, t_end: T) -> (Vector<T>, Matrix<T>)
+    fn solve<F>(self: &Self, function: F, init_cond: Vector<T>, t_span: (T, T)) -> Result<(Vec<T>, Vec<Vector<T>>),
+     ()>
         where F: Fn(&T, &Vector<T>) -> Vector<T>;
 
 }
