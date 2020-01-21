@@ -1,6 +1,6 @@
 use crate::algebra::linear::{Vector};
 use crate::algebra::abstr::Real;
-use super::Solver;
+use super::{Solver, ExplicitODE};
 
 /// Solves an ordinary differential equation using Euler's method.
 ///
@@ -62,21 +62,61 @@ impl<T> Solver<T> for Euler<T>
     ///
     /// ```
     /// use mathru::*;
-    /// use mathru::algebra::linear::{vector, Vector};
-    /// use mathru::analysis::ode::{Solver, Euler};
+    /// use mathru::algebra::linear::{Vector};
+    /// use mathru::analysis::ode::{Solver, ExplicitODE, Euler};
     ///
-    /// let f = |t: &f64, _x: &Vector<f64> | -> Vector<f64> { return Vector::new_row(1, vec![1.0]) * (t * &2.0f64); };
+    /// // Define ODE
+    /// // $`y^{'} = ay = f(x, y) `$
+    /// // $`y = C a e^{at}`$
+    /// // $'y(t_{s}) = C a e^{at_s} => C = \frac{y(t_s)}{ae^{at_s}}`$
+    /// pub struct ExplicitODEProblem
+    /// {
+    ///	    time_span: (f64, f64),
+    ///	    init_cond: Vector<f64>
+    /// }
     ///
-    ///	let init: Vector<f64> = vector![1.0];
-    ///	let solver: Euler<f64> = Euler::new(0.01);
-    /// let t_start: f64 = 0.0;
-    /// let t_stop: f64 = 2.0;
+    /// impl Default for ExplicitODEProblem
+    /// {
+    ///	    fn default() -> ExplicitODEProblem
+    ///	    {
+    ///		    ExplicitODEProblem
+    ///		    {
+    ///			    time_span: (0.0, 2.0),
+    ///			    init_cond: vector![0.5],
+    ///		    }
+    ///	    }
+    /// }
     ///
-    ///	let (t, x): (Vec<f64>, Vec<Vector<f64>>) = solver.solve(f, init, (t_start, t_stop)).unwrap();
+    /// impl ExplicitODE<f64> for ExplicitODEProblem
+    /// {
+    ///   	fn func(self: &Self, t: &f64, x: &Vector<f64>) -> Vector<f64>
+    ///     {
+    ///		    return x * &2.0f64;
+    ///	    }
+    ///
+    ///     fn time_span(self: &Self) -> (f64, f64)
+    ///     {
+    ///		    return self.time_span;
+    ///     }
+    ///
+    ///    fn init_cond(self: &Self) -> Vector<f64>
+    ///    {
+    ///	        return self.init_cond.clone();
+    ///    }
+    /// }
+    ///
+    ///	let problem: ExplicitODEProblem = ExplicitODEProblem::default();
+    ///
+    ///	let solver: Euler<f64> = Euler::new(0.001);
+    ///
+    /// let (t, y): (Vec<f64>, Vec<Vector<f64>>) = solver.solve(&problem).unwrap();
+    ///
     /// ```
-	fn solve<F>(self: &Self, func: F, init: Vector<T>, t_span: (T, T)) -> Result<(Vec<T>, Vec<Vector<T>>),()>
-        where F: Fn(&T, &Vector<T>) -> Vector<T>
+    fn solve<F>(self: &Self, prob: &F) -> Result<(Vec<T>, Vec<Vector<T>>), ()>
+        where F: ExplicitODE<T>
     {
+        let t_span =  prob.time_span();
+        let init = prob.init_cond();
         let t_start = t_span.0;
         let t_stop = t_span.1;
 
@@ -102,8 +142,7 @@ impl<T> Solver<T> for Euler<T>
             t_vec.push(t_n);
             res_vec.push(x_n.clone());
 
-            let x_n_1_2: Vector<T> = &x_n + &(&func(&t_n, &x_n) * &(h / T::from_f64(2.0).unwrap()));
-            x_n = &x_n + &(&func(&(t_n + h / T::from_f64(2.0).unwrap()), &x_n_1_2) * &h);
+            x_n = &x_n + &(&prob.func(&t_n, &x_n) * &h);
 
             t_n = t_n + h;
         }

@@ -1,47 +1,45 @@
-use crate::algebra::linear::{Vector};
+use crate::analysis::ode::solver::{Solver, ExplicitODE};
+use crate::algebra::linear::vector::vector::Vector;
 use crate::algebra::abstr::Real;
-use super::{Solver, ExplicitODE};
+use crate::algebra::abstr::Zero;
 
-/// Solves an ordinary differential equation using Heun's method.
 ///
-/// <a href="https://en.wikipedia.org/wiki/Heun%27s_method">https://en.wikipedia.org/wiki/Heun's_method</a>
-pub struct Heun<T>
+/// Adams-Bashforth method
+pub struct AdamsBashforth<T>
 {
-    step_size: T
+	k: u8,
+	step_size: T
 }
 
-
-impl<T> Heun<T>
-    where T: Real
+impl<T> AdamsBashforth<T>
+	where T: Real
 {
-    /// Creates a Heun instance with step size 'step_size'
-    ///
-    /// # Argument
-    ///
-    /// * 'step_size'
-    ///
-    /// # Panics
-    ///
-    /// 'step_size' <= 0.0
-    ///
-    pub fn new(step_size: T) -> Heun<T>
-    {
-        if step_size <= T::zero()
+	///
+	pub fn new(k: u8, step_size: T) -> AdamsBashforth<T>
+	{
+		if k == 0 || k >= 6
+		{
+			panic!();
+		}
+		if step_size <= T::zero()
         {
             panic!();
         }
-        Heun
-        {
-            step_size: step_size,
-        }
-    }
+
+		return
+		AdamsBashforth
+		{
+			k: k,
+			step_size: step_size
+		}
+	}
 }
 
-impl<T> Solver<T> for Heun<T>
+impl<T> Solver<T> for AdamsBashforth<T>
     where T: Real
 {
 
-    /// Solves `func` using Heun's method.
+    /// Solves `func` using Adams' method.
     ///
     /// # Arguments
     ///
@@ -63,7 +61,7 @@ impl<T> Solver<T> for Heun<T>
     /// ```
     /// use mathru::*;
     /// use mathru::algebra::linear::{Vector, Matrix};
-    /// use mathru::analysis::ode::{Solver, ExplicitODE, Heun};
+    /// use mathru::analysis::ode::{Solver, ExplicitODE, AdamsBashforth};
     ///
     /// // Define ODE
     /// // $`y^{'} = ay = f(x, y) `$
@@ -106,7 +104,7 @@ impl<T> Solver<T> for Heun<T>
     /// }
     ///
     /// let problem: ExplicitODEProblem = ExplicitODEProblem::default();
-    ///	let solver: Heun<f64> = Heun::new(0.001);
+    ///	let solver: AdamsBashforth<f64> = AdamsBashforth::new(1, 0.001);
     ///
     /// let (t, y): (Vec<f64>, Vec<Vector<f64>>) = solver.solve(&problem).unwrap();
     ///
@@ -114,9 +112,10 @@ impl<T> Solver<T> for Heun<T>
 	fn solve<F>(self: &Self, prob: &F) -> Result<(Vec<T>, Vec<Vector<T>>), ()>
         where F: ExplicitODE<T>
     {
-        let t_span: (T, T) = prob.time_span();
+		let t_span: (T, T) = prob.time_span();
         let t_start: T = t_span.0;
         let t_stop: T = t_span.1;
+
         if t_start > t_stop
         {
             panic!();
@@ -130,6 +129,8 @@ impl<T> Solver<T> for Heun<T>
         let mut t_vec: Vec<T> = Vec::with_capacity(steps);
         let mut res_vec: Vec<Vector<T>> = Vec::with_capacity(steps);
 
+     	let mut res_vec: Vec<Vector<T>> = Vec::with_capacity(steps);
+
         for _i in 0..steps
         {
             //Step size
@@ -138,16 +139,34 @@ impl<T> Solver<T> for Heun<T>
             t_vec.push(t_n);
             res_vec.push(x_n.clone());
 
-            let slope_left: Vector<T> = prob.func(&t_n, &x_n);
-            let slope_right: Vector<T> = prob.func(&(t_n + h), &(&x_n + &(&slope_left * &h)));
+            x_n = &x_n + &(&prob.func(&t_n, &x_n) * &h);
 
-            let slope_ideal: Vector<T> = (&slope_left + &slope_right) / T::from_f64(2.0).unwrap();
-
-            // Update
-            x_n = &x_n + &(&slope_ideal * &h);
             t_n = t_n + h;
-        }
+		}
+    	return Ok((t_vec, res_vec));
+	}
+}
 
-        return Ok((t_vec, res_vec));
-    }
+impl<T> AdamsBashforth<T>
+	where T: Real
+{
+	///
+	/// J \in \[0, 8\]
+	///
+	fn coefficient(j: u32) -> T
+	{
+		match j
+		{
+			0 => return T::from_f64(1.0).unwrap(),
+			1 => return T::from_f64(0.5).unwrap(),
+			2 => return T::from_f64(5.0/12.0).unwrap(),
+			3 => return T::from_f64(3.0/8.0).unwrap(),
+			4 => return T::from_f64(251.0/720.0).unwrap(),
+			5 => return T::from_f64(95.0/288.0).unwrap(),
+			6 => return T::from_f64(19087.0/60480.0).unwrap(),
+			7 => return T::from_f64(5257.0/17280.0).unwrap(),
+			7 => return T::from_f64(1070017.0/3628800.0).unwrap(),
+			_ => panic!(),
+		}
+	}
 }

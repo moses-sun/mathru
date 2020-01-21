@@ -1,6 +1,6 @@
 [package]
 name = "mathru"
-version = "0.5.0"
+version = "0.6.0"
 description = "Simple mathematics library written in Rust"
 authors = ["Matthias Eiholzer <matthias.eiholzer@gmail.com>"]
 exclude = ["literature/*", "tests/*", "backup/*", ".gitignore"]
@@ -80,6 +80,7 @@ optional = true
 [dev-dependencies]
 serde_json = "1.0"
 criterion = "0.3"
+
 
 [[bench]]
 name = "benchmark"

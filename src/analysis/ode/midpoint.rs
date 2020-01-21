@@ -2,20 +2,19 @@ use crate::algebra::linear::{Vector};
 use crate::algebra::abstr::Real;
 use super::{Solver, ExplicitODE};
 
-/// Solves an ordinary differential equation using the 4th order Runge-Kutta algorithm.
+/// Solves an ordinary differential equation using midpoint method.
 ///
-///<a href="https://en.wikipedia.org/wiki/Runge%E2%80%93Kutta_methods">https://en.wikipedia
-/// .org/wiki/Rung-Kutta_methods</a>
-pub struct RK4<T>
+/// <a href="https://en.wikipedia.org/wiki/Midpoint_method">https://en.wikipedia.org/wiki/Midpoint_method</a>
+pub struct Midpoint<T>
 {
-    /// Step size
+     /// Step size
     step_size: T
 }
 
-impl<T> RK4<T>
+impl<T> Midpoint<T>
     where T: Real
 {
-    /// Creates a RK4 instance with step size 'step_size'
+    /// Creates a Euler instance with step size 'step_size'
     ///
     /// # Argument
     ///
@@ -25,43 +24,46 @@ impl<T> RK4<T>
     ///
     /// 'step_size' <= 0.0
     ///
-    pub fn new(step_size: T) -> RK4<T>
+    pub fn new(step_size: T) -> Midpoint<T>
     {
         if step_size <= T::zero()
         {
-            panic!("Step is lower or equal to zero");
+            panic!();
         }
-        RK4
+        return Midpoint
         {
             step_size: step_size,
         }
     }
 }
 
-impl<T> Solver<T> for RK4<T>
+impl<T> Solver<T> for Midpoint<T>
     where T: Real
 {
 
-    /// Solves `func` using the 4th order Runge-Kutta algorithm.
+    /// Solves `func` using Euler's method.
     ///
     /// # Arguments
     ///
     /// * 'func' is an explict oridnary diffential equation
     /// * 'init' is the initial value at the time 't_start'
-    /// * 't_start' initial time
-    /// * 't_end'
+    /// * 't_span' Time span
     ///
     /// # Return
     ///
     /// The solver returns a vector and a matrix, containing the times used in each step of the
     /// algorithm and the respectful values for that time.
     ///
+    /// # Panic
+    ///
+    /// t_span.0 > t_span 1
+    ///
     /// # Example
     ///
     /// ```
     /// use mathru::*;
-    /// use mathru::algebra::linear::{Vector, Matrix};
-    /// use mathru::analysis::ode::{Solver, ExplicitODE, RK4};
+    /// use mathru::algebra::linear::{Vector};
+    /// use mathru::analysis::ode::{Solver, ExplicitODE, Midpoint};
     ///
     /// // Define ODE
     /// // $`y^{'} = ay = f(x, y) `$
@@ -104,52 +106,45 @@ impl<T> Solver<T> for RK4<T>
     /// }
     ///
     ///	let problem: ExplicitODEProblem = ExplicitODEProblem::default();
-    ///	let solver: RK4<f64> = RK4::new(0.01);
+    ///
+    ///	let solver: Midpoint<f64> = Midpoint::new(0.001);
     ///
     /// let (t, y): (Vec<f64>, Vec<Vector<f64>>) = solver.solve(&problem).unwrap();
     ///
     /// ```
-	 fn solve<F>(self: &Self, prob: &F) -> Result<(Vec<T>, Vec<Vector<T>>), ()>
+    fn solve<F>(self: &Self, prob: &F) -> Result<(Vec<T>, Vec<Vector<T>>), ()>
         where F: ExplicitODE<T>
     {
-        let mut x_n: Vector<T> = prob.init_cond();
+        let t_span =  prob.time_span();
+        let init = prob.init_cond();
+        let t_start = t_span.0;
+        let t_stop = t_span.1;
 
-        let t_span: (T, T) = prob.time_span();
-        let t_start: T = t_span.0;
-        let t_stop: T = t_span.1;
+        if t_start > t_stop
+        {
+            panic!()
+        }
+
+        let mut x_n: Vector<T> = init.clone();
 
         let mut t_n: T = t_start;
 
-        let limit: T = ((t_stop - t_start) / self.step_size).ceil() + T::one();
+        let limit = ((t_stop - t_start) / self.step_size).ceil() + T::one();
 
         let steps: usize = limit.to_u64().unwrap() as usize;
-
         let mut t_vec: Vec<T> = Vec::with_capacity(steps);
         let mut res_vec: Vec<Vector<T>> = Vec::with_capacity(steps);
 
-        let h: T = self.step_size;
-
         for _i in 0..steps
         {
+            let h: T = self.step_size.min(t_stop - t_n);
+
             t_vec.push(t_n);
             res_vec.push(x_n.clone());
 
-            // k1 = f(t_n, x_n)
-            let k1: Vector<T> = prob.func(&t_n, &x_n);
+            let x_n_1_2: Vector<T> = &x_n + &(&prob.func(&t_n, &x_n) * &(h / T::from_f64(2.0).unwrap()));
+            x_n = &x_n + &(&prob.func(&(t_n + h / T::from_f64(2.0).unwrap()), &x_n_1_2) * &h);
 
-            // k2 = func(t_n + h / 2, x_n + h / 2 k1)
-            let k2: Vector<T> = prob.func(&(t_n + (h / T::from_f64(2.0).unwrap())), &(&x_n + &((&k1 * &h) /
-            T::from_f64(2.0).unwrap())));
-
-            // k3 = func(t_n + h / 2, x_n + h / 2 * k2)
-            let k3: Vector<T> = prob.func(&(t_n + h / T::from_f64(2.0).unwrap()), &(&x_n + &(&k2 * &(h /
-            T::from_f64(2.0).unwrap())))) ;
-
-            // k4 = h * func(t_n + h, x_n + h * k3)
-            let k4: Vector<T> = prob.func(&(t_n + h), &(&x_n + &(&k3 * &h)));
-
-            // x[n+1] = x[n] + h*(k1 + 2*k2 + 2*k3 + k4)/6
-            x_n = x_n + (k1 + ((k2 + k3) * T::from_f64(2.0).unwrap()) + k4) * h / T::from_f64(6.0).unwrap();
             t_n = t_n + h;
         }
 

@@ -3,14 +3,16 @@ mod rk4
 {
 	extern crate mathru;
 	use mathru::algebra::linear::{Vector};
-	use mathru::analysis::ode::Solver;
+	use mathru::analysis::ode::{Solver, ExplicitODE};
 	use mathru::analysis::ode::RK4;
 
+	use super::super::problem::{ExplicitODE1, ExplicitODE2};
 
 	fn compare_epsilon(a: f64, b: f64, epsilon: f64) -> bool
     {
     	if (a - b).abs() > epsilon
         {
+        	println!("|a-b|: {}", (a-b).abs());
         	return false;
         }
 
@@ -20,40 +22,33 @@ mod rk4
 	#[test]
 	fn fn1()
 	{
-		let f = |t: &f64, _x: &Vector<f64> | -> Vector<f64> { return vector![1.0] * (t * &2.0f64); };
-
-		let init: Vector<f64> = vector![1.0];
+		let problem: ExplicitODE1 = ExplicitODE1::default();
 		let solver: RK4<f64> = RK4::new(0.01);
 
-		let (t, y): (Vec<f64>, Vec<Vector<f64>>) = solver.solve(f, init, (0.0f64, 2.0f64)).unwrap();
+		let (t, y): (Vec<f64>, Vec<Vector<f64>>) = solver.solve(&problem).unwrap();
 
 		let len: usize = y.len();
 
-		assert!(compare_epsilon(2.0, t[len - 1], 0.000000001));
-		assert!(compare_epsilon(5.0, *y[len - 1].get(0), 0.000000001));
-	}
+		let time_span: (f64, f64) = problem.time_span();
+		let init_cond: Vector<f64> = problem.init_cond();
 
-
-
-	// x' = 1 + x^2
-	fn f(_t: &f64, x: &Vector<f64>) -> Vector<f64>
-	{
-		let result  = vector![1.0] + x.clone().apply(&|e: &f64| -> f64 {return e * e;}) ;
-
-		return result;
+		assert!(compare_epsilon(time_span.1, t[len - 1], 0.000000001));
+		assert!(compare_epsilon(*init_cond.get(0) * (2.0 * time_span.1).exp() , *y[len - 1].get(0), 0.0000002));
 	}
 
 	#[test]
 	fn fn2()
 	{
-		let init: Vector<f64> = vector![0.0];
+		let problem: ExplicitODE2 = ExplicitODE2::default();
 		let solver: RK4<f64> = RK4::new(0.1);
 
-		let (t, y): (Vec<f64>, Vec<Vector<f64>>) = solver.solve(f, init, (0.0, 1.4)).unwrap();
+		let (t, y): (Vec<f64>, Vec<Vector<f64>>) = solver.solve(&problem).unwrap();
 
 		let len: usize = y.len();
 
-		assert!(compare_epsilon(1.40, t[len - 1], 0.00000001));
-		assert!(compare_epsilon(1.4_f64.tan(), *y[len - 1].get(0), 0.006));
+		let time_span: (f64, f64) = problem.time_span();
+
+		assert!(compare_epsilon(time_span.1, t[len - 1], 0.00000001));
+		assert!(compare_epsilon(time_span.1.tan(), *y[len - 1].get(0), 0.006));
 	}
 }

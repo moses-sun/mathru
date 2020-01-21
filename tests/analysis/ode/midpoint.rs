@@ -1,9 +1,9 @@
 #[cfg(test)]
-mod euler
+mod midpoint
 {
 	extern crate mathru;
 	use mathru::algebra::linear::{Vector};
-	use mathru::analysis::ode::{Solver, Euler, ExplicitODE};
+	use mathru::analysis::ode::{Solver, Midpoint, ExplicitODE};
 
 	use super::super::problem::{ExplicitODE1, ExplicitODE2};
 
@@ -22,7 +22,7 @@ mod euler
 	fn fn1()
 	{
 		let problem: ExplicitODE1 = ExplicitODE1::default();
-		let solver: Euler<f64> = Euler::new(0.0000001);
+		let solver: Midpoint<f64> = Midpoint::new(0.001);
 
 		let (t, y): (Vec<f64>, Vec<Vector<f64>>) = solver.solve(&problem).unwrap();
 
@@ -39,7 +39,7 @@ mod euler
 	fn fn2()
 	{
 		let problem: ExplicitODE2 = ExplicitODE2::default();
-		let solver: Euler<f64> = Euler::new(0.000001);
+		let solver: Midpoint<f64> = Midpoint::new(0.01);
 
 		let (t, y): (Vec<f64>, Vec<Vector<f64>>) = solver.solve(&problem).unwrap();
 

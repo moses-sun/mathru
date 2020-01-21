@@ -3,12 +3,15 @@ mod euler
 {
 	extern crate mathru;
 	use mathru::algebra::linear::{Vector};
-	use mathru::analysis::ode::{Solver, Heun};
+	use mathru::analysis::ode::{Solver, ExplicitODE, Heun};
+
+	use super::super::problem::{ExplicitODE1, ExplicitODE2};
 
 	fn compare_epsilon(a: f64, b: f64, epsilon: f64) -> bool
     {
     	if (a - b).abs() > epsilon
         {
+        	println!("|a-b|: {}", (a-b).abs());
         	return false;
         }
 
@@ -18,45 +21,33 @@ mod euler
 	#[test]
 	fn fn1()
 	{
-		let t_start: f64 = 0.0;
-		let t_stop: f64 = 2.0;
+		let problem: ExplicitODE1 = ExplicitODE1::default();
+		let solver: Heun<f64> = Heun::new(0.001);
 
-		let f = |t: &f64, _x: &Vector<f64> | -> Vector<f64> { return vector![1.0] * (t * &2.0f64); };
-
-		let init: Vector<f64> = vector![1.0];
-		let solver: Heun<f64> = Heun::new(0.01);
-
-		let (t, y): (Vec<f64>, Vec<Vector<f64>>) = solver.solve(f, init, (t_start, t_stop)).unwrap();
+		let (t, y): (Vec<f64>, Vec<Vector<f64>>) = solver.solve(&problem).unwrap();
 
 		let len: usize = y.len();
 
-		assert!(compare_epsilon(t_stop, t[len - 1], 0.000000001));
-		assert!(compare_epsilon(5.0, *y[len - 1].get(0), 0.000000001));
-	}
+		let time_span: (f64, f64) = problem.time_span();
+		let init_cond: Vector<f64> = problem.init_cond();
 
-
-
-	// x' = 1 + x^2
-	fn f(_t: &f64, x: &Vector<f64>) -> Vector<f64>
-	{
-		let result  = vector![1.0] + x.clone().apply(&|e: &f64| -> f64 {return e * e;}) ;
-
-		return result;
+		assert!(compare_epsilon(time_span.1, t[len - 1], 0.000000001));
+		assert!(compare_epsilon(*init_cond.get(0) * (2.0 * time_span.1).exp() , *y[len - 1].get(0), 0.0001));
 	}
 
 	#[test]
 	fn fn2()
 	{
-		let t_start: f64 = 0.0;
-		let t_stop: f64 = 1.0;
-		let init: Vector<f64> = vector![0.0];
-		let solver: Heun<f64> = Heun::new(0.01);
+		let problem: ExplicitODE2 = ExplicitODE2::default();
+		let solver: Heun<f64> = Heun::new(0.001);
 
-		let (t, y): (Vec<f64>, Vec<Vector<f64>>) = solver.solve(f, init, (t_start, t_stop)).unwrap();
+		let (t, y): (Vec<f64>, Vec<Vector<f64>>) = solver.solve(&problem).unwrap();
 
 		let len: usize = y.len();
 
-		assert!(compare_epsilon(t_stop, t[len - 1], 0.00000001));
-		assert!(compare_epsilon(t_stop.tan(), *y[len - 1].get(0), 0.001));
+		let time_span: (f64, f64) = problem.time_span();
+
+		assert!(compare_epsilon(time_span.1, t[len - 1], 0.00000001));
+		assert!(compare_epsilon(time_span.1.tan(), *y[len - 1].get(0), 0.0001));
 	}
 }

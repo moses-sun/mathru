@@ -26,9 +26,9 @@ mathru is a numeric library containing algorithms for linear algebra, analysis a
 
     - Ordinary differential equation (ODE)
         - Heun's method
+        - Euler method
+        - Midpoint method
         - Runge-Kutta 4th order
-        - Euler
-        - Runge-Kutta 4(5)
         - Runge-Kutta-Felhberg 4(5)
         - Dormand-Prince 4(5)
         

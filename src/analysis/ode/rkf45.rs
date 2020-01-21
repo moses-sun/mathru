@@ -1,6 +1,6 @@
 use crate::algebra::linear::{Vector};
 use crate::algebra::abstr::Real;
-use super::Solver;
+use super::{Solver, ExplicitODE};
 
 /// Solves an ordinary differential equation using the 4th order Runge-Kutta-Fehlberg algorithm.
 ///
@@ -82,21 +82,66 @@ impl<T> Solver<T> for RKF45<T>
     ///
     /// ```
     /// use mathru::*;
-    /// use mathru::algebra::linear::{Vector};
-    /// use mathru::analysis::ode::{Solver, RKF45};
+    /// use mathru::algebra::linear::{Vector, Matrix};
+    /// use mathru::analysis::ode::{Solver, ExplicitODE, RKF45};
     ///
-    /// let f = |t: &f64, _x: &Vector<f64> | -> Vector<f64> { return Vector::new_row(1, vec![1.0]) * (t * &2.0f64); };
+    /// // Define ODE
+    /// // $`y^{'} = ay = f(x, y) `$
+    /// // $`y = C a e^{at}`$
+    /// // $'y(t_{s}) = C a e^{at_s} => C = \frac{y(t_s)}{ae^{at_s}}`$
+    /// pub struct ExplicitODEProblem
+    /// {
+    ///	    time_span: (f64, f64),
+    ///	    init_cond: Vector<f64>
+    /// }
     ///
-    ///	let init: Vector<f64> = vector![1.0];
-    ///	let solver: RKF45<f64> = RKF45::new(0.001, 0.001, 0.01, 0.1, 3000);
-    /// let t_start: f64 = 0.0;
-    /// let t_stop: f64 = 2.0;
+    /// impl Default for ExplicitODEProblem
+    /// {
+    ///	    fn default() -> ExplicitODEProblem
+    ///	    {
+    ///		    ExplicitODEProblem
+    ///		    {
+    ///			    time_span: (0.0, 2.0),
+    ///			    init_cond: vector![0.5],
+    ///		    }
+    ///	    }
+    /// }
     ///
-    ///	let (t, y): (Vec<f64>, Vec<Vector<f64>>) = solver.solve(f, init, (t_start, t_stop)).unwrap();
+    /// impl ExplicitODE<f64> for ExplicitODEProblem
+    /// {
+    ///   	fn func(self: &Self, t: &f64, x: &Vector<f64>) -> Vector<f64>
+    ///     {
+    ///		    return x * &2.0f64;
+    ///	    }
+    ///
+    ///     fn time_span(self: &Self) -> (f64, f64)
+    ///     {
+    ///		    return self.time_span;
+    ///     }
+    ///
+    ///    fn init_cond(self: &Self) -> Vector<f64>
+    ///    {
+    ///	        return self.init_cond.clone();
+    ///    }
+    /// }
+    ///
+    ///	let problem: ExplicitODEProblem = ExplicitODEProblem::default();
+   	///
+   	/// let h_0: f64 = 0.02;
+	///	let h_min: f64 = 0.001;
+	///	let h_max: f64 = 1.0;
+	///	let e_max: f64 = 0.00001;
+	///	let n_max: u32 = 100;
+    ///
+	///	let solver: RKF45<f64> = RKF45::new(h_0, h_min, h_max, e_max, n_max);
+    ///
+    /// let (t, y): (Vec<f64>, Vec<Vector<f64>>) = solver.solve(&problem).unwrap();
+    ///
     /// ```
-	fn solve<F>(self: &Self, func: F, init: Vector<T>, t_span: (T, T)) -> Result<(Vec<T>, Vec<Vector<T>>), ()>
-        where F: Fn(&T, &Vector<T>) -> Vector<T>
+    fn solve<F>(self: &Self, prob: &F) -> Result<(Vec<T>, Vec<Vector<T>>), ()>
+        where F: ExplicitODE<T>
     {
+        let t_span: (T, T) = prob.time_span();
         let t_start: T = t_span.0;
         let t_stop: T = t_span.1;
         if t_start > t_stop
@@ -104,7 +149,7 @@ impl<T> Solver<T> for RKF45<T>
             panic!();
         }
 
-        let mut x_n: Vector<T> = init.clone();
+        let mut x_n: Vector<T> = prob.init_cond();
         let mut t_n: T = t_start;
         let mut h: T = self.h_0;
 
@@ -119,7 +164,7 @@ impl<T> Solver<T> for RKF45<T>
         {
             h = h.min(t_stop - t_n);
             //
-            let (rkf4, rkf5): (Vector<T>, Vector<T>) = RKF45::calc_rkf4_rkf5(&t_n, &x_n, &func, &h);
+            let (rkf4, rkf5): (Vector<T>, Vector<T>) = RKF45::calc_rkf4_rkf5(&t_n, &x_n, prob, &h);
             let e: T = (rkf4.clone() - rkf5.clone()).p_norm(&T::from_f64(2.0).unwrap());
 
             let mut s: T = T::one();
@@ -180,33 +225,33 @@ impl<T> RKF45<T>
     where T: Real
 {
 
-    fn calc_rkf4_rkf5<F>(t_n: &T, x_n: &Vector<T>, func: F, h: &T) -> (Vector<T>, Vector<T>)
-        where F: Fn(&T, &Vector<T>) -> Vector<T>
+    fn calc_rkf4_rkf5<F>(t_n: &T, x_n: &Vector<T>, prob: &F, h: &T) -> (Vector<T>, Vector<T>)
+        where F: ExplicitODE<T>
     {
         // k_1 = hf(t_n, x_n)
-        let k_1: Vector<T> = &func(t_n, x_n) * h;
+        let k_1: Vector<T> = &prob.func(t_n, x_n) * h;
 
         // k_2 = h f(t_n + h/4, x_n + k1/4);
-        let k_2: Vector<T> = &func(&(*t_n + *h / T::from_f64(4.0).unwrap()), &(x_n + &(&k_1 / &T::from_f64(4.0).unwrap()
+        let k_2: Vector<T> = &prob.func(&(*t_n + *h / T::from_f64(4.0).unwrap()), &(x_n + &(&k_1 / &T::from_f64(4.0).unwrap()
         ))) * h;
 
         //k_3 = h f(t_n + h3/8, x_n + k_1*3/32 + k2*9/32)
         let k_31: Vector<T> = x_n + &(&k_1 * &T::from_f64(3.0 / 32.0).unwrap());
         let k_32: Vector<T> = k_31 + (&k_2 * &T::from_f64(9.0 / 32.0).unwrap());
-        let k_3: Vector<T> = &func(&(*t_n + *h * T::from_f64(3.0 / 8.0).unwrap()),  &k_32) * h;
+        let k_3: Vector<T> = &prob.func(&(*t_n + *h * T::from_f64(3.0 / 8.0).unwrap()),  &k_32) * h;
 
         // k_4 = h f(t_n + 12/13h, x_n + 1932/2197k_1 - 7200/2197k_2 + 7296/2197k_3)
         let k_41: Vector<T> = x_n + &(&k_1 * &T::from_f64(1932.0 / 2197.0).unwrap());
         let k_42: Vector<T> = k_41 - (&k_2 * &T::from_f64(7200.0 / 2197.0).unwrap());
         let k_43: Vector<T> = k_42 + (&k_3 * &T::from_f64(7296.0 / 2197.0).unwrap());
-        let k_4: Vector<T> = &func(&(*t_n + *h * T::from_f64(12.0 / 13.0).unwrap()), &k_43) * h;
+        let k_4: Vector<T> = &prob.func(&(*t_n + *h * T::from_f64(12.0 / 13.0).unwrap()), &k_43) * h;
 
         // k_5 = h f(t_n + h, x_n + 439/216k_1 - 8k_2 + 3680/513k_3 - 845/4104k_4)
         let k_51: Vector<T> = x_n + &(&k_1 * &T::from_f64(439.0 / 216.0).unwrap());
         let k_52: Vector<T> = k_51 - (&k_2 * &T::from_f64(8.0).unwrap());
         let k_53: Vector<T> = k_52 + (&k_3 * &T::from_f64(3680.0 / 513.0).unwrap());
         let k_54: Vector<T> = k_53 - (&k_4 * &T::from_f64(845.0 / 4104.0).unwrap());
-        let k_5: Vector<T> = &func(&(*t_n + *h) , &k_54) * h;
+        let k_5: Vector<T> = &prob.func(&(*t_n + *h) , &k_54) * h;
 
 
         // k_6 = h f(t_n + h/2, x_n - 8/27k_1 + 2k_2 - 3544/2565k_3 + 1859/4104k_4 - 11/40k_5)
@@ -215,7 +260,7 @@ impl<T> RKF45<T>
         let k_63: Vector<T> = k_62 - (&k_3 * &T::from_f64(3544.0 / 2565.0).unwrap());
         let k_64: Vector<T> = k_63 + (&k_4 * &T::from_f64(1859.0 / 4104.0).unwrap());
         let k_65: Vector<T> = k_64 - (&k_5 * &T::from_f64(11.0 / 40.0).unwrap());
-        let k_6: Vector<T> = &func(&(*t_n + *h * T::from_f64(0.5).unwrap()), &k_65) * h;
+        let k_6: Vector<T> = &prob.func(&(*t_n + *h * T::from_f64(0.5).unwrap()), &k_65) * h;
 
         // order 4
         // x_(n +1) = x_n + 25/216k_1 + 1408/2565k_3 + 2197/4104k_4 - 1/5k_5
