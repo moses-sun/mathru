@@ -28,6 +28,7 @@ mathru is a numeric library containing algorithms for linear algebra, analysis a
         - Heun's method
         - Euler method
         - Midpoint method
+        - Ralston's method
         - Runge-Kutta 4th order
         - Runge-Kutta-Felhberg 4(5)
         - Dormand-Prince 4(5)

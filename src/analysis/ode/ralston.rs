@@ -2,19 +2,21 @@ use crate::algebra::linear::{Vector};
 use crate::algebra::abstr::Real;
 use super::{Solver, ExplicitODE};
 
-/// Solves an ordinary differential equation using Heun's method.
+/// Solves an ordinary differential equation using Ralston's method.
 ///
-/// <a href="https://en.wikipedia.org/wiki/Heun%27s_method">https://en.wikipedia.org/wiki/Heun's_method</a>
-pub struct Heun<T>
+/// Ralston's method is a second-order metho
+///
+/// <a href="https://en.wikipedia.org/wiki/List_of_Runge-Kutta_methods#Forward_Euler">https://en.wikipedia.org/wiki/List_of_Runge-Kutta_methods#Forward_Euler</a>
+pub struct Ralston<T>
 {
+     /// Step size
     step_size: T
 }
 
-
-impl<T> Heun<T>
+impl<T> Ralston<T>
     where T: Real
 {
-    /// Creates a Heun instance with step size 'step_size'
+    /// Creates a Ralstons instance with step size 'step_size'
     ///
     /// # Argument
     ///
@@ -24,24 +26,24 @@ impl<T> Heun<T>
     ///
     /// 'step_size' <= 0.0
     ///
-    pub fn new(step_size: T) -> Heun<T>
+    pub fn new(step_size: T) -> Ralston<T>
     {
         if step_size <= T::zero()
         {
             panic!();
         }
-        Heun
+        Ralston
         {
             step_size: step_size,
         }
     }
 }
 
-impl<T> Solver<T> for Heun<T>
+impl<T> Solver<T> for Ralston<T>
     where T: Real
 {
 
-    /// Solves `func` using Heun's method.
+    /// Solves `func` using Ralston's method.
     ///
     /// # Arguments
     ///
@@ -56,14 +58,14 @@ impl<T> Solver<T> for Heun<T>
     ///
     /// # Panic
     ///
-    /// if t_span.0 > t_span.1
+    /// t_span.0 > t_span 1
     ///
     /// # Example
     ///
     /// ```
     /// use mathru::*;
-    /// use mathru::algebra::linear::{Vector, Matrix};
-    /// use mathru::analysis::ode::{Solver, ExplicitODE, Heun};
+    /// use mathru::algebra::linear::{Vector};
+    /// use mathru::analysis::ode::{Solver, ExplicitODE, Ralston};
     ///
     /// // Define ODE
     /// // $`y^{'} = ay = f(x, y) `$
@@ -105,44 +107,49 @@ impl<T> Solver<T> for Heun<T>
     ///    }
     /// }
     ///
-    /// let problem: ExplicitODEProblem = ExplicitODEProblem::default();
-    ///	let solver: Heun<f64> = Heun::new(0.001);
+    ///	let problem: ExplicitODEProblem = ExplicitODEProblem::default();
+    ///
+    ///	let solver: Ralston<f64> = Ralston::new(0.001);
     ///
     /// let (t, y): (Vec<f64>, Vec<Vector<f64>>) = solver.solve(&problem).unwrap();
     ///
     /// ```
-	fn solve<F>(self: &Self, prob: &F) -> Result<(Vec<T>, Vec<Vector<T>>), ()>
+    fn solve<F>(self: &Self, prob: &F) -> Result<(Vec<T>, Vec<Vector<T>>), ()>
         where F: ExplicitODE<T>
     {
-        let t_span: (T, T) = prob.time_span();
-        let t_start: T = t_span.0;
-        let t_stop: T = t_span.1;
+        let t_span =  prob.time_span();
+        let init = prob.init_cond();
+        let t_start = t_span.0;
+        let t_stop = t_span.1;
+
         if t_start > t_stop
         {
-            panic!();
+            panic!()
         }
 
-        let mut x_n: Vector<T> = prob.init_cond();
+        let mut x_n: Vector<T> = init.clone();
+
         let mut t_n: T = t_start;
 
         let limit = ((t_stop - t_start) / self.step_size).ceil() + T::one();
+
         let steps: usize = limit.to_u64().unwrap() as usize;
         let mut t_vec: Vec<T> = Vec::with_capacity(steps);
         let mut res_vec: Vec<Vector<T>> = Vec::with_capacity(steps);
 
         for _i in 0..steps
         {
-            //Step size
             let h: T = self.step_size.min(t_stop - t_n);
 
             t_vec.push(t_n);
             res_vec.push(x_n.clone());
 
             let k_1: Vector<T> = prob.func(&t_n, &x_n);
-            let k_2: Vector<T> = prob.func(&(t_n + h), &(&x_n + &(&k_1 * &h)));
+            let factor: T = h * T::from_f64(2.0/3.0).unwrap();
+            let k_2: Vector<T> = prob.func(&(t_n + factor), &(&x_n + &(&k_1 * &factor )));
 
             // Update
-            x_n = x_n + (&k_1 + &k_2) * h / T::from_f64(2.0).unwrap();
+            x_n = x_n + ((k_1 * T::from_f64(1.0/4.0).unwrap()) + (k_2 * T::from_f64(3.0/4.0).unwrap())) * h;
             t_n = t_n + h;
         }
 
