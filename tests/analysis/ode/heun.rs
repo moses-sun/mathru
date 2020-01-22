@@ -1,9 +1,9 @@
 #[cfg(test)]
-mod euler
+mod heun
 {
 	extern crate mathru;
 	use mathru::algebra::linear::{Vector};
-	use mathru::analysis::ode::{Solver, ExplicitODE, Heun};
+	use mathru::analysis::ode::{ExplicitODE, Heun, FixedStepper};
 
 	use super::super::problem::{ExplicitODE1, ExplicitODE2};
 
@@ -22,9 +22,10 @@ mod euler
 	fn fn1()
 	{
 		let problem: ExplicitODE1 = ExplicitODE1::default();
-		let solver: Heun<f64> = Heun::new(0.001);
+		let heun: Heun<f64> = Heun::new();
+		let solver: FixedStepper<f64> = FixedStepper::new(0.001);
 
-		let (t, y): (Vec<f64>, Vec<Vector<f64>>) = solver.solve(&problem).unwrap();
+		let (t, y): (Vec<f64>, Vec<Vector<f64>>) = solver.solve(&problem, &heun).unwrap();
 
 		let len: usize = y.len();
 
@@ -39,9 +40,10 @@ mod euler
 	fn fn2()
 	{
 		let problem: ExplicitODE2 = ExplicitODE2::default();
-		let solver: Heun<f64> = Heun::new(0.001);
+		let heun: Heun<f64> = Heun::new();
+		let solver: FixedStepper<f64> = FixedStepper::new(0.001);
 
-		let (t, y): (Vec<f64>, Vec<Vector<f64>>) = solver.solve(&problem).unwrap();
+		let (t, y): (Vec<f64>, Vec<Vector<f64>>) = solver.solve(&problem, &heun).unwrap();
 
 		let len: usize = y.len();
 
