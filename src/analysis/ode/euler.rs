@@ -22,7 +22,6 @@ impl<T> Euler<T>
         Euler
         {
             phantom: PhantomData
-            //step_size: step_size,
         }
     }
 }
