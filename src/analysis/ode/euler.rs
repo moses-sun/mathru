@@ -10,7 +10,6 @@ use std::marker::PhantomData;
 pub struct Euler<T>
 {
     phantom: PhantomData<T>,
-    //step_size: T
 }
 
 impl<T> Euler<T>
@@ -18,20 +17,8 @@ impl<T> Euler<T>
 {
     /// Creates a Euler instance with step size 'step_size'
     ///
-    /// # Argument
-    ///
-    /// * 'step_size'
-    ///
-    /// # Panics
-    ///
-    /// 'step_size' <= 0.0
-    ///
     pub fn new() -> Euler<T>
     {
-//        if step_size <= T::zero()
-//        {
-//            panic!();
-//        }
         Euler
         {
             phantom: PhantomData
