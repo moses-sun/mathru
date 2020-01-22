@@ -1,7 +1,6 @@
 use crate::algebra::linear::{Vector};
 use crate::algebra::abstr::Real;
-use super::{ExplicitFixedStepSizeMethod};
-use super::ExplicitODE;
+use super::{ExplicitFixedStepSizeMethod, ExplicitODE};
 use std::marker::PhantomData;
 
 /// Solves an ordinary differential equation using Euler's method.
