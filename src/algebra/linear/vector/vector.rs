@@ -807,7 +807,7 @@ impl<'a, T> Add<&T> for &'a Vector<T>
 	/// let a: Vector<f64> = Vector::new_column(4, vec![1.0, 2.0, 3.0, 4.0]);
 	/// let res_ref: Vector<f64> = Vector::new_column(4, vec![-4.0, -3.0, -2.0, -1.0]);
 	///
-	/// assert_eq!(res_ref, a + -5.0)
+	/// assert_eq!(res_ref, &a + &-5.0)
     /// ```
     fn add(self: Self, rhs: &T) -> Self::Output
     {
