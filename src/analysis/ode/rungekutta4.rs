@@ -6,13 +6,13 @@ use super::{Solver, ExplicitODE};
 ///
 ///<a href="https://en.wikipedia.org/wiki/Runge%E2%80%93Kutta_methods">https://en.wikipedia
 /// .org/wiki/Rung-Kutta_methods</a>
-pub struct RK4<T>
+pub struct RungeKutta4<T>
 {
     /// Step size
     step_size: T
 }
 
-impl<T> RK4<T>
+impl<T> RungeKutta4<T>
     where T: Real
 {
     /// Creates a RK4 instance with step size 'step_size'
@@ -25,20 +25,20 @@ impl<T> RK4<T>
     ///
     /// 'step_size' <= 0.0
     ///
-    pub fn new(step_size: T) -> RK4<T>
+    pub fn new(step_size: T) -> RungeKutta4<T>
     {
         if step_size <= T::zero()
         {
             panic!("Step is lower or equal to zero");
         }
-        RK4
+        RungeKutta4
         {
             step_size: step_size,
         }
     }
 }
 
-impl<T> Solver<T> for RK4<T>
+impl<T> Solver<T> for RungeKutta4<T>
     where T: Real
 {
 
@@ -61,7 +61,7 @@ impl<T> Solver<T> for RK4<T>
     /// ```
     /// use mathru::*;
     /// use mathru::algebra::linear::{Vector, Matrix};
-    /// use mathru::analysis::ode::{Solver, ExplicitODE, RK4};
+    /// use mathru::analysis::ode::{Solver, ExplicitODE, RungeKutta4};
     ///
     /// // Define ODE
     /// // $`y^{'} = ay = f(x, y) `$
@@ -104,7 +104,7 @@ impl<T> Solver<T> for RK4<T>
     /// }
     ///
     ///	let problem: ExplicitODEProblem = ExplicitODEProblem::default();
-    ///	let solver: RK4<f64> = RK4::new(0.01);
+    ///	let solver: RungeKutta4<f64> = RungeKutta4::new(0.01);
     ///
     /// let (t, y): (Vec<f64>, Vec<Vector<f64>>) = solver.solve(&problem).unwrap();
     ///

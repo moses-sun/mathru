@@ -1,10 +1,10 @@
 #[cfg(test)]
-mod rk4
+mod rungekutta4
 {
 	extern crate mathru;
 	use mathru::algebra::linear::{Vector};
 	use mathru::analysis::ode::{Solver, ExplicitODE};
-	use mathru::analysis::ode::RK4;
+	use mathru::analysis::ode::RungeKutta4;
 
 	use super::super::problem::{ExplicitODE1, ExplicitODE2};
 
@@ -23,7 +23,7 @@ mod rk4
 	fn fn1()
 	{
 		let problem: ExplicitODE1 = ExplicitODE1::default();
-		let solver: RK4<f64> = RK4::new(0.01);
+		let solver: RungeKutta4<f64> = RungeKutta4::new(0.01);
 
 		let (t, y): (Vec<f64>, Vec<Vector<f64>>) = solver.solve(&problem).unwrap();
 
@@ -40,7 +40,7 @@ mod rk4
 	fn fn2()
 	{
 		let problem: ExplicitODE2 = ExplicitODE2::default();
-		let solver: RK4<f64> = RK4::new(0.1);
+		let solver: RungeKutta4<f64> = RungeKutta4::new(0.1);
 
 		let (t, y): (Vec<f64>, Vec<Vector<f64>>) = solver.solve(&problem).unwrap();
 
