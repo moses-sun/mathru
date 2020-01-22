@@ -6,7 +6,7 @@
 //mod rungekutta4;
 mod euler;
 //mod midpoint;
-//mod heun;
+mod heun;
 //mod kutta3;
 //mod rkf45;
 //mod ralston;
@@ -22,7 +22,7 @@ mod fixed_stepper;
 //pub use kutta3::Kutta3;
 pub use euler::Euler;
 //pub use midpoint::Midpoint;
-//pub use heun::Heun;
+pub use heun::Heun;
 //pub use ralston::Ralston;
 //pub use rkf45::RKF45;
 //pub use dormandprince5::DormandPrince5;
