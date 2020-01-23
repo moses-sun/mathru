@@ -7,9 +7,9 @@
 mod euler;
 mod midpoint;
 mod heun;
-//mod kutta3;
+mod kutta3;
 //mod rkf45;
-//mod ralston;
+mod ralston;
 //mod dormandprince5;
 //mod adamsbashforth;
 //mod adamsmoulton;
@@ -19,11 +19,11 @@ mod fixed_stepper;
 //mod step_size_controller;
 
 //pub use rungekutta4::RungeKutta4;
-//pub use kutta3::Kutta3;
+pub use kutta3::Kutta3;
 pub use euler::Euler;
 pub use midpoint::Midpoint;
 pub use heun::Heun;
-//pub use ralston::Ralston;
+pub use ralston::Ralston;
 //pub use rkf45::RKF45;
 //pub use dormandprince5::DormandPrince5;
 //pub use adamsbashforth::AdamsBashforth;
