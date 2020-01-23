@@ -1,3 +1,4 @@
+//! Fixed step size Stepper
 use crate::algebra::linear::{Vector};
 use crate::algebra::abstr::Real;
 use super::{ExplicitODE, ExplicitFixedStepSizeMethod};
@@ -12,7 +13,15 @@ pub struct FixedStepper<T>
 impl<T> FixedStepper<T>
     where T: Real
 {
+    /// Creates an instance with the given step size
     ///
+    /// # Arguments
+    ///
+    /// * 'step_size'
+    ///
+    /// # Panics
+    ///
+    /// if 'step_size' <= 0.0
     pub fn new(step_size: T) -> FixedStepper<T>
     {
         if step_size <= T::zero()
