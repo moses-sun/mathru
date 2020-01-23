@@ -5,6 +5,6 @@ mod midpoint;
 mod heun;
 mod ralston;
 mod kutta3;
-//mod rkf45;
+mod rungekuttafehlberg45;
 //mod dormandprince5;
 //mod adamsbashforth;
