@@ -1,12 +1,12 @@
 // https://web.archive.org/web/20150907215914/http://adorio-research.org/wordpress/?p=6565
 
 #[cfg(test)]
-mod rkdp
+mod dormandprince45
 {
 	extern crate mathru;
 
 	use mathru::algebra::linear::{Vector};
-	use mathru::analysis::ode::{Solver, ExplicitODE, Dopri5};
+	use mathru::analysis::ode::{AdaptiveStepper, ExplicitODE, DormandPrince45};
 	use super::super::problem::{ExplicitODE1, ExplicitODE2};
 
 	fn compare_epsilon(a: f64, b: f64, epsilon: f64) -> bool
@@ -26,12 +26,14 @@ mod rkdp
 		let h_0: f64 = 0.002;
 		let e_max: f64 = 0.00001;
 		let n_max: u32 = 400;
-
-		let solver: Dopri5<f64> = Dopri5::new(h_0, e_max, n_max);
+		let h_min: f64 = 0.0001;
+		let h_max: f64 = 1.0;
 
 		let problem: ExplicitODE1 = ExplicitODE1::default();
+		let method: DormandPrince45<f64> = DormandPrince45::new();
+		let solver: AdaptiveStepper<f64> = AdaptiveStepper::new(n_max, e_max, h_0, h_min, h_max);
 
-		let (t, y): (Vec<f64>, Vec<Vector<f64>>) = solver.solve(&problem).unwrap();
+		let (t, y): (Vec<f64>, Vec<Vector<f64>>) = solver.solve(&problem, &method).unwrap();
 
 		let time_span: (f64, f64) = problem.time_span();
 		let init_cond: Vector<f64> = problem.init_cond();
@@ -46,20 +48,24 @@ mod rkdp
 	#[test]
 	fn fn2()
 	{
-		let h_0: f64 = 0.0001;
-		let e_max: f64 = 0.000001;
-		let n_max: u32 = 500;
-
-		let solver: Dopri5<f64> = Dopri5::new(h_0, e_max, n_max);
 		let problem: ExplicitODE2 = ExplicitODE2::default();
 
-		let (t, y): (Vec<f64>, Vec<Vector<f64>>) = solver.solve(&problem).unwrap();
+		let h_0: f64 = 0.0001;
+		let h_min: f64 = 0.0001;
+		let h_max: f64 = 1.0;
+		let e_max: f64 = 0.00001;
+		let n_max: u32 = 400;
+
+		let method: DormandPrince45<f64> = DormandPrince45::new();
+		let solver: AdaptiveStepper<f64> = AdaptiveStepper::new(n_max, e_max, h_0, h_min, h_max);
+
+		let (t, y): (Vec<f64>, Vec<Vector<f64>>) = solver.solve(&problem, &method).unwrap();
 
 		let len: usize = y.len();
 
 		let time_span: (f64, f64) = problem.time_span();
 
-		assert!(compare_epsilon(time_span.1, t[len - 1], 0.001));
-		assert!(compare_epsilon(time_span.1.tan(), *y[len - 1].get(0), 0.0001));
+		assert!(compare_epsilon(time_span.1, t[len - 1], 0.0001));
+		assert!(compare_epsilon(time_span.1.tan(), *y[len - 1].get(0), 0.0007));
 	}
 }

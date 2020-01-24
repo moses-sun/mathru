@@ -6,5 +6,5 @@ mod heun;
 mod ralston;
 mod kutta3;
 mod rungekuttafehlberg45;
-//mod dormandprince5;
+mod dormandprince45;
 //mod adamsbashforth;
