@@ -36,9 +36,11 @@ macro_rules! vector
         {
             let data = [ $($x),* ];
             let rows = data.len();
-            let data_array: Vec<_> = data.into_iter()
-                .cloned()
-                .collect();
+            let mut data_array: Vec<_> = Vec::with_capacity(rows);
+            for i in 0..rows
+            {
+                data_array.push(data[i]);
+            }
             Vector::new_row(rows, data_array)
         }
     };
@@ -48,10 +50,12 @@ macro_rules! vector
         {
             let data = [ $($x),* ];
             let cols = data.len();
-            let data_vec: Vec<_> = data.into_iter()
-                .cloned()
-                .collect();
-            Vector::new_column(cols, data_vec)
+            let mut data_array: Vec<_> = Vec::with_capacity(cols);
+            for i in 0..cols
+            {
+                data_array.push(data[i]);
+            }
+            Vector::new_column(cols, data_array)
         }
     };
 }
@@ -370,7 +374,7 @@ impl<T> Vector<T>
         let (m, n) = self.dim();
 
         let mut max_index: usize = 0;
-        let mut max = *self.get(max_index);;
+        let mut max = *self.get(max_index);
 
         let limit: usize = m.max(n);
 
@@ -407,7 +411,7 @@ impl<T> Vector<T>
         let (m, n) = self.dim();
 
         let mut min_index: usize = 0;
-        let mut min: T = *self.get(min_index);;
+        let mut min: T = *self.get(min_index);
 
         let limit: usize = m.max(n);
 
