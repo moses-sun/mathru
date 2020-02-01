@@ -3,8 +3,7 @@
 use crate::algebra::linear::Matrix;
 use crate::elementary::{Exponential, Power};
 use std::ops::{Add, Mul, Sub, Div, Neg};
-use crate::algebra::abstr::{Sign};
-use crate::algebra::abstr::{Scalar, Field};
+use crate::algebra::abstr::{Scalar, Field, Sign};
 use std::fmt::Display;
 use std::fmt;
 use serde::{Serialize, Deserialize};
@@ -1113,12 +1112,7 @@ impl<T> Sign for Vector<T>
 
     fn abs(self: &Self) -> Self
     {
-        unimplemented!();
-//        if self.is_negative()
-//        {
-//            return -*self;
-//        }
-//        return *self;
+        return (self.clone()).apply(&|x: &T| x.abs() );
     }
 
     fn is_positive(self: &Self) -> bool
