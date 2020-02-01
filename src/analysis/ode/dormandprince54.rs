@@ -1,33 +1,113 @@
 use crate::algebra::linear::{Vector};
+use crate::algebra::abstr::Sign;
 use crate::algebra::abstr::Real;
-use super::{ExplicitODE, ExplicitAdaptiveMethod};
-use std::marker::PhantomData;
+use super::explicit_method::{ExplicitAdaptiveMethod};
+use super::ExplicitODE;
 
 /// Solves an ordinary differential equation using the 4th order Runge-Kutta-Dormand-Prince algorithm.
 ///
 ///<a href="https://en.wikipedia.org/wiki/Dormand-Prince_method">https://en.wikipedia.org/wiki/Dormand-Prince_method</a>
-pub struct DormandPrince45<T>
+pub struct DormandPrince54<T>
 {
-    phantom: PhantomData<T>,
+    abs_tol: T,
+    h_0: T,
+    n_max: u32,
 }
 
-impl<T> DormandPrince45<T>
+impl<T> DormandPrince54<T>
     where T: Real
 {
-    /// Creates a DormandPrince45 instance, also known as explicit Runge-Kutta method of order (4)5 with step-size control
-    ///
-    ///
-    pub fn new() -> DormandPrince45<T>
+    /// Creates a DormandPrince54 instance, also known as explicit Runge-Kutta method of order 5(4) with step-size control
+    pub fn new(abs_tol: T, begin_step_size: T, n_max: u32) -> DormandPrince54<T>
     {
-
-        return DormandPrince45
+        return DormandPrince54
         {
-            phantom: PhantomData
+            abs_tol: abs_tol,
+            h_0: begin_step_size,
+            n_max: n_max,
         }
+    }
+
+    pub fn get_begin_step_size(self: &Self) -> &T
+    {
+        return &self.h_0;
+    }
+
+    pub fn set_begin_step_size(self: &mut Self, step_size: T)
+    {
+        self.h_0 = step_size
+    }
+
+    pub fn solve<F>(self: &Self, prob: &F) -> Result<(Vec<T>, Vec<Vector<T>>), &'static str>
+        where F: ExplicitODE<T>,
+    {
+        let t_span: (T, T) = prob.time_span();
+        let t_start: T = t_span.0;
+        let t_stop: T = t_span.1;
+        if t_start > t_stop
+        {
+            panic!();
+        }
+
+        let mut x_n: Vector<T> = prob.init_cond();
+        let mut t_n: T = t_start;
+        let mut h_n: T = self.h_0;
+
+        let mut t_vec: Vec<T> = Vec::new();
+        t_vec.push(t_n);
+
+        let mut res_vec: Vec<Vector<T>> = Vec::new();
+        res_vec.push(x_n.clone());
+
+        let mut n: u32 = 0;
+
+        while n < self.n_max && t_n < t_stop
+        {
+            h_n = h_n.min(t_stop - t_n);
+            //
+            let (x_n_new, x_ne): (Vector<T>, Vector<T>) = self.do_step(prob, &t_n, &x_n, &h_n);
+            let error_n: T = self.calc_error(&x_n_new, &x_ne);
+
+            if error_n <= self.abs_tol
+            {
+                t_n = t_n + h_n;
+                x_n = x_n_new;
+                t_vec.push(t_n);
+                res_vec.push(x_n.clone());
+				n = n + 1;
+            }
+
+            //Update step size
+            h_n = self.calc_step_size(h_n, error_n);
+        }
+
+        if t_n < t_stop
+        {
+            return Err("Maxmimum number of iterations reached");
+        }
+        return Ok((t_vec, res_vec));
+    }
+
+    /// calculate new step size
+    fn calc_step_size(self: &Self, h_n: T, error_n: T) -> T
+    {
+        return T::from_f64(0.9).unwrap() * h_n * (self.abs_tol / error_n).pow(&(T::one() / T::from_f64(5.0).unwrap()))
+    }
+
+    ///
+    /// ```math
+    /// \lvert \lvert y - \hat{y} \rvert \rvert_{\infty}
+    /// ```
+    pub fn calc_error(self: &Self, y: &Vector<T>, y_hat: &Vector<T>) -> T
+    {
+        let diff: Vector<T> = (y - y_hat).abs();
+
+        let idx_max: usize = diff.argmax();
+        return *diff.get(idx_max);
     }
 }
 
-impl<T> ExplicitAdaptiveMethod<T> for DormandPrince45<T>
+impl<T> ExplicitAdaptiveMethod<T> for DormandPrince54<T>
     where T: Real
 {
 
@@ -85,6 +165,12 @@ impl<T> ExplicitAdaptiveMethod<T> for DormandPrince45<T>
         let rkdp5_5: Vector<T> = rkdp5_4 + (&k_6 * &T::from_f64(187.0 / 2100.0).unwrap());
         let rkdp5: Vector<T> = rkdp5_5 + (&k_7 * &T::from_f64(1.0 / 40.0).unwrap());
         return (rkdp4, rkdp5);
+    }
+
+
+    fn order(self: &Self) -> (u8, u8)
+    {
+        return (4, 5);
     }
 
 }
