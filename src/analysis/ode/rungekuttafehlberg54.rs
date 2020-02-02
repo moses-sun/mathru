@@ -97,6 +97,26 @@ impl<T> RungeKuttaFehlberg54<T>
     {
         return self.stepper.solve(prob, self);
     }
+
+    pub fn get_abs_tol(self: &Self) -> &T
+    {
+        return self.stepper.get_abs_tol();
+    }
+
+    pub fn get_rel_tol(self: &Self) -> &T
+    {
+        return self.stepper.get_rel_tol();
+    }
+
+    pub fn set_abs_tol(self: &mut Self, abs_tol: T)
+    {
+        self.stepper.set_abs_tol(abs_tol);
+    }
+
+    pub fn set_rel_tol(self: &mut Self, rel_tol: T)
+    {
+        self.stepper.set_rel_tol(rel_tol);
+    }
 }
 
 impl<T> Default for RungeKuttaFehlberg54<T>

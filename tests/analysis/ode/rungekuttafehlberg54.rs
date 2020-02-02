@@ -19,6 +19,33 @@ mod rungekuttafehlberg54
     }
 
 	#[test]
+	fn setter_getter_test()
+	{
+		let h_0: f64 = 0.0001;
+		let fac: f64 = 0.9;
+		let fac_min: f64 = 0.01;
+		let fac_max: f64 = 2.0;
+		let n_max: u32 = 100;
+		let abs_tol: f64 = 10e-6;
+		let rel_tol: f64 = 10e-6;
+
+		let mut solver: RungeKuttaFehlberg54<f64> = RungeKuttaFehlberg54::new(n_max, h_0, fac, fac_min, fac_max, abs_tol, rel_tol);
+
+		assert_eq!(abs_tol, *solver.get_abs_tol());
+
+		let abs_tol_new: f64 = 0.2;
+		solver.set_abs_tol(abs_tol_new);
+		assert_eq!(abs_tol_new, *solver.get_abs_tol());
+
+		assert_eq!(rel_tol, *solver.get_rel_tol());
+
+		let rel_tol_new: f64 = 0.2;
+		solver.set_rel_tol(abs_tol_new);
+		assert_eq!(rel_tol_new, *solver.get_rel_tol());
+
+	}
+
+	#[test]
 	fn fn1()
 	{
 		let problem: ExplicitODE1 = ExplicitODE1::default();
