@@ -1,4 +1,4 @@
-use crate::analysis::ode::solver::{Solver, ExplicitODE};
+use crate::analysis::ode::explicit_ode::{ExplicitODE};
 use crate::algebra::linear::vector::vector::Vector;
 use crate::algebra::abstr::Real;
 use crate::algebra::abstr::Zero;

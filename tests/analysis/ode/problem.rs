@@ -22,7 +22,7 @@ impl Default for ExplicitODE1
 		ExplicitODE1
 		{
 			time_span: (0.0, 2.0),
-			init_cond: vector![0.5],
+			init_cond: vector![0.5]
 		}
 	}
 }

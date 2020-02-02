@@ -1,7 +1,8 @@
 use crate::algebra::linear::{Vector};
 use crate::algebra::abstr::Real;
-use super::{ExplicitODE, ExplicitFixedStepSizeMethod};
-use std::marker::PhantomData;
+use super::explicit_method::{ExplicitFixedStepSizeMethod};
+use super::ExplicitODE;
+use crate::analysis::ode::fixed_stepper::FixedStepper;
 
 /// Solves an ordinary differential equation using the 4th order Runge-Kutta algorithm.
 ///
@@ -9,7 +10,7 @@ use std::marker::PhantomData;
 /// .org/wiki/Rung-Kutta_methods</a>
 pub struct RungeKutta4<T>
 {
-    phantom: PhantomData<T>,
+    stepper: FixedStepper<T>
 }
 
 impl<T> RungeKutta4<T>
@@ -17,19 +18,35 @@ impl<T> RungeKutta4<T>
 {
     /// Creates a RungeKutta4 instance
     ///
-    pub fn new() -> RungeKutta4<T>
+    pub fn new(step_size: T) -> RungeKutta4<T>
     {
-        RungeKutta4
+        return RungeKutta4
         {
-            phantom: PhantomData
+            stepper: FixedStepper::new(step_size)
         }
+    }
+
+    pub fn solve<F>(self: &Self, prob: &F) -> Result<(Vec<T>, Vec<Vector<T>>), ()>
+        where F: ExplicitODE<T>
+    {
+        return self.stepper.solve(prob, self);
+    }
+
+    pub fn get_step_size(self: &Self) -> &T
+    {
+        return self.stepper.get_step_size();
+    }
+
+    pub fn set_step_size(self: &mut Self, step_size: T)
+    {
+        self.stepper.set_step_size(step_size)
     }
 }
 
 impl<T> ExplicitFixedStepSizeMethod<T> for RungeKutta4<T>
     where T: Real
 {
-    fn do_step<F>(self: &Self, prob: &F, t_n: &T, x_n: &Vector<T>, h: &T) -> (Vector<T>)
+    fn do_step<F>(self: &Self, prob: &F, t_n: &T, x_n: &Vector<T>, h: &T) -> Vector<T>
         where F: ExplicitODE<T>
     {
            // k1 = f(t_n, x_n)
@@ -47,5 +64,11 @@ impl<T> ExplicitFixedStepSizeMethod<T> for RungeKutta4<T>
 
             // x[n+1] = x[n] + h*(k1 + 2*k2 + 2*k3 + k4)/6
             return x_n + &((k1 + ((k2 + k3) * T::from_f64(2.0).unwrap()) + k4) * *h / T::from_f64(6.0).unwrap());
+    }
+
+    /// Runge-Kutta 4 is a fourth order method
+    fn order(self: &Self) -> u8
+    {
+        return 4;
     }
 }

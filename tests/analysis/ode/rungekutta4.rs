@@ -3,7 +3,7 @@ mod rungekutta4
 {
 	extern crate mathru;
 	use mathru::algebra::linear::{Vector};
-	use mathru::analysis::ode::{FixedStepper, ExplicitODE, RungeKutta4};
+	use mathru::analysis::ode::{ExplicitODE, RungeKutta4};
 
 	use super::super::problem::{ExplicitODE1, ExplicitODE2};
 
@@ -22,10 +22,9 @@ mod rungekutta4
 	fn fn1()
 	{
 		let problem: ExplicitODE1 = ExplicitODE1::default();
-		let method: RungeKutta4<f64> = RungeKutta4::new();
-		let solver: FixedStepper<f64> = FixedStepper::new(0.01);
+		let solver: RungeKutta4<f64> = RungeKutta4::new(0.01);
 
-		let (t, y): (Vec<f64>, Vec<Vector<f64>>) = solver.solve(&problem, &method).unwrap();
+		let (t, y): (Vec<f64>, Vec<Vector<f64>>) = solver.solve(&problem).unwrap();
 
 		let len: usize = y.len();
 
@@ -40,10 +39,9 @@ mod rungekutta4
 	fn fn2()
 	{
 		let problem: ExplicitODE2 = ExplicitODE2::default();
-		let method: RungeKutta4<f64> = RungeKutta4::new();
-		let solver: FixedStepper<f64> = FixedStepper::new(0.1);
+		let solver: RungeKutta4<f64> = RungeKutta4::new(0.1);
 
-		let (t, y): (Vec<f64>, Vec<Vector<f64>>) = solver.solve(&problem, &method).unwrap();
+		let (t, y): (Vec<f64>, Vec<Vector<f64>>) = solver.solve(&problem).unwrap();
 
 		let len: usize = y.len();
 

@@ -134,7 +134,7 @@ pub fn beta_inc_reg(x: f64, a: f64, b: f64) -> f64
     loop
     {
         term = term * temp * rx / ( pp + ai );
-        value = value + term;;
+        value = value + term;
         temp = term.abs();
 
         if temp <= acu && temp <= acu * value

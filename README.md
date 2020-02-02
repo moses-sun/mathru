@@ -7,7 +7,6 @@
 ------------
 mathru is a numeric library containing algorithms for linear algebra, analysis and statistics written in pure Rust with BLAS/LAPACK support.
 
-
 ## Features
     - Linear algebra
         - Vector
@@ -25,13 +24,19 @@ mathru is a numeric library containing algorithms for linear algebra, analysis a
             - Eigenvalue (native/lapack)
 
     - Ordinary differential equation (ODE)
-        - Heun's method
-        - Euler method
-        - Midpoint method
-        - Ralston's method
-        - Runge-Kutta 4th order
-        - Runge-Kutta-Felhberg 4(5)
-        - Dormand-Prince 4(5)
+        - Explicit methods
+            - Heun's method
+            - Euler method
+            - Midpoint method
+            - Ralston's method
+            - Kutta 3rd order
+            - Runge-Kutta 4th order
+            - Runge-Kutta-Felhberg 4(5)
+            - Dormand-Prince 4(5)
+            - Cash-Karp 4(5)
+            - Tsitouras 4(5)
+            - Bogacki-Shampine 4(5)
+        - Automatic step size control with starting step size
         
     - Optimization
         - Gauss-Newton algorithm
@@ -75,20 +80,20 @@ Add this to your `Cargo.toml` for the native Rust implementation:
 
 ```toml
 [dependencies.mathru]
-version = "0.5"
+version = "0.6"
 ```
 Add the following lines to 'Cargo.toml' if the blas/lapack backend should be used:
 
 ```toml
 [dependencies.mathru]
-version = "0.5"
+version = "0.6"
 default-features = false
 features = ["blaslapack"]
 ```
 
 Then import the modules and it is ready to be used:
 
-``` rust
+```rust
 use mathru::algebra::linear::{Matrix};
 
 // Compute the LU decomposition of a 2x2 matrix
@@ -100,34 +105,69 @@ let (l, u, p): (Matrix<f64>, Matrix<f64>, Matrix<f64>) = a.dec_lu();
 assert_eq!(l_ref, l);
 ```
 
-Solve an ODE:
+Solve an ODE with initial condition:
 
-```
-//
-// explicit ODE
-// x' = 1 + x^2
-fn f(_t: &f64, x: &Vector<f64>) -> Vector<f64>
+```rust
+use mathru::*;
+use mathru::algebra::linear::{Vector};
+use mathru::analysis::ode::{DormandPrince54};
+use mathru::analysis::ode::ExplicitODE;
+
+// Define the ODE
+// x' = (5t^2 - x) / e^(t + x) `$
+// x(0) = 1
+pub struct ExplicitODE1
 {
-	let result  = vector![1.0] + x.clone().apply(&|e: &f64| -> f64 {return e * e;}) ;
-
-	return result;
+	time_span: (f64, f64),
+	init_cond: Vector<f64>
 }
 
-let h_0: f64 = 0.0001;
-let e_max: f64 = 0.000001;
-let n_max: u32 = 500;
+impl Default for ExplicitODE1
+{
+	fn default() -> ExplicitODE1
+	{
+		ExplicitODE1
+		{
+			time_span: (0.0, 10.0),
+			init_cond: vector![1.0],
+		}
+	}
+}
 
-let init: Vector<f64> = vector![0.0];
-let solver: Dopri5<f64> = Dopri5::new(h_0, e_max, n_max);
+impl ExplicitODE<f64> for ExplicitODE1
+{
+   	fn func(self: &Self, t: &f64, x: &Vector<f64>) -> Vector<f64>
+	{
+		return vector!((5.0 * t * t - *x.get(0)) / (t + *x.get(0)).exp());
+	}
+    
+    // Returns the time span
+    fn time_span(self: &Self) -> (f64, f64)
+	{
+		return self.time_span;
+	}
 
-let (t, y): (Vector<f64>, Matrix<f64>) = solver.solve(f, init, 0.0, 1.4);
+    // Initial value at x(0)
+    fn init_cond(self: &Self) -> Vector<f64>
+	{
+		return self.init_cond.clone();
+	}
+}
 
-let (m, _n): (usize, usize) = y.dim();
 
-assert!(compare_real(&1.40, &t.get(&(m-1)), 0.0001));
-assert!(compare_real(&1.4_f64.tan(), &y.get(&(m-1), &0), 0.0001));
+fn main() {
+	let h_0: f64 = 0.001;
+	let n_max: u32 = 300;
+	let abs_tol: f64 = 0.00000001;
 
+	let solver: DormandPrince54<f64> = DormandPrince54::new(abs_tol, h_0, n_max);
+
+	let (t, x): (Vec<f64>, Vec<Vector<f64>>) = solver.solve(&problem).unwrap();
+}
 ```
+![Example image](figure/ode_simple3.png)
+
+
 ## Contributions
 
 Any contribution is welcome!

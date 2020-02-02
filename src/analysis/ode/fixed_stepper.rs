@@ -1,7 +1,8 @@
 //! Fixed step size Stepper
 use crate::algebra::linear::{Vector};
 use crate::algebra::abstr::Real;
-use super::{ExplicitODE, ExplicitFixedStepSizeMethod};
+use super::explicit_method::{ExplicitFixedStepSizeMethod};
+use super::ExplicitODE;
 
 /// Fixed step size Stepper
 pub struct FixedStepper<T>
@@ -71,5 +72,15 @@ impl<T> FixedStepper<T>
         }
 
         return Ok((t_vec, res_vec));
+    }
+
+    pub fn get_step_size(self: &Self) -> &T
+    {
+        return &self.step_size;
+    }
+
+    pub fn set_step_size(mut self: &mut Self, step_size: T)
+    {
+        self.step_size = step_size;
     }
 }

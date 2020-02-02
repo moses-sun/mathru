@@ -3,17 +3,24 @@
 use std::default::Default;
 use crate::algebra::linear::{Vector};
 use crate::algebra::abstr::Real;
-use super::{ExplicitODE, ExplicitAdaptiveMethod};
+use super::ExplicitODE;
+use super::explicit_method::ExplicitAdaptiveMethod;
 
 /// Adaptive step size stepper
 pub struct AdaptiveStepper<T>
 {
      /// Step size
-    e_max: T,
     n_max: u32,
     h_0: T,
-    h_max: T,
-    h_min: T,
+    fac: T,
+    fac_min: T,
+    fac_max: T,
+    /// abs_tol: Absolute tolerance. This is the tolerance on local error estimates, not necessarily the global error.
+    /// Defaults to 1e-6.
+    abs_tol: T,
+    ///reltol: Relative tolerance. This is the tolerance on local error estimates, not necessarily the global error.
+    /// Defaults to 1e-3.
+    rel_tol: T,
 }
 
 impl<T> Default for AdaptiveStepper<T>
@@ -21,8 +28,8 @@ impl<T> Default for AdaptiveStepper<T>
 {
     fn default() -> AdaptiveStepper<T>
     {
-        return AdaptiveStepper::new(1000, T::from_f64(0.02).unwrap(), T::from_f64(0.01).unwrap(), T::from_f64(0.001).unwrap(), T::from_f64
-        (0.001).unwrap());
+        return AdaptiveStepper::new(1000, T::from_f64(0.02).unwrap(), T::from_f64(0.8).unwrap(), T::from_f64(0.001).unwrap(), T::from_f64
+        (3.0).unwrap(), T::from_f64(10e-6).unwrap(), T::from_f64(10e-3).unwrap());
     }
 }
 
@@ -30,18 +37,72 @@ impl<T> AdaptiveStepper<T>
     where T: Real
 {
     /// Creates an instance with the given step siz
+    ///a
     ///
-    pub fn new(n_max: u32, e_max: T, h_0: T, h_min: T, h_max: T) -> AdaptiveStepper<T>
+    /// # Param
+    ///
+    /// * 'fac_min':
+    /// *'fac_max': 1.5 <= fac_max <= 5.0
+    pub fn new(n_max: u32, h_0: T, fac: T, fac_min: T, fac_max: T, abs_tol: T, rel_tol: T) -> AdaptiveStepper<T>
     {
         return AdaptiveStepper
         {
-            e_max: e_max,
             n_max: n_max,
             h_0: h_0,
-            h_max: h_max,
-            h_min: h_min,
+            fac: fac,
+            fac_min: fac_min,
+            fac_max: fac_max,
+            abs_tol: abs_tol,
+            rel_tol: rel_tol,
         }
     }
+
+    /// Returns the aboslute tolerance
+    pub fn get_abs_tol(self: &Self) -> &T
+    {
+        return &self.abs_tol;
+    }
+
+    /// Returns the relative tolerance
+    pub fn get_rel_tol(self: &Self) -> &T
+    {
+        return &self.rel_tol;
+    }
+
+    /// Sets the aboslute tolerance
+    ///
+    /// # Parameters
+    ///
+    /// * 'abs_tol': abs_tol >= 0.0
+    /// # Panics
+    ///
+    /// if 'abs_tol' < 0.0
+    pub fn set_abs_tol(self: &mut Self, abs_tol: T)
+    {
+        if abs_tol < T::zero()
+        {
+            panic!();
+        }
+        self.abs_tol = abs_tol;
+    }
+
+    /// Sets the relative tolerance
+    ///
+    /// # Parameters
+    ///
+    /// * 'rel_tol': rel_tol >= 0.0
+    /// # Panics
+    ///
+    /// if 'rel_tol' < 0.0
+    pub fn set_rel_tol(self: &mut Self, rel_tol: T)
+    {
+        if rel_tol < T::zero()
+        {
+            panic!();
+        }
+        self.rel_tol = rel_tol;
+    }
+
 
     /// Solves `func` using the 4th order Runge-Kutta-Fehlberg algorithm.
     ///
@@ -59,68 +120,7 @@ impl<T> AdaptiveStepper<T>
     /// # Panic
     ///
     /// if t_span.0 > t_span.1
-    ///
-    /// # Example
-    ///
-    /// ```
-    /// use mathru::*;
-    /// use mathru::algebra::linear::{Vector, Matrix};
-    /// use mathru::analysis::ode::{AdaptiveStepper, ExplicitODE, RungeKuttaFehlberg45};
-    ///
-    /// // Define ODE
-    /// // $`y^{'} = ay = f(x, y) `$
-    /// // $`y = C a e^{at}`$
-    /// // $'y(t_{s}) = C a e^{at_s} => C = \frac{y(t_s)}{ae^{at_s}}`$
-    /// pub struct ExplicitODEProblem
-    /// {
-    ///	    time_span: (f64, f64),
-    ///	    init_cond: Vector<f64>
-    /// }
-    ///
-    /// impl Default for ExplicitODEProblem
-    /// {
-    ///	    fn default() -> ExplicitODEProblem
-    ///	    {
-    ///		    ExplicitODEProblem
-    ///		    {
-    ///			    time_span: (0.0, 2.0),
-    ///			    init_cond: vector![0.5],
-    ///		    }
-    ///	    }
-    /// }
-    ///
-    /// impl ExplicitODE<f64> for ExplicitODEProblem
-    /// {
-    ///   	fn func(self: &Self, t: &f64, x: &Vector<f64>) -> Vector<f64>
-    ///     {
-    ///		    return x * &2.0f64;
-    ///	    }
-    ///
-    ///     fn time_span(self: &Self) -> (f64, f64)
-    ///     {
-    ///		    return self.time_span;
-    ///     }
-    ///
-    ///    fn init_cond(self: &Self) -> Vector<f64>
-    ///    {
-    ///	        return self.init_cond.clone();
-    ///    }
-    /// }
-    ///
-    ///	let problem: ExplicitODEProblem = ExplicitODEProblem::default();
-   	///
-   	/// let h_0: f64 = 0.02;
-	///	let h_min: f64 = 0.001;
-	///	let h_max: f64 = 1.0;
-	///	let e_max: f64 = 0.00001;
-	///	let n_max: u32 = 100;
-    ///
-	///	let method: RungeKuttaFehlberg45<f64> = RungeKuttaFehlberg45::new();
-    /// let solver: AdaptiveStepper<f64> = AdaptiveStepper::new(n_max, e_max, h_0, h_min, h_max);
-    ///
-    /// let (t, y): (Vec<f64>, Vec<Vector<f64>>) = solver.solve(&problem, &method).unwrap();
-    /// ```
-    pub fn solve<F, M>(self: &Self, prob: &F, method: &M) -> Result<(Vec<T>, Vec<Vector<T>>), ()>
+    pub fn solve<F, M>(self: &Self, prob: &F, method: &M) -> Result<(Vec<T>, Vec<Vector<T>>), &'static str>
         where F: ExplicitODE<T>,
                M: ExplicitAdaptiveMethod<T>
     {
@@ -132,6 +132,9 @@ impl<T> AdaptiveStepper<T>
             panic!();
         }
 
+        let order: (u8, u8) = method.order();
+        let q: T = T::from_u8(order.0.max(order.1)).unwrap();
+        let l: T = T::one() / (q + T::one());
         let mut x_n: Vector<T> = prob.init_cond();
         let mut t_n: T = t_start;
         let mut h: T = self.h_0;
@@ -143,44 +146,65 @@ impl<T> AdaptiveStepper<T>
         res_vec.push(x_n.clone());
 
         let mut n: u32 = 0;
+
         while n < self.n_max && t_n < t_stop
         {
             h = h.min(t_stop - t_n);
             //
             let (x_n_new, x_ne): (Vector<T>, Vector<T>) = method.do_step(prob, &t_n, &x_n, &h);
-            let e: T = (x_n_new.clone() - x_ne.clone()).p_norm(&T::from_f64(2.0).unwrap());
+            let err: T = self.calc_error(&x_n_new, &x_ne);
 
-            let mut s: T = T::one();
 
-            if e != T::zero()
-            {
-                s = (self.e_max * h / (T::from_f64(2.0).unwrap() * e)).pow(&T::from_f64(0.25).unwrap());
-            }
-
-            if e <= self.e_max
+            if err <= T::one()
             {
                 t_n = t_n + h;
                 x_n = x_n_new;
                 t_vec.push(t_n);
                 res_vec.push(x_n.clone());
 				n = n + 1;
-				h = s * h;
             }
-            else
+
+            if err != T::zero()
             {
+                let mut s: T = self.fac * (T::one() / err).pow(&l);
+
+                if s < self.fac_min
+                {
+                    s = self.fac_min;
+                }
+
+                if s > self.fac_max
+                {
+                    s = self.fac_max;
+                }
+
                 h = s * h;
             }
 
-
-            if h < self.h_min
-            {
-                h = self.h_min;
-            }
-            if h > self.h_max
-            {
-                h = self.h_max;
-            }
         }
         return Ok((t_vec, res_vec));
     }
+
+    fn calc_error(self: &Self, y: &Vector<T>, y_hat: &Vector<T>) -> T
+    {
+        let (_m, n) = y.dim();
+
+        let mut sum: T = T::zero();
+
+        for i in 0..n
+        {
+            let y_i: T = *y.get(i);
+            let y_hat_i: T = *y_hat.get(i);
+            let sc: T = self.abs_tol + y_i.abs().max(y_hat_i.abs()) * self.rel_tol;
+
+            let k: T = (y_i - y_hat_i) / sc;
+            sum += k * k;
+
+        }
+
+        let p = (sum / T::from_f64(n as f64).unwrap()).pow(&T::from_f64(0.5).unwrap());
+        return p;
+    }
+
+
 }

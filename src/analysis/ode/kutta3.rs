@@ -1,7 +1,8 @@
 use crate::algebra::linear::{Vector};
 use crate::algebra::abstr::Real;
-use super::{ExplicitODE, ExplicitFixedStepSizeMethod};
-use std::marker::PhantomData;
+use super::explicit_method::{ExplicitFixedStepSizeMethod};
+use super::ExplicitODE;
+use crate::analysis::ode::fixed_stepper::FixedStepper;
 
 /// Solves an ordinary differential equation using the 3th order Runge-Kutta algorithm.
 ///
@@ -9,7 +10,7 @@ use std::marker::PhantomData;
 /// .org/wiki/Rung-Kutta_methods</a>
 pub struct Kutta3<T>
 {
-    phantom: PhantomData<T>,
+    stepper: FixedStepper<T>
 }
 
 impl<T> Kutta3<T>
@@ -17,19 +18,35 @@ impl<T> Kutta3<T>
 {
     /// Creates a Kutta3 instance with step size 'step_size'
     ///
-    pub fn new() -> Kutta3<T>
+    pub fn new(step_size: T) -> Kutta3<T>
     {
-        Kutta3
+        return Kutta3
         {
-            phantom: PhantomData
+            stepper: FixedStepper::new(step_size)
         }
+    }
+
+    pub fn solve<F>(self: &Self, prob: &F) -> Result<(Vec<T>, Vec<Vector<T>>), ()>
+        where F: ExplicitODE<T>
+    {
+        return self.stepper.solve(prob, self);
+    }
+
+    pub fn get_step_size(self: &Self) -> &T
+    {
+        return self.stepper.get_step_size();
+    }
+
+    pub fn set_step_size(self: &mut Self, step_size: T)
+    {
+        self.stepper.set_step_size(step_size)
     }
 }
 
 impl<T> ExplicitFixedStepSizeMethod<T> for Kutta3<T>
     where T: Real
 {
-    fn do_step<F>(self: &Self, prob: &F, t_n: &T, x_n: &Vector<T>, h: &T) -> (Vector<T>)
+    fn do_step<F>(self: &Self, prob: &F, t_n: &T, x_n: &Vector<T>, h: &T) -> Vector<T>
         where F: ExplicitODE<T>
     {
         // k1 = f(t_n, x_n)
@@ -43,5 +60,11 @@ impl<T> ExplicitFixedStepSizeMethod<T> for Kutta3<T>
 
         // x[n+1] = xn + h*(k1 + 4*k2 + k3)/6
         return x_n + &((k1 + k2 * T::from_f64(4.0).unwrap() + k3) * *h / T::from_f64(6.0).unwrap());
+    }
+
+    /// Kuttas method is a 3rd order method
+    fn order(self: &Self) -> u8
+    {
+        return 3;
     }
 }

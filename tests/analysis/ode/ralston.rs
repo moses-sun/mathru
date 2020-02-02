@@ -3,7 +3,7 @@ mod ralston
 {
 	extern crate mathru;
 	use mathru::algebra::linear::{Vector};
-	use mathru::analysis::ode::{FixedStepper, ExplicitODE, Ralston};
+	use mathru::analysis::ode::{ExplicitODE, Ralston};
 
 	use super::super::problem::{ExplicitODE1, ExplicitODE2};
 
@@ -22,10 +22,9 @@ mod ralston
 	fn fn1()
 	{
 		let problem: ExplicitODE1 = ExplicitODE1::default();
-		let method: Ralston<f64> = Ralston::new();
-		let solver: FixedStepper<f64> = FixedStepper::new(0.001);
+		let solver: Ralston<f64> = Ralston::new(0.001);
 
-		let (t, y): (Vec<f64>, Vec<Vector<f64>>) = solver.solve(&problem, &method).unwrap();
+		let (t, y): (Vec<f64>, Vec<Vector<f64>>) = solver.solve(&problem).unwrap();
 
 		let len: usize = y.len();
 
@@ -40,10 +39,9 @@ mod ralston
 	fn fn2()
 	{
 		let problem: ExplicitODE2 = ExplicitODE2::default();
-		let method: Ralston<f64> = Ralston::new();
-		let solver: FixedStepper<f64> = FixedStepper::new(0.001);
+		let solver: Ralston<f64> = Ralston::new(0.001);
 
-		let (t, y): (Vec<f64>, Vec<Vector<f64>>) = solver.solve(&problem, &method).unwrap();
+		let (t, y): (Vec<f64>, Vec<Vector<f64>>) = solver.solve(&problem).unwrap();
 
 		let len: usize = y.len();
 

@@ -3,7 +3,7 @@ mod midpoint
 {
 	extern crate mathru;
 	use mathru::algebra::linear::{Vector};
-	use mathru::analysis::ode::{Midpoint, ExplicitODE, FixedStepper};
+	use mathru::analysis::ode::{Midpoint, ExplicitODE};
 
 	use super::super::problem::{ExplicitODE1, ExplicitODE2};
 
@@ -23,9 +23,8 @@ mod midpoint
 	{
 		let problem: ExplicitODE1 = ExplicitODE1::default();
 
-		let midpoint: Midpoint<f64> = Midpoint::new();
-		let solver: FixedStepper<f64> = FixedStepper::new(0.001);
-		let (t, y): (Vec<f64>, Vec<Vector<f64>>) = solver.solve(&problem, &midpoint).unwrap();
+		let solver: Midpoint<f64> = Midpoint::new(0.001);
+		let (t, y): (Vec<f64>, Vec<Vector<f64>>) = solver.solve(&problem).unwrap();
 
 		let len: usize = y.len();
 
@@ -41,9 +40,8 @@ mod midpoint
 	{
 		let problem: ExplicitODE2 = ExplicitODE2::default();
 
-		let midpoint: Midpoint<f64> = Midpoint::new();
-		let solver: FixedStepper<f64> = FixedStepper::new(0.01);
-		let (t, y): (Vec<f64>, Vec<Vector<f64>>) = solver.solve(&problem, &midpoint).unwrap();
+		let solver: Midpoint<f64> = Midpoint::new(0.01);
+		let (t, y): (Vec<f64>, Vec<Vector<f64>>) = solver.solve(&problem).unwrap();
 
 		let len: usize = y.len();
 

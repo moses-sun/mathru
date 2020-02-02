@@ -3,7 +3,7 @@ mod kutta3
 {
 	extern crate mathru;
 	use mathru::algebra::linear::{Vector};
-	use mathru::analysis::ode::{ExplicitODE, FixedStepper};
+	use mathru::analysis::ode::{ExplicitODE};
 	use mathru::analysis::ode::Kutta3;
 
 	use super::super::problem::{ExplicitODE1, ExplicitODE2};
@@ -23,10 +23,9 @@ mod kutta3
 	fn fn1()
 	{
 		let problem: ExplicitODE1 = ExplicitODE1::default();
-		let method: Kutta3<f64> = Kutta3::new();
-		let solver: FixedStepper<f64> = FixedStepper::new(0.01);
+		let solver: Kutta3<f64> = Kutta3::new(0.01);
 
-		let (t, y): (Vec<f64>, Vec<Vector<f64>>) = solver.solve(&problem, &method).unwrap();
+		let (t, y): (Vec<f64>, Vec<Vector<f64>>) = solver.solve(&problem).unwrap();
 
 		let len: usize = y.len();
 
@@ -41,10 +40,9 @@ mod kutta3
 	fn fn2()
 	{
 		let problem: ExplicitODE2 = ExplicitODE2::default();
-		let method: Kutta3<f64> = Kutta3::new();
-		let solver: FixedStepper<f64> = FixedStepper::new(0.1);
+		let solver: Kutta3<f64> = Kutta3::new(0.1);
 
-		let (t, y): (Vec<f64>, Vec<Vector<f64>>) = solver.solve(&problem, &method).unwrap();
+		let (t, y): (Vec<f64>, Vec<Vector<f64>>) = solver.solve(&problem).unwrap();
 
 		let len: usize = y.len();
 

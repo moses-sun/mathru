@@ -1,7 +1,9 @@
 use crate::algebra::linear::{Vector};
 use crate::algebra::abstr::Real;
-use super::{ExplicitODE, ExplicitAdaptiveMethod};
-use std::marker::PhantomData;
+use super::explicit_method::{ExplicitAdaptiveMethod};
+use super::ExplicitODE;
+use std::default::Default;
+use super::adaptive_stepper::AdaptiveStepper;
 
 /// Solves an ordinary differential equation using the 4th order Runge-Kutta-Fehlberg algorithm.
 ///
@@ -12,27 +14,109 @@ use std::marker::PhantomData;
 ///<a href="https://en.wikipedia.org/wiki/Runge-Kutta-Fehlberg_method">https://en.wikipedia
 /// .org/wiki/Runge-Kutta-Fehlberg_method</a>
 ///
-pub struct RungeKuttaFehlberg45<T>
+pub struct RungeKuttaFehlberg54<T>
 {
-    phantom: PhantomData<T>,
+    stepper: AdaptiveStepper<T>
 }
 
-impl<T> RungeKuttaFehlberg45<T>
+impl<T> RungeKuttaFehlberg54<T>
     where T: Real
 {
-    /// Creates a RKF45 instance, also known as Runge-Kutta-Fehlberg
+    /// Creates a Runge Kuttea Fehlberg 54 instance, also known as Runge-Kutta-Fehlberg
     ///
-    pub fn new() -> RungeKuttaFehlberg45<T>
+    pub fn new(n_max: u32, h_0: T, fac: T, fac_min: T, fac_max: T, abs_tol: T, rel_tol: T) -> RungeKuttaFehlberg54<T>
     {
-        return
-        RungeKuttaFehlberg45
+        return RungeKuttaFehlberg54
         {
-            phantom: PhantomData
+            stepper: AdaptiveStepper::new(n_max, h_0, fac, fac_min, fac_max, abs_tol, rel_tol)
         }
+    }
+  /// # Example
+    ///
+    /// ```
+    /// use mathru::*;
+    /// use mathru::algebra::linear::{Vector, Matrix};
+    /// use mathru::analysis::ode::{ExplicitODE, RungeKuttaFehlberg54};
+    ///
+    /// // Define ODE
+    /// // $`y^{'} = ay = f(x, y) `$
+    /// // $`y = C a e^{at}`$
+    /// // $'y(t_{s}) = C a e^{at_s} => C = \frac{y(t_s)}{ae^{at_s}}`$
+    /// pub struct ExplicitODEProblem
+    /// {
+    ///	    time_span: (f64, f64),
+    ///	    init_cond: Vector<f64>
+    /// }
+    ///
+    /// impl Default for ExplicitODEProblem
+    /// {
+    ///	    fn default() -> ExplicitODEProblem
+    ///	    {
+    ///		    ExplicitODEProblem
+    ///		    {
+    ///			    time_span: (0.0, 2.0),
+    ///			    init_cond: vector![0.5],
+    ///		    }
+    ///	    }
+    /// }
+    ///
+    /// impl ExplicitODE<f64> for ExplicitODEProblem
+    /// {
+    ///   	fn func(self: &Self, t: &f64, x: &Vector<f64>) -> Vector<f64>
+    ///     {
+    ///		    return x * &2.0f64;
+    ///	    }
+    ///
+    ///     fn time_span(self: &Self) -> (f64, f64)
+    ///     {
+    ///		    return self.time_span;
+    ///     }
+    ///
+    ///    fn init_cond(self: &Self) -> Vector<f64>
+    ///    {
+    ///	        return self.init_cond.clone();
+    ///    }
+    /// }
+    ///
+    ///	let problem: ExplicitODEProblem = ExplicitODEProblem::default();
+   	///
+    /// let h_0: f64 = 0.0001;
+    /// let fac: f64 = 0.9;
+    /// let fac_min: f64 = 0.01;
+    ///	let fac_max: f64 = 2.0;
+    ///	let n_max: u32 = 100;
+    /// let abs_tol: f64 = 10e-6;
+    ///	let rel_tol: f64 = 10e-3;
+    ///
+	///	let solver: RungeKuttaFehlberg54<f64> = RungeKuttaFehlberg54::new(n_max, h_0, fac, fac_min, fac_max, abs_tol, rel_tol);
+    ///
+    /// let (t, y): (Vec<f64>, Vec<Vector<f64>>) = solver.solve(&problem).unwrap();
+    /// ```
+    pub fn solve<F>(self: &Self, prob: &F) -> Result<(Vec<T>, Vec<Vector<T>>), &'static str>
+        where F: ExplicitODE<T>,
+    {
+        return self.stepper.solve(prob, self);
     }
 }
 
-impl<T> ExplicitAdaptiveMethod<T> for RungeKuttaFehlberg45<T>
+impl<T> Default for RungeKuttaFehlberg54<T>
+    where T: Real
+{
+
+    fn default() -> RungeKuttaFehlberg54<T>
+    {
+        let h_0: T = T::from_f64(0.0001).unwrap();
+        let fac: T = T::from_f64(0.9).unwrap();
+        let fac_min: T = T::from_f64(0.01).unwrap();
+        let fac_max: T = T::from_f64(2.0).unwrap();
+        let n_max: u32 = 100;
+        let abs_tol: T = T::from_f64(10e-6).unwrap();
+        let rel_tol: T = T::from_f64(10e-3).unwrap();
+        return RungeKuttaFehlberg54::new(n_max, h_0, fac, fac_min, fac_max, abs_tol, rel_tol);
+    }
+}
+
+impl<T> ExplicitAdaptiveMethod<T> for RungeKuttaFehlberg54<T>
     where T: Real
 {
 
@@ -89,6 +173,12 @@ impl<T> ExplicitAdaptiveMethod<T> for RungeKuttaFehlberg45<T>
         let rkf5: Vector<T> = rkf5_4 + (&k_6 * &T::from_f64(2.0 / 55.0).unwrap());
 
         return (rkf4, rkf5);
+    }
+
+
+    fn order(self: &Self) -> (u8, u8)
+    {
+        return (4, 5);
     }
 
 }

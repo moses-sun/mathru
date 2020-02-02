@@ -414,4 +414,15 @@ mod vector
 
         assert_eq!(sign, sign_hat);
     }
+
+    #[test]
+    fn abs()
+    {
+        let v: Vector<f64> = vector![1.0, -2.0, 0.0, -4.0];
+
+        let abs_ref: Vector<f64> = vector![1.0, 2.0, 0.0, 4.0];
+        let abs: Vector<f64> = v.abs();
+
+        assert_eq!(abs_ref, abs);
+    }
 }

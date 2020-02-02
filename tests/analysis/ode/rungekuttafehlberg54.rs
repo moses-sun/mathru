@@ -1,9 +1,9 @@
 #[cfg(test)]
-mod rungekuttafehlberg45
+mod rungekuttafehlberg54
 {
 	extern crate mathru;
 	use mathru::algebra::linear::{Vector};
-	use mathru::analysis::ode::{AdaptiveStepper, ExplicitODE, RungeKuttaFehlberg45};
+	use mathru::analysis::ode::{ExplicitODE, RungeKuttaFehlberg54};
 
 	use super::super::problem::{ExplicitODE1, ExplicitODE2};
 
@@ -23,16 +23,17 @@ mod rungekuttafehlberg45
 	{
 		let problem: ExplicitODE1 = ExplicitODE1::default();
 
-		let h_0: f64 = 0.02;
-		let h_min: f64 = 0.001;
-		let h_max: f64 = 1.0;
-		let e_max: f64 = 0.00001;
+		let h_0: f64 = 0.0001;
+		let fac: f64 = 0.9;
+		let fac_min: f64 = 0.01;
+		let fac_max: f64 = 2.0;
 		let n_max: u32 = 100;
+		let abs_tol: f64 = 10e-6;
+		let rel_tol: f64 = 10e-6;
 
-		let method: RungeKuttaFehlberg45<f64> = RungeKuttaFehlberg45::new();
-		let solver: AdaptiveStepper<f64> = AdaptiveStepper::new(n_max, e_max, h_0, h_min, h_max);
+		let solver: RungeKuttaFehlberg54<f64> = RungeKuttaFehlberg54::new(n_max, h_0, fac, fac_min, fac_max, abs_tol, rel_tol);
 
-		let (t, y): (Vec<f64>, Vec<Vector<f64>>) = solver.solve(&problem, &method).unwrap();
+		let (t, y): (Vec<f64>, Vec<Vector<f64>>) = solver.solve(&problem).unwrap();
 
 		let len: usize = y.len();
 
@@ -49,15 +50,16 @@ mod rungekuttafehlberg45
 		let problem: ExplicitODE2 = ExplicitODE2::default();
 
 		let h_0: f64 = 0.0001;
-		let h_min: f64 = 0.0001;
-		let h_max: f64 = 1.0;
-		let e_max: f64 = 0.00001;
+		let fac: f64 = 0.9;
+		let fac_min: f64 = 0.01;
+		let fac_max: f64 = 2.0;
 		let n_max: u32 = 100;
+		let abs_tol: f64 = 10e-7;
+		let rel_tol: f64 = 10e-7;
 
-		let method: RungeKuttaFehlberg45<f64> = RungeKuttaFehlberg45::new();
-		let solver: AdaptiveStepper<f64> = AdaptiveStepper::new(n_max, e_max, h_0, h_min, h_max);
+		let solver: RungeKuttaFehlberg54<f64> = RungeKuttaFehlberg54::new(n_max, h_0, fac, fac_min, fac_max, abs_tol, rel_tol);
 
-		let (t, y): (Vec<f64>, Vec<Vector<f64>>) = solver.solve(&problem, &method).unwrap();
+		let (t, y): (Vec<f64>, Vec<Vector<f64>>) = solver.solve(&problem).unwrap();
 
 		let len: usize = y.len();
 
