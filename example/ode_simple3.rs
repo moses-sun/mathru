@@ -49,7 +49,7 @@ fn main()
 
 	let h_0: f64 = 0.001;
 	let n_max: u32 = 300;
-	let abs_tol: f64 = 0.00000001;
+	let abs_tol: f64 = 10e-7;
 
 	let solver: DormandPrince54<f64> = DormandPrince54::new(abs_tol, h_0, n_max);
 
@@ -77,7 +77,7 @@ fn main()
 
     plot.set_x_axis_designator("Time t");
     plot.set_y_axis_designator("x(t)");
-    plot.set_title("y'=(5t^2 - x)/(e^(t + x))");
+    plot.set_title("x'=(5t^2 - x)/(e^(t + x))");
 
     figure.save("../figure/ode_simple3.png").unwrap();
 }

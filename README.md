@@ -158,7 +158,7 @@ impl ExplicitODE<f64> for ExplicitODE1
 fn main() {
 	let h_0: f64 = 0.001;
 	let n_max: u32 = 300;
-	let abs_tol: f64 = 0.00000001;
+	let abs_tol: f64 = 10e-7;
 
 	let solver: DormandPrince54<f64> = DormandPrince54::new(abs_tol, h_0, n_max);
 

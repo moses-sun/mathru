@@ -37,7 +37,70 @@ impl<T> DormandPrince54<T>
     {
         self.h_0 = step_size
     }
-
+    /// Solve ordinary differential equation
+    ///
+    /// # Arguments
+    ///
+    /// * 'self'
+    /// * 'prob': explicit ordinary differntial equation with initial condition, which is solved
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// use mathru::*;
+    /// use mathru::algebra::linear::{Vector, Matrix};
+    /// use mathru::analysis::ode::{ExplicitODE, DormandPrince54};
+    ///
+    /// // Define ODE
+    /// // $`y^{'} = ay = f(x, y) `$
+    /// // $`y = C a e^{at}`$
+    /// // $'y(t_{s}) = C a e^{at_s} => C = \frac{y(t_s)}{ae^{at_s}}`$
+    /// pub struct ExplicitODEProblem
+    /// {
+    ///	    time_span: (f64, f64),
+    ///	    init_cond: Vector<f64>
+    /// }
+    ///
+    /// impl Default for ExplicitODEProblem
+    /// {
+    ///	    fn default() -> ExplicitODEProblem
+    ///	    {
+    ///		    ExplicitODEProblem
+    ///		    {
+    ///			    time_span: (0.0, 2.0),
+    ///			    init_cond: vector![0.5],
+    ///		    }
+    ///	    }
+    /// }
+    ///
+    /// impl ExplicitODE<f64> for ExplicitODEProblem
+    /// {
+    ///   	fn func(self: &Self, t: &f64, x: &Vector<f64>) -> Vector<f64>
+    ///     {
+    ///		    return x * &2.0f64;
+    ///	    }
+    ///
+    ///     fn time_span(self: &Self) -> (f64, f64)
+    ///     {
+    ///		    return self.time_span;
+    ///     }
+    ///
+    ///    fn init_cond(self: &Self) -> Vector<f64>
+    ///    {
+    ///	        return self.init_cond.clone();
+    ///    }
+    /// }
+    ///
+    ///	let problem: ExplicitODEProblem = ExplicitODEProblem::default();
+   	///
+    /// let h_0: f64 = 0.001;
+    /// let n_max: u32 = 500;
+    /// let abs_tol: f64 = 0.00000001;
+    ///
+	///	let solver: DormandPrince54<f64> = DormandPrince54::new(abs_tol, h_0, n_max);
+    ///
+    /// let (t, y): (Vec<f64>, Vec<Vector<f64>>) = solver.solve(&problem).unwrap();
+    /// ```
     pub fn solve<F>(self: &Self, prob: &F) -> Result<(Vec<T>, Vec<Vector<T>>), &'static str>
         where F: ExplicitODE<T>,
     {
@@ -155,15 +218,17 @@ impl<T> ExplicitAdaptiveMethod<T> for DormandPrince54<T>
         let k_75: Vector<T> = k_74 + (&k_6 * &T::from_f64(11.0 / 84.0).unwrap());
         let k_7: Vector<T> = &prob.func(&(*t_n + *h), &k_75) * h;
 
-        let rkdp4: Vector<T> = k_75;
+        // 5th order
+        let rkdp5: Vector<T> = k_75;
 
-        // y_(n +1) = x_n + 5179/57600k_1 + 7571/16695k_3 + 393/640k_4 - 92097/339200k_5 + 187/2100k_6 + 1/40k_7
-        let rkdp5_1: Vector<T> = x_n + &(&k_1 * &T::from_f64(5179.0 / 57600.0).unwrap());
-        let rkdp5_2: Vector<T> = rkdp5_1 + (&k_3 * &T::from_f64(7571.0 / 16695.0).unwrap());
-        let rkdp5_3: Vector<T> = rkdp5_2 + (&k_4 * &T::from_f64(393.0 / 640.0).unwrap());
-        let rkdp5_4: Vector<T> = rkdp5_3 - (&k_5 * &T::from_f64(92097.0 / 339200.0).unwrap());
-        let rkdp5_5: Vector<T> = rkdp5_4 + (&k_6 * &T::from_f64(187.0 / 2100.0).unwrap());
-        let rkdp5: Vector<T> = rkdp5_5 + (&k_7 * &T::from_f64(1.0 / 40.0).unwrap());
+        // 4th order
+        // y(n +1) = x_n + 5179/57600k_1 + 7571/16695k_3 + 393/640k_4 - 92097/339200k_5 + 187/2100k_6 + 1/40k_7
+        let rkdp4_1: Vector<T> = x_n + &(&k_1 * &T::from_f64(5179.0 / 57600.0).unwrap());
+        let rkdp4_2: Vector<T> = rkdp4_1 + (&k_3 * &T::from_f64(7571.0 / 16695.0).unwrap());
+        let rkdp4_3: Vector<T> = rkdp4_2 + (&k_4 * &T::from_f64(393.0 / 640.0).unwrap());
+        let rkdp4_4: Vector<T> = rkdp4_3 - (&k_5 * &T::from_f64(92097.0 / 339200.0).unwrap());
+        let rkdp4_5: Vector<T> = rkdp4_4 + (&k_6 * &T::from_f64(187.0 / 2100.0).unwrap());
+        let rkdp4: Vector<T> = rkdp4_5 + (&k_7 * &T::from_f64(1.0 / 40.0).unwrap());
         return (rkdp4, rkdp5);
     }
 

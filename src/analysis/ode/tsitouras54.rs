@@ -2,6 +2,7 @@ use crate::algebra::linear::{Vector};
 use crate::algebra::abstr::Real;
 use super::explicit_method::{ExplicitAdaptiveMethod};
 use super::ExplicitODE;
+
 /// Solves an ordinary differential equation using the 4th order Tsitouras algorithm
 ///
 ///<a href="http://users.ntua.gr/tsitoura/RK54_new_v2.pdf">http://users.ntua.gr/tsitoura/RK54_new_v2.pdf</a>

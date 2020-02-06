@@ -182,6 +182,10 @@ impl<T> AdaptiveStepper<T>
             }
 
         }
+        if t_n < t_stop
+        {
+            return Err("Maxmimum number of iterations reached");
+        }
         return Ok((t_vec, res_vec));
     }
 

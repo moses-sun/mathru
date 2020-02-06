@@ -31,7 +31,8 @@ impl<T> RungeKuttaFehlberg54<T>
             stepper: AdaptiveStepper::new(n_max, h_0, fac, fac_min, fac_max, abs_tol, rel_tol)
         }
     }
-  /// # Example
+
+    /// # Example
     ///
     /// ```
     /// use mathru::*;
