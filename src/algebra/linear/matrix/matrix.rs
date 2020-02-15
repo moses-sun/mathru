@@ -14,6 +14,8 @@ MatrixColumnIteratorMut};
 use crate::algebra::linear::matrix::{Substitute};
 use crate::elementary::Power;
 
+use std::convert::From;
+
 /// Macro to construct matrices
 ///
 /// ```
@@ -64,6 +66,20 @@ pub struct Matrix<T>
     /// Matrix entries
     pub(crate) data:  Vec<T>
 }
+
+impl<T> From<Vector<T>> for Matrix<T>
+    where T: Field + Scalar
+{
+    fn from(v: Vector<T>) -> Self
+    {
+        let (v_m, v_n) : (usize, usize) = v.dim();
+
+        return Matrix::new(v_m, v_n, v.convert_to_vec());
+    }
+
+}
+
+
 
 impl<T> IntoIterator for Matrix<T>
     where T: Field + Scalar

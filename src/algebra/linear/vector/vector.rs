@@ -1077,7 +1077,7 @@ impl<'a, 'b, T> Mul<&'b Matrix<T>> for &'a Vector<T>
 
     fn mul(self: Self, rhs: &'b Matrix<T>) -> Self::Output
     {
-        let (rhs_m, _rhs_n): (usize, usize) = rhs.dim();
+        let (rhs_m, rhs_n): (usize, usize) = rhs.dim();
         let (_m, n): (usize, usize) = self.dim();
 
         if n != rhs_m
@@ -1085,19 +1085,19 @@ impl<'a, 'b, T> Mul<&'b Matrix<T>> for &'a Vector<T>
             panic!("Vector and matrix dimension do not match");
         }
 
-        let mut res: Vec<T> = Vec::with_capacity(n);
+        let mut res: Vec<T> = Vec::with_capacity(rhs_n);
 
-        for i in 0..n
+        for i in 0..rhs_n
         {
             let mut sum: T = T::zero();
-            for k in 0..n
+            for k in 0..rhs_m
             {
                 sum = sum + *self.data.get(0, k) * *rhs.get(k, i);
             }
             res.push(sum.clone());
         }
 
-        Vector::new_row(n, res)
+        Vector::new_row(rhs_n, res)
     }
 }
 
