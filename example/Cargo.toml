@@ -6,7 +6,7 @@ edition = "2018"
 
 [[bin]]
 name = "ode_simple"
-path = "ode_simple3.rs"
+path = "fit.rs"
 
 [dependencies.mathru]
 #version = "0.5"
