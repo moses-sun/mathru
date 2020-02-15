@@ -3,13 +3,14 @@ use crate::algebra::linear::{Vector, Matrix};
 use crate::algebra::linear::matrix::Solve;
 use crate::optimization::{OptimResult, Jacobian};
 
+
 /// Levenberg-Marquardt method
 ///
 /// input: $` f \colon \mathbb{R}^{n} \to \mathbb{R} `$ with initial approximation $` x_{0} \in \mathbb{R}^{n} `$
 ///
 /// output: $` x_{k} `$
 ///
-/// 1. Initialization: 0 \leq \rho^{-} < \rho^{+} \leq 1, set $` k := 0 `$
+/// 1. Initialization: $`0 \leq \rho^{-} < \rho^{+} \leq 1 `$, set $` k := 0 `$
 /// 2. Solve the equation
 /// 3. $`\rho = \frac{\lvert \lvert f(x_{k}) \rvert \rvert_{2}^{2} - \lvert \lvert f(x_{k+1}) \rvert \rvert_{2}^{2}}{2d_{k}^{T}(f^{'}(x_{k})
 /// )^T f(x_{k})}`$

@@ -7,51 +7,53 @@ mod levenbergmarquardt
 	use mathru::optimization::{Jacobian, LevenbergMarquardt};
 	use mathru::algebra::abstr::Real;
 
-	pub struct Rosenbrock
+	struct QuadraticFunction
 	{
+
 	}
 
-	impl Rosenbrock
+	//F(x) = 0.5 (x1^2 + x2^2)^2
+	impl QuadraticFunction
 	{
-		pub fn new() -> Rosenbrock
+		pub fn new() -> QuadraticFunction
 		{
-			Rosenbrock
-			{
-			}
+			QuadraticFunction{}
 		}
 	}
 
-	impl Jacobian<f64> for Rosenbrock
+	// Ix
+	impl Jacobian<f64> for QuadraticFunction
 	{
-		fn eval(self: &Self, input: &Vector<f64>) -> Vector<f64>
-		{
-			let x_1: f64 = *input.get(0);
-			let x_2: f64 = *input.get(1);
 
-			return vector![	f64::sqrt(2.0) * (1.0 - x_1);
-							f64::sqrt(200.0) * (x_2 - x_1 * x_1)];
+		fn jacobian(&self, input: &Vector<f64>) -> Matrix<f64>
+		{
+			let mut jacobian: Matrix<f64> = Matrix::zero(1, 2);
+
+			let quadratic: f64 = input.dotp(input);
+			*jacobian.get_mut(0, 0) = *input.get(0) * quadratic;
+			*jacobian.get_mut(0, 1) = *input.get(1) * quadratic;
+
+			return jacobian;
 		}
 
-		fn jacobian(self: &Self, input: &Vector<f64>) -> Matrix<f64>
+		fn eval(&self, x: &Vector<f64>) -> Vector<f64>
 		{
-			return matrix![	-f64::sqrt(2.0), 0.0;
-							-f64::sqrt(2.0) * *input.get(0) * f64::sqrt(200.0), f64::sqrt(200.0)];
+			return vector![x.dotp(x) * x.dotp(x) * 0.5];
 		}
 	}
-
 
 	#[test]
-	fn test_minimization()
+	fn minimization()
 	{
-		let rosenbrock: Rosenbrock = Rosenbrock::new();
+		let problem: QuadraticFunction = QuadraticFunction::new();
 
-		let lm: LevenbergMarquardt<f64> = LevenbergMarquardt::new(150, 0.3, 0.95);
-		let x_0: Vector<f64> = vector![0.0; -0.1];
-		let x_opt: Vector<f64> = lm.minimize(&rosenbrock, &x_0).arg();
+		let lm: LevenbergMarquardt<f64> = LevenbergMarquardt::new(30, 0.3, 0.95);
+		let x_0: Vector<f64> = vector![1.0; -2.1];
+		let x_opt: Vector<f64> = lm.minimize(&problem, &x_0).arg();
 
-		let x_opt_ref: Vector<f64> = vector![1.0; 1.0];
+		let x_opt_ref: Vector<f64> = vector![0.0; 0.0];
 
-		assert!(compare_vector_epsilon(&x_opt_ref, &x_opt, 0.01f64));
+		assert!(compare_vector_epsilon(&x_opt_ref, &x_opt, 0.001f64));
 	}
 
 	fn compare_vector_epsilon<T: Real>(a: &Vector<T>, b: &Vector<T>, epsilon: T) -> bool
