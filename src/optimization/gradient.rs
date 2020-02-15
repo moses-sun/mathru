@@ -1,7 +1,7 @@
 use crate::algebra::linear::{Vector};
 use crate::optimization::{OptimResult, Jacobian};
 extern crate rand;
-
+use crate::algebra::abstr::Real;
 
 /// Gradient method
 ///
@@ -24,23 +24,24 @@ extern crate rand;
 /// 2. calculate antigradient $`d_{k} := -\nabla f(x_{k}) `$
 ///
 ///     set $` \alpha_{k} := 1 `$
-/// 3. while $`f(x_{k} + \alpha_{k} d_{k}) > f(x_k) - \sigma \alpha_{k} \lvert \lvert d_{k} \rvert \rvert_{2}^{2} `$
+/// 3. while $`f(x_{k} + \alpha_{k} d_{k}) > f(x_k) + \sigma \alpha_{k} \lvert \lvert d_{k} \rvert \rvert_{2}^{2} `$
 ///
 ///     set  $` \alpha_{k} := \alpha_{k} /2 `$
 /// 4. $` x_{k + 1} := x_{k} + \alpha_{k} d_{k} `$
 /// 5. $` k := k + 1 `$ go to 2.
 /// ```
 #[derive(Clone, Copy, Debug)]
-pub struct Gradient
+pub struct Gradient<T>
 {
     /// Learningrate
-    sigma: f64,
+    sigma: T,
     /// The number of iterations to run.
     iters: usize,
 }
 
 
-impl Gradient
+impl<T> Gradient<T>
+    where T: Real
 {
     /// Construct an instance of gradient algorithm.
     ///
@@ -55,9 +56,9 @@ impl Gradient
     ///
     /// let gd = Gradient::new(0.3, 10000);
     /// ```
-    pub fn new(sigma: f64, iters: usize) -> Gradient
+    pub fn new(sigma: T, iters: usize) -> Gradient<T>
     {
-        assert!(sigma <= 1.0 && sigma > 0.0f64);
+        assert!(sigma <= T::one() && sigma > T::zero());
         assert!(iters > 0);
         Gradient
         {
@@ -69,38 +70,38 @@ impl Gradient
 
 }
 
-impl Gradient
+impl<T> Gradient<T>
+    where T: Real
 {
-    pub fn minimize<F: Jacobian<f64>>(self: &Self, func: &F, x_0: &Vector<f64>) -> OptimResult<Vector<f64>>
+    pub fn minimize<F: Jacobian<T>>(self: &Self, func: &F, x_0: &Vector<T>) -> OptimResult<Vector<T>>
     {
-        let mut x_n: Vector<f64> = x_0.clone();
+        let mut x_k: Vector<T> = x_0.clone();
 
-
-        for _i in 0..self.iters
+        for _k in 0..self.iters
         {
-            let mut alpha_k: f64 = 1.0;
-            let anti_grad: Vector<f64> = -func.jacobian(&x_n).get_row(0).transpose();
+            let mut alpha_k: T = T::one();
+            let anti_grad: Vector<T> = -func.jacobian(&x_k).get_row(0).transpose();
 
             //Backtracking line search
             //Armijo–Goldstein condition
-            let mut anti_grad_alpha: Vector<f64> = &anti_grad * &alpha_k;
-            let mut r: Vector<f64> = &x_n + &anti_grad_alpha;
-            let mut k: f64 = self.sigma * anti_grad_alpha.dotp(&anti_grad.clone());
-            let mut f_r: f64 = *func.eval(&r).get(0);
-            let f_x_n: f64 = *func.eval(&x_n).get(0);
-
-            while f_r > f_x_n - k
+            loop
             {
-                alpha_k = alpha_k / 2.0;
-                anti_grad_alpha  = &anti_grad * &alpha_k;
-                r = &x_n + &anti_grad_alpha;
-                k = self.sigma * anti_grad_alpha.dotp(&anti_grad.clone());
-                f_r = *func.eval(&r).get(0);
+                let anti_grad_alpha: Vector<T> = &anti_grad * &alpha_k;
+                let r: Vector<T> = &x_k + &anti_grad_alpha;
+                let f_r: T = *func.eval(&r).get(0);
+                let b: T = self.sigma * anti_grad_alpha.dotp(&anti_grad);
+
+                let f_x_k: T = *func.eval(&x_k).get(0);
+
+                if f_r <= f_x_k - b
+                {
+                    break;
+                }
+                alpha_k = alpha_k / T::from_f64(2.0).unwrap();
             }
             //Make step
-            x_n = x_n + anti_grad * alpha_k;
-
+            x_k = x_k + anti_grad * alpha_k;
         }
-        return OptimResult::new(x_n);
+        return OptimResult::new(x_k);
     }
 }
