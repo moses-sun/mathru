@@ -1,18 +1,20 @@
 use crate::statistics::distrib::Continuous;
 use crate::special::gamma;
 use crate::special::hypergeometrical;
+use crate::algebra::abstr::Real;
 
 /// T distribution
 ///
 /// Fore more information:
 /// <a href="https://en.wikipedia.org/wiki/T_distribution">https://en.wikipedia.org/wiki/T_distribution</a>
 ///
-pub struct T
+pub struct T<K>
 {
-    n: f64,
+    n: K,
 }
 
-impl T
+impl<K> T<K>
+    where K: Real
 {
 
     /// Create a probability distribution
@@ -32,9 +34,9 @@ impl T
     ///
     /// let distrib: T = T::new(1.2);
     /// ```
-    pub fn new(n: f64) -> T
+    pub fn new(n: K) -> T<K>
     {
-        if n < 0.0_f64
+        if n < K::zero()
         {
             panic!()
         }
@@ -45,7 +47,8 @@ impl T
     }
 }
 
-impl Continuous<f64, f64> for T
+impl<K> Continuous<K, K, K> for T<K>
+    where K: Real
 {
     /// Probability density function
     ///
@@ -63,10 +66,10 @@ impl Continuous<f64, f64> for T
     /// let x: f64 = 0.5;
     /// let p: f64 = distrib.pdf(x);
     /// ```
-    fn pdf<'a>(self: &'a Self, x: f64) -> f64
+    fn pdf<'a>(self: &'a Self, x: K) -> K
     {
-        gamma::gamma((self.n + 1.0) / 2.0) * (1.0 + x.powi(2) / self.n).powf(-(self.n + 1.0) / 2.0) / ((self.n *
-        std::f64::consts::PI).sqrt() * gamma::gamma(self.n / 2.0))
+        gamma::gamma((self.n + K::one()) / K::from_f64(2.0).unwrap()) * (K::one() + x.pow(&K::from_f64(2.0).unwrap()) / self.n).pow(&(-
+        (self.n + K::one()) / K::from_f64(2.0).unwrap())) / ((self.n * K::pi()).sqrt() * gamma::gamma(self.n / K::from_f64(2.0).unwrap()))
     }
 
     /// Cumulative distribution function
@@ -80,22 +83,23 @@ impl Continuous<f64, f64> for T
     /// ```
     /// use mathru::statistics::distrib::{Continuous, T};
     ///
-    /// let distrib: T = T::new(1.3);
+    /// let distrib: T = K::new(1.3);
     /// let x: f64 = 0.4;
     /// let p: f64 = distrib.cdf(x);
     /// ```
-    fn cdf<'a>(self: &'a Self, x: f64) -> f64
+    fn cdf<'a>(self: &'a Self, x: K) -> K
     {
-        let k: f64 = (self.n + 1.0) / 2.0;
-        let f21: f64 = hypergeometrical::f21(0.5, k, 1.5, -(x.powi(2)) / self.n);
-        0.5 + x * gamma::gamma(k) * f21 / ((self.n *
-        std::f64::consts::PI).sqrt() * gamma::gamma(self.n / 2.0))
+        unimplemented!();
+//        let k: K = (self.n + K::one()) / K::from_f64(2.0).unwrap();
+//        let f21: K = hypergeometrical::f21(0.5, k, 1.5, -(x.powi(2)) / self.n);
+//        0.5 + x * gamma::gamma(k) * f21 / ((self.n *
+//        std::f64::consts::PI).sqrt() * gamma::gamma(self.n / K::from_f64(2.0).unwrap()))
     }
 
 
     /// Quantile function of inverse cdf
     ///
-    fn quantile<'a, 'b>(self: &'a Self, _p: f64) -> f64
+    fn quantile<'a, 'b>(self: &'a Self, _p: K) -> K
     {
         unimplemented!();
     }
@@ -111,14 +115,14 @@ impl Continuous<f64, f64> for T
     /// ```
     /// use mathru::statistics::distrib::{Continuous, T};
     ///
-    /// let distrib: T = T::new(1.2);
+    /// let distrib: T = K::new(1.2);
     /// let mean: f64 = distrib.mean();
     /// ```
-	fn mean<'a>(self: &'a Self) -> f64
+	fn mean<'a>(self: &'a Self) -> K
     {
-        if self.n > 1.0
+        if self.n > K::one()
         {
-            return 0.0;
+            return K::zero();
         }
         panic!();
     }
@@ -130,18 +134,18 @@ impl Continuous<f64, f64> for T
     /// ```
     /// use mathru::statistics::distrib::{Continuous, T};
     ///
-    /// let distrib: T = T::new(2.2);
+    /// let distrib: T = K::new(2.2);
     /// let var: f64 = distrib.variance();
     /// ```
-	fn variance<'a>(self: &'a Self) -> f64
+	fn variance<'a>(self: &'a Self) -> K
     {
-        if self.n > 2.0
+        if self.n > K::from_f64(2.0).unwrap()
         {
-            return self.n / (self.n - 2.0)
+            return self.n / (self.n - K::from_f64(2.0).unwrap())
         }
-        if self.n > 1.0
+        if self.n > K::one()
         {
-            return std::f64::INFINITY;
+            return K::from_f64(std::f64::INFINITY).unwrap();
         }
         else
         {

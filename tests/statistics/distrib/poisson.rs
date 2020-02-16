@@ -10,7 +10,7 @@ mod poissondistrib
     {
         let gamma: f64 = 1.0;
         let x: u32 = 0;
-        let distrib : Poisson = Poisson::new(&gamma);
+        let distrib: Poisson<f64> = Poisson::new(&gamma);
         let prob: f64 = distrib.pmf(x);
 
         assert_eq!(0.36787944117144233, prob);
@@ -21,7 +21,7 @@ mod poissondistrib
     {
         let gamma: f64 = 3.0;
         let x: u32 = 5;
-        let distrib : Poisson = Poisson::new(&gamma);
+        let distrib: Poisson<f64> = Poisson::new(&gamma);
         let prob: f64 = distrib.pmf(x);
 
         assert_eq!(0.10081881344492448, prob);
@@ -32,13 +32,13 @@ mod poissondistrib
     {
         let gamma: f64 = 5.0;
         let x: u32 = 5;
-        let distrib : Poisson = Poisson::new(&gamma);
+        let distrib : Poisson<f64> = Poisson::new(&gamma);
         let prob: f64 = distrib.cdf(x);
 
 			assert_eq!(0.6159606548330621, prob);
     }
 
-//// Does not work all the time, because the used function random is not mocked.
+//// Does not work all the time, because the used function 'random' is not mocked.
 ////    #[test]
 ////    fn random()
 ////    {

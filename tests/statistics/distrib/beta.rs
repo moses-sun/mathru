@@ -15,7 +15,7 @@ mod beta
         let q: f64 = 5.0;
 		let x: f64 = 0.0 - f64::EPSILON;
 
-        let beta: Beta = Beta::new(&p, &q);
+        let beta: Beta<f64> = Beta::new(&p, &q);
 
         beta.pdf(x);
     }
@@ -27,7 +27,7 @@ mod beta
         let q: f64 = 5.0;
 		let x: f64 = 0.0;
 
-        let beta: Beta = Beta::new(&p, &q);
+        let beta: Beta<f64> = Beta::new(&p, &q);
 
         assert_eq!(0.0, beta.pdf(x));
     }
@@ -40,7 +40,7 @@ mod beta
         let q: f64 = 5.0;
 		let x: f64 = 1.0;
 
-        let beta: Beta = Beta::new(&p, &q);
+        let beta: Beta<f64> = Beta::new(&p, &q);
 
         beta.pdf(x);
     }
@@ -53,7 +53,7 @@ mod beta
         let q: f64 = 5.0;
 		let x: f64 = 1.0 + f64::EPSILON;
 
-        let beta: Beta = Beta::new(&p, &q);
+        let beta: Beta<f64> = Beta::new(&p, &q);
 
         beta.pdf(x);
     }
@@ -65,7 +65,7 @@ mod beta
         let q: f64 = 5.0;
 		let x: f64 = 0.4;
 
-        let beta: Beta = Beta::new(&p, &q);
+        let beta: Beta<f64> = Beta::new(&p, &q);
 
         assert_eq!(1.5552000000000026, beta.pdf(x));
     }
@@ -78,7 +78,7 @@ mod beta
         let q: f64 = 5.0;
 		let x: f64 = 0.0 - f64::EPSILON;
 
-        let beta: Beta = Beta::new(&p, &q);
+        let beta: Beta<f64> = Beta::new(&p, &q);
 
        	beta.cdf(x);
     }
@@ -90,7 +90,7 @@ mod beta
         let q: f64 = 5.0;
 		let x: f64 = 0.0;
 
-        let beta: Beta = Beta::new(&p, &q);
+        let beta: Beta<f64> = Beta::new(&p, &q);
 
        	assert_eq!(0.0, beta.cdf(x));
     }
@@ -102,7 +102,7 @@ mod beta
         let q: f64 = 5.0;
 		let x: f64 = 1.0;
 
-        let beta: Beta = Beta::new(&p, &q);
+        let beta: Beta<f64> = Beta::new(&p, &q);
 
         assert_eq!(1.0, beta.cdf(x));
     }
@@ -115,7 +115,7 @@ mod beta
         let q: f64 = 5.0;
 		let x: f64 = 1.0 + f64::EPSILON;
 
-        let beta: Beta = Beta::new(&p, &q);
+        let beta: Beta<f64> = Beta::new(&p, &q);
 
         beta.cdf(x);
     }
@@ -127,7 +127,7 @@ mod beta
         let q: f64 = 5.0_f64;
 		let x: f64 = 0.3_f64;
 
-        let beta: Beta = Beta::new(&p, &q);
+        let beta: Beta<f64> = Beta::new(&p, &q);
 
         assert_eq!(0.5798249999999994_f64, beta.cdf(x));
     }

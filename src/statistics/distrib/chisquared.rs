@@ -1,8 +1,8 @@
 use crate::statistics::distrib::Continuous;
 use crate::special::gamma;
 use crate::special;
-use std::f64;
 use super::Normal;
+use crate::algebra::abstr::Real;
 
 
 /// Chi-Squared distribution
@@ -10,12 +10,13 @@ use super::Normal;
 /// Fore more information:
 /// <a href="https://en.wikipedia.org/wiki/Chi-squared_distribution">https://en.wikipedia.org/wiki/Chi-squared_distribution</a>
 ///
-pub struct ChiSquared
+pub struct ChiSquared<T>
 {
-    k: f64 //degree of freedom
+    k: T //degree of freedom
 }
 
-impl ChiSquared
+impl<T> ChiSquared<T>
+    where T: Real
 {
     /// Creates a probability distribution
     ///
@@ -32,23 +33,24 @@ impl ChiSquared
     /// ```
     /// use mathru::statistics::distrib::ChiSquared;
     ///
-    /// let distrib: ChiSquared = ChiSquared::new(&3);
+    /// let distrib: ChiSquared<f64> = ChiSquared::new(3);
     /// ```
-    pub fn new(df: &u32) -> ChiSquared
+    pub fn new(df: u32) -> ChiSquared<T>
     {
-        if *df < 1
+        if T::from_u32(df).unwrap() < T::one()
         {
             panic!()
         }
         ChiSquared
         {
-            k: *df as f64
+            k: T::from_u32(df).unwrap()
         }
     }
 }
 
 
-impl Continuous<f64, f64> for ChiSquared
+impl<T> Continuous<T, T, T> for ChiSquared<T>
+    where T: Real
 {
 
     /// Probability density function
@@ -62,21 +64,21 @@ impl Continuous<f64, f64> for ChiSquared
     /// ```
     /// use mathru::statistics::distrib::{Continuous, ChiSquared};
     ///
-    /// let distrib: ChiSquared = ChiSquared::new(&2);
+    /// let distrib: ChiSquared<f64> = ChiSquared::new(2);
     /// let x: f64 = 5.0;
     /// let p: f64 = distrib.pdf(x);
     /// ```
-    fn pdf<'a>(self: &'a Self, x: f64) -> f64
+    fn pdf<'a>(self: &'a Self, x: T) -> T
     {
-        if x < 0.0
+        if x < T::zero()
         {
-            return 0.0
+            return T::zero()
         }
-        let t1: f64 = 1.0 / ((2.0_f64).powf(self.k  / 2.0) * gamma::gamma(self.k / 2.0));
-        let t2: f64 = x.powf(self.k / 2.0 - 1.0) * (-x / 2.0).exp();
-        let chisquared: f64 = t1 * t2;
+        let t1: T = T::one() / (T::from_f64(2.0).unwrap().pow(&(self.k / T::from_f64(2.0).unwrap())) * gamma::gamma(self.k / T::from_f64(2.0).unwrap()));
+        let t2: T = x.pow(&(self.k / T::from_f64(2.0).unwrap() - T::one())) * (-x / T::from_f64(2.0).unwrap()).exp();
+        let chisquared: T = t1 * t2;
 
-        chisquared
+        return chisquared;
     }
 
     /// Cumulative distribution function
@@ -90,36 +92,37 @@ impl Continuous<f64, f64> for ChiSquared
     /// ```
     /// use mathru::statistics::distrib::{Continuous, ChiSquared};
     ///
-    /// let distrib: ChiSquared = ChiSquared::new(&3);
+    /// let distrib: ChiSquared<f64> = ChiSquared::new(3);
     /// let x: f64 = 0.4;
     /// let p: f64 = distrib.cdf(x);
     /// ```
-    fn cdf<'a>(self: &'a Self, x: f64) -> f64
+    fn cdf<'a>(self: &'a Self, x: T) -> T
     {
-        let t1: f64 = (-x / 2.0).exp();
+        let t1: T = (-x / T::from_f64(2.0).unwrap()).exp();
 
-        let k_natural: u32 = self.k as u32;
-        let p: f64;
+        let k_natural: u32 = self.k.to_u32().unwrap();
+        let p: T;
 
         if k_natural % 2 == 0
         {
-            let mut sum: f64 = 0.0;
-            for i in 0..(self.k / 2.0) as u32
+            let mut sum: T = T::zero();
+            for i in 0..(self.k / T::from_f64(2.0).unwrap()).to_u32().unwrap()
             {
-                sum += (x / 2.0).powf(i as f64) / gamma::gamma((i + 1) as f64)
+                sum += (x / T::from_f64(2.0).unwrap()).pow(&T::from_u32(i).unwrap()) / gamma::gamma(T::from_u32(i + 1).unwrap())
             }
 
-            p = 1.0 - t1 * sum;
+            p = T::one() - t1 * sum;
         }
         else
         {
-            let mut sum: f64 = 0.0;
-            for i in 0..(self.k / 2.0) as u32
+            let mut sum: T = T::zero();
+            for i in 0..(self.k / T::from_f64(2.0).unwrap()).to_u32().unwrap()
             {
-                sum += (x / 2.0).powf((i as f64) + 0.5) / gamma::gamma((i as f64) + 1.5)
+                sum += (x / T::from_f64(2.0).unwrap()).pow(&T::from_f64((i as f64) + 0.5).unwrap()) / gamma::gamma(T::from_f64((i as f64) +
+                1.5).unwrap());
             }
 
-            p = special::erf((x / 2.0).sqrt()) - t1 * sum;
+            p = special::erf((x / T::from_f64(2.0).unwrap()).sqrt()) - t1 * sum;
         }
 
         p
@@ -127,11 +130,12 @@ impl Continuous<f64, f64> for ChiSquared
 
     /// Quantile function of inverse cdf
     ///
-    fn quantile<'a, 'b>(self: &'a Self, p: f64) -> f64
+    fn quantile<'a, 'b>(self: &'a Self, p: T) -> T
     {
-        let std_distrib: Normal = Normal::new(0.0, 1.0);
-        let q: f64 = 0.5 * (std_distrib.quantile(p) + (2.0 * self.k as f64 - 1.0).sqrt()).powi(2);
-        q
+        let std_distrib: Normal<T> = Normal::new(T::zero(), T::one());
+        let q: T = T::from_f64(0.5).unwrap() * (std_distrib.quantile(p) + (T::from_f64(2.0).unwrap() * self.k - T::one()).sqrt()).pow
+        (&T::from_f64(2.0).unwrap());
+        return q;
     }
 
     /// Expected value
@@ -139,14 +143,14 @@ impl Continuous<f64, f64> for ChiSquared
     /// # Example
     ///
     /// ```
-    /// use mathru::statistics::distrib::{Discrete, Bernoulli};
+    /// use mathru::statistics::distrib::{Continuous, ChiSquared};
     ///
-    /// let distrib: Bernoulli = Bernoulli::new(0.2);
+    /// let distrib: ChiSquared<f64> = ChiSquared::new(2);
     /// let mean: f64 = distrib.mean();
     /// ```
-	fn mean<'a>(self: &'a Self) -> f64
+	fn mean<'a>(self: &'a Self) -> T
     {
-        return self.k as f64
+        return self.k
     }
 
     /// Variance
@@ -154,13 +158,13 @@ impl Continuous<f64, f64> for ChiSquared
     /// # Example
     ///
     /// ```
-    /// use mathru::statistics::distrib::{Discrete, Bernoulli};
+    /// use mathru::statistics::distrib::{Continuous, ChiSquared};
     ///
-    /// let distrib: Bernoulli = Bernoulli::new(0.2);
+    /// let distrib: ChiSquared<f64> = ChiSquared::new(2);
     /// let var: f64 = distrib.variance();
     /// ```
-	fn variance<'a>(self: &'a Self) -> f64
+	fn variance<'a>(self: &'a Self) -> T
     {
-        return 2.0 * (self.k as f64)
+        return T::from_f64(2.0).unwrap() * self.k
     }
 }

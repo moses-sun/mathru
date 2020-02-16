@@ -11,7 +11,7 @@ mod uniformdistrib
         let b: f64 = 0.4;
 		let x: f64 = -0.3;
 
-        let distrib: Uniform = Uniform::new(a, b);
+        let distrib: Uniform<f64> = Uniform::new(a, b);
 
         assert_eq!(0.0, distrib.pdf(x));
     }
@@ -23,7 +23,7 @@ mod uniformdistrib
         let b: f64 = 0.4;
 		let x: f64 = 0.5;
 
-        let distrib: Uniform = Uniform::new(a, b);
+        let distrib: Uniform<f64> = Uniform::new(a, b);
 
         assert_eq!(0.0, distrib.pdf(x));
     }
@@ -35,7 +35,7 @@ mod uniformdistrib
         let b: f64 = 0.4;
 		let x: f64 = 0.3;
 
-        let distrib: Uniform = Uniform::new(a, b);
+        let distrib: Uniform<f64> = Uniform::new(a, b);
 
         assert_eq!(1.6666666666666665, distrib.pdf(x));
     }
@@ -47,7 +47,7 @@ mod uniformdistrib
         let b: f64 = 0.4;
 		let x: f64 = -0.3;
 
-        let distrib: Uniform = Uniform::new(a, b);
+        let distrib: Uniform<f64> = Uniform::new(a, b);
 
         assert_eq!(0.0, distrib.cdf(x));
     }
@@ -59,7 +59,7 @@ mod uniformdistrib
         let b: f64 = 0.4;
 		let x: f64 = 0.5;
 
-        let distrib: Uniform = Uniform::new(a, b);
+        let distrib: Uniform<f64> = Uniform::new(a, b);
 
         assert_eq!(1.0, distrib.cdf(x));
     }
@@ -71,7 +71,7 @@ mod uniformdistrib
         let b: f64 = 0.4;
 		let x: f64 = 0.3;
 
-        let distrib: Uniform = Uniform::new(a, b);
+        let distrib: Uniform<f64> = Uniform::new(a, b);
 
         assert_eq!(0.8333333333333333, distrib.cdf(x));
     }
@@ -82,7 +82,7 @@ mod uniformdistrib
     	let a: f64 = -0.2;
         let b: f64 = 0.4;
 
-        let distrib: Uniform = Uniform::new(a, b);
+        let distrib: Uniform<f64> = Uniform::new(a, b);
 
         assert_eq!((a + b) / 2.0, distrib.mean());
     }
@@ -94,7 +94,7 @@ mod uniformdistrib
         let b: f64 = 0.4;
 		let diff: f64 = b - a;
 
-        let distrib: Uniform = Uniform::new(a, b);
+        let distrib: Uniform<f64> = Uniform::new(a, b);
 
         assert_eq!(diff * diff / 12.0, distrib.variance());
     }

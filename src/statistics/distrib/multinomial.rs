@@ -1,18 +1,20 @@
 use crate::statistics::distrib::Discrete;
 use crate::statistics::combins;
 use crate::algebra::linear::Vector;
+use crate::algebra::abstr::Real;
 
 /// Multinomial distribution
 ///
 /// Fore more information:
 /// <a href="https://en.wikipedia.org/wiki/Multinomial_distribution">https://en.wikipedia.org/wiki/Multinomial_distribution</a>
 ///
-pub struct Multinomial
+pub struct Multinomial<T>
 {
-    p: Vector<f64>,
+    p: Vector<T>,
 }
 
-impl Multinomial
+impl<T> Multinomial<T>
+    where T: Real
 {
      /// Create a probability distribution with
     ///
@@ -34,7 +36,7 @@ impl Multinomial
     ///
     /// let distrib: Multinomial = Multinomial::new(vector![0.3; 0.2; 0.5]);
     /// ```
-	 pub fn new(p: Vector<f64>) -> Multinomial
+	 pub fn new(p: Vector<T>) -> Multinomial<T>
     {
         Multinomial
         {
@@ -43,7 +45,7 @@ impl Multinomial
     }
 }
 
-impl Discrete<Vector<u32>, Vector<f64>> for Multinomial
+impl<T> Discrete<T, Vector<u32>, Vector<T>> for Multinomial<T>
 {
     /// Probability mass function
     ///
@@ -63,16 +65,16 @@ impl Discrete<Vector<u32>, Vector<f64>> for Multinomial
     /// let x: Vector<u32> = vector![1; 2];
     /// let p: f64 = distrib.pmf(x);
     /// ```
-	fn pmf<'a>(self: &'a Self, x: Vector<u32>) -> f64
+	fn pmf<'a>(self: &'a Self, x: Vector<u32>) -> T
     {
         assert_eq!(self.p.dim(), x.dim());
         let (m, _n) = x.dim();
 
-        let mut prod: f64 = 1.0;
+        let mut prod: T = T::one();
         let mut n: u32 = 0;
         for k in 0..m
         {
-            let p_k: f64 = *self.p.get(k);
+            let p_k: T = *self.p.get(k);
             let n_k: u32 = *x.get(k);
             n = n + n_k;
             prod = prod * p_k.powf(n_k as f64) / (combins::factorial(n_k) as f64);
@@ -95,7 +97,7 @@ impl Discrete<Vector<u32>, Vector<f64>> for Multinomial
     /// let x: f64 = 0.4;
     /// let p: f64 = distrib.cdf(x);
     /// ```
-	fn cdf<'a>(self: &'a Self, _x: Vector<f64>) -> f64
+	fn cdf<'a>(self: &'a Self, _x: Vector<T>) -> T
     {
     /*
         let x_supremum : u32 = x.floor() as u32;
@@ -120,7 +122,7 @@ impl Discrete<Vector<u32>, Vector<f64>> for Multinomial
     /// let distrib: Binomial = Binomial::new(&5, &0.3);
     /// let mean: f64 = distrib.mean();
     /// ```
-	fn mean<'a>(self: &'a Self) -> f64
+	fn mean<'a>(self: &'a Self) -> T
     {
         unimplemented!();
         //return &(self.n as f64) * &self.p
@@ -136,7 +138,7 @@ impl Discrete<Vector<u32>, Vector<f64>> for Multinomial
     /// let distrib: Binomial = Binomial::new(&5, &0.3);
     /// let var: f64 = distrib.variance();
     /// ```
-	fn variance<'a>(self: &'a Self) -> f64
+	fn variance<'a>(self: &'a Self) -> T
     {
         unimplemented!();
         //return self.mean() * (1.0 - self.p)

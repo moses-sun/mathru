@@ -9,7 +9,7 @@ mod chisquareddistrib
     fn pdf0()
     {
         let df: u32 = 4;
-        let distrib : ChiSquared = ChiSquared::new(&df);
+        let distrib: ChiSquared<f64> = ChiSquared::new(df);
         let x : f64 = 0.0;
         let prob : f64 = distrib.pdf(x);
 
@@ -20,7 +20,7 @@ mod chisquareddistrib
     fn pdf1()
     {
         let df: u32 = 4;
-        let distrib : ChiSquared = ChiSquared::new(&df);
+        let distrib : ChiSquared<f64> = ChiSquared::new(df);
         let x : f64 = 1.0;
         let prob : f64 = distrib.pdf(x);
 
@@ -31,7 +31,7 @@ mod chisquareddistrib
     fn cdf0()
     {
         let df: u32 = 4;
-        let distrib: ChiSquared = ChiSquared::new(&df);
+        let distrib: ChiSquared<f64> = ChiSquared::new(df);
 
         assert_eq!(0.09020401043104986, distrib.cdf(1.0))
     }
@@ -40,7 +40,7 @@ mod chisquareddistrib
     fn cdf1()
     {
         let df: u32 = 4;
-        let distrib: ChiSquared = ChiSquared::new(&df);
+        let distrib: ChiSquared<f64> = ChiSquared::new(df);
 
         assert_eq!(0.001209104274250028, distrib.cdf(0.1))
     }
@@ -49,7 +49,7 @@ mod chisquareddistrib
     fn cdf2()
     {
         let df: u32 = 4;
-        let distrib: ChiSquared = ChiSquared::new(&df);
+        let distrib: ChiSquared<f64> = ChiSquared::new(df);
 
         assert_eq!(0.7689217620241717, distrib.cdf(5.6))
     }
@@ -60,7 +60,7 @@ mod chisquareddistrib
     {
         let df: u32 = 3;
 
-        let distrib: ChiSquared = ChiSquared::new(&df);
+        let distrib: ChiSquared<f64> = ChiSquared::new(df);
 
         assert_eq!(0.0811279995005158, distrib.cdf(0.5))
     }
@@ -71,19 +71,17 @@ mod chisquareddistrib
     {
         let df: u32 = 3;
 
-        let distrib: ChiSquared = ChiSquared::new(&df);
+        let distrib: ChiSquared<f64> = ChiSquared::new(df);
 
         assert_eq!(0.9541107096801389, distrib.cdf(8.0))
     }
 
-
-
-      #[test]
+    #[test]
     fn quantile()
     {
         let df: u32 = 4;
 
-        let distrib: ChiSquared = ChiSquared::new(&df);
+        let distrib: ChiSquared<f64> = ChiSquared::new(df);
 
         assert_eq!(7.711853942311415, distrib.quantile(0.9))
     }

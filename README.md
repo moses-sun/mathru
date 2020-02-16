@@ -35,7 +35,7 @@ mathru is a numeric library containing algorithms for linear algebra, analysis a
             - Dormand-Prince 4(5)
             - Cash-Karp 4(5)
             - Tsitouras 4(5)
-            - Bogacki-Shampine 4(5)
+            - Bogacki-Shampine 2(3)
         - Automatic step size control with starting step size
         
     - Optimization

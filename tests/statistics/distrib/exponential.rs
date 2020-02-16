@@ -9,7 +9,7 @@ mod exponential
     fn pdf0()
     {
         let lambda : f64 = 1.0;
-        let distrib : Exponential = Exponential::new(&lambda);
+        let distrib : Exponential<f64> = Exponential::new(lambda);
         let x : f64 = 1.0;
         let prob : f64 = distrib.pdf(x);
 
@@ -42,7 +42,7 @@ mod exponential
     fn cdf0()
     {
         let lambda: f64 = 0.5;
-        let distrib: Exponential = Exponential::new(&lambda);
+        let distrib: Exponential<f64> = Exponential::new(lambda);
 
         assert_eq!(1.0-(-1.0_f64).exp(), distrib.cdf(2.0))
     }
@@ -51,7 +51,7 @@ mod exponential
     fn quantile()
     {
         let lambda: f64 = 0.5;
-        let distrib: Exponential = Exponential::new(&lambda);
+        let distrib: Exponential<f64> = Exponential::new(lambda);
 
         assert_eq!(1.3862943611198906, distrib.quantile(0.5))
     }

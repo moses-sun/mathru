@@ -2,20 +2,21 @@ use crate::statistics::distrib::{Distribution, Continuous};
 use crate::algebra::linear::{Vector};
 use crate::special;
 use rand;
-use std::f64;
+use crate::algebra::abstr::Real;
 
 /// Normal distribution
 ///
 /// Fore more information:
 /// <a href="https://en.wikipedia.org/wiki/Normal_distribution">https://en.wikipedia.org/wiki/Normal_distribution</a>
 ///
-pub struct Normal
+pub struct Normal<T>
 {
-    mean: f64,
-    variance: f64,
+    mean: T,
+    variance: T,
 }
 
-impl Normal
+impl<T> Normal<T>
+    where T: Real
 {
      /// Creates a probability distribution
     ///
@@ -33,11 +34,11 @@ impl Normal
     /// ```
     /// use mathru::statistics::distrib::Normal;
     ///
-    /// let distrib: Normal = Normal::new(0.3, 0.2);
+    /// let distrib: Normal<f64> = Normal::new(0.3, 0.2);
     /// ```
-    pub fn new(mean: f64, variance: f64) -> Self
+    pub fn new(mean: T, variance: T) -> Self
     {
-        if variance <= 0.0
+        if variance <= T::zero()
         {
             panic!();
         }
@@ -54,7 +55,7 @@ impl Normal
     ///
     /// data.len() >= 2
     ///
-    pub fn from_data<'a>(data: &'a Vector<f64>) -> Self
+    pub fn from_data<'a>(data: &'a Vector<T>) -> Self
     {
         let (_m, n): (usize, usize) = data.dim();
         if n < 2
@@ -62,40 +63,41 @@ impl Normal
                 panic!()
         }
 
-        let mean: f64 = Normal::calc_mean(data);
-        let variance: f64 = Normal::calc_variance(data, mean);
+        let mean: T = Normal::calc_mean(data);
+        let variance: T = Normal::calc_variance(data, mean);
 
         return Normal::new(mean, variance)
     }
 
-    fn calc_mean<'a>(data: &'a Vector<f64>) -> f64
+    fn calc_mean<'a>(data: &'a Vector<T>) -> T
     {
         let (_m, n) = data.dim();
-        let mut sum: f64 = 0.0;
+        let mut sum: T = T::zero();
 
         for x in data.iter()
         {
             sum = sum + *x;
         }
 
-        return sum / (n as f64)
+        return sum / T::from_u64(n as u64).unwrap();
     }
 
-    fn calc_variance<'a>(data: &'a Vector<f64>, mean: f64) -> f64
+    fn calc_variance<'a>(data: &'a Vector<T>, mean: T) -> T
     {
         let (_m, n): (usize, usize) = data.dim();
-        let mut sum: f64 = 0.0;
+        let mut sum: T = T::zero();
 
         for x in data.iter()
         {
-            sum += (x - mean).powi(2);
+            sum += (*x - mean).pow(&T::from_f64(2.0).unwrap());
         }
 
-        return sum / ((n - 1) as f64)
+        return sum / T::from_u64((n - 1) as u64).unwrap()
     }
 }
 
-impl Continuous<f64, f64> for Normal
+impl<T> Continuous<T, T, T> for Normal<T>
+    where T: Real
 {
 
     /// Probability density function
@@ -110,15 +112,16 @@ impl Continuous<f64, f64> for Normal
     /// ```
     /// use mathru::statistics::distrib::{Continuous, Normal};
     ///
-    /// let distrib: Normal = Normal::new(0.3, 0.2);
+    /// let distrib: Normal<f64> = Normal::new(0.3, 0.2);
     /// let x: f64 = 5.0;
     /// let p: f64 = distrib.pdf(x);
     /// ```
-    fn pdf<'a, 'b>(self: &'a Self, x: f64) -> f64
+    fn pdf<'a, 'b>(self: &'a Self, x: T) -> T
     {
-        let z: f64 = -0.5 * ((x - self.mean) / self.variance).powf(2.0);
-        let f: f64 = 1.0 / (self.variance * (2.0 * f64::consts::PI).sqrt());
-        f * z.exp()
+        let z: T = T::from_f64(-0.5).unwrap() * ((x - self.mean) / self.variance).pow(&T::from_f64(2.0).unwrap());
+        let f: T = T::one() / (self.variance * (T::from_f64(2.0).unwrap() * T::pi()).sqrt());
+
+        return f * z.exp();
     }
 
     /// Cumulative distribution function
@@ -132,14 +135,14 @@ impl Continuous<f64, f64> for Normal
     /// ```
     /// use mathru::statistics::distrib::{Continuous, Normal};
     ///
-    /// let distrib: Normal = Normal::new(0.3, 0.2);
+    /// let distrib: Normal<f64> = Normal::new(0.3, 0.2);
     /// let x: f64 = 0.4;
     /// let p: f64 = distrib.cdf(x);
     /// ```
-    fn cdf<'a, 'b>(self: &'a Self, x: f64) -> f64
+    fn cdf<'a, 'b>(self: &'a Self, x: T) -> T
     {
-        let k: f64 = (x - self.mean) / ((2.0 * self.variance).sqrt());
-        let prob: f64 =  0.5 * (1.0 + special::erf(k));
+        let k: T = (x - self.mean) / ((T::from_f64(2.0).unwrap() * self.variance).sqrt());
+        let prob: T =  T::from_f64(0.5).unwrap() * (T::one() + special::erf(k));
         prob
     }
 
@@ -154,48 +157,48 @@ impl Continuous<f64, f64> for Normal
     /// # Panics
     ///
     /// if  p <= 0.0 || p >= 1.0
-    fn quantile<'a>(self: &'a Self, p: f64) -> f64
+    fn quantile<'a>(self: &'a Self, p: T) -> T
     {
-        if p <= 0.0 || p >= 1.0
+        if p <= T::zero() || p >= T::one()
         {
             panic!();
         }
 
-        let mut ppnd16: f64;
-        let mut r: f64;
-        let q: f64 = p - 0.5;
-        if q.abs() <= 0.425
+        let mut ppnd16: T;
+        let mut r: T;
+        let q: T = p - T::from_f64(0.5).unwrap();
+        if q.abs() <= T::from_f64(0.425).unwrap()
         {
-            let r: f64 = 0.180625 - q * q;
+            let r: T = T::from_f64(0.180625).unwrap() - q * q;
             ppnd16 = q * Normal::r1(r);
         }
         else
         {
-            if q < 0.0
+            if q < T::zero()
             {
                 r = p
             }
             else
             {
-                r = 1.0 - p
+                r = T::one() - p
             }
-            if r <= 0.0
+            if r <= T::zero()
             {
-                ppnd16 = 0.0;
+                ppnd16 = T::zero();
                 return ppnd16
             }
             r = (-r.ln()).sqrt();
-            if r <= 5.
+            if r <= T::from_f64(5.).unwrap()
             {
-                r -= 1.6;
+                r -= T::from_f64(1.6).unwrap();
                 ppnd16 = Normal::r2(r);
             }
             else
             {
-                r -= 5.0;
+                r -= T::from_f64(5.0).unwrap();
                 ppnd16 = Normal::r3(r);
             }
-            if q <= 0.0
+            if q <= T::zero()
             {
                 ppnd16 = -ppnd16;
 
@@ -213,10 +216,10 @@ impl Continuous<f64, f64> for Normal
     /// use mathru;
     /// use mathru::statistics::distrib::{Continuous, Normal};
     ///
-    /// let distrib: Normal = Normal::new(0.0, 0.2);
+    /// let distrib: Normal<f64> = Normal::new(0.0, 0.2);
     /// let mean: f64 = distrib.mean();
     /// ```
-	fn mean<'a>(self: &'a Self) -> f64
+	fn mean<'a>(self: &'a Self) -> T
     {
         return self.mean
     }
@@ -229,46 +232,50 @@ impl Continuous<f64, f64> for Normal
     /// use mathru;
     /// use mathru::statistics::distrib::{Continuous, Normal};
     ///
-    /// let distrib: Normal = Normal::new(0.0, 0.2);
+    /// let distrib: Normal<f64> = Normal::new(0.0, 0.2);
     /// let var: f64 = distrib.variance();
     ///
     /// ```
-	fn variance<'a>(self: &'a Self) -> f64
+	fn variance<'a>(self: &'a Self) -> T
     {
         return self.variance
     }
 }
 
 
-impl Distribution for  Normal
+impl<T> Distribution<T> for  Normal<T>
+    where T: Real
 {
     ///
     ///  See Knuth The Art of Computer Programming Vol 2 3.4.1 C Algorithm P
     ///
-    fn random(self: &Self) -> f64
+    fn random(self: &Self) -> T
     {
-        let mut s : f64 = 1.0;
-        let mut v1 : f64 = 1.0;
-        let mut v2 : f64;
-        while s >= 1.0
+        let mut s: T = T::one();
+        let mut v1: T = T::one();
+        let mut v2: T;
+
+        while s >= T::one()
         {
-            let u1 : f64 = rand::random::<f64>();
-            let u2 : f64 = rand::random::<f64>();
-            v1 = 2.0 * u1 - 1.0;
-            v2 = 2.0 * u2 - 1.0;
+            let u1: T = T::from_f64(rand::random::<f64>()).unwrap();
+            let u2: T = T::from_f64(rand::random::<f64>()).unwrap();
+            v1 = T::from_f64(2.0).unwrap() * u1 - T::one();
+            v2 = T::from_f64(2.0).unwrap() * u2 - T::one();
             s =  v1 * v1 + v2 * v2
         }
-        let x1: f64 = v1 * (-2.0 * s.ln() / s).sqrt();
+        let x1: T = v1 * (-T::from_f64(2.0).unwrap() * s.ln() / s).sqrt();
         x1 * self.variance.sqrt() + self.mean
     }
 }
 
 
-impl Normal
+impl<T> Normal<T>
+    where T: Real
 {
 
-    fn r1(r: f64) -> f64
+    fn r1(t: T) -> T
     {
+        let r: f64 = t.to_f64().unwrap();
         let value: f64 = (((((((r * 2509.0809287301226727 +
                        33430.575583588128105) * r + 67265.770927008700853) * r +
                      45921.953931549871457) * r + 13731.693765509461125) * r +
@@ -278,11 +285,12 @@ impl Normal
                      28729.085735721942674) * r + 39307.89580009271061) * r +
                    21213.794301586595867) * r + 5394.1960214247511077) * r +
                  687.1870074920579083) * r + 42.313330701600911252) * r + 1.);
-        value
+        return T::from_f64(value).unwrap();
     }
 
-    fn r2(r: f64) -> f64
+    fn r2(t: T) -> T
     {
+        let r: f64 = t.to_f64().unwrap();
         let value: f64 = (((((((r * 7.7454501427834140764e-4 +
                        0.0227238449892691845833) * r + 0.24178072517745061177) *
                      r + 1.27045825245236838258) * r +
@@ -296,11 +304,12 @@ impl Normal
                      r + 1.6763848301838038494) * r +
                     2.05319162663775882187) * r + 1.);
 
-        value
+        return T::from_f64(value).unwrap();
     }
 
-    fn r3(r: f64) -> f64
+    fn r3(t: T) -> T
     {
+        let r: f64 = t.to_f64().unwrap();
         let value: f64 = (((((((r * 2.01033439929228813265e-7 +
                        2.71155556874348757815e-5) * r +
                       0.0012426609473880784386) * r + 0.026532189526576123093) *
@@ -314,6 +323,6 @@ impl Normal
                      * r + 0.13692988092273580531) * r +
                     0.59983220655588793769) * r + 1.);
 
-        return value
+        return T::from_f64(value).unwrap();
     }
 }

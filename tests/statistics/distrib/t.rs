@@ -1,8 +1,7 @@
 #[cfg(test)]
 mod tdistrib
 {
-	use mathru::statistics::distrib::T;
-	use mathru::statistics::distrib::Continuous;
+	use mathru::statistics::distrib::{Continuous, T};
 
     #[test]
 	fn pdf0()
@@ -10,7 +9,7 @@ mod tdistrib
         let n: f64 = 2.0;
 		let x: f64 = 0.0;
 
-        let t: T = T::new(n);
+        let t: T<f64> = T::new(n);
 
         assert_eq!(0.3535533905932741, t.pdf(x));
     }
@@ -21,7 +20,7 @@ mod tdistrib
         let n: f64 = 5.0;
 		let x: f64 = -1.0;
 
-        let t: T = T::new(n);
+        let t: T<f64> = T::new(n);
 
         assert_eq!(0.21967979735098045, t.pdf(x));
     }
@@ -32,7 +31,7 @@ mod tdistrib
         let n: f64 = 2.0;
 		let x: f64 = 0.0;
 
-        let t: T = T::new(n);
+        let t: T<f64> = T::new(n);
 
        	assert_eq!(0.5, t.cdf(x));
     }
@@ -43,7 +42,7 @@ mod tdistrib
         let n: f64 = 2.0;
 		let x: f64 = -0.5;
 
-        let t: T = T::new(n);
+        let t: T<f64> = T::new(n);
 
        	assert_eq!(0.33333333333333315, t.cdf(x));
     }
@@ -54,7 +53,7 @@ mod tdistrib
         let n: f64 = 7.753;
 		let x: f64 = -0.7559;
 
-        let t: T = T::new(n);
+        let t: T<f64> = T::new(n);
 
        	assert!((t.pdf(x) - 0.283).abs() < 0.001);
     }

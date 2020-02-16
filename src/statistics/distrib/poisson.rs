@@ -1,19 +1,20 @@
 use crate::statistics::distrib::Discrete;
 use crate::statistics::combins;
 use crate::special;
-
+use crate::algebra::abstr::Real;
 
 /// Poisson distribution
 ///
 /// Fore more information:
 /// <a href="https://en.wikipedia.org/wiki/Poisson_distribution">https://en.wikipedia.org/wiki/Poisson_distribution</a>
 ///
-pub struct Poisson
+pub struct Poisson<T>
 {
-	gamma: f64
+	gamma: T
 }
 
-impl Poisson
+impl<T> Poisson<T>
+	where T: Real
 {
 	/// Creates a probability distribution
     ///
@@ -30,11 +31,11 @@ impl Poisson
     /// ```
     /// use mathru::statistics::distrib::Poisson;
     ///
-    /// let distrib: Poisson = Poisson::new(&0.2);
+    /// let distrib: Poisson<f64> = Poisson::new(&0.2);
     /// ```
-	pub fn new(gamma: &f64) -> Poisson
+	pub fn new(gamma: &T) -> Poisson<T>
 	{
-		if *gamma <= 0.0
+		if *gamma <= T::zero()
 		{
 			panic!();
 		}
@@ -46,7 +47,8 @@ impl Poisson
 	}
 }
 
-impl Discrete<u32, u32> for Poisson
+impl<T> Discrete<T, u32, u32> for Poisson<T>
+	where T: Real
 {
 	/// Probability mass function
     ///
@@ -59,14 +61,14 @@ impl Discrete<u32, u32> for Poisson
     /// ```
     /// use mathru::statistics::distrib::{Discrete, Poisson};
     ///
-    /// let distrib: Poisson = Poisson::new(&0.2);
+    /// let distrib: Poisson<f64> = Poisson::new(&0.2);
     /// let x: u32 = 5;
     /// let p: f64 = distrib.pmf(x);
     /// ```
-    fn pmf<'a>(self: &'a Self, x: u32) -> f64
+    fn pmf<'a>(self: &'a Self, x: u32) -> T
 	{
-		let k_fact: f64 = combins::factorial(x) as f64;
-		self.gamma.powf(x as f64) * (-self.gamma).exp() / k_fact
+		let k_fact: T = T::from_u64(combins::factorial(x)).unwrap();
+		self.gamma.pow(&T::from_u32(x).unwrap()) * (-self.gamma).exp() / k_fact
 	}
 
 	/// Cumulative distribution function of the Bernoulli distribution
@@ -80,13 +82,13 @@ impl Discrete<u32, u32> for Poisson
     /// ```
     /// use mathru::statistics::distrib::{Discrete, Poisson};
     ///
-    /// let distrib: Poisson = Poisson::new(&0.2);
+    /// let distrib: Poisson<f64> = Poisson::new(&0.2);
     /// let x: u32 = 4;
     /// let p: f64 = distrib.cdf(x);
     /// ```
-	fn cdf<'a>(self: &'a Self, x: u32) -> f64
+	fn cdf<'a>(self: &'a Self, x: u32) -> T
     {
-		special::gamma::gamma_ur( (x + 1) as f64,self.gamma)
+		return special::gamma::gamma_ur(T::from_u32(x + 1).unwrap(), self.gamma)
 	}
 
   	/// Expected value
@@ -96,10 +98,10 @@ impl Discrete<u32, u32> for Poisson
     /// ```
     /// use mathru::statistics::distrib::{Discrete, Poisson};
     ///
-    /// let distrib: Poisson = Poisson::new(&0.2);
+    /// let distrib: Poisson<f64> = Poisson::new(&0.2);
     /// let mean: f64 = distrib.mean();
     /// ```
-	fn mean<'a>(self: &'a Self) -> f64
+	fn mean<'a>(self: &'a Self) -> T
     {
         return self.gamma
     }
@@ -111,10 +113,10 @@ impl Discrete<u32, u32> for Poisson
     /// ```
     /// use mathru::statistics::distrib::{Discrete, Poisson};
     ///
-    /// let distrib: Poisson = Poisson::new(&0.2);
+    /// let distrib: Poisson<f64> = Poisson::new(&0.2);
     /// let var: f64 = distrib.variance();
     /// ```
-	fn variance<'a>(self: &'a Self) -> f64
+	fn variance<'a>(self: &'a Self) -> T
     {
         return self.gamma
     }

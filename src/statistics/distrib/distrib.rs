@@ -1,18 +1,22 @@
 use crate::algebra::linear::{Vector};
-pub trait Distribution
-{
-    fn random(self: &Self) -> f64;
+use crate::algebra::abstr::Real;
 
-    fn random_vector(self: &Self, size: usize) -> Vector<f64>
+pub trait Distribution<T>
+	where T: Real
+{
+    fn random(self: &Self) -> T;
+
+    fn random_vector(self: &Self, size: usize) -> Vector<T>
 	{
-        let v: Vector<f64> = Vector::zero(size).transpose().apply(&|_x| self.random());
+        let v: Vector<T> = Vector::zero(size).transpose().apply(&|_x| self.random());
 
         return v;
 	}
 }
 
 /// Continuous distribution
-pub trait Continuous<A, B>
+pub trait Continuous<T, A, B>
+	where T: Real
 {
    	/// Probability density function
    	///
@@ -20,7 +24,7 @@ pub trait Continuous<A, B>
    	///
    	/// *`x`: random variable
    	///
-    fn pdf<'a, 'b>(self: &'a Self, x: A) -> f64;
+    fn pdf<'a, 'b>(self: &'a Self, x: A) -> T;
 
     /// Cumulative distribution function
     ///
@@ -28,23 +32,23 @@ pub trait Continuous<A, B>
     ///
     /// *`x`: random variable
     ///
-    fn cdf<'a, 'b>(self: &'a Self, x: B) -> f64;
+    fn cdf<'a, 'b>(self: &'a Self, x: B) -> T;
 
 	/// Quantile function, inverse cdf
-    fn quantile<'a, 'b>(self: &'a Self, p: B) -> f64;
+    fn quantile<'a, 'b>(self: &'a Self, p: B) -> T;
 
 	/// Mean
-	fn mean<'a>(self: &'a Self) -> f64;
+	fn mean<'a>(self: &'a Self) -> T;
 
 	/// Variance
-	fn variance<'a>(self: &'a Self) -> f64;
+	fn variance<'a>(self: &'a Self) -> T;
 
 
 
 }
 
 /// Discrete distribution
-pub trait Discrete<A, B>
+pub trait Discrete<T, A, B>
 {
    	/// Probability mass function
    	///
@@ -52,7 +56,7 @@ pub trait Discrete<A, B>
    	///
    	/// *`x`: random variable
    	///
-    fn pmf<'a, 'b>(self: &'a Self, x: A) -> f64;
+    fn pmf<'a, 'b>(self: &'a Self, x: A) -> T;
 
     ///Cumulative distribution function
     ///
@@ -60,14 +64,14 @@ pub trait Discrete<A, B>
     ///
     /// * `x`: random variable
     ///
-    fn cdf<'a, 'b>(self: &'a Self, x: B) -> f64;
+    fn cdf<'a, 'b>(self: &'a Self, x: B) -> T;
 
     /// Mean
     ///
-	fn mean<'a>(self: &'a Self) -> f64;
+	fn mean<'a>(self: &'a Self) -> T;
 
    	/// Variance
    	///
-	fn variance<'a>(self: &'a Self) -> f64;
+	fn variance<'a>(self: &'a Self) -> T;
 
 }

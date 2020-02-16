@@ -7,7 +7,7 @@ mod poisson;
 mod beta;
 mod gamma;
 mod t;
-mod multinomial;
+//mod multinomial;
 mod raisedcosine;
 mod uniform;
 

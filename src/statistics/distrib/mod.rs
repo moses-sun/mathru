@@ -16,7 +16,7 @@ mod poisson;
 mod beta;
 mod gamma;
 mod t;
-mod multinomial;
+//mod multinomial;
 mod raisedcosine;
 mod uniform;
 
@@ -30,6 +30,6 @@ pub use self::poisson::Poisson;
 pub use self::beta::Beta;
 pub use self::gamma::Gamma;
 pub use self::t::T;
-pub use self::multinomial::Multinomial;
+//pub use self::multinomial::Multinomial;
 pub use self::raisedcosine::RaisedCosine;
 pub use self::uniform::Uniform;

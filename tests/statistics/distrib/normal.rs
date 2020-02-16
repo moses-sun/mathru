@@ -9,7 +9,7 @@ mod normal
     {
         let mean : f64 = 0.0;
         let variance: f64 = 1.0;
-        let distrib : Normal = Normal::new(mean, variance);
+        let distrib : Normal<f64> = Normal::new(mean, variance);
         let x : f64 = 0.0;
         let prob : f64 = distrib.pdf(x);
 
@@ -43,7 +43,7 @@ mod normal
     {
         let mean: f64 = 0.0;
         let variance: f64 = 1.0;
-        let distrib: Normal = Normal::new(mean, variance);
+        let distrib: Normal<f64> = Normal::new(mean, variance);
 
         assert_eq!(0.5, distrib.cdf(0.0))
     }
@@ -53,7 +53,7 @@ mod normal
     {
         let mean: f64 = 0.0;
         let variance: f64 = 1.0;
-        let distrib: Normal = Normal::new(mean, variance);
+        let distrib: Normal<f64> = Normal::new(mean, variance);
 
         assert_eq!(1.2815515655446006, distrib.quantile(0.9));
     }
@@ -63,7 +63,7 @@ mod normal
     {
         let mean: f64 = 1.0;
         let variance: f64 = 0.5;
-        let distrib: Normal = Normal::new(mean, variance);
+        let distrib: Normal<f64> = Normal::new(mean, variance);
 
         assert_eq!(1.0, distrib.quantile(0.5));
     }

@@ -1,5 +1,6 @@
 //! Beta functions
 use crate::special::gamma::gamma;
+use crate::algebra::abstr::Real;
 
 /// Beta function
 ///
@@ -27,7 +28,8 @@ use crate::special::gamma::gamma;
 ///
 /// let beta: f64 = beta::beta(x, y);
 /// ```
-pub fn beta<'a>(x: f64, y: f64) -> f64
+pub fn beta<T>(x: T, y: T) -> T
+    where T: Real
 {
 	gamma(x) * gamma(y) / gamma(x + y)
 }
@@ -64,19 +66,20 @@ pub fn beta<'a>(x: f64, y: f64) -> f64
 /// ```
 /// The code from the following C code was ported to Rust
 /// <a href="http://people.sc.fsu.edu/~jburkardt/c_src/asa109/asa109.c">C implementation</a>
-pub fn beta_inc_reg(x: f64, a: f64, b: f64) -> f64
+pub fn beta_inc_reg<T>(x: T, a: T, b: T) -> T
+    where T: Real
 {
-    let acu: f64 = 0.1E-14;
+    let acu: T = T::from_f64(0.1E-14).unwrap();
 
     /*
     Check the input arguments.
     */
-    if a <= 0.0_f64 || b <= 0.0_f64
+    if a <= T::zero() || b <= T::zero()
     {
         panic!();
     }
 
-    if 0.0_f64 > x || x > 1.0_f64
+    if T::zero() > x || x > T::one()
     {
         panic!();
     }
@@ -84,7 +87,7 @@ pub fn beta_inc_reg(x: f64, a: f64, b: f64) -> f64
     /*
     Special cases.
     */
-    if x == 0.0 || x == 1.0
+    if x == T::zero() || x == T::one()
     {
         return x
     }
@@ -92,11 +95,11 @@ pub fn beta_inc_reg(x: f64, a: f64, b: f64) -> f64
     /*
       Change tail if necessary and determine S.
     */
-    let mut psq: f64 = a + b;
-    let mut cx: f64 = 1.0_f64 - x;
-    let xx: f64;
-    let pp: f64;
-    let qq: f64;
+    let mut psq: T = a + b;
+    let mut cx: T = T::one() - x;
+    let xx: T;
+    let pp: T;
+    let qq: T;
     let indx: u32;
 
     if a < psq * x
@@ -115,17 +118,17 @@ pub fn beta_inc_reg(x: f64, a: f64, b: f64) -> f64
         indx = 0;
     }
 
-    let mut term: f64 = 1.0_f64;
-    let mut ai: f64= 1.0_f64;
-    let mut value: f64 = 1.0;
+    let mut term: T = T::one();
+    let mut ai: T = T::one();
+    let mut value: T = T::one();
 
-    let mut ns: i32 = ( qq + cx * psq ) as i32;
+    let mut ns: i32 = ( qq + cx * psq ).to_i32().unwrap();
 
     /*
       Use the Soper reduction formula.
     */
-    let mut rx: f64 = xx / cx;
-    let mut temp: f64 = qq - ai;
+    let mut rx: T = xx / cx;
+    let mut temp: T = qq - ai;
     if ns == 0
     {
         rx = xx;
@@ -139,16 +142,16 @@ pub fn beta_inc_reg(x: f64, a: f64, b: f64) -> f64
 
         if temp <= acu && temp <= acu * value
         {
-            value = value * (pp * xx.ln() + ( qq - 1.0_f64 ) * cx.ln() - (beta(a, b)).ln() ).exp() / pp;
+            value = value * (pp * xx.ln() + ( qq - T::one()) * cx.ln() - (beta(a, b)).ln() ).exp() / pp;
 
             if indx == 0
             {
-                value = 1.0_f64 - value;
+                value = T::one() - value;
             }
             break;
         }
 
-        ai = ai + 1.0;
+        ai = ai + T::one();
         ns = ns - 1;
 
         if 0 <= ns
@@ -162,13 +165,13 @@ pub fn beta_inc_reg(x: f64, a: f64, b: f64) -> f64
         else
         {
             temp = psq;
-            psq = psq + 1.0_f64;
+            psq = psq + T::one();
         }
     }
 
     if indx == 1
     {
-        return 1.0_f64 - value
+        return T::one() - value
     }
     else
     {

@@ -1,16 +1,18 @@
 use crate::statistics::distrib::Discrete;
+use crate::algebra::abstr::Real;
 
 /// Bernoulli distribution
 ///
 /// Fore more information:
 ///
 /// <a href="https://en.wikipedia.org/wiki/Bernoulli_distribution">https://en.wikipedia.org/wiki/Bernoulli_distribution</a>
-pub struct Bernoulli
+pub struct Bernoulli<T>
 {
-    p: f64
+    p: T
 }
 
-impl Bernoulli
+impl<T> Bernoulli<T>
+    where T: Real
 {
     /// Create a probability distribution with p(X=1) = p
     ///
@@ -27,22 +29,25 @@ impl Bernoulli
     /// ```
     /// use mathru::statistics::distrib::Bernoulli;
     ///
-    /// let distrib: Bernoulli = Bernoulli::new(0.2);
+    /// let distrib: Bernoulli<f64> = Bernoulli::new(0.2);
     /// ```
-    pub fn new(p: f64) -> Bernoulli
+    pub fn new(p: T) -> Bernoulli<T>
     {
-        if p < 0.0 || p > 1.0
+        if p < T::zero() || p > T::one()
         {
             panic!()
         }
+
+        return
         Bernoulli
         {
             p: p
-        }
+        };
     }
 }
 
-impl Discrete<u8, f64> for Bernoulli
+impl<T> Discrete<T, u8, T> for Bernoulli<T>
+    where T: Real
 {
     /// Probability mass function of the Bernoulli distribution
     ///
@@ -59,17 +64,17 @@ impl Discrete<u8, f64> for Bernoulli
     /// ```
     /// use mathru::statistics::distrib::{Discrete, Bernoulli};
     ///
-    /// let distrib: Bernoulli = Bernoulli::new(0.2);
+    /// let distrib: Bernoulli<f64> = Bernoulli::new(0.2);
     /// let x: u8 = 0;
     /// let p: f64 = distrib.pmf(x);
     /// ```
-    fn pmf<'a>(self: &'a Self, x: u8) -> f64
+    fn pmf<'a>(self: &'a Self, x: u8) -> T
     {
-        if (x == 1) || (x ==  0)
+        if (x == 1) || (x == 0)
         {
             if x == 0
             {
-                return 1.0 - self.p
+                return T::one() - self.p
             }
             else
             {
@@ -93,24 +98,24 @@ impl Discrete<u8, f64> for Bernoulli
     /// ```
     /// use mathru::statistics::distrib::{Discrete, Bernoulli};
     ///
-    /// let distrib: Bernoulli = Bernoulli::new(0.2);
+    /// let distrib: Bernoulli<f64> = Bernoulli::new(0.2);
     /// let x: f64 = 0.4;
     /// let p: f64 = distrib.cdf(x);
     /// ```
-    fn cdf<'a>(self: &'a Self, x: f64) -> f64
+    fn cdf<'a>(self: &'a Self, x: T) -> T
     {
-        if x >= 1.0
+        if x >= T::one()
         {
-            return 1.0
+            return T::one()
         }
 
-        if x <= 0.0
+        if x <= T::zero()
         {
-            return 0.0
+            return T::zero()
         }
         else
         {
-            return 1.0 - self.p
+            return T::one() - self.p
         }
     }
 
@@ -121,10 +126,10 @@ impl Discrete<u8, f64> for Bernoulli
     /// ```
     /// use mathru::statistics::distrib::{Discrete, Bernoulli};
     ///
-    /// let distrib: Bernoulli = Bernoulli::new(0.2);
+    /// let distrib: Bernoulli<f64> = Bernoulli::new(0.2);
     /// let mean: f64 = distrib.mean();
     /// ```
-    fn mean<'a>(self: &'a Self) -> f64
+    fn mean<'a>(self: &'a Self) -> T
     {
         self.p
     }
@@ -136,11 +141,11 @@ impl Discrete<u8, f64> for Bernoulli
     /// ```
     /// use mathru::statistics::distrib::{Discrete, Bernoulli};
     ///
-    /// let distrib: Bernoulli = Bernoulli::new(0.2);
+    /// let distrib: Bernoulli<f64> = Bernoulli::new(0.2);
     /// let var: f64 = distrib.variance();
     /// ```
-    fn variance<'a>(self: &'a Self) -> f64
+    fn variance<'a>(self: &'a Self) -> T
     {
-        self.p * (1.0 - self.p)
+        self.p * (T::one() - self.p)
     }
 }

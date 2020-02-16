@@ -580,12 +580,17 @@ macro_rules! power_impl
 		{
 			fn pow(self: &Self, exp: &Self) -> Self
 			{
-				self.powf(*exp)
+				return self.powf(*exp);
 			}
 
 			fn root(self: &Self, root: &Self) -> Self
 			{
-				self.powf(1.0 / *root)
+				return self.powf(1.0 / *root);
+			}
+
+			fn sqrt(self: &Self) -> Self
+			{
+				return self.powf(0.5);
 			}
 		}
 	}

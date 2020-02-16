@@ -14,7 +14,7 @@ mod gammadistrib
         let b: f64 = 5.0;
 		let x: f64 = 0.0 - f64::EPSILON;
 
-        let distrib: Gamma = Gamma::new(p, b);
+        let distrib: Gamma<f64> = Gamma::new(p, b);
 
         distrib.pdf(x);
     }
@@ -27,7 +27,7 @@ mod gammadistrib
         let b: f64 = 2.0;
 		let x: f64 = 0.0;
 
-        let distrib: Gamma = Gamma::new(p, b);
+        let distrib: Gamma<f64> = Gamma::new(p, b);
 
         distrib.pdf(x);
     }
@@ -40,7 +40,7 @@ mod gammadistrib
         let b: f64 = 2.0;
 		let x: f64 = 1.0;
 
-        let distrib: Gamma = Gamma::new(p, b);
+        let distrib: Gamma<f64> = Gamma::new(p, b);
 
         distrib.pdf(x);
     }
@@ -52,7 +52,7 @@ mod gammadistrib
         let b: f64 = 2.0;
 		let x: f64 = 0.4;
 
-        let distrib: Gamma = Gamma::new(p, b);
+        let distrib: Gamma<f64> = Gamma::new(p, b);
 
         assert_eq!(0.7189263425875543, distrib.pdf(x));
     }
@@ -65,7 +65,7 @@ mod gammadistrib
         let q: f64 = 5.0;
 		let x: f64 = 0.0 - f64::EPSILON;
 
-        let distrib: Gamma = Gamma::new(p, q);
+        let distrib: Gamma<f64> = Gamma::new(p, q);
 
        	distrib.cdf(x);
     }
@@ -77,7 +77,7 @@ mod gammadistrib
         let q: f64 = 5.0;
 		let x: f64 = 0.0;
 
-        let distrib: Gamma = Gamma::new(p, q);
+        let distrib: Gamma<f64> = Gamma::new(p, q);
 
        	assert_eq!(0.0_f64, distrib.cdf(x));
     }
@@ -89,7 +89,7 @@ mod gammadistrib
         let q: f64 = 5.0;
 		let x: f64 = 1.0;
 
-        let distrib: Gamma = Gamma::new(p, q);
+        let distrib: Gamma<f64> = Gamma::new(p, q);
 
         assert_eq!(0.9595723180054873_f64, distrib.cdf(x));
     }
@@ -101,7 +101,7 @@ mod gammadistrib
         let q: f64 = 5.0_f64;
 		let x: f64 = 0.3_f64;
 
-        let distrib: Gamma = Gamma::new(p, q);
+        let distrib: Gamma<f64> = Gamma::new(p, q);
 
         assert_eq!(0.44217459962892536_f64, distrib.cdf(x));
     }

@@ -1,20 +1,21 @@
 use crate::statistics::distrib::Continuous;
 use crate::special;
 use crate::special::beta;
-
+use crate::algebra::abstr::Real;
 
 /// Beta distribution
 ///
 /// Fore more information:
 /// <a href="https://en.wikipedia.org/wiki/Beta_distribution">https://en.wikipedia.org/wiki/Beta_distribution</a>
 ///
-pub struct Beta
+pub struct Beta<T>
 {
-    p: f64,
-    q: f64,
+    p: T,
+    q: T,
 }
 
-impl Beta
+impl<T> Beta<T>
+    where T: Real
 {
 
     /// Create a probability distribution
@@ -32,11 +33,11 @@ impl Beta
     /// ```
     /// use mathru::statistics::distrib::{Continuous, Beta};
     ///
-    /// let distrib: Beta = Beta::new(&0.2, &0.3);
+    /// let distrib: Beta<f64> = Beta::new(&0.2, &0.3);
     /// ```
-    pub fn new(p: &f64, q: &f64) -> Beta
+    pub fn new(p: &T, q: &T) -> Beta<T>
     {
-        if *p < 0.0_f64 || *q <= 0.0_f64
+        if *p < T::zero() || *q <= T::zero()
         {
             panic!()
         }
@@ -48,7 +49,8 @@ impl Beta
     }
 }
 
-impl Continuous<f64, f64> for Beta
+impl<T> Continuous<T, T, T> for Beta<T>
+    where T: Real
 {
     /// Probability density function
     ///
@@ -61,17 +63,17 @@ impl Continuous<f64, f64> for Beta
     /// ```
     /// use mathru::statistics::distrib::{Continuous, Beta};
     ///
-    /// let distrib: Beta = Beta::new(&0.2, &0.3);
+    /// let distrib: Beta<f64> = Beta::new(&0.2, &0.3);
     /// let x: f64 = 0.5;
     /// let p: f64 = distrib.pdf(x);
     /// ```
-    fn pdf<'a>(self: &'a Self, x: f64) -> f64
+    fn pdf<'a>(self: &'a Self, x: T) -> T
     {
-        if 0.0_f64 > x || x > 1.0_f64
+        if T::zero() > x || x > T::one()
         {
             panic!();
         }
-        x.powf(self.p - 1.0_f64) * (1.0_f64 - x).powf(self.q - 1.0_f64) / special::beta::beta(self.p, self.q)
+        return x.pow(&(self.p - T::one())) * (T::one() - x).pow(&(self.q - T::one())) / special::beta::beta(self.p, self.q);
     }
 
     /// Cumulative distribution function
@@ -85,11 +87,11 @@ impl Continuous<f64, f64> for Beta
     /// ```
     /// use mathru::statistics::distrib::{Continuous, Beta};
     ///
-    /// let distrib: Beta = Beta::new(&0.3, &0.2);
+    /// let distrib: Beta<f64> = Beta::new(&0.3, &0.2);
     /// let x: f64 = 0.4;
     /// let p: f64 = distrib.cdf(x);
     /// ```
-    fn cdf<'a>(self: &'a Self, x: f64) -> f64
+    fn cdf<'a>(self: &'a Self, x: T) -> T
     {
         beta::beta_inc_reg(x, self.p, self.q)
     }
@@ -97,7 +99,7 @@ impl Continuous<f64, f64> for Beta
 
     /// Quantile function of inverse cdf
     ///
-    fn quantile<'a, 'b>(self: &'a Self, _p: f64) -> f64
+    fn quantile<'a, 'b>(self: &'a Self, _p: T) -> T
     {
         unimplemented!();
     }
@@ -109,10 +111,10 @@ impl Continuous<f64, f64> for Beta
     /// ```
     /// use mathru::statistics::distrib::{Continuous, Beta};
     ///
-    /// let distrib: Beta = Beta::new(&0.2, &0.3);
+    /// let distrib: Beta<f64> = Beta::new(&0.2, &0.3);
     /// let mean: f64 = distrib.mean();
     /// ```
-	fn mean<'a>(self: &'a Self) -> f64
+	fn mean<'a>(self: &'a Self) -> T
     {
         self.p  / (self.p + self.q)
     }
@@ -124,11 +126,11 @@ impl Continuous<f64, f64> for Beta
     /// ```
     /// use mathru::statistics::distrib::{Continuous, Beta};
     ///
-    /// let distrib: Beta = Beta::new(&0.2, &0.3);
+    /// let distrib: Beta<f64> = Beta::new(&0.2, &0.3);
     /// let var: f64 = distrib.variance();
     /// ```
-	fn variance<'a>(self: &'a Self) -> f64
+	fn variance<'a>(self: &'a Self) -> T
     {
-        self.p * self.q / ((self.p + self.q + 1.0_f64) * (self.p + self.q).powi(2))
+        self.p * self.q / ((self.p + self.q + T::one()) * (self.p + self.q).pow(&T::from_f64(2.0).unwrap()))
     }
 }

@@ -1,20 +1,22 @@
 use crate::statistics::distrib::Continuous;
 use crate::special::gamma;
+use crate::algebra::abstr::Real;
 
 /// Gamma distribution
 ///
 /// Fore more information:
 /// <a href="https://en.wikipedia.org/wiki/Gamma_distribution">https://en.wikipedia.org/wiki/Gamma_distribution</a>
 ///
-pub struct Gamma
+pub struct Gamma<T>
 {
-    p: f64,
-    b: f64,
+    p: T,
+    b: T,
 }
 
 
 
-impl Gamma
+impl<T> Gamma<T>
+    where T: Real
 {
     /// Creates a probability distribution
     ///
@@ -32,11 +34,11 @@ impl Gamma
     /// ```
     /// use mathru::statistics::distrib::Gamma;
     ///
-    /// let distrib: Gamma = Gamma::new(0.3, 0.2);
+    /// let distrib: Gamma<f64> = Gamma::new(0.3, 0.2);
     /// ```
-    pub fn new(p: f64, b: f64) -> Gamma
+    pub fn new(p: T, b: T) -> Gamma<T>
     {
-        if p <= 0.0_f64 || b <= 0.0_f64
+        if p <= T::zero() || b <= T::zero()
         {
             panic!()
         }
@@ -48,7 +50,8 @@ impl Gamma
     }
 }
 
-impl Continuous<f64, f64> for Gamma
+impl<T> Continuous<T, T, T> for Gamma<T>
+    where T: Real
 {
 
     /// Probability density function
@@ -66,17 +69,17 @@ impl Continuous<f64, f64> for Gamma
     /// ```
     /// use mathru::statistics::distrib::{Continuous, Gamma};
     ///
-    /// let distrib: Gamma = Gamma::new(0.3, 0.2);
+    /// let distrib: Gamma<f64> = Gamma::new(0.3, 0.2);
     /// let x: f64 = 5.0;
     /// let p: f64 = distrib.pdf(x);
     /// ```
-    fn pdf<'a>(self: &'a Self, x: f64) -> f64
+    fn pdf<'a>(self: &'a Self, x: T) -> T
     {
-        if x <= 0.0_f64
+        if x <= T::zero()
         {
             panic!();
         }
-        self.b.powf(self.p) / gamma::gamma(self.p) * x.powf(self.p - 1.0_f64) * (-self.b * x).exp()
+        self.b.pow(&self.p) / gamma::gamma(self.p) * x.pow(&(self.p - T::one())) * (-self.b * x).exp()
     }
 
     /// Cumulative distribution function
@@ -90,30 +93,30 @@ impl Continuous<f64, f64> for Gamma
     /// ```
     /// use mathru::statistics::distrib::{Continuous, Gamma};
     ///
-    /// let distrib: Gamma = Gamma::new(0.3, 0.2);
+    /// let distrib: Gamma<f64> = Gamma::new(0.3, 0.2);
     /// let x: f64 = 0.4;
     /// let p: f64 = distrib.cdf(x);
     /// ```
-    fn cdf<'a>(self: &'a Self, x: f64) -> f64
+    fn cdf<'a>(self: &'a Self, x: T) -> T
     {
-        if x == 0.0_f64
+        if x == T::zero()
         {
-            return 0.0_f64
+            return T::zero()
         }
-        gamma::gamma_lr(self.p, self.b * x)
+        return gamma::gamma_lr(self.p, self.b * x)
     }
 
 
     /// Quantile function of inverse cdf
     ///
-    fn quantile<'a, 'b>(self: &'a Self, _p: f64) -> f64
+    fn quantile<'a, 'b>(self: &'a Self, _p: T) -> T
     {
         unimplemented!();
     }
 
     /// Expected value
     ///
-	fn mean<'a>(self: &'a Self) -> f64
+	fn mean<'a>(self: &'a Self) -> T
     {
         return self.p / self.b;
     }
@@ -125,11 +128,11 @@ impl Continuous<f64, f64> for Gamma
     /// ```
     /// use mathru::statistics::distrib::{Continuous, Gamma};
     ///
-    /// let distrib: Gamma = Gamma::new(0.2, 0.5);
+    /// let distrib: Gamma<f64> = Gamma::new(0.2, 0.5);
     /// let var: f64 = distrib.variance();
     /// ```
-	fn variance<'a>(self: &'a Self) -> f64
+	fn variance<'a>(self: &'a Self) -> T
     {
-        return self.p / self.b.powi(2);
+        return self.p / self.b.pow(&T::from_f64(2.0).unwrap());
     }
 }
