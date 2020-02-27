@@ -96,7 +96,7 @@ impl<T> Normal<T>
     }
 }
 
-impl<T> Continuous<T, T, T> for Normal<T>
+impl<T> Continuous<T> for Normal<T>
     where T: Real
 {
 
@@ -116,7 +116,7 @@ impl<T> Continuous<T, T, T> for Normal<T>
     /// let x: f64 = 5.0;
     /// let p: f64 = distrib.pdf(x);
     /// ```
-    fn pdf<'a, 'b>(self: &'a Self, x: T) -> T
+    fn pdf(self: &Self, x: T) -> T
     {
         let z: T = T::from_f64(-0.5).unwrap() * ((x - self.mean) / self.variance).pow(&T::from_f64(2.0).unwrap());
         let f: T = T::one() / (self.variance * (T::from_f64(2.0).unwrap() * T::pi()).sqrt());
@@ -139,7 +139,7 @@ impl<T> Continuous<T, T, T> for Normal<T>
     /// let x: f64 = 0.4;
     /// let p: f64 = distrib.cdf(x);
     /// ```
-    fn cdf<'a, 'b>(self: &'a Self, x: T) -> T
+    fn cdf(self: &Self, x: T) -> T
     {
         let k: T = (x - self.mean) / ((T::from_f64(2.0).unwrap() * self.variance).sqrt());
         let prob: T =  T::from_f64(0.5).unwrap() * (T::one() + special::erf(k));
@@ -157,7 +157,7 @@ impl<T> Continuous<T, T, T> for Normal<T>
     /// # Panics
     ///
     /// if  p <= 0.0 || p >= 1.0
-    fn quantile<'a>(self: &'a Self, p: T) -> T
+    fn quantile(self: &Self, p: T) -> T
     {
         if p <= T::zero() || p >= T::one()
         {
@@ -219,7 +219,7 @@ impl<T> Continuous<T, T, T> for Normal<T>
     /// let distrib: Normal<f64> = Normal::new(0.0, 0.2);
     /// let mean: f64 = distrib.mean();
     /// ```
-	fn mean<'a>(self: &'a Self) -> T
+	fn mean(self: &Self) -> T
     {
         return self.mean
     }
@@ -236,7 +236,7 @@ impl<T> Continuous<T, T, T> for Normal<T>
     /// let var: f64 = distrib.variance();
     ///
     /// ```
-	fn variance<'a>(self: &'a Self) -> T
+	fn variance(self: &Self) -> T
     {
         return self.variance
     }

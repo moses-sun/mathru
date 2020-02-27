@@ -1,7 +1,7 @@
 //! Hypergeometrical functions
 
 use crate::special::gamma;
-
+use crate::algebra::abstr::Real;
 
 /// Hypergeometrical function
 ///
@@ -29,22 +29,23 @@ use crate::special::gamma;
 ///
 /// https://cran.r-project.org/web/packages/hypergeo/vignettes/hypergeometric.pdf
 /// http://people.maths.ox.ac.uk/porterm/research/pearson_final.pdf
-pub fn f21(a: f64, b: f64, c: f64, z: f64) -> f64
+pub fn f21<T>(a: T, b: T, c: T, z: T) -> T
+	where T: Real
 {
-	if a <= 0.0 || b <= 0.0 || c <= 0.0 || z > 1.0
+	if a <= T::zero() || b <= T::zero() || c <= T::zero() || z > T::one()
 	{
 		panic!();
 	}
 
-	if z == 1.0
+	if z == T::one()
 	{
-		if c - a  - b  < 0.0
+		if c - a  - b  < T::zero()
 		{
 			return gamma::gamma(c) * gamma::gamma(a + b -c) / (gamma::gamma(a) * gamma::gamma(b));
 		}
 		else
 		{
-			if c - a - b == 0.0
+			if c - a - b == T::zero()
 			{
 				return gamma::gamma(c) / (gamma::gamma(a) * gamma::gamma(b))
 			}
@@ -56,48 +57,48 @@ pub fn f21(a: f64, b: f64, c: f64, z: f64) -> f64
 	}
 
 
-	let f: f64;
-	if -std::f64::INFINITY < z && z < -1.0
+	let f: T;
+	if T::from_f64(-std::f64::INFINITY).unwrap() < z && z < -T::one()
 	{
-		let l1: f64 = (1.0 - z).powf(-a) * gamma::gamma(c) * gamma::gamma(b - a) / (gamma::gamma(b) * gamma::gamma(c -
+		let l1: T = (T::one() - z).pow(&-a) * gamma::gamma(c) * gamma::gamma(b - a) / (gamma::gamma(b) * gamma::gamma(c -
 		a));
 
-		let l2: f64 = (1.0 - z).powf(-b) * gamma::gamma(c) * gamma::gamma(a - b) / (gamma::gamma(a) * gamma::gamma(c -
+		let l2: T = (T::one() - z).pow(&-b) * gamma::gamma(c) * gamma::gamma(a - b) / (gamma::gamma(a) * gamma::gamma(c -
 		b));
 
-		let f1: f64 = f21_norm(a, c - b, a - b + 1.0, 1.0 / (1.0 - z));
-		let f2: f64 = f21_norm(b, c - a, b - a + 1.0, 1.0 / (1.0 - z));
+		let f1: T = f21_norm(a, c - b, a - b + T::one(), T::one() / (T::one() - z));
+		let f2: T = f21_norm(b, c - a, b - a + T::one(), T::one() / (T::one() - z));
 
 		f = l1 * f1 + l2 * f2;
 	}
 	else
 	{
-		if -1.0 <= z && z < 0.0
+		if -T::one() <= z && z < T::zero()
 		{
-			f = f21_norm(a, c - b, c, z / (z - 1.0)) * (1.0 - z).powf(-a);
+			f = f21_norm(a, c - b, c, z / (z - T::one())) * (T::one() - z).pow(&-a);
 		}
 		else
 		{
-			if 0.0 <= z && z <= 0.5
+			if T::zero() <= z && z <= T::from_f64(0.5).unwrap()
 			{
 				f = f21_norm(a, b, c, z);
 			}
 			else
 			{
-				if 0.5 < z && z <= 1.0
+				if T::from_f64(0.5).unwrap() < z && z <= T::one()
 				{
-					let l1: f64 = gamma::gamma(c) * gamma::gamma(c-a-b) / (gamma::gamma(c - a) * gamma::gamma(c - b));
-					let l2: f64 = (1.0 - z).powf(c - a - b) * gamma::gamma(c) * gamma::gamma(a + b -c) / (gamma::gamma
+					let l1: T = gamma::gamma(c) * gamma::gamma(c-a-b) / (gamma::gamma(c - a) * gamma::gamma(c - b));
+					let l2: T = (T::one() - z).pow(&(c - a - b)) * gamma::gamma(c) * gamma::gamma(a + b -c) / (gamma::gamma
 					(a) *
 					gamma::gamma(b));
-					let f1: f64 = f21_norm(a, b, a + b - c + 1.0, 1.0 - z);
-					let f2: f64 = f21_norm(c - a, c - b, c - a - b + 1.0, 1.0 - z);
+					let f1: T = f21_norm(a, b, a + b - c + T::one(), T::one() - z);
+					let f2: T = f21_norm(c - a, c - b, c - a - b + T::one(), T::one() - z);
 
 					f = l1 * f1 + l2 * f2;
 				}
 				else
 				{
-					if 1.0 < z && z <= 2.0
+					if T::one() < z && z <= T::from_f64(2.0).unwrap()
 					{
 						//complex numbers are not supported
 //						let l1: f64 = gamma::gamma(c) * gamma::gamma(c - a - b) / (gamma::gamma(c - a) * gamma::gamma
@@ -112,7 +113,8 @@ pub fn f21(a: f64, b: f64, c: f64, z: f64) -> f64
 //						println!("{}", f2);
 //
 //						f = l1 * f1 + l2 * f2;
-						f = 0.0;
+						unimplemented!();
+						//f = 0.0;
 					}
 					// 2.0 < z && z < std::f64::INFINITY
 					else
@@ -128,7 +130,8 @@ pub fn f21(a: f64, b: f64, c: f64, z: f64) -> f64
 //						let f2: f64 = f21_norm(b, 1.0 - c + b, 1.0 - a + b, 1.0 / z);
 //
 //						f = l1 * f1 + l2 * f2;
-						f = 0.0;
+						unimplemented!();
+						//f = T::zero();
 					}
 				}
 			}
@@ -138,24 +141,25 @@ pub fn f21(a: f64, b: f64, c: f64, z: f64) -> f64
 	return f;
 }
 
-fn f21_norm(a: f64, b: f64, c: f64, z: f64) -> f64
+fn f21_norm<T>(a: T, b: T, c: T, z: T) -> T
+	where T: Real
 {
 
-	let mut c_i: f64 = 1.0;
-	let mut s_i: f64 = c_i;
-	let mut s_i_p: f64 = s_i; 	//s_{i-1}
-	let tolerance: f64 = 0.0000000000000002;
-	let mut j: f64 = 0.0;
+	let mut c_i: T = T::one();
+	let mut s_i: T = c_i;
+	let mut s_i_p: T = s_i; 	//s_{i-1}
+	let tolerance: T = T::from_f64(0.0000000000000002).unwrap();
+	let mut j: T = T::zero();
 
 	while c_i.abs()/s_i_p.abs() > tolerance
 	{
-		let k: f64 = (a + j) * (b + j) / (c + j);
-		let l: f64 = z / (j + 1.0);
+		let k: T = (a + j) * (b + j) / (c + j);
+		let l: T = z / (j + T::one());
 		c_i = c_i * k * l;
 		s_i_p = s_i;
 		s_i += c_i;
 
-		j += 1.0;
+		j += T::one();
 	}
 	return s_i
 }

@@ -1,14 +1,17 @@
 //#![feature(test)]
 #![allow(unused_macros)]
-
+#[macro_use]
 extern crate mathru;
 
 #[macro_use]
 extern crate criterion;
 
-pub mod matrix;
+mod algebra;
+mod analysis;
 
-criterion_main!(
-    matrix::matrix,
+criterion_main!
+(
+    //algebra::linear::matrix::matrix,
+    analysis::ode::ode,
 );
 

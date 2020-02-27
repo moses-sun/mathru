@@ -9,7 +9,7 @@ mod multinomialdistrib
     fn pmf0()
     {
         let p: Vector<f64> = vector![0.3; 0.7];
-        let distrib: Multinomial = Multinomial::new(p);
+        let distrib: Multinomial<f64> = Multinomial::new(p);
         let x: Vector<u32> = vector![3; 7];
         let prob: f64 = distrib.pmf(x);
 
@@ -21,20 +21,20 @@ mod multinomialdistrib
     {
         let p: Vector<f64> = vector![0.2; 0.3; 0.5];
         let n: Vector<u32> = vector![1; 2; 3];
-        let distrib : Multinomial = Multinomial::new(p);
-        let prob : f64 = distrib.pmf(n);
+        let distrib : Multinomial<f64> = Multinomial::new(p);
+        let prob: f64 = distrib.pmf(n);
 
         assert!((0.135 - prob).abs() < 0.0001 );
     }
-//
+
 //    #[test]
 //    fn pmf2()
 //    {
-//        let p : f64 = 0.2;
-//        let n : u32 = 2;
-//        let distrib : Multinomial = Multinomial::new(&n, &p);
-//        let k : u32 = 1;
-//        let prob : f64 = distrib.pmf(k);
+//        let p: f64 = 0.2;
+//        let n: u32 = 2;
+//        let distrib : Multinomial<f64> = Multinomial::new(&n, &p);
+//        let k: u32 = 1;
+//        let prob: f64 = distrib.pmf(k);
 //
 //        assert_eq!(0.32000000000000006, prob);
 //    }

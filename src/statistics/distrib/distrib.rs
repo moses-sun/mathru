@@ -15,7 +15,7 @@ pub trait Distribution<T>
 }
 
 /// Continuous distribution
-pub trait Continuous<T, A, B>
+pub trait Continuous<T>
 	where T: Real
 {
    	/// Probability density function
@@ -24,7 +24,7 @@ pub trait Continuous<T, A, B>
    	///
    	/// *`x`: random variable
    	///
-    fn pdf<'a, 'b>(self: &'a Self, x: A) -> T;
+    fn pdf(self: &Self, x: T) -> T;
 
     /// Cumulative distribution function
     ///
@@ -32,18 +32,16 @@ pub trait Continuous<T, A, B>
     ///
     /// *`x`: random variable
     ///
-    fn cdf<'a, 'b>(self: &'a Self, x: B) -> T;
+    fn cdf(self: &Self, x: T) -> T;
 
 	/// Quantile function, inverse cdf
-    fn quantile<'a, 'b>(self: &'a Self, p: B) -> T;
+    fn quantile(self: &Self, p: T) -> T;
 
 	/// Mean
-	fn mean<'a>(self: &'a Self) -> T;
+	fn mean(self: &Self) -> T;
 
 	/// Variance
-	fn variance<'a>(self: &'a Self) -> T;
-
-
+	fn variance(self: &Self) -> T;
 
 }
 

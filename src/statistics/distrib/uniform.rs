@@ -56,7 +56,7 @@ impl<T> Distribution<T> for Uniform<T>
     }
 }
 
-impl<T> Continuous<T, T, T> for Uniform<T>
+impl<T> Continuous<T> for Uniform<T>
     where T: Real
 {
 
@@ -74,7 +74,7 @@ impl<T> Continuous<T, T, T> for Uniform<T>
     /// let x: f64 = 5.0;
     /// let p: f64 = distrib.pdf(x);
     /// ```
-    fn pdf<'a>(self: &'a Self, x: T) -> T
+    fn pdf(self: &Self, x: T) -> T
     {
         if self.a <= x && x <= self.b
         {
@@ -101,7 +101,7 @@ impl<T> Continuous<T, T, T> for Uniform<T>
     /// let x: f64 = 0.3;
     /// let p: f64 = distrib.cdf(x);
     /// ```
-    fn cdf<'a>(self: &'a Self, x: T) -> T
+    fn cdf(self: &Self, x: T) -> T
     {
         if x < self.a
         {
@@ -123,12 +123,12 @@ impl<T> Continuous<T, T, T> for Uniform<T>
 
     /// Quantile function of inverse cdf
     ///
-    fn quantile<'a, 'b>(self: &'a Self, _p: T) -> T
+    fn quantile(self: &Self, _p: T) -> T
     {
         unimplemented!();
     }
 
-	fn mean<'a>(self: &'a Self) -> T
+	fn mean(self: &Self) -> T
     {
         return (self.a +  self.b) / T::from_f64(2.0).unwrap();
     }
@@ -143,7 +143,7 @@ impl<T> Continuous<T, T, T> for Uniform<T>
     /// let distrib: Uniform<f64> = Uniform::new(0.2, 0.5);
     /// let var: f64 = distrib.variance();
     /// ```
-	fn variance<'a>(self: &'a Self) -> T
+	fn variance(self: &Self) -> T
     {
         return (self.b - self.a) * (self.b - self.a) / T::from_f64(12.0).unwrap();
     }

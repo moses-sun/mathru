@@ -36,6 +36,7 @@ mathru is a numeric library containing algorithms for linear algebra, analysis a
             - Cash-Karp 4(5)
             - Tsitouras 4(5)
             - Bogacki-Shampine 2(3)
+            - Adams-Bashforth
         - Automatic step size control with starting step size
         
     - Optimization
@@ -54,7 +55,6 @@ mathru is a numeric library containing algorithms for linear algebra, analysis a
             - Exponential
             - Gamma
             - Chi-squared
-            - Multinomial
             - Normal
             - Poisson
             - Raised cosine
@@ -278,6 +278,19 @@ fn main()
 ```
 ![Fitting with Levenberg-Marquardt](figure/fit.png)
 
-## Contributions
+## License
+
+Licensed under either of
+
+ * Apache License, Version 2.0, ([LICENSE-APACHE](LICENSE-APACHE) or http://www.apache.org/licenses/LICENSE-2.0)
+ * MIT license ([LICENSE-MIT](LICENSE-MIT) or http://opensource.org/licenses/MIT)
+
+at your option.
+
+### Contribution
+
+Unless you explicitly state otherwise, any contribution intentionally submitted
+for inclusion in the work by you, as defined in the Apache-2.0 license, shall be dual licensed as above, without any
+additional terms or conditions.
 
 Any contribution is welcome!

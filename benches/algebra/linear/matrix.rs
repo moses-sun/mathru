@@ -31,6 +31,7 @@ fn mat1000_add_mat1000(bench: &mut Criterion)
 
     bench.bench_function("mat1000_add_mat1000", move |bh| bh.iter(|| &a + &b));
 }
+
 fn mat1000_add_mat1000_func(bench: &mut Criterion)
 {
     let a: Matrix<f64> = Matrix::new_random(1000, 1000);

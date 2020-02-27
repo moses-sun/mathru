@@ -2,7 +2,7 @@ use crate::algebra::linear::{Vector};
 use crate::algebra::abstr::Real;
 use super::explicit_method::{ExplicitFixedStepSizeMethod};
 use super::ExplicitODE;
-use crate::analysis::ode::fixed_stepper::FixedStepper;
+use crate::analysis::ode::fixed_stepper::ExplicitFixedStepper;
 
 /// Solves an ordinary differential equation using Ralston's method.
 ///
@@ -11,7 +11,7 @@ use crate::analysis::ode::fixed_stepper::FixedStepper;
 /// <a href="https://en.wikipedia.org/wiki/List_of_Runge-Kutta_methods#Forward_Euler">https://en.wikipedia.org/wiki/List_of_Runge-Kutta_methods#Forward_Euler</a>
 pub struct Ralston<T>
 {
-    stepper: FixedStepper<T>
+    stepper: ExplicitFixedStepper<T>
 }
 
 impl<T> Ralston<T>
@@ -23,7 +23,7 @@ impl<T> Ralston<T>
     {
         return Ralston
         {
-            stepper: FixedStepper::new(step_size)
+            stepper: ExplicitFixedStepper::new(step_size)
         }
     }
 

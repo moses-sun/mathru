@@ -52,7 +52,7 @@ impl<T> RaisedCosine<T>
     }
 }
 
-impl<T> Continuous<T, T, T> for RaisedCosine<T>
+impl<T> Continuous<T> for RaisedCosine<T>
     where T: Real
 {
 
@@ -75,7 +75,7 @@ impl<T> Continuous<T, T, T> for RaisedCosine<T>
     /// let x: f64 = 5.0;
     /// let p: f64 = distrib.pdf(x);
     /// ```
-    fn pdf(self: & Self, x: T) -> T
+    fn pdf(self: &Self, x: T) -> T
     {
         if (self.mu - self.s) <= x && x < (self.mu + self.s)
         {

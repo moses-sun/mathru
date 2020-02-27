@@ -49,7 +49,7 @@ impl<T> ChiSquared<T>
 }
 
 
-impl<T> Continuous<T, T, T> for ChiSquared<T>
+impl<T> Continuous<T> for ChiSquared<T>
     where T: Real
 {
 
@@ -68,7 +68,7 @@ impl<T> Continuous<T, T, T> for ChiSquared<T>
     /// let x: f64 = 5.0;
     /// let p: f64 = distrib.pdf(x);
     /// ```
-    fn pdf<'a>(self: &'a Self, x: T) -> T
+    fn pdf(self: &Self, x: T) -> T
     {
         if x < T::zero()
         {
@@ -96,7 +96,7 @@ impl<T> Continuous<T, T, T> for ChiSquared<T>
     /// let x: f64 = 0.4;
     /// let p: f64 = distrib.cdf(x);
     /// ```
-    fn cdf<'a>(self: &'a Self, x: T) -> T
+    fn cdf(self: &Self, x: T) -> T
     {
         let t1: T = (-x / T::from_f64(2.0).unwrap()).exp();
 
@@ -130,7 +130,7 @@ impl<T> Continuous<T, T, T> for ChiSquared<T>
 
     /// Quantile function of inverse cdf
     ///
-    fn quantile<'a, 'b>(self: &'a Self, p: T) -> T
+    fn quantile(self: &Self, p: T) -> T
     {
         let std_distrib: Normal<T> = Normal::new(T::zero(), T::one());
         let q: T = T::from_f64(0.5).unwrap() * (std_distrib.quantile(p) + (T::from_f64(2.0).unwrap() * self.k - T::one()).sqrt()).pow
@@ -148,7 +148,7 @@ impl<T> Continuous<T, T, T> for ChiSquared<T>
     /// let distrib: ChiSquared<f64> = ChiSquared::new(2);
     /// let mean: f64 = distrib.mean();
     /// ```
-	fn mean<'a>(self: &'a Self) -> T
+	fn mean(self: &Self) -> T
     {
         return self.k
     }
@@ -163,7 +163,7 @@ impl<T> Continuous<T, T, T> for ChiSquared<T>
     /// let distrib: ChiSquared<f64> = ChiSquared::new(2);
     /// let var: f64 = distrib.variance();
     /// ```
-	fn variance<'a>(self: &'a Self) -> T
+	fn variance(self: &Self) -> T
     {
         return T::from_f64(2.0).unwrap() * self.k
     }

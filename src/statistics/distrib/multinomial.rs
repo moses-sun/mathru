@@ -34,9 +34,9 @@ impl<T> Multinomial<T>
     /// use mathru::algebra::linear::Vector;
     /// use mathru::statistics::distrib::Multinomial;
     ///
-    /// let distrib: Multinomial = Multinomial::new(vector![0.3; 0.2; 0.5]);
+    /// let distrib: Multinomial<f64> = Multinomial::new(vector![0.3; 0.2; 0.5]);
     /// ```
-	 pub fn new(p: Vector<T>) -> Multinomial<T>
+    pub fn new(p: Vector<T>) -> Multinomial<T>
     {
         Multinomial
         {
@@ -46,6 +46,7 @@ impl<T> Multinomial<T>
 }
 
 impl<T> Discrete<T, Vector<u32>, Vector<T>> for Multinomial<T>
+    where T: Real
 {
     /// Probability mass function
     ///
@@ -61,7 +62,7 @@ impl<T> Discrete<T, Vector<u32>, Vector<T>> for Multinomial<T>
     /// use mathru::algebra::linear::Vector;
     ///
     /// let p: Vector<f64> = vector![0.3; 0.7];
-    /// let distrib: Multinomial = Multinomial::new(p);
+    /// let distrib: Multinomial<f64> = Multinomial::new(p);
     /// let x: Vector<u32> = vector![1; 2];
     /// let p: f64 = distrib.pmf(x);
     /// ```
@@ -77,9 +78,9 @@ impl<T> Discrete<T, Vector<u32>, Vector<T>> for Multinomial<T>
             let p_k: T = *self.p.get(k);
             let n_k: u32 = *x.get(k);
             n = n + n_k;
-            prod = prod * p_k.powf(n_k as f64) / (combins::factorial(n_k) as f64);
+            prod = prod * p_k.pow(&T::from_u32(n_k).unwrap()) / T::from_u64(combins::factorial(n_k)).unwrap();
         }
-        return prod * (combins::factorial(n) as f64);
+        return prod * T::from_u64(combins::factorial(n)).unwrap();
     }
 
     /// Cumulative distribution function
@@ -93,7 +94,7 @@ impl<T> Discrete<T, Vector<u32>, Vector<T>> for Multinomial<T>
     /// ```
     /// use mathru::statistics::distrib::{Discrete, Binomial};
     ///
-    /// let distrib: Binomial = Binomial::new(&5, &0.3);
+    /// let distrib: Binomial<f64> = Binomial::new(5, 0.3);
     /// let x: f64 = 0.4;
     /// let p: f64 = distrib.cdf(x);
     /// ```
@@ -119,7 +120,7 @@ impl<T> Discrete<T, Vector<u32>, Vector<T>> for Multinomial<T>
     /// ```
     /// use mathru::statistics::distrib::{Discrete, Binomial};
     ///
-    /// let distrib: Binomial = Binomial::new(&5, &0.3);
+    /// let distrib: Binomial<f64> = Binomial::new(5, 0.3);
     /// let mean: f64 = distrib.mean();
     /// ```
 	fn mean<'a>(self: &'a Self) -> T
@@ -135,7 +136,7 @@ impl<T> Discrete<T, Vector<u32>, Vector<T>> for Multinomial<T>
     /// ```
     /// use mathru::statistics::distrib::{Discrete, Binomial};
     ///
-    /// let distrib: Binomial = Binomial::new(&5, &0.3);
+/// let distrib: Binomial<f64> = Binomial::new(5, pi0.3);
     /// let var: f64 = distrib.variance();
     /// ```
 	fn variance<'a>(self: &'a Self) -> T

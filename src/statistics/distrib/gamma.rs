@@ -50,7 +50,7 @@ impl<T> Gamma<T>
     }
 }
 
-impl<T> Continuous<T, T, T> for Gamma<T>
+impl<T> Continuous<T> for Gamma<T>
     where T: Real
 {
 
@@ -73,7 +73,7 @@ impl<T> Continuous<T, T, T> for Gamma<T>
     /// let x: f64 = 5.0;
     /// let p: f64 = distrib.pdf(x);
     /// ```
-    fn pdf<'a>(self: &'a Self, x: T) -> T
+    fn pdf(self: &Self, x: T) -> T
     {
         if x <= T::zero()
         {
@@ -97,7 +97,7 @@ impl<T> Continuous<T, T, T> for Gamma<T>
     /// let x: f64 = 0.4;
     /// let p: f64 = distrib.cdf(x);
     /// ```
-    fn cdf<'a>(self: &'a Self, x: T) -> T
+    fn cdf(self: &Self, x: T) -> T
     {
         if x == T::zero()
         {
@@ -109,14 +109,14 @@ impl<T> Continuous<T, T, T> for Gamma<T>
 
     /// Quantile function of inverse cdf
     ///
-    fn quantile<'a, 'b>(self: &'a Self, _p: T) -> T
+    fn quantile(self: &Self, _p: T) -> T
     {
         unimplemented!();
     }
 
     /// Expected value
     ///
-	fn mean<'a>(self: &'a Self) -> T
+	fn mean(self: &Self) -> T
     {
         return self.p / self.b;
     }
@@ -131,7 +131,7 @@ impl<T> Continuous<T, T, T> for Gamma<T>
     /// let distrib: Gamma<f64> = Gamma::new(0.2, 0.5);
     /// let var: f64 = distrib.variance();
     /// ```
-	fn variance<'a>(self: &'a Self) -> T
+	fn variance(self: &Self) -> T
     {
         return self.p / self.b.pow(&T::from_f64(2.0).unwrap());
     }

@@ -49,7 +49,7 @@ impl<T> Beta<T>
     }
 }
 
-impl<T> Continuous<T, T, T> for Beta<T>
+impl<T> Continuous<T> for Beta<T>
     where T: Real
 {
     /// Probability density function
@@ -67,7 +67,7 @@ impl<T> Continuous<T, T, T> for Beta<T>
     /// let x: f64 = 0.5;
     /// let p: f64 = distrib.pdf(x);
     /// ```
-    fn pdf<'a>(self: &'a Self, x: T) -> T
+    fn pdf(self: &Self, x: T) -> T
     {
         if T::zero() > x || x > T::one()
         {
@@ -91,7 +91,7 @@ impl<T> Continuous<T, T, T> for Beta<T>
     /// let x: f64 = 0.4;
     /// let p: f64 = distrib.cdf(x);
     /// ```
-    fn cdf<'a>(self: &'a Self, x: T) -> T
+    fn cdf(self: &Self, x: T) -> T
     {
         beta::beta_inc_reg(x, self.p, self.q)
     }
@@ -99,7 +99,7 @@ impl<T> Continuous<T, T, T> for Beta<T>
 
     /// Quantile function of inverse cdf
     ///
-    fn quantile<'a, 'b>(self: &'a Self, _p: T) -> T
+    fn quantile(self: &Self, _p: T) -> T
     {
         unimplemented!();
     }
@@ -114,7 +114,7 @@ impl<T> Continuous<T, T, T> for Beta<T>
     /// let distrib: Beta<f64> = Beta::new(&0.2, &0.3);
     /// let mean: f64 = distrib.mean();
     /// ```
-	fn mean<'a>(self: &'a Self) -> T
+	fn mean(self: &Self) -> T
     {
         self.p  / (self.p + self.q)
     }
@@ -129,7 +129,7 @@ impl<T> Continuous<T, T, T> for Beta<T>
     /// let distrib: Beta<f64> = Beta::new(&0.2, &0.3);
     /// let var: f64 = distrib.variance();
     /// ```
-	fn variance<'a>(self: &'a Self) -> T
+	fn variance(self: &Self) -> T
     {
         self.p * self.q / ((self.p + self.q + T::one()) * (self.p + self.q).pow(&T::from_f64(2.0).unwrap()))
     }

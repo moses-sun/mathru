@@ -32,7 +32,7 @@ impl<K> T<K>
     /// ```
     /// use mathru::statistics::distrib::{Continuous, T};
     ///
-    /// let distrib: T = T::new(1.2);
+    /// let distrib: T<f64> = T::new(1.2);
     /// ```
     pub fn new(n: K) -> T<K>
     {
@@ -47,7 +47,7 @@ impl<K> T<K>
     }
 }
 
-impl<K> Continuous<K, K, K> for T<K>
+impl<K> Continuous<K> for T<K>
     where K: Real
 {
     /// Probability density function
@@ -62,11 +62,11 @@ impl<K> Continuous<K, K, K> for T<K>
     /// ```
     /// use mathru::statistics::distrib::{Continuous, T};
     ///
-    /// let distrib: T = T::new(1.2);
+    /// let distrib: T<f64> = T::new(1.2);
     /// let x: f64 = 0.5;
     /// let p: f64 = distrib.pdf(x);
     /// ```
-    fn pdf<'a>(self: &'a Self, x: K) -> K
+    fn pdf(self: &Self, x: K) -> K
     {
         gamma::gamma((self.n + K::one()) / K::from_f64(2.0).unwrap()) * (K::one() + x.pow(&K::from_f64(2.0).unwrap()) / self.n).pow(&(-
         (self.n + K::one()) / K::from_f64(2.0).unwrap())) / ((self.n * K::pi()).sqrt() * gamma::gamma(self.n / K::from_f64(2.0).unwrap()))
@@ -83,23 +83,23 @@ impl<K> Continuous<K, K, K> for T<K>
     /// ```
     /// use mathru::statistics::distrib::{Continuous, T};
     ///
-    /// let distrib: T = K::new(1.3);
+    /// let distrib: T<f64> = T::new(1.3);
     /// let x: f64 = 0.4;
     /// let p: f64 = distrib.cdf(x);
     /// ```
-    fn cdf<'a>(self: &'a Self, x: K) -> K
+    fn cdf(self: &Self, x: K) -> K
     {
-        unimplemented!();
-//        let k: K = (self.n + K::one()) / K::from_f64(2.0).unwrap();
-//        let f21: K = hypergeometrical::f21(0.5, k, 1.5, -(x.powi(2)) / self.n);
-//        0.5 + x * gamma::gamma(k) * f21 / ((self.n *
-//        std::f64::consts::PI).sqrt() * gamma::gamma(self.n / K::from_f64(2.0).unwrap()))
+        let k: K = (self.n + K::one()) / K::from_f64(2.0).unwrap();
+        let f21: K = hypergeometrical::f21(K::from_f64(0.5).unwrap(), k, K::from_f64(1.5).unwrap(), -(x.pow(&K::from_f64(2.0).unwrap())) /
+        self.n);
+        return K::from_f64(0.5).unwrap() + x * gamma::gamma(k) * f21 / ((self.n * K::pi()).sqrt() * gamma::gamma(self.n /
+        K::from_f64(2.0).unwrap()))
     }
 
 
     /// Quantile function of inverse cdf
     ///
-    fn quantile<'a, 'b>(self: &'a Self, _p: K) -> K
+    fn quantile(self: &Self, _p: K) -> K
     {
         unimplemented!();
     }
@@ -115,10 +115,10 @@ impl<K> Continuous<K, K, K> for T<K>
     /// ```
     /// use mathru::statistics::distrib::{Continuous, T};
     ///
-    /// let distrib: T = K::new(1.2);
+    /// let distrib: T<f64> = T::new(1.2);
     /// let mean: f64 = distrib.mean();
     /// ```
-	fn mean<'a>(self: &'a Self) -> K
+	fn mean(self: &Self) -> K
     {
         if self.n > K::one()
         {
@@ -134,10 +134,10 @@ impl<K> Continuous<K, K, K> for T<K>
     /// ```
     /// use mathru::statistics::distrib::{Continuous, T};
     ///
-    /// let distrib: T = K::new(2.2);
+    /// let distrib: T<f64> = T::new(2.2);
     /// let var: f64 = distrib.variance();
     /// ```
-	fn variance<'a>(self: &'a Self) -> K
+	fn variance(self: &Self) -> K
     {
         if self.n > K::from_f64(2.0).unwrap()
         {

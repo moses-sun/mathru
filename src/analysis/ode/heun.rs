@@ -2,14 +2,14 @@ use crate::algebra::linear::{Vector};
 use crate::algebra::abstr::Real;
 use super::explicit_method::{ExplicitFixedStepSizeMethod};
 use super::ExplicitODE;
-use crate::analysis::ode::fixed_stepper::FixedStepper;
+use crate::analysis::ode::fixed_stepper::ExplicitFixedStepper;
 
 /// Solves an ordinary differential equation using Heun's method.
 ///
 /// <a href="https://en.wikipedia.org/wiki/Heun's_method">https://en.wikipedia.org/wiki/Heun's_method</a>
 pub struct Heun<T>
 {
-    stepper: FixedStepper<T>
+    stepper: ExplicitFixedStepper<T>
 }
 
 
@@ -22,7 +22,7 @@ impl<T> Heun<T>
     {
         return Heun
         {
-            stepper: FixedStepper::new(step_size)
+            stepper: ExplicitFixedStepper::new(step_size)
         }
     }
 

@@ -65,7 +65,7 @@ impl<T> Exponential<T>
     }
 }
 
-impl<T> Continuous<T, T, T> for Exponential<T>
+impl<T> Continuous<T> for Exponential<T>
 	where T: Real
 {
     /// Probability density function
@@ -83,7 +83,7 @@ impl<T> Continuous<T, T, T> for Exponential<T>
     /// let x: f64 = 5.0;
     /// let p: f64 = distrib.pdf(x);
     /// ```
-    fn pdf<'a>(self: &'a Self, x: T) -> T
+    fn pdf(self: &Self, x: T) -> T
 	{
 		if x < T::zero()
 		{
@@ -108,7 +108,7 @@ impl<T> Continuous<T, T, T> for Exponential<T>
     /// let x: f64 = 0.4;
     /// let p: f64 = distrib.cdf(x);
     /// ```
-    fn cdf<'a>(self: &'a Self, x: T) -> T
+    fn cdf(self: &Self, x: T) -> T
 	{
 		if x < T::zero()
 		{
@@ -119,7 +119,7 @@ impl<T> Continuous<T, T, T> for Exponential<T>
 	}
 
 	/// Quantile function of inverse cdf
-    fn quantile<'a>(self: &'a Self, p: T) -> T
+    fn quantile(self: &Self, p: T) -> T
     {
     	return -(T::one() - p).ln() / self.lambda;
     }
@@ -134,7 +134,7 @@ impl<T> Continuous<T, T, T> for Exponential<T>
     /// let distrib: Exponential<f64> = Exponential::new(0.2);
     /// let mean: f64 = distrib.mean();
     /// ```
-	fn mean<'a>(self: &'a Self) -> T
+	fn mean(self: &Self) -> T
 	{
 		return T::one() / self.lambda
 	}
@@ -149,7 +149,7 @@ impl<T> Continuous<T, T, T> for Exponential<T>
     /// let distrib: Exponential<f64> = Exponential::new(0.2);
     /// let var: f64 = distrib.variance();
     /// ```
-	fn variance<'a>(self: &'a Self) -> T
+	fn variance(self: &Self) -> T
 	{
 		return T::one() / self.lambda.pow(&T::from_u8(2).unwrap())
 	}

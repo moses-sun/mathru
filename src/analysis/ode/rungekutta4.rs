@@ -2,7 +2,7 @@ use crate::algebra::linear::{Vector};
 use crate::algebra::abstr::Real;
 use super::explicit_method::{ExplicitFixedStepSizeMethod};
 use super::ExplicitODE;
-use crate::analysis::ode::fixed_stepper::FixedStepper;
+use crate::analysis::ode::fixed_stepper::ExplicitFixedStepper;
 
 /// Solves an ordinary differential equation using the 4th order Runge-Kutta algorithm.
 ///
@@ -10,7 +10,7 @@ use crate::analysis::ode::fixed_stepper::FixedStepper;
 /// .org/wiki/Rung-Kutta_methods</a>
 pub struct RungeKutta4<T>
 {
-    stepper: FixedStepper<T>
+    stepper: ExplicitFixedStepper<T>
 }
 
 impl<T> RungeKutta4<T>
@@ -22,7 +22,7 @@ impl<T> RungeKutta4<T>
     {
         return RungeKutta4
         {
-            stepper: FixedStepper::new(step_size)
+            stepper: ExplicitFixedStepper::new(step_size)
         }
     }
 

@@ -1,32 +1,32 @@
 use crate::algebra::linear::{Vector};
 use crate::algebra::abstr::Real;
-use super::explicit_method::{ExplicitFixedStepSizeMethod};
-use super::ExplicitODE;
-use crate::analysis::ode::fixed_stepper::ExplicitFixedStepper;
+use super::implicit_method::{ImplicitFixedStepSizeMethod};
+use super::ImplicitODE;
+use crate::analysis::ode::fixed_stepper::ImplicitFixedStepper;
 
 /// Solves an ordinary differential equation using Euler's method.
 ///
 /// <a href="https://en.wikipedia.org/wiki/Euler_method">https://en.wikipedia.org/wiki/Euler_method</a>
-pub struct Euler<T>
+pub struct BackwardEuler<T>
 {
-    stepper: ExplicitFixedStepper<T>
+    stepper: ImplicitFixedStepper<T>
 }
 
-impl<T> Euler<T>
+impl<T> BackwardEuler<T>
     where T: Real
 {
-    /// Creates a Euler instance
+    /// Creates a backward Euler instance
     ///
-    pub fn new(step_size: T) -> Euler<T>
+    pub fn new(step_size: T) -> BackwardEuler<T>
     {
-        return Euler
+        return BackwardEuler
         {
-            stepper: ExplicitFixedStepper::new(step_size)
+            stepper: ImplicitFixedStepper::new(step_size)
         };
     }
 
     pub fn solve<F>(self: &Self, prob: &F) -> Result<(Vec<T>, Vec<Vector<T>>), ()>
-        where F: ExplicitODE<T>
+        where F: ImplicitODE<T>
     {
         return self.stepper.solve(prob, self);
     }
@@ -42,13 +42,17 @@ impl<T> Euler<T>
     }
 }
 
-impl<T> ExplicitFixedStepSizeMethod<T> for Euler<T>
+impl<T> ImplicitFixedStepSizeMethod<T> for BackwardEuler<T>
     where T: Real
 {
     fn do_step<F>(self: &Self, prob: &F, t_n: &T, x_n: &Vector<T>, h: &T) -> Vector<T>
-        where F: ExplicitODE<T>
+        where F: ImplicitODE<T>
     {
-        return x_n + &(&prob.func(t_n, x_n) * h);
+        let y_n = prob.func(t_n, x_n);
+
+        return y_n.apply(&|y: &T| -> T {return (-T::one() + (T::one() + T::from_f64(4.0).unwrap() * *y).sqrt())/(T::from_f64(2.0).unwrap() *
+        *h)});
+
     }
 
     /// Euler's method is a first order method

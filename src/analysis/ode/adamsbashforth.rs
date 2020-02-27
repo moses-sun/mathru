@@ -1,7 +1,6 @@
 use crate::analysis::ode::explicit_ode::{ExplicitODE};
 use crate::algebra::linear::vector::vector::Vector;
 use crate::algebra::abstr::Real;
-use crate::algebra::abstr::Zero;
 
 ///
 /// Adams-Bashforth method
@@ -17,7 +16,7 @@ impl<T> AdamsBashforth<T>
 	///
 	pub fn new(k: u8, step_size: T) -> AdamsBashforth<T>
 	{
-		if k == 0 || k >= 6
+		if k == 0 || k > 5
 		{
 			panic!();
 		}
@@ -35,7 +34,7 @@ impl<T> AdamsBashforth<T>
 	}
 }
 
-impl<T> Solver<T> for AdamsBashforth<T>
+impl<T> AdamsBashforth<T>
     where T: Real
 {
 
@@ -61,7 +60,7 @@ impl<T> Solver<T> for AdamsBashforth<T>
     /// ```
     /// use mathru::*;
     /// use mathru::algebra::linear::{Vector, Matrix};
-    /// use mathru::analysis::ode::{Solver, ExplicitODE, AdamsBashforth};
+    /// use mathru::analysis::ode::{ExplicitODE, AdamsBashforth};
     ///
     /// // Define ODE
     /// // $`y^{'} = ay = f(x, y) `$
@@ -109,7 +108,7 @@ impl<T> Solver<T> for AdamsBashforth<T>
     /// let (t, y): (Vec<f64>, Vec<Vector<f64>>) = solver.solve(&problem).unwrap();
     ///
     /// ```
-	fn solve<F>(self: &Self, prob: &F) -> Result<(Vec<T>, Vec<Vector<T>>), ()>
+	pub fn solve<F>(self: &Self, prob: &F) -> Result<(Vec<T>, Vec<Vector<T>>), ()>
         where F: ExplicitODE<T>
     {
 		let t_span: (T, T) = prob.time_span();
@@ -131,18 +130,74 @@ impl<T> Solver<T> for AdamsBashforth<T>
 
      	let mut res_vec: Vec<Vector<T>> = Vec::with_capacity(steps);
 
-        for _i in 0..steps
+		t_vec.push(t_n);
+     	res_vec.push(x_n.clone());
+
+		//calculate initial steps
+		if self.k >= 2
+		{
+			let h: T = self.step_size.min(t_stop - t_n);
+			let x_n = AdamsBashforth::step_s1(prob, &t_vec, &res_vec, h);
+			t_n = t_n + h;
+
+			t_vec.push(t_n);
+            res_vec.push(x_n.clone());
+		}
+
+		if self.k >= 3
+		{
+			let h: T = self.step_size.min(t_stop - t_n);
+			let x_n = AdamsBashforth::step_s2(prob, &t_vec, &res_vec, h);
+			t_n = t_n + h;
+
+			t_vec.push(t_n);
+            res_vec.push(x_n.clone());
+		}
+
+		if self.k >= 4
+		{
+			let h: T = self.step_size.min(t_stop - t_n);
+			let x_n = AdamsBashforth::step_s3(prob, &t_vec, &res_vec, h);
+			t_n = t_n + h;
+
+			t_vec.push(t_n);
+            res_vec.push(x_n.clone());
+		}
+
+		if self.k >= 5
+		{
+			let h: T = self.step_size.min(t_stop - t_n);
+			let x_n = AdamsBashforth::step_s4(prob, &t_vec, &res_vec, h);
+			t_n = t_n + h;
+
+			t_vec.push(t_n);
+            res_vec.push(x_n.clone());
+		}
+
+		let step = match self.k
+		{
+			1 => AdamsBashforth::step_s1,
+			2 => AdamsBashforth::step_s2,
+			3 => AdamsBashforth::step_s3,
+			4 => AdamsBashforth::step_s4,
+			5 => AdamsBashforth::step_s5,
+			_ => panic!(),
+		};
+
+		println!("{}", t_vec.len());
+
+		while (t_n - t_stop).abs() > T::from_f64(0.0000000001).unwrap()
         {
-            //Step size
+ 			//Step size
             let h: T = self.step_size.min(t_stop - t_n);
 
-            t_vec.push(t_n);
-            res_vec.push(x_n.clone());
-
-            x_n = &x_n + &(&prob.func(&t_n, &x_n) * &h);
-
+			x_n = step(prob, &t_vec, &res_vec, h);
             t_n = t_n + h;
+
+        	t_vec.push(t_n);
+            res_vec.push(x_n.clone());
 		}
+
     	return Ok((t_vec, res_vec));
 	}
 }
@@ -150,23 +205,72 @@ impl<T> Solver<T> for AdamsBashforth<T>
 impl<T> AdamsBashforth<T>
 	where T: Real
 {
-	///
-	/// J \in \[0, 8\]
-	///
-	fn coefficient(j: u32) -> T
+	fn step_s1<F>(prob: &F, t: &Vec<T>, x: &Vec<Vector<T>>, h: T) -> Vector<T>
+		where F: ExplicitODE<T>
 	{
-		match j
-		{
-			0 => return T::from_f64(1.0).unwrap(),
-			1 => return T::from_f64(0.5).unwrap(),
-			2 => return T::from_f64(5.0/12.0).unwrap(),
-			3 => return T::from_f64(3.0/8.0).unwrap(),
-			4 => return T::from_f64(251.0/720.0).unwrap(),
-			5 => return T::from_f64(95.0/288.0).unwrap(),
-			6 => return T::from_f64(19087.0/60480.0).unwrap(),
-			7 => return T::from_f64(5257.0/17280.0).unwrap(),
-			7 => return T::from_f64(1070017.0/3628800.0).unwrap(),
-			_ => panic!(),
-		}
+		let n: usize = x.len() - 1;
+		let x_n: &Vector<T> = &x[n];
+		let t_n: &T = &t[n];
+		return x_n + &(&prob.func(t_n, x_n) * &h);
+	}
+
+	fn step_s2<F>(prob: &F, t: &Vec<T>, x: &Vec<Vector<T>>, h: T) -> Vector<T>
+		where F: ExplicitODE<T>
+	{
+		let n: usize = x.len() - 1;
+		let x_n: &Vector<T> = &x[n];
+		let t_n: &T = &t[n];
+		let x_n1: &Vector<T> = &x[n - 1];
+		let t_n1: &T = &t[n - 1];
+		return x_n + &((prob.func(t_n, x_n) * T::from_f64(3.0/2.0).unwrap()  + prob.func(&t_n1, x_n1) * T::from_f64(-0.5).unwrap()) * h);
+	}
+
+	fn step_s3<F>(prob: &F, t: &Vec<T>, x: &Vec<Vector<T>>, h: T) -> Vector<T>
+		where F: ExplicitODE<T>
+	{
+		let n: usize = x.len() - 1;
+		let x_n: &Vector<T> = &x[n];
+		let t_n: &T = &t[n];
+		let x_n1: &Vector<T> = &x[n - 1];
+		let t_n1: &T = &t[n - 1];
+		let x_n2: &Vector<T> = &x[n - 2];
+		let t_n2: &T = &t[n - 2];
+		return x_n + &((prob.func(t_n, x_n) * T::from_f64(23.0/12.0).unwrap() + prob.func(t_n1, x_n1) * T::from_f64(-16.0/12.0).unwrap()
+		+ prob.func(t_n2, x_n2) * T::from_f64(5.0/12.0).unwrap()) * h);
+	}
+
+	fn step_s4<F>(prob: &F, t: &Vec<T>, x: &Vec<Vector<T>>, h: T) -> Vector<T>
+		where F: ExplicitODE<T>
+	{
+		let n: usize = x.len() - 1;
+		let x_n: &Vector<T> = &x[n];
+		let t_n: &T = &t[n];
+		let x_n1: &Vector<T> = &x[n - 1];
+		let t_n1: &T = &t[n - 1];
+		let x_n2: &Vector<T> = &x[n - 2];
+		let t_n2: &T = &t[n - 2];
+		let x_n3: &Vector<T> = &x[n - 3];
+		let t_n3: &T = &t[n - 3];
+		return x_n + &((prob.func(t_n, x_n) * T::from_f64(55.0/24.0).unwrap() + prob.func(t_n1, x_n1) * T::from_f64(-59.0/24.0).unwrap
+		() + prob.func(t_n2, x_n2) * T::from_f64(37.0/24.0).unwrap() + prob.func(t_n3, x_n3) * T::from_f64(-9.0/24.0).unwrap()) * h);
+	}
+
+	fn step_s5<F>(prob: &F, t: &Vec<T>, x: &Vec<Vector<T>>, h: T) -> Vector<T>
+		where F: ExplicitODE<T>
+	{
+		let n: usize = x.len() - 1;
+		let x_n: &Vector<T> = &x[n];
+		let t_n: &T = &t[n];
+		let x_n1: &Vector<T> = &x[n - 1];
+		let t_n1: &T = &t[n - 1];
+		let x_n2: &Vector<T> = &x[n - 2];
+		let t_n2: &T = &t[n - 2];
+		let x_n3: &Vector<T> = &x[n - 3];
+		let t_n3: &T = &t[n - 3];
+		let x_n4: &Vector<T> = &x[n - 4];
+		let t_n4: &T = &t[n - 4];
+		return x_n + &((prob.func(t_n, x_n) * T::from_f64(1901.0/720.0).unwrap()  + prob.func(t_n1, x_n1) * T::from_f64(-2774.0/720.0)
+		.unwrap() + prob.func(t_n2, x_n2) * T::from_f64(2616.0/720.0).unwrap() + prob.func(t_n3, x_n3) * T::from_f64(-1274.0/720.0)
+		.unwrap() + prob.func(t_n4, x_n4) * T::from_f64(251.0/720.0).unwrap()) * h);
 	}
 }
