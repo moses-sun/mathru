@@ -1,17 +1,19 @@
 use crate::statistics::distrib::{Continuous, ChiSquared};
+use crate::algebra::abstr::Real;
 
 /// G-Test
 ///
 /// Fore more information:
 /// <a href="https://de.wikipedia.org/wiki/G-Test">https://de.wikipedia.org/wiki/G-Test</a>
 ///
-pub struct G
+pub struct G<T>
 {
 	df: u32,
-	g: f64
+	g: T
 }
 
-impl G
+impl<T> G<T>
+	where T: Real
 {
 	///
 	/// \sum_{i}{y_{i}} = n = \sum_i{xs_i}
@@ -21,7 +23,7 @@ impl G
 	///
 	/// x: observation
 	/// y: expectation
-	pub fn test_vector(x: &Vec<f64>, y: &Vec<f64>) -> G
+	pub fn test_vector(x: &Vec<T>, y: &Vec<T>) -> G<T>
 	{
 		if x.len() != y.len()
 		{
@@ -30,21 +32,21 @@ impl G
 
 		let df: u32 = (x.len() - 1) as u32;
 
-		let mut n: f64 = 0.0;
+		let mut n: T = T::zero();
 		for y_i in y.iter()
 		{
-			n += y_i;
+			n += *y_i;
 		}
 
-		let mut b: f64 = 0.0;
+		let mut b: T = T::zero();
 		for x_i in x.iter()
 		{
-			b += x_i;
+			b += *x_i;
 		}
 
-		let k: f64 = n / b;
+		let k: T = n / b;
 
-		let mut g: f64 = 0.0;
+		let mut g: T = T::zero();
 
 		for i in 0..x.len()
 		{
@@ -54,7 +56,7 @@ impl G
 		G
 		{
 			df: df,
-			g: 2.0 * g
+			g: T::from_f64(2.0).unwrap() * g
 		}
 	}
 
@@ -63,14 +65,14 @@ impl G
 		self.df
 	}
 
-	pub fn g(self: &Self) -> f64
+	pub fn g(self: &Self) -> T
 	{
 		self.g
 	}
 
-	pub fn p_value(self: &Self) -> f64
+	pub fn p_value(self: &Self) -> T
 	{
-		let distrib: ChiSquared = ChiSquared::new(&self.df);
-		1.0 - distrib.cdf(self.g)
+		let distrib: ChiSquared<T> = ChiSquared::new(self.df);
+		T::one() - distrib.cdf(self.g)
 	}
 }

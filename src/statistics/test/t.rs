@@ -1,7 +1,7 @@
 use crate::statistics::distrib::{Continuous, Normal};
 use crate::algebra::linear::{Vector};
 use crate::statistics::distrib::T as TD;
-
+use crate::algebra::abstr::Real;
 
 /// T-Test
 ///
@@ -18,12 +18,12 @@ use crate::statistics::distrib::T as TD;
 /// let rv2 = Normal::new(1.0, 0.5).random_vector(100);
 ///
 /// //Test with sample with identical means
-/// let mut measure: T = T::test_independence_unequal_variance(&rv1, &rv2);
+/// let mut measure: T<f64> = T::test_independence_unequal_variance(&rv1, &rv2);
 /// println!("{}", measure.t());
 /// measure = T::test_independence_equal_variance(&rv1, &rv2);
 /// println!("{}", measure.t());
 ///
-/// // TEst with different equal mean, but unequal variances
+/// // Test with different equal mean, but unequal variances
 /// let rv3 = Normal::new(1.0, 1.5).random_vector(100);
 /// measure = T::test_independence_unequal_variance(&rv1, &rv3);
 /// println!("{}", measure.t());
@@ -45,20 +45,21 @@ use crate::statistics::distrib::T as TD;
 /// measure = T::test_independence_equal_variance(&rv1, &rv5);
 /// println!("{}", measure.t());
 /// ```
-pub struct T
+pub struct T<K>
 {
-	p: f64,
-	t: f64
+	p: K,
+	t: K
 }
 
-impl T
+impl<K> T<K>
+	where K: Real
 {
-	pub fn t(self: &Self) -> f64
+	pub fn t(self: &Self) -> K
 	{
 		self.t
 	}
 
-	pub fn p_value(self: &Self) -> f64
+	pub fn p_value(self: &Self) -> K
 	{
 		return self.p
 	}
@@ -68,31 +69,31 @@ impl T
 	///
 	/// This is a two-sided test for the null hypothesis that two independent samples have identical expected values.
 	/// It is assumed, that the populations have identical variances.
-	pub fn test_independence_equal_variance(x: &Vector<f64>, y: &Vector<f64>) -> T
+	pub fn test_independence_equal_variance(x: &Vector<K>, y: &Vector<K>) -> T<K>
 	{
 		let (_, n_x) : (usize, usize) = x.dim();
 		let (_, n_y) : (usize, usize) = y.dim();
 
-		let x_dist: Normal = Normal::from_data(&x);
-		let y_dist: Normal = Normal::from_data(&y);
+		let x_dist: Normal<K> = Normal::from_data(&x);
+		let y_dist: Normal<K> = Normal::from_data(&y);
 
-		let mean_x: f64 = x_dist.mean();
-		let mean_y: f64 = y_dist.mean();
+		let mean_x: K = x_dist.mean();
+		let mean_y: K = y_dist.mean();
 
 		let df: usize = n_x + n_y - 2;
 
-		let s_x_squared: f64 = x_dist.variance();
-		let s_y_squared: f64 = y_dist.variance();
+		let s_x_squared: K = x_dist.variance();
+		let s_y_squared: K = y_dist.variance();
 
-		let nomin: f64 = ((n_x - 1) as f64) * s_x_squared + ((n_y - 1) as f64) * s_y_squared;
-		let denom: f64 = (df) as f64;
+		let nomin: K = K::from_f64((n_x - 1) as f64).unwrap() * s_x_squared + K::from_f64((n_y - 1) as f64).unwrap() * s_y_squared;
+		let denom: K = K::from((df) as f64).unwrap();
 
-		let s_p: f64 = (nomin / denom).sqrt();
+		let s_p: K = (nomin / denom).sqrt();
 
-		let t: f64 = (mean_x - mean_y) / (s_p * (1.0 / (n_x as f64) + 1.0 / (n_y as f64)).sqrt());
+		let t: K = (mean_x - mean_y) / (s_p * K::from_f64((1.0 / (n_x as f64) + 1.0 / (n_y as f64)).sqrt()).unwrap());
 		T
 		{
-			p: 0.0,
+			p: K::zero(),
 			t: t
 		}
 	}
@@ -101,30 +102,31 @@ impl T
 	///
 	/// This is a two-sided test for the null hypothesis that two independent samples have identical expected values.
 	/// It is assumed, that the populations have NOT identical variances. It performs the Welch’s t-test
-	pub fn test_independence_unequal_variance(x: &Vector<f64>, y: &Vector<f64>) -> T
+	pub fn test_independence_unequal_variance(x: &Vector<K>, y: &Vector<K>) -> T<K>
 	{
 		let (_, n_x) : (usize, usize) = x.dim();
 		let (_, n_y) : (usize, usize) = y.dim();
 
-		let x_dist: Normal = Normal::from_data(&x);
-		let y_dist: Normal = Normal::from_data(&y);
+		let x_dist: Normal<K> = Normal::from_data(&x);
+		let y_dist: Normal<K> = Normal::from_data(&y);
 
-		let mean_x: f64 = x_dist.mean();
-		let mean_y: f64 = y_dist.mean();
+		let mean_x: K = x_dist.mean();
+		let mean_y: K = y_dist.mean();
 
-		let s_x_squared: f64 = x_dist.variance();
-		let s_y_squared: f64 = y_dist.variance();
+		let s_x_squared: K = x_dist.variance();
+		let s_y_squared: K = y_dist.variance();
 
-		let term1: f64 = s_x_squared / (n_x as f64) + s_y_squared / (n_y as f64);
+		let term1: K = s_x_squared / K::from_f64(n_x as f64).unwrap() + s_y_squared / K::from_f64(n_y as f64).unwrap();
 
-		let df: f64 =  term1 * term1 / (s_x_squared * s_x_squared /
-		 ((n_x * n_x * (n_x - 1)) as f64) +	s_y_squared * s_y_squared / ((n_y * n_y * (n_y - 1)) as f64));
+		let df: K =  term1 * term1 / (s_x_squared * s_x_squared /
+		 K::from_f64((n_x * n_x * (n_x - 1)) as f64).unwrap() +	s_y_squared * s_y_squared / K::from_f64((n_y * n_y * (n_y - 1)) as
+		 f64).unwrap());
 
-		let s_p: f64 = term1.sqrt();
+		let s_p: K = term1.sqrt();
 
-		let t: f64 = (mean_x - mean_y) / s_p ;
+		let t: K = (mean_x - mean_y) / s_p ;
 
-		let p: f64 = 2.0 * TD::new(df).cdf(-t.abs());
+		let p: K = K::from_f64(2.0).unwrap() * TD::new(df).cdf(-t.abs());
 		T
 		{
 			p: p,

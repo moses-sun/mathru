@@ -3,6 +3,7 @@ mod ttest
 {
     use mathru::statistics::test::{T};
     use mathru::algebra::linear::Vector;
+    use mathru::statistics::distrib::Normal;
 
 //    #[test]
 //    fn test_independence_identical_means()
@@ -13,8 +14,8 @@ mod ttest
 //        let rv1: Vector<f64> = Normal::new(mean, variance).random_vector(sample_size);
 //        let rv2: Vector<f64> = Normal::new(mean, variance).random_vector(sample_size);
 //
-//        let measure1: T = T::test_independence_equal_variance(&rv1, &rv2);
-//        let measure2: T = T::test_independence_unequal_variance(&rv1, &rv2);
+//        let measure1: T<f64> = T::test_independence_equal_variance(&rv1, &rv2);
+//        let measure2: T<f64> = T::test_independence_unequal_variance(&rv1, &rv2);
 //
 //        println!("{}", measure1.t());
 //        assert!((measure1.t().abs() - 0.268).abs() < 0.001);
@@ -31,15 +32,15 @@ mod ttest
 //        let rv1: Vector<f64> = Normal::new(mean, variance1).random_vector(sample_size);
 //        let rv2: Vector<f64> = Normal::new(mean, variance2).random_vector(sample_size);
 //
-//        let measure1: T = T::test_independence_equal_variance(&rv1, &rv2);
-//        let measure2: T = T::test_independence_unequal_variance(&rv1, &rv2);
+//        let measure1: T<f64> = T::test_independence_equal_variance(&rv1, &rv2);
+//        let measure2: T<f64> = T::test_independence_unequal_variance(&rv1, &rv2);
 //
 //        println!("{}", measure1.t());
 //        assert_eq!(measure1.t(), 0.465);
 //        assert!((measure1.t().abs() - 0.465).abs() < 0.001);
 //        assert!((measure2.t().abs() - 0.465).abs() < 0.001);
 //    }
-
+//
 //    #[test]
 //    fn test_independence_unequal_sample_sizes()
 //    {
@@ -50,8 +51,8 @@ mod ttest
 //        let rv1: Vector<f64> = Normal::new(mean, variance).random_vector(sample_size1);
 //        let rv2: Vector<f64> = Normal::new(mean, variance).random_vector(sample_size2);
 //
-//        let measure1: T = T::test_independence_equal_variance(&rv1, &rv2);
-//        let measure2: T = T::test_independence_unequal_variance(&rv1, &rv2);
+//        let measure1: T<f64> = T::test_independence_equal_variance(&rv1, &rv2);
+//        let measure2: T<f64> = T::test_independence_unequal_variance(&rv1, &rv2);
 //
 //        assert!((measure1.t().abs() - 0.9988).abs() < 0.001);
 //        assert!((measure2.t().abs() - 0.6971).abs() < 0.001);
@@ -64,7 +65,7 @@ mod ttest
         let rv1: Vector<f64> = vector![1.0, 4.0, 5.0, 2.0, 1.0];
         let rv2: Vector<f64> = vector![1.0, 4.0, 5.0, 3.0, 4.0];
 
-        let t_measure: T = T::test_independence_equal_variance(&rv1, &rv2);
+        let t_measure: T<f64> = T::test_independence_equal_variance(&rv1, &rv2);
 
         assert!((t_measure.t().abs() - 0.7559).abs() < 0.0001);
     }
@@ -75,7 +76,7 @@ mod ttest
         let rv1: Vector<f64> = vector![1.0, 4.0, 5.0, 2.0, 1.0];
         let rv2: Vector<f64> = vector![1.0, 4.0, 5.0, 3.0, 4.0];
 
-        let measure: T = T::test_independence_unequal_variance(&rv1, &rv2);
+        let measure: T<f64> = T::test_independence_unequal_variance(&rv1, &rv2);
 
         assert!((measure.t().abs() - 0.756).abs() < 0.001);
         assert!((measure.p_value() - 0.472).abs() < 0.001);
