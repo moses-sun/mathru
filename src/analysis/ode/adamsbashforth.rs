@@ -126,8 +126,6 @@ impl<T> AdamsBashforth<T>
         let limit = ((t_stop - t_start) / self.step_size).ceil() + T::one();
         let steps: usize = limit.to_u64().unwrap() as usize;
         let mut t_vec: Vec<T> = Vec::with_capacity(steps);
-        let mut res_vec: Vec<Vector<T>> = Vec::with_capacity(steps);
-
      	let mut res_vec: Vec<Vector<T>> = Vec::with_capacity(steps);
 
 		t_vec.push(t_n);
