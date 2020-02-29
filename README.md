@@ -107,7 +107,7 @@ let (l, u, p): (Matrix<f64>, Matrix<f64>, Matrix<f64>) = a.dec_lu();
 assert_eq!(l_ref, l);
 ```
 
-### Solve an ODE with initial condition:
+### Solve an initial value problem with Dormand-Prince method :
 
 ```rust
 use mathru::*;

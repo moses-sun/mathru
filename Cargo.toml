@@ -1,6 +1,6 @@
 [package]
 name = "mathru"
-version = "0.6.2"
+version = "0.6.3"
 description = "Simple mathematics library written in Rust"
 authors = ["Matthias Eiholzer <matthias.eiholzer@gmail.com>"]
 exclude = ["literature/*", "tests/*", "backup/*", ".gitignore"]
@@ -28,8 +28,8 @@ name = "mathru"
 path = "src/lib.rs"
 
 [features]
-default = ["native"]
-#default = ["blaslapack"]
+#default = ["native"]
+default = ["blaslapack"]
 blaslapack = ["lapack", "blas", "lapack-src", "blas-src"]
 native = []
 

@@ -80,7 +80,7 @@ fn main()
 {
 	let num_samples: usize = 100;
 
-	let noise: Normal = Normal::new(0.0, 0.05);
+	let noise: Normal<f64> = Normal::new(0.0, 0.05);
 
 	let mut t_vec: Vec<f64> = Vec::with_capacity(num_samples);
 	// Start time
@@ -127,8 +127,6 @@ fn main()
         let y_hat_i = Example::function(t_i, &beta_opt);
         graph_y_hat.push((t_i, y_hat_i));
     }
-
-    println!("{}", beta_opt);
 
 	//Create chart
     let mut figure: Figure = Figure::new(1024, 768);
