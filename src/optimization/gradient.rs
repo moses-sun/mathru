@@ -97,7 +97,7 @@ impl<T> Gradient<T>
                 {
                     break;
                 }
-                alpha_k = alpha_k / T::from_f64(2.0).unwrap();
+                alpha_k = alpha_k / T::from_f64(2.0);
             }
             //Make step
             x_k = x_k + anti_grad * alpha_k;

@@ -67,9 +67,9 @@ impl<T> Discrete<T, u32, T> for Binomial<T>
         {
             return T::zero();
         }
-        let f: T = T::from_u32(combins::binom(self.n, x)).unwrap();
+        let f: T = T::from_u32(combins::binom(self.n, x));
         let diff: i32 = (self.n as i32) - (x as i32);
-        let pdf: T = f * (self.p.pow(&T::from_u32(x).unwrap())) * ((T::one() - self.p).pow(&T::from_i32(diff).unwrap()));
+        let pdf: T = f * (self.p.pow(&T::from_u32(x))) * ((T::one() - self.p).pow(&T::from_i32(diff)));
         pdf
     }
 
@@ -90,7 +90,7 @@ impl<T> Discrete<T, u32, T> for Binomial<T>
     /// ```
     fn cdf<'a>(self: &'a Self, x: T) -> T
     {
-        let x_supremum: u32 = x.floor().to_u32().unwrap();
+        let x_supremum: u32 = x.floor().to_u32();
         let mut prob: T = T::zero();
 
         for k in 0..x_supremum + 1
@@ -112,7 +112,7 @@ impl<T> Discrete<T, u32, T> for Binomial<T>
     /// ```
 	fn mean<'a>(self: &'a Self) -> T
     {
-        return T::from_u32(self.n).unwrap() * self.p
+        return T::from_u32(self.n) * self.p
     }
 
     /// Variance

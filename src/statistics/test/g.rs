@@ -56,7 +56,7 @@ impl<T> G<T>
 		G
 		{
 			df: df,
-			g: T::from_f64(2.0).unwrap() * g
+			g: T::from_f64(2.0) * g
 		}
 	}
 

@@ -124,7 +124,7 @@ impl<T> AdamsBashforth<T>
         let mut t_n: T = t_start;
 
         let limit = ((t_stop - t_start) / self.step_size).ceil() + T::one();
-        let steps: usize = limit.to_u64().unwrap() as usize;
+        let steps: usize = limit.to_u64() as usize;
         let mut t_vec: Vec<T> = Vec::with_capacity(steps);
      	let mut res_vec: Vec<Vector<T>> = Vec::with_capacity(steps);
 
@@ -184,7 +184,7 @@ impl<T> AdamsBashforth<T>
 
 		println!("{}", t_vec.len());
 
-		while (t_n - t_stop).abs() > T::from_f64(0.0000000001).unwrap()
+		while (t_n - t_stop).abs() > T::from_f64(0.0000000001)
         {
  			//Step size
             let h: T = self.step_size.min(t_stop - t_n);
@@ -220,7 +220,7 @@ impl<T> AdamsBashforth<T>
 		let t_n: &T = &t[n];
 		let x_n1: &Vector<T> = &x[n - 1];
 		let t_n1: &T = &t[n - 1];
-		return x_n + &((prob.func(t_n, x_n) * T::from_f64(3.0/2.0).unwrap()  + prob.func(&t_n1, x_n1) * T::from_f64(-0.5).unwrap()) * h);
+		return x_n + &((prob.func(t_n, x_n) * T::from_f64(3.0/2.0)  + prob.func(&t_n1, x_n1) * T::from_f64(-0.5)) * h);
 	}
 
 	fn step_s3<F>(prob: &F, t: &Vec<T>, x: &Vec<Vector<T>>, h: T) -> Vector<T>
@@ -233,8 +233,8 @@ impl<T> AdamsBashforth<T>
 		let t_n1: &T = &t[n - 1];
 		let x_n2: &Vector<T> = &x[n - 2];
 		let t_n2: &T = &t[n - 2];
-		return x_n + &((prob.func(t_n, x_n) * T::from_f64(23.0/12.0).unwrap() + prob.func(t_n1, x_n1) * T::from_f64(-16.0/12.0).unwrap()
-		+ prob.func(t_n2, x_n2) * T::from_f64(5.0/12.0).unwrap()) * h);
+		return x_n + &((prob.func(t_n, x_n) * T::from_f64(23.0/12.0) + prob.func(t_n1, x_n1) * T::from_f64(-16.0/12.0)
+		+ prob.func(t_n2, x_n2) * T::from_f64(5.0/12.0)) * h);
 	}
 
 	fn step_s4<F>(prob: &F, t: &Vec<T>, x: &Vec<Vector<T>>, h: T) -> Vector<T>
@@ -249,8 +249,8 @@ impl<T> AdamsBashforth<T>
 		let t_n2: &T = &t[n - 2];
 		let x_n3: &Vector<T> = &x[n - 3];
 		let t_n3: &T = &t[n - 3];
-		return x_n + &((prob.func(t_n, x_n) * T::from_f64(55.0/24.0).unwrap() + prob.func(t_n1, x_n1) * T::from_f64(-59.0/24.0).unwrap
-		() + prob.func(t_n2, x_n2) * T::from_f64(37.0/24.0).unwrap() + prob.func(t_n3, x_n3) * T::from_f64(-9.0/24.0).unwrap()) * h);
+		return x_n + &((prob.func(t_n, x_n) * T::from_f64(55.0/24.0) + prob.func(t_n1, x_n1) * T::from_f64(-59.0/24.0) + prob.func(t_n2,
+		x_n2) * T::from_f64(37.0/24.0) + prob.func(t_n3, x_n3) * T::from_f64(-9.0/24.0)) * h);
 	}
 
 	fn step_s5<F>(prob: &F, t: &Vec<T>, x: &Vec<Vector<T>>, h: T) -> Vector<T>
@@ -267,8 +267,8 @@ impl<T> AdamsBashforth<T>
 		let t_n3: &T = &t[n - 3];
 		let x_n4: &Vector<T> = &x[n - 4];
 		let t_n4: &T = &t[n - 4];
-		return x_n + &((prob.func(t_n, x_n) * T::from_f64(1901.0/720.0).unwrap()  + prob.func(t_n1, x_n1) * T::from_f64(-2774.0/720.0)
-		.unwrap() + prob.func(t_n2, x_n2) * T::from_f64(2616.0/720.0).unwrap() + prob.func(t_n3, x_n3) * T::from_f64(-1274.0/720.0)
-		.unwrap() + prob.func(t_n4, x_n4) * T::from_f64(251.0/720.0).unwrap()) * h);
+		return x_n + &((prob.func(t_n, x_n) * T::from_f64(1901.0/720.0)  + prob.func(t_n1, x_n1) * T::from_f64(-2774.0/720.0)
+		 + prob.func(t_n2, x_n2) * T::from_f64(2616.0/720.0) + prob.func(t_n3, x_n3) * T::from_f64(-1274.0/720.0)
+		 + prob.func(t_n4, x_n4) * T::from_f64(251.0/720.0)) * h);
 	}
 }

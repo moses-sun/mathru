@@ -74,7 +74,7 @@ impl<T> Matrix<T>
             .get(p - 1,q - 1);
 
             // compute first 3 elements of first column of M
-            let mut x: T = self.get(0,0).pow(&T::from_f64(2.0).unwrap()) + *self.get(0,1) * *self.get(1,0) - s *
+            let mut x: T = self.get(0,0).pow(&T::from_f64(2.0)) + *self.get(0,1) * *self.get(1,0) - s *
             *self.get(0,0) + t;
             let mut y: T = *self.get(1,0) * (*self.get(0,0) + *self.get(1, 1) - s);
             let mut z: T = *self.get(1,0) * *self.get(2,1);

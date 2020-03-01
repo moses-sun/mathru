@@ -131,6 +131,6 @@ impl<T> Continuous<T> for Beta<T>
     /// ```
 	fn variance(self: &Self) -> T
     {
-        self.p * self.q / ((self.p + self.q + T::one()) * (self.p + self.q).pow(&T::from_f64(2.0).unwrap()))
+        self.p * self.q / ((self.p + self.q + T::one()) * (self.p + self.q).pow(&T::from_f64(2.0)))
     }
 }

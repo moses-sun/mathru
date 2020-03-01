@@ -37,13 +37,13 @@ impl<T> ChiSquared<T>
     /// ```
     pub fn new(df: u32) -> ChiSquared<T>
     {
-        if T::from_u32(df).unwrap() < T::one()
+        if T::from_u32(df) < T::one()
         {
             panic!()
         }
         ChiSquared
         {
-            k: T::from_u32(df).unwrap()
+            k: T::from_u32(df)
         }
     }
 }
@@ -74,8 +74,8 @@ impl<T> Continuous<T> for ChiSquared<T>
         {
             return T::zero()
         }
-        let t1: T = T::one() / (T::from_f64(2.0).unwrap().pow(&(self.k / T::from_f64(2.0).unwrap())) * gamma::gamma(self.k / T::from_f64(2.0).unwrap()));
-        let t2: T = x.pow(&(self.k / T::from_f64(2.0).unwrap() - T::one())) * (-x / T::from_f64(2.0).unwrap()).exp();
+        let t1: T = T::one() / (T::from_f64(2.0).pow(&(self.k / T::from_f64(2.0))) * gamma::gamma(self.k / T::from_f64(2.0)));
+        let t2: T = x.pow(&(self.k / T::from_f64(2.0) - T::one())) * (-x / T::from_f64(2.0)).exp();
         let chisquared: T = t1 * t2;
 
         return chisquared;
@@ -98,17 +98,17 @@ impl<T> Continuous<T> for ChiSquared<T>
     /// ```
     fn cdf(self: &Self, x: T) -> T
     {
-        let t1: T = (-x / T::from_f64(2.0).unwrap()).exp();
+        let t1: T = (-x / T::from_f64(2.0)).exp();
 
-        let k_natural: u32 = self.k.to_u32().unwrap();
+        let k_natural: u32 = self.k.to_u32();
         let p: T;
 
         if k_natural % 2 == 0
         {
             let mut sum: T = T::zero();
-            for i in 0..(self.k / T::from_f64(2.0).unwrap()).to_u32().unwrap()
+            for i in 0..(self.k / T::from_f64(2.0)).to_u32()
             {
-                sum += (x / T::from_f64(2.0).unwrap()).pow(&T::from_u32(i).unwrap()) / gamma::gamma(T::from_u32(i + 1).unwrap())
+                sum += (x / T::from_f64(2.0)).pow(&T::from_u32(i)) / gamma::gamma(T::from_u32(i + 1))
             }
 
             p = T::one() - t1 * sum;
@@ -116,13 +116,13 @@ impl<T> Continuous<T> for ChiSquared<T>
         else
         {
             let mut sum: T = T::zero();
-            for i in 0..(self.k / T::from_f64(2.0).unwrap()).to_u32().unwrap()
+            for i in 0..(self.k / T::from_f64(2.0)).to_u32()
             {
-                sum += (x / T::from_f64(2.0).unwrap()).pow(&T::from_f64((i as f64) + 0.5).unwrap()) / gamma::gamma(T::from_f64((i as f64) +
-                1.5).unwrap());
+                sum += (x / T::from_f64(2.0)).pow(&T::from_f64((i as f64) + 0.5)) / gamma::gamma(T::from_f64((i as f64) +
+                1.5));
             }
 
-            p = special::erf((x / T::from_f64(2.0).unwrap()).sqrt()) - t1 * sum;
+            p = special::erf((x / T::from_f64(2.0)).sqrt()) - t1 * sum;
         }
 
         p
@@ -133,8 +133,8 @@ impl<T> Continuous<T> for ChiSquared<T>
     fn quantile(self: &Self, p: T) -> T
     {
         let std_distrib: Normal<T> = Normal::new(T::zero(), T::one());
-        let q: T = T::from_f64(0.5).unwrap() * (std_distrib.quantile(p) + (T::from_f64(2.0).unwrap() * self.k - T::one()).sqrt()).pow
-        (&T::from_f64(2.0).unwrap());
+        let q: T = T::from_f64(0.5) * (std_distrib.quantile(p) + (T::from_f64(2.0) * self.k - T::one()).sqrt()).pow
+        (&T::from_f64(2.0));
         return q;
     }
 
@@ -165,6 +165,6 @@ impl<T> Continuous<T> for ChiSquared<T>
     /// ```
 	fn variance(self: &Self) -> T
     {
-        return T::from_f64(2.0).unwrap() * self.k
+        return T::from_f64(2.0) * self.k
     }
 }

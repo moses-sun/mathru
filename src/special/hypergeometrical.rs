@@ -58,7 +58,7 @@ pub fn f21<T>(a: T, b: T, c: T, z: T) -> T
 
 
 	let f: T;
-	if T::from_f64(-std::f64::INFINITY).unwrap() < z && z < -T::one()
+	if T::from_f64(-std::f64::INFINITY) < z && z < -T::one()
 	{
 		let l1: T = (T::one() - z).pow(&-a) * gamma::gamma(c) * gamma::gamma(b - a) / (gamma::gamma(b) * gamma::gamma(c -
 		a));
@@ -79,13 +79,13 @@ pub fn f21<T>(a: T, b: T, c: T, z: T) -> T
 		}
 		else
 		{
-			if T::zero() <= z && z <= T::from_f64(0.5).unwrap()
+			if T::zero() <= z && z <= T::from_f64(0.5)
 			{
 				f = f21_norm(a, b, c, z);
 			}
 			else
 			{
-				if T::from_f64(0.5).unwrap() < z && z <= T::one()
+				if T::from_f64(0.5) < z && z <= T::one()
 				{
 					let l1: T = gamma::gamma(c) * gamma::gamma(c-a-b) / (gamma::gamma(c - a) * gamma::gamma(c - b));
 					let l2: T = (T::one() - z).pow(&(c - a - b)) * gamma::gamma(c) * gamma::gamma(a + b -c) / (gamma::gamma
@@ -98,7 +98,7 @@ pub fn f21<T>(a: T, b: T, c: T, z: T) -> T
 				}
 				else
 				{
-					if T::one() < z && z <= T::from_f64(2.0).unwrap()
+					if T::one() < z && z <= T::from_f64(2.0)
 					{
 						//complex numbers are not supported
 //						let l1: f64 = gamma::gamma(c) * gamma::gamma(c - a - b) / (gamma::gamma(c - a) * gamma::gamma
@@ -148,7 +148,7 @@ fn f21_norm<T>(a: T, b: T, c: T, z: T) -> T
 	let mut c_i: T = T::one();
 	let mut s_i: T = c_i;
 	let mut s_i_p: T = s_i; 	//s_{i-1}
-	let tolerance: T = T::from_f64(0.0000000000000002).unwrap();
+	let tolerance: T = T::from_f64(0.0000000000000002);
 	let mut j: T = T::zero();
 
 	while c_i.abs()/s_i_p.abs() > tolerance

@@ -51,11 +51,11 @@ impl<T> ExplicitFixedStepSizeMethod<T> for Ralston<T>
         where F: ExplicitODE<T>
     {
         let k_1: Vector<T> = prob.func(&t_n, &x_n);
-        let factor: T = *h * T::from_f64(2.0/3.0).unwrap();
+        let factor: T = *h * T::from_f64(2.0/3.0);
         let k_2: Vector<T> = prob.func(&(*t_n + factor), &(x_n + &(&k_1 * &factor)));
 
         // Update
-        return x_n + &(((k_1 * T::from_f64(1.0/4.0).unwrap()) + (k_2 * T::from_f64(3.0/4.0).unwrap())) * *h);
+        return x_n + &(((k_1 * T::from_f64(1.0/4.0)) + (k_2 * T::from_f64(3.0/4.0))) * *h);
     }
 
     /// Ralston's method is a 3rd order method

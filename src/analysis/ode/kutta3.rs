@@ -53,13 +53,13 @@ impl<T> ExplicitFixedStepSizeMethod<T> for Kutta3<T>
         let k1: Vector<T> = prob.func(&t_n, &x_n);
 
         // k2 = func(t_n + h / 2, x_n + h / 2 k1)
-        let k2: Vector<T> = prob.func(&(*t_n + (*h / T::from_f64(2.0).unwrap())), &(x_n + &((&k1 * h) / T::from_f64(2.0).unwrap())));
+        let k2: Vector<T> = prob.func(&(*t_n + (*h / T::from_f64(2.0))), &(x_n + &((&k1 * h) / T::from_f64(2.0))));
 
         // k3 = func(t_n + h, x_n + - h k1 + 2h *k2)
-        let k3: Vector<T> = prob.func(&(*t_n + *h), &(x_n + &(&(&(&k2 * &T::from_f64(2.0).unwrap()) - &k1) * h))) ;
+        let k3: Vector<T> = prob.func(&(*t_n + *h), &(x_n + &(&(&(&k2 * &T::from_f64(2.0)) - &k1) * h))) ;
 
         // x[n+1] = xn + h*(k1 + 4*k2 + k3)/6
-        return x_n + &((k1 + k2 * T::from_f64(4.0).unwrap() + k3) * *h / T::from_f64(6.0).unwrap());
+        return x_n + &((k1 + k2 * T::from_f64(4.0) + k3) * *h / T::from_f64(6.0));
     }
 
     /// Kuttas method is a 3rd order method

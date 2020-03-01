@@ -69,7 +69,7 @@ pub fn beta<T>(x: T, y: T) -> T
 pub fn beta_inc_reg<T>(x: T, a: T, b: T) -> T
     where T: Real
 {
-    let acu: T = T::from_f64(0.1E-14).unwrap();
+    let acu: T = T::from_f64(0.1E-14);
 
     /*
     Check the input arguments.
@@ -122,7 +122,7 @@ pub fn beta_inc_reg<T>(x: T, a: T, b: T) -> T
     let mut ai: T = T::one();
     let mut value: T = T::one();
 
-    let mut ns: i32 = ( qq + cx * psq ).to_i32().unwrap();
+    let mut ns: i32 = ( qq + cx * psq ).to_i32();
 
     /*
       Use the Soper reduction formula.

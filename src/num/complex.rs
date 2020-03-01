@@ -319,11 +319,11 @@ impl<T> Sign for Complex<T>
 	///
 	/// let a: Complex<f64> = Complex::new(1.0, 2.0);
    	/// let refer: f64 = (5.0_f64).sqrt();
-    /// assert_eq!(refer, a.abs().to_f64().unwrap());
+    /// assert_eq!(refer, a.abs().to_f64());
     /// ```
 	fn abs(self: &Self) -> Self
 	{
-		let root: T = T::from_f64(2.0).unwrap();
+		let root: T = T::from_f64(2.0);
 		Complex
 		{
 			re: (self.re * self.re + self.im * self.im).root(&root),
@@ -575,7 +575,7 @@ macro_rules! impl_to_primitive
 {
     ($ty:ty, $to:ident) =>
     {
-        fn $to(&self) -> Option<$ty>
+        fn $to(&self) -> $ty
         {
         	return self.re.$to();
 //            if self.im == T::zero()
@@ -1216,58 +1216,49 @@ impl<T> FromPrimitive for Complex<T>
 
 	/// Convert an `i64` to return an optional value of this type. If the
 	/// type cannot be represented by this value, the `None` is returned.
-	fn from_i64(_n: i64) -> Option<Self>
+	fn from_i64(_n: i64) -> Self
 	{
-		None
+		unimplemented!();
 	}
 
 	/// Convert an `i128` to return an optional value of this type. If the
 	/// type cannot be represented by this value, the `None` is returned.
-	fn from_i128(_n: i128) -> Option<Self>
+	fn from_i128(_n: i128) -> Self
 	{
-		None
+		unimplemented!();
 	}
 
 	/// Convert an `u64` to return an optional value of this type. If the
 	/// type cannot be represented by this value, the `None` is returned.
-	fn from_u64(n: u64) -> Option<Self>
+	fn from_u64(n: u64) -> Self
 	{
-		Some
-		(
-			Complex
-			{
-				re: cast::cast(n).unwrap(),
-				im: T::zero()
-			}
-		)
+		Complex
+		{
+			re: cast::cast(n),
+			im: T::zero()
+		}
 	}
 
 	/// Convert an `u128` to return an optional value of this type. If the
 	/// type cannot be represented by this value, the `None` is returned.
-	fn from_u128(n: u128) -> Option<Self>
+	fn from_u128(n: u128) -> Self
 	{
-		Some
-		(
-			Complex
-			{
-				re: cast::cast(n).unwrap(),
-				im: T::zero()
-			}
-		)
+		Complex
+		{
+			re: cast::cast(n),
+			im: T::zero()
+		}
 	}
 
 	/// Convert a `f64` to return an optional value of this type. If the
 	/// type cannot be represented by this value, the `None` is returned.
-	fn from_f64(n: f64) -> Option<Self>
+	fn from_f64(n: f64) -> Self
 	{
-		Some
-		(
-			Complex
-			{
-				re: cast::cast(n).unwrap(),
-				im: T::zero()
-			}
-		)
+		Complex
+		{
+			re: cast::cast(n),
+			im: T::zero()
+		}
 	}
 }
 
@@ -1277,15 +1268,13 @@ impl<T> NumCast for Complex<T>
 {
 	/// Creates a number from another value that can be converted into
 	/// a primitive via the `ToPrimitive` trait.
-	fn from<K: ToPrimitive>(n: K) -> Option<Self>
+	fn from<K: ToPrimitive>(n: K) -> Self
 	{
-		Some(
-			Complex
-			{
-				re: cast::cast(n.to_f64().unwrap()).unwrap(),
-				im: T::zero()
-			}
-		)
+		Complex
+		{
+			re: cast::cast(n.to_f64()),
+			im: T::zero()
+		}
 	}
 }
 

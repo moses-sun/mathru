@@ -79,7 +79,7 @@ impl<T> Normal<T>
             sum = sum + *x;
         }
 
-        return sum / T::from_u64(n as u64).unwrap();
+        return sum / T::from_u64(n as u64);
     }
 
     fn calc_variance<'a>(data: &'a Vector<T>, mean: T) -> T
@@ -89,10 +89,10 @@ impl<T> Normal<T>
 
         for x in data.iter()
         {
-            sum += (*x - mean).pow(&T::from_f64(2.0).unwrap());
+            sum += (*x - mean).pow(&T::from_f64(2.0));
         }
 
-        return sum / T::from_u64((n - 1) as u64).unwrap()
+        return sum / T::from_u64((n - 1) as u64)
     }
 }
 
@@ -118,8 +118,8 @@ impl<T> Continuous<T> for Normal<T>
     /// ```
     fn pdf(self: &Self, x: T) -> T
     {
-        let z: T = T::from_f64(-0.5).unwrap() * ((x - self.mean) / self.variance).pow(&T::from_f64(2.0).unwrap());
-        let f: T = T::one() / (self.variance * (T::from_f64(2.0).unwrap() * T::pi()).sqrt());
+        let z: T = T::from_f64(-0.5) * ((x - self.mean) / self.variance).pow(&T::from_f64(2.0));
+        let f: T = T::one() / (self.variance * (T::from_f64(2.0) * T::pi()).sqrt());
 
         return f * z.exp();
     }
@@ -141,8 +141,8 @@ impl<T> Continuous<T> for Normal<T>
     /// ```
     fn cdf(self: &Self, x: T) -> T
     {
-        let k: T = (x - self.mean) / ((T::from_f64(2.0).unwrap() * self.variance).sqrt());
-        let prob: T =  T::from_f64(0.5).unwrap() * (T::one() + special::erf(k));
+        let k: T = (x - self.mean) / ((T::from_f64(2.0) * self.variance).sqrt());
+        let prob: T =  T::from_f64(0.5) * (T::one() + special::erf(k));
         prob
     }
 
@@ -166,10 +166,10 @@ impl<T> Continuous<T> for Normal<T>
 
         let mut ppnd16: T;
         let mut r: T;
-        let q: T = p - T::from_f64(0.5).unwrap();
-        if q.abs() <= T::from_f64(0.425).unwrap()
+        let q: T = p - T::from_f64(0.5);
+        if q.abs() <= T::from_f64(0.425)
         {
-            let r: T = T::from_f64(0.180625).unwrap() - q * q;
+            let r: T = T::from_f64(0.180625) - q * q;
             ppnd16 = q * Normal::r1(r);
         }
         else
@@ -188,14 +188,14 @@ impl<T> Continuous<T> for Normal<T>
                 return ppnd16
             }
             r = (-r.ln()).sqrt();
-            if r <= T::from_f64(5.).unwrap()
+            if r <= T::from_f64(5.)
             {
-                r -= T::from_f64(1.6).unwrap();
+                r -= T::from_f64(1.6);
                 ppnd16 = Normal::r2(r);
             }
             else
             {
-                r -= T::from_f64(5.0).unwrap();
+                r -= T::from_f64(5.0);
                 ppnd16 = Normal::r3(r);
             }
             if q <= T::zero()
@@ -257,13 +257,13 @@ impl<T> Distribution<T> for  Normal<T>
 
         while s >= T::one()
         {
-            let u1: T = T::from_f64(rand::random::<f64>()).unwrap();
-            let u2: T = T::from_f64(rand::random::<f64>()).unwrap();
-            v1 = T::from_f64(2.0).unwrap() * u1 - T::one();
-            v2 = T::from_f64(2.0).unwrap() * u2 - T::one();
+            let u1: T = T::from_f64(rand::random::<f64>());
+            let u2: T = T::from_f64(rand::random::<f64>());
+            v1 = T::from_f64(2.0) * u1 - T::one();
+            v2 = T::from_f64(2.0) * u2 - T::one();
             s =  v1 * v1 + v2 * v2
         }
-        let x1: T = v1 * (-T::from_f64(2.0).unwrap() * s.ln() / s).sqrt();
+        let x1: T = v1 * (-T::from_f64(2.0) * s.ln() / s).sqrt();
         x1 * self.variance.sqrt() + self.mean
     }
 }
@@ -275,7 +275,7 @@ impl<T> Normal<T>
 
     fn r1(t: T) -> T
     {
-        let r: f64 = t.to_f64().unwrap();
+        let r: f64 = t.to_f64();
         let value: f64 = (((((((r * 2509.0809287301226727 +
                        33430.575583588128105) * r + 67265.770927008700853) * r +
                      45921.953931549871457) * r + 13731.693765509461125) * r +
@@ -285,12 +285,12 @@ impl<T> Normal<T>
                      28729.085735721942674) * r + 39307.89580009271061) * r +
                    21213.794301586595867) * r + 5394.1960214247511077) * r +
                  687.1870074920579083) * r + 42.313330701600911252) * r + 1.);
-        return T::from_f64(value).unwrap();
+        return T::from_f64(value);
     }
 
     fn r2(t: T) -> T
     {
-        let r: f64 = t.to_f64().unwrap();
+        let r: f64 = t.to_f64();
         let value: f64 = (((((((r * 7.7454501427834140764e-4 +
                        0.0227238449892691845833) * r + 0.24178072517745061177) *
                      r + 1.27045825245236838258) * r +
@@ -304,12 +304,12 @@ impl<T> Normal<T>
                      r + 1.6763848301838038494) * r +
                     2.05319162663775882187) * r + 1.);
 
-        return T::from_f64(value).unwrap();
+        return T::from_f64(value);
     }
 
     fn r3(t: T) -> T
     {
-        let r: f64 = t.to_f64().unwrap();
+        let r: f64 = t.to_f64();
         let value: f64 = (((((((r * 2.01033439929228813265e-7 +
                        2.71155556874348757815e-5) * r +
                       0.0012426609473880784386) * r + 0.026532189526576123093) *
@@ -323,6 +323,6 @@ impl<T> Normal<T>
                      * r + 0.13692988092273580531) * r +
                     0.59983220655588793769) * r + 1.);
 
-        return T::from_f64(value).unwrap();
+        return T::from_f64(value);
     }
 }

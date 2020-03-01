@@ -86,7 +86,7 @@ impl<T> Matrix<T>
                 let a_jj: T = *r.get(j, j);
                 let a_ij: T = *r.get(i, j);
                 //let k: T = a_jj.sgn();
-                let p: T = (a_jj * a_jj + a_ij * a_ij).pow(&T::from_f64(0.5).unwrap());
+                let p: T = (a_jj * a_jj + a_ij * a_ij).pow(&T::from_f64(0.5));
                 if (p != T::zero()) && (a_jj != T::zero()) && (a_ij != T::zero())
                 {
                     let c: T = a_jj / p;

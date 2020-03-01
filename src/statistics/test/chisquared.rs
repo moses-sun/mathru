@@ -70,7 +70,7 @@ impl<T> ChiSquared<T>
 				let n_j_: T = x[j] + y[j];
 
 				let n_jks: T = (n_k * n_j_) / (n);
-				chi_squared += (n_jk - n_jks).pow(&T::from_f64(2.0).unwrap())/n_jks
+				chi_squared += (n_jk - n_jks).pow(&T::from_f64(2.0))/n_jks
 			}
 		}
 

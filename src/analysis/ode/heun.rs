@@ -52,7 +52,7 @@ impl<T> ExplicitFixedStepSizeMethod<T> for Heun<T>
             let k_1: Vector<T> = prob.func(t_n, x_n);
             let k_2: Vector<T> = prob.func(&(*t_n + *h), &(x_n + &(k_1.clone() * *h)));
 
-            return x_n.clone() + (&k_1 + &k_2) * *h / T::from_f64(2.0).unwrap();
+            return x_n.clone() + (&k_1 + &k_2) * *h / T::from_f64(2.0);
     }
 
     ///

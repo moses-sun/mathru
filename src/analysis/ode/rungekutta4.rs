@@ -53,17 +53,17 @@ impl<T> ExplicitFixedStepSizeMethod<T> for RungeKutta4<T>
             let k1: Vector<T> = prob.func(t_n, x_n);
 
             // k2 = func(t_n + h / 2, x_n + h / 2 k1)
-            let k2: Vector<T> = prob.func(&(*t_n + (*h / T::from_f64(2.0).unwrap())), &(x_n + &((&k1 * h) /
-            T::from_f64(2.0).unwrap())));
+            let k2: Vector<T> = prob.func(&(*t_n + (*h / T::from_f64(2.0))), &(x_n + &((&k1 * h) /
+            T::from_f64(2.0))));
 
             // k3 = func(t_n + h / 2, x_n + h / 2 * k2)
-            let k3: Vector<T> = prob.func(&(*t_n + *h / T::from_f64(2.0).unwrap()), &(x_n + &(&k2 * &(*h / T::from_f64(2.0).unwrap())))) ;
+            let k3: Vector<T> = prob.func(&(*t_n + *h / T::from_f64(2.0)), &(x_n + &(&k2 * &(*h / T::from_f64(2.0))))) ;
 
             // k4 = h * func(t_n + h, x_n + h * k3)
             let k4: Vector<T> = prob.func(&(*t_n + *h), &(x_n + &(&k3 * h)));
 
             // x[n+1] = x[n] + h*(k1 + 2*k2 + 2*k3 + k4)/6
-            return x_n + &((k1 + ((k2 + k3) * T::from_f64(2.0).unwrap()) + k4) * *h / T::from_f64(6.0).unwrap());
+            return x_n + &((k1 + ((k2 + k3) * T::from_f64(2.0)) + k4) * *h / T::from_f64(6.0));
     }
 
     /// Runge-Kutta 4 is a fourth order method

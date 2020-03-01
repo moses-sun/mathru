@@ -121,13 +121,13 @@ impl<T> Default for BogackiShampine32<T>
 
     fn default() -> BogackiShampine32<T>
     {
-        let h_0: T = T::from_f64(0.0001).unwrap();
-        let fac: T = T::from_f64(0.9).unwrap();
-        let fac_min: T = T::from_f64(0.01).unwrap();
-        let fac_max: T = T::from_f64(2.0).unwrap();
+        let h_0: T = T::from_f64(0.0001);
+        let fac: T = T::from_f64(0.9);
+        let fac_min: T = T::from_f64(0.01);
+        let fac_max: T = T::from_f64(2.0);
         let n_max: u32 = 100;
-        let abs_tol: T = T::from_f64(10e-6).unwrap();
-        let rel_tol: T = T::from_f64(10e-3).unwrap();
+        let abs_tol: T = T::from_f64(10e-6);
+        let rel_tol: T = T::from_f64(10e-3);
         return BogackiShampine32::new(n_max, h_0, fac, fac_min, fac_max, abs_tol, rel_tol);
     }
 }
@@ -143,23 +143,23 @@ impl<T> ExplicitAdaptiveMethod<T> for BogackiShampine32<T>
         let k_1: Vector<T> = prob.func(t_n, x_n);
 
         // k_2 = f(t_n + 1/2h_n, x_n + 1/2h_n k1);
-        let k_2: Vector<T> = prob.func(&(*t_n + *h_n / T::from_f64(2.0).unwrap()), &(x_n + &(&k_1 * &(*h_n / T::from_f64(2.0).unwrap()
+        let k_2: Vector<T> = prob.func(&(*t_n + *h_n / T::from_f64(2.0)), &(x_n + &(&k_1 * &(*h_n / T::from_f64(2.0)
         ))));
 
         //k_3 = f(t_n + 3/4h_n, x_n + 3/4h_nk_2)
-        let k_3: Vector<T> = prob.func(&(*t_n + *h_n / T::from_f64(3.0/4.0).unwrap()), &(x_n + &(&k_2 * &(*h_n / T::from_f64(3.0/4.0)
-        .unwrap()))));
+        let k_3: Vector<T> = prob.func(&(*t_n + *h_n / T::from_f64(3.0/4.0)), &(x_n + &(&k_2 * &(*h_n / T::from_f64(3.0/4.0)
+        ))));
 
         // x_{n + 1} = x_n + 2/9h_nk_1 + 1/3h_nk_2 + 4/9h_nk_3
-        let x_n1: Vector<T> = x_n + &(&k_1 * &(*h_n * T::from_f64(2.0/9.0).unwrap())) + (&k_2 * &(*h_n * T::from_f64(1.0/3.0).unwrap()))
-         + (&k_3 * &(*h_n * T::from_f64(4.0/9.0).unwrap()));
+        let x_n1: Vector<T> = x_n + &(&k_1 * &(*h_n * T::from_f64(2.0/9.0))) + (&k_2 * &(*h_n * T::from_f64(1.0/3.0)))
+         + (&k_3 * &(*h_n * T::from_f64(4.0/9.0)));
 
         // k_4 = f(t_n + h_n, x_{n+1})
-        let k_4: Vector<T> = prob.func(&(*t_n + *h_n / T::from_f64(3.0/4.0).unwrap()), &x_n1);
+        let k_4: Vector<T> = prob.func(&(*t_n + *h_n / T::from_f64(3.0/4.0)), &x_n1);
 
         // y_{n + 1} = x_n + 7/24h_nk_1 + 1/4h_nk_2 + 1/3h_nk_3 + 1/8h_nk_4
-        let y_n1: Vector<T> = (x_n + &(&k_1 * &(*h_n * T::from_f64(7.0/24.0).unwrap()))) + (&k_2 * &(*h_n * T::from_f64(1.0/4.0).unwrap())
-        ) + (&k_3 * &(*h_n * T::from_f64(1.0/3.0).unwrap())) + (&k_4 * &(*h_n * T::from_f64(1.0/8.0).unwrap()));
+        let y_n1: Vector<T> = (x_n + &(&k_1 * &(*h_n * T::from_f64(7.0/24.0)))) + (&k_2 * &(*h_n * T::from_f64(1.0/4.0))
+        ) + (&k_3 * &(*h_n * T::from_f64(1.0/3.0))) + (&k_4 * &(*h_n * T::from_f64(1.0/8.0)));
 
         return (x_n1, y_n1)
     }

@@ -50,7 +50,7 @@ impl<T> ImplicitFixedStepSizeMethod<T> for BackwardEuler<T>
     {
         let y_n = prob.func(t_n, x_n);
 
-        return y_n.apply(&|y: &T| -> T {return (-T::one() + (T::one() + T::from_f64(4.0).unwrap() * *y).sqrt())/(T::from_f64(2.0).unwrap() *
+        return y_n.apply(&|y: &T| -> T {return (-T::one() + (T::one() + T::from_f64(4.0) * *y).sqrt())/(T::from_f64(2.0) *
         *h)});
 
     }

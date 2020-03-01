@@ -119,7 +119,7 @@ impl<T> Newton<T>
             let temp: T = grad_x_n.dotp(&d_k);
             while f_r > f_x_n + temp * (self.sigma * alpha)
             {
-                alpha = alpha / T::from_f64(2.0).unwrap();
+                alpha = alpha / T::from_f64(2.0);
                 r = &x_n + &(&d_k * &alpha);
                 f_r = *func.eval(&r).get(0);
             }

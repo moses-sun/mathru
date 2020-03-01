@@ -524,7 +524,7 @@ impl<T> Matrix<T>
         let mut perm: T = T::one();
         if counter != 0
         {
-            perm = (-T::one()).pow( &T::from_u128(counter as u128 - 1).unwrap());
+            perm = (-T::one()).pow( &T::from_u128(counter as u128 - 1));
         }
 
         perm * det
@@ -695,8 +695,8 @@ impl<T> Matrix<T>
     /// GVL4: Algorithm 5.1.3
     pub fn givens_cosine_sine_pair(a: T,b: T) -> (T, T)
     {
-        let exponent: T = T::from_f64(2.0).unwrap();
-        let exponent_sqrt: T = T::from_f64(0.5).unwrap();
+        let exponent: T = T::from_f64(2.0);
+        let exponent_sqrt: T = T::from_f64(0.5);
 
         let c: T;
         let s: T;
@@ -761,7 +761,7 @@ impl<T> Matrix<T>
 
         let d: Vector<T> = v.get_slice(k, v_m -1);
 
-        let norm: T = T::from_f64(2.0).unwrap();
+        let norm: T = T::from_f64(2.0);
 
         let alpha: T;
 
@@ -786,13 +786,13 @@ impl<T> Matrix<T>
 
         let mut v: Vector<T> = Vector::zero(d_m);
 
-        * v.get_mut(0) = (T::from_f64(0.5).unwrap() * (T::one() - d_0 / alpha)).pow(&T::from_f64(0.5).unwrap());
+        * v.get_mut(0) = (T::from_f64(0.5) * (T::one() - d_0 / alpha)).pow(&T::from_f64(0.5));
         let p: T = -alpha * *v.get(0);
 
 
         if d_m - 1 >= 1
         {
-            let temp: Vector<T> = d.get_slice(1, d_m - 1).apply(&|e: &T| -> T {*e / (T::from_f64(2.0).unwrap() * p)});
+            let temp: Vector<T> = d.get_slice(1, d_m - 1).apply(&|e: &T| -> T {*e / (T::from_f64(2.0) * p)});
             v.set_slice(&temp, 1);
         }
 
@@ -802,7 +802,7 @@ impl<T> Matrix<T>
 
         let ident : Matrix<T> = Matrix::one(v_m);
 
-        let two: T = T::from_f64(2.0).unwrap();
+        let two: T = T::from_f64(2.0);
         let w_dyadp: Matrix<T> = w.dyadp(&w);
         let h : Matrix<T> = &ident - &(&w_dyadp * &two);
 
@@ -932,8 +932,8 @@ impl<T> Matrix<T>
         }
         else
         {
-            let expo: T = T::from_f64(2.0).unwrap();
-            let sqrt: T = T::from_f64(0.5).unwrap();
+            let expo: T = T::from_f64(2.0);
+            let sqrt: T = T::from_f64(0.5);
             if f.abs() > g.abs()
             {
                 let t: T = g / f;
@@ -1275,7 +1275,7 @@ impl<T> Matrix<T>
     pub fn new_random(m: usize, n: usize) -> Matrix<T>
     {
         let mut rng = rand::thread_rng();
-        let data: Vec<T> = vec![T::from_f64(rng.gen()).unwrap() ; m * n];
+        let data: Vec<T> = vec![T::from_f64(rng.gen()) ; m * n];
         Matrix::new(m, n, data)
     }
 }

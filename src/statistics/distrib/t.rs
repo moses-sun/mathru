@@ -68,8 +68,8 @@ impl<K> Continuous<K> for T<K>
     /// ```
     fn pdf(self: &Self, x: K) -> K
     {
-        gamma::gamma((self.n + K::one()) / K::from_f64(2.0).unwrap()) * (K::one() + x.pow(&K::from_f64(2.0).unwrap()) / self.n).pow(&(-
-        (self.n + K::one()) / K::from_f64(2.0).unwrap())) / ((self.n * K::pi()).sqrt() * gamma::gamma(self.n / K::from_f64(2.0).unwrap()))
+        gamma::gamma((self.n + K::one()) / K::from_f64(2.0)) * (K::one() + x.pow(&K::from_f64(2.0)) / self.n).pow(&(-
+        (self.n + K::one()) / K::from_f64(2.0))) / ((self.n * K::pi()).sqrt() * gamma::gamma(self.n / K::from_f64(2.0)))
     }
 
     /// Cumulative distribution function
@@ -89,11 +89,11 @@ impl<K> Continuous<K> for T<K>
     /// ```
     fn cdf(self: &Self, x: K) -> K
     {
-        let k: K = (self.n + K::one()) / K::from_f64(2.0).unwrap();
-        let f21: K = hypergeometrical::f21(K::from_f64(0.5).unwrap(), k, K::from_f64(1.5).unwrap(), -(x.pow(&K::from_f64(2.0).unwrap())) /
+        let k: K = (self.n + K::one()) / K::from_f64(2.0);
+        let f21: K = hypergeometrical::f21(K::from_f64(0.5), k, K::from_f64(1.5), -(x.pow(&K::from_f64(2.0))) /
         self.n);
-        return K::from_f64(0.5).unwrap() + x * gamma::gamma(k) * f21 / ((self.n * K::pi()).sqrt() * gamma::gamma(self.n /
-        K::from_f64(2.0).unwrap()))
+        return K::from_f64(0.5) + x * gamma::gamma(k) * f21 / ((self.n * K::pi()).sqrt() * gamma::gamma(self.n /
+        K::from_f64(2.0)))
     }
 
 
@@ -139,13 +139,13 @@ impl<K> Continuous<K> for T<K>
     /// ```
 	fn variance(self: &Self) -> K
     {
-        if self.n > K::from_f64(2.0).unwrap()
+        if self.n > K::from_f64(2.0)
         {
-            return self.n / (self.n - K::from_f64(2.0).unwrap())
+            return self.n / (self.n - K::from_f64(2.0))
         }
         if self.n > K::one()
         {
-            return K::from_f64(std::f64::INFINITY).unwrap();
+            return K::from_f64(std::f64::INFINITY);
         }
         else
         {

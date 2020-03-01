@@ -28,8 +28,8 @@ impl<T> Default for AdaptiveStepper<T>
 {
     fn default() -> AdaptiveStepper<T>
     {
-        return AdaptiveStepper::new(1000, T::from_f64(0.02).unwrap(), T::from_f64(0.8).unwrap(), T::from_f64(0.001).unwrap(), T::from_f64
-        (3.0).unwrap(), T::from_f64(10e-6).unwrap(), T::from_f64(10e-3).unwrap());
+        return AdaptiveStepper::new(1000, T::from_f64(0.02), T::from_f64(0.8), T::from_f64(0.001), T::from_f64
+        (3.0), T::from_f64(10e-6), T::from_f64(10e-3));
     }
 }
 
@@ -133,7 +133,7 @@ impl<T> AdaptiveStepper<T>
         }
 
         let order: (u8, u8) = method.order();
-        let q: T = T::from_u8(order.0.max(order.1)).unwrap();
+        let q: T = T::from_u8(order.0.max(order.1));
         let l: T = T::one() / (q + T::one());
         let mut x_n: Vector<T> = prob.init_cond();
         let mut t_n: T = t_start;
@@ -206,7 +206,7 @@ impl<T> AdaptiveStepper<T>
 
         }
 
-        let p = (sum / T::from_f64(n as f64).unwrap()).pow(&T::from_f64(0.5).unwrap());
+        let p = (sum / T::from_f64(n as f64)).pow(&T::from_f64(0.5));
         return p;
     }
 

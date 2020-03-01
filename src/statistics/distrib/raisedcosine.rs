@@ -79,7 +79,7 @@ impl<T> Continuous<T> for RaisedCosine<T>
     {
         if (self.mu - self.s) <= x && x < (self.mu + self.s)
         {
-            return (T::one() + (T::pi() * (x - self.mu)/self.s).cos()) / (T::from_f64(2.0).unwrap() * self.s)
+            return (T::one() + (T::pi() * (x - self.mu)/self.s).cos()) / (T::from_f64(2.0) * self.s)
         }
 
         return T::zero();
@@ -105,7 +105,7 @@ impl<T> Continuous<T> for RaisedCosine<T>
         if (self.mu - self.s) <= x && x <= (self.mu + self.s)
         {
             let k: T = (x - self.mu) / self.s;
-            return (T::one() + k + T::one() / T::pi() * (k * T::pi()).sin()) / T::from_f64(2.0).unwrap();
+            return (T::one() + k + T::one() / T::pi() * (k * T::pi()).sin()) / T::from_f64(2.0);
         }
         else
         {
@@ -156,6 +156,6 @@ impl<T> Continuous<T> for RaisedCosine<T>
     /// ```
 	fn variance(self: & Self) -> T
     {
-        return self.s * self.s * (T::from_f64(1.0 / 3.0).unwrap() - T::from_f64(2.0).unwrap() / (T::pi() * T::pi()));
+        return self.s * self.s * (T::from_f64(1.0 / 3.0) - T::from_f64(2.0) / (T::pi() * T::pi()));
     }
 }

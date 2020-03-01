@@ -74,7 +74,7 @@ impl<T> Matrix<T>
     fn dec_cholesky_r<'a>(self: &'a Self) -> Option<CholeskyDec<T>>
     {
         let (m, n) = self.dim();
-        let exponent_sqrt: T = T::from_f64(0.5).unwrap();
+        let exponent_sqrt: T = T::from_f64(0.5);
         let mut l: Matrix<T> = Matrix::zero(m, n);
 
         for i in 0..n

@@ -53,8 +53,8 @@ impl<T> LevenbergMarquardt<T>
     pub fn minimize<F: Jacobian<T>>(self: &Self, func: &F, x_0: &Vector<T>) -> OptimResult<Vector<T>>
     {
         let mut x_n: Vector<T> = x_0.clone();
-        let mut mu_n: T = T::from_f64(0.5).unwrap();
-        //let mut lambda_n: T = T::from_f64(0.4).unwrap();
+        let mut mu_n: T = T::from_f64(0.5);
+        //let mut lambda_n: T = T::from_f64(0.4);
         for _n in 0..self.iters
         {
 
@@ -80,13 +80,13 @@ impl<T> LevenbergMarquardt<T>
 
                 if epsilon < self.beta_0
                 {
-                    mu_n = mu_n * T::from_f64(2.0).unwrap();
+                    mu_n = mu_n * T::from_f64(2.0);
                 }
                 else
                 {
                     if epsilon > self.beta_1
                     {
-                        mu_n = mu_n / T::from_f64(2.0).unwrap();
+                        mu_n = mu_n / T::from_f64(2.0);
                     }
                     break;
                 }

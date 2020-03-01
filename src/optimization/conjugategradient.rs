@@ -135,7 +135,7 @@ impl<T> ConjugateGradient<T>
 
             d_n = r_n_1.clone() + d_n * beta_n;
 
-            if r_n_1.dotp(&r_n_1).pow(&T::from_f64(0.5).unwrap()) < self.epsilon
+            if r_n_1.dotp(&r_n_1).pow(&T::from_f64(0.5)) < self.epsilon
             {
                 break;
             }

@@ -85,12 +85,12 @@ impl<K> T<K>
 		let s_x_squared: K = x_dist.variance();
 		let s_y_squared: K = y_dist.variance();
 
-		let nomin: K = K::from_f64((n_x - 1) as f64).unwrap() * s_x_squared + K::from_f64((n_y - 1) as f64).unwrap() * s_y_squared;
-		let denom: K = K::from((df) as f64).unwrap();
+		let nomin: K = K::from_f64((n_x - 1) as f64) * s_x_squared + K::from_f64((n_y - 1) as f64) * s_y_squared;
+		let denom: K = K::from((df) as f64);
 
 		let s_p: K = (nomin / denom).sqrt();
 
-		let t: K = (mean_x - mean_y) / (s_p * K::from_f64((1.0 / (n_x as f64) + 1.0 / (n_y as f64)).sqrt()).unwrap());
+		let t: K = (mean_x - mean_y) / (s_p * K::from_f64((1.0 / (n_x as f64) + 1.0 / (n_y as f64)).sqrt()));
 		T
 		{
 			p: K::zero(),
@@ -116,17 +116,17 @@ impl<K> T<K>
 		let s_x_squared: K = x_dist.variance();
 		let s_y_squared: K = y_dist.variance();
 
-		let term1: K = s_x_squared / K::from_f64(n_x as f64).unwrap() + s_y_squared / K::from_f64(n_y as f64).unwrap();
+		let term1: K = s_x_squared / K::from_f64(n_x as f64) + s_y_squared / K::from_f64(n_y as f64);
 
 		let df: K =  term1 * term1 / (s_x_squared * s_x_squared /
-		 K::from_f64((n_x * n_x * (n_x - 1)) as f64).unwrap() +	s_y_squared * s_y_squared / K::from_f64((n_y * n_y * (n_y - 1)) as
-		 f64).unwrap());
+		 K::from_f64((n_x * n_x * (n_x - 1)) as f64) +	s_y_squared * s_y_squared / K::from_f64((n_y * n_y * (n_y - 1)) as
+		 f64));
 
 		let s_p: K = term1.sqrt();
 
 		let t: K = (mean_x - mean_y) / s_p ;
 
-		let p: K = K::from_f64(2.0).unwrap() * TD::new(df).cdf(-t.abs());
+		let p: K = K::from_f64(2.0) * TD::new(df).cdf(-t.abs());
 		T
 		{
 			p: p,

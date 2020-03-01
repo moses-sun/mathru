@@ -52,7 +52,7 @@ impl<T> Distribution<T> for Uniform<T>
     fn random(self: &Self) -> T
     {
         let mut rng: ThreadRng = rand::thread_rng();
-        return T::from_f64(rng.gen_range(self.a.to_f64().unwrap(), self.b.to_f64().unwrap())).unwrap();
+        return T::from_f64(rng.gen_range(self.a.to_f64(), self.b.to_f64()));
     }
 }
 
@@ -130,7 +130,7 @@ impl<T> Continuous<T> for Uniform<T>
 
 	fn mean(self: &Self) -> T
     {
-        return (self.a +  self.b) / T::from_f64(2.0).unwrap();
+        return (self.a +  self.b) / T::from_f64(2.0);
     }
 
     /// Variance
@@ -145,6 +145,6 @@ impl<T> Continuous<T> for Uniform<T>
     /// ```
 	fn variance(self: &Self) -> T
     {
-        return (self.b - self.a) * (self.b - self.a) / T::from_f64(12.0).unwrap();
+        return (self.b - self.a) * (self.b - self.a) / T::from_f64(12.0);
     }
 }

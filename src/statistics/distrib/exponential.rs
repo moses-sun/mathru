@@ -61,7 +61,7 @@ impl<T> Exponential<T>
             sum += *x;
         }
 
-        return sum / T::from_u64(data.len() as u64).unwrap();
+        return sum / T::from_u64(data.len() as u64);
     }
 }
 
@@ -151,7 +151,7 @@ impl<T> Continuous<T> for Exponential<T>
     /// ```
 	fn variance(self: &Self) -> T
 	{
-		return T::one() / self.lambda.pow(&T::from_u8(2).unwrap())
+		return T::one() / self.lambda.pow(&T::from_u8(2))
 	}
 }
 
@@ -161,7 +161,7 @@ impl<T> Exponential<T>
 {
  	pub fn random(self: &Self) -> T
     {
-  		let y: T = T::from_f64(rand::random::<f64>()).unwrap();
+  		let y: T = T::from_f64(rand::random::<f64>());
    		let p: T = self.quantile(y);
 
    		return p;

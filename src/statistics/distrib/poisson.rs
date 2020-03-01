@@ -67,8 +67,8 @@ impl<T> Discrete<T, u32, u32> for Poisson<T>
     /// ```
     fn pmf<'a>(self: &'a Self, x: u32) -> T
 	{
-		let k_fact: T = T::from_u64(combins::factorial(x)).unwrap();
-		self.gamma.pow(&T::from_u32(x).unwrap()) * (-self.gamma).exp() / k_fact
+		let k_fact: T = T::from_u64(combins::factorial(x));
+		self.gamma.pow(&T::from_u32(x)) * (-self.gamma).exp() / k_fact
 	}
 
 	/// Cumulative distribution function of the Bernoulli distribution
@@ -88,7 +88,7 @@ impl<T> Discrete<T, u32, u32> for Poisson<T>
     /// ```
 	fn cdf<'a>(self: &'a Self, x: u32) -> T
     {
-		return special::gamma::gamma_ur(T::from_u32(x + 1).unwrap(), self.gamma)
+		return special::gamma::gamma_ur(T::from_u32(x + 1), self.gamma)
 	}
 
   	/// Expected value

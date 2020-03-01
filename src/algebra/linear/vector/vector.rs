@@ -189,7 +189,7 @@ impl<T> Vector<T>
     /// ```
     pub fn eucl_norm<'a, 'b>(self: &'a Self) -> T
     {
-        let exp: T = T::from_f64(2.0).unwrap();
+        let exp: T = T::from_f64(2.0);
 
         return self.p_norm(&exp);
     }

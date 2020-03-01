@@ -133,6 +133,6 @@ impl<T> Continuous<T> for Gamma<T>
     /// ```
 	fn variance(self: &Self) -> T
     {
-        return self.p / self.b.pow(&T::from_f64(2.0).unwrap());
+        return self.p / self.b.pow(&T::from_f64(2.0));
     }
 }

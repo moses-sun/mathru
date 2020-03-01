@@ -48,8 +48,8 @@ impl<T> ExplicitFixedStepSizeMethod<T> for Midpoint<T>
      fn do_step<F>(self: &Self, prob: &F, t_n: &T, x_n: &Vector<T>, h: &T) -> Vector<T>
         where F: ExplicitODE<T>
      {
-        let x_n_1_2: Vector<T> = x_n + &(&prob.func(t_n, x_n) * &(*h / T::from_f64(2.0).unwrap()));
-        return x_n + &(&prob.func(&(*t_n + *h / T::from_f64(2.0).unwrap()), &x_n_1_2) * h);
+        let x_n_1_2: Vector<T> = x_n + &(&prob.func(t_n, x_n) * &(*h / T::from_f64(2.0)));
+        return x_n + &(&prob.func(&(*t_n + *h / T::from_f64(2.0)), &x_n_1_2) * h);
     }
 
     /// The mitdpoint methods is a 2nd order method

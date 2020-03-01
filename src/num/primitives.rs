@@ -1,8 +1,8 @@
-use crate::algebra::abstr::{Identity, Addition};
+//use crate::algebra::abstr::{Identity, Addition};
 use crate::algebra::abstr::cast::{ToPrimitive, AsPrimitive};
 use crate::elementary::{Exponential, Trigonometry, Power, Hyperbolic};
-use crate::num::bound::Bound;
-use std::mem::size_of;
+//use crate::num::bound::Bound;
+//use std::mem::size_of;
 use std::{u8, u16, u32, u64, u128, i8, i16, i32, i64, i128, f32, f64};
 
 
@@ -17,24 +17,25 @@ macro_rules! impl_to_primitive_int_to_int
 {
     ($SrcT:ty, $DstT:ty, $slf:expr) => (
         {
-            if size_of::<$SrcT>() <= size_of::<$DstT>()
-            {
-                Some($slf as $DstT)
-            }
-            else
-            {
-                let n = $slf as i64;
-                let min_value: $DstT = Bound::lower_bound();
-                let max_value: $DstT = Bound::upper_bound();
-                if min_value as i64 <= n && n <= max_value as i64
-                {
-                    Some($slf as $DstT)
-                }
-                else
-                {
-                	None
-               	}
-            }
+        	$slf as $DstT
+//            if size_of::<$SrcT>() <= size_of::<$DstT>()
+//            {
+//                Some($slf as $DstT)
+//            }
+//            else
+//            {
+//                let n = $slf as i64;
+//                let min_value: $DstT = Bound::lower_bound();
+//                let max_value: $DstT = Bound::upper_bound();
+//                if min_value as i64 <= n && n <= max_value as i64
+//                {
+//                    Some($slf as $DstT)
+//                }
+//                else
+//                {
+//                	None
+//               	}
+//            }
         }
     )
 }
@@ -43,16 +44,17 @@ macro_rules! impl_to_primitive_int_to_uint
 {
     ($SrcT:ty, $DstT:ty, $slf:expr) => (
         {
-            let zero: $SrcT = Identity::<Addition>::id();
-            let max_value: $DstT = Bound::upper_bound();
-            if zero <= $slf && $slf as u64 <= max_value as u64
-           	{
-               Some($slf as $DstT)
-           	}
-           	else
-            {
-            	None
-            }
+        	return $slf as $DstT;
+//            let zero: $SrcT = Identity::<Addition>::id();
+//            let max_value: $DstT = Bound::upper_bound();
+//            if zero <= $slf && $slf as u64 <= max_value as u64
+//           	{
+//               Some($slf as $DstT)
+//           	}
+//           	else
+//            {
+//            	None
+//            }
         }
     )
 }
@@ -63,72 +65,74 @@ macro_rules! impl_to_primitive_int
         impl ToPrimitive for $T
         {
 
-            fn to_i8(&self) -> Option<i8>
+            fn to_i8(&self) -> i8
             {
             	impl_to_primitive_int_to_int!($T, i8, *self)
             }
 
 
-            fn to_i16(&self) -> Option<i16>
+            fn to_i16(&self) -> i16
             {
             	impl_to_primitive_int_to_int!($T, i16, *self)
             }
 
 
-            fn to_i32(&self) -> Option<i32>
+            fn to_i32(&self) -> i32
             {
             	impl_to_primitive_int_to_int!($T, i32, *self)
             }
 
 
-            fn to_i64(&self) -> Option<i64>
+            fn to_i64(&self) -> i64
             {
             	impl_to_primitive_int_to_int!($T, i64, *self)
             }
 
-           	fn to_i128(&self) -> Option<i128>
+           	fn to_i128(&self) -> i128
             {
             	impl_to_primitive_int_to_int!($T, i128, *self)
             }
 
-            fn to_u8(&self) -> Option<u8>
+            fn to_u8(&self) -> u8
             {
             	impl_to_primitive_int_to_uint!($T, u8, *self)
             }
 
 
-            fn to_u16(&self) -> Option<u16>
+            fn to_u16(&self) -> u16
             {
             	impl_to_primitive_int_to_uint!($T, u16, *self)
             }
 
 
-            fn to_u32(&self) -> Option<u32>
+            fn to_u32(&self) -> u32
             {
             	impl_to_primitive_int_to_uint!($T, u32, *self)
             }
 
 
-            fn to_u64(&self) -> Option<u64>
+            fn to_u64(&self) -> u64
             {
             	impl_to_primitive_int_to_uint!($T, u64, *self)
             }
 
-            fn to_u128(&self) -> Option<u128>
+            fn to_u128(&self) -> u128
             {
             	impl_to_primitive_int_to_uint!($T, u128, *self)
             }
 
 
-            fn to_f32(&self) -> Option<f32>
+            fn to_f32(&self) -> f32
             {
-            	Some(*self as f32)
+            	return *self as f32;
+            	//Some(*self as f32)
             }
 
 
-            fn to_f64(&self) -> Option<f64>
+            fn to_f64(&self) -> f64
             {
-            	Some(*self as f64)
+            	return *self as f64;
+            	//Some(*self as f64)
             }
         }
     )
@@ -143,15 +147,16 @@ impl_to_primitive_int!(i128);
 macro_rules! impl_to_primitive_uint_to_int {
     ($DstT:ty, $slf:expr) => (
         {
-            let max_value: $DstT = Bound::upper_bound();
-            if $slf as u64 <= max_value as u64
-            {
-                Some($slf as $DstT)
-            }
-            else
-            {
-                None
-            }
+        	return $slf as $DstT;
+//            let max_value: $DstT = Bound::upper_bound();
+//            if $slf as u64 <= max_value as u64
+//            {
+//                Some($slf as $DstT)
+//            }
+//            else
+//            {
+//                None
+//            }
         }
     )
 }
@@ -159,23 +164,24 @@ macro_rules! impl_to_primitive_uint_to_int {
 macro_rules! impl_to_primitive_uint_to_uint {
     ($SrcT:ty, $DstT:ty, $slf:expr) => (
         {
-            if size_of::<$SrcT>() <= size_of::<$DstT>()
-            {
-                Some($slf as $DstT)
-            }
-            else
-            {
-                let zero: $SrcT = Identity::<Addition>::id();
-                let max_value: $DstT = Bound::upper_bound();
-                if zero <= $slf && $slf as u64 <= max_value as u64
-                {
-                    Some($slf as $DstT)
-                }
-                else
-                {
-                    None
-                }
-            }
+        	return $slf as $DstT;
+//            if size_of::<$SrcT>() <= size_of::<$DstT>()
+//            {
+//                Some($slf as $DstT)
+//            }
+//            else
+//            {
+//                let zero: $SrcT = Identity::<Addition>::id();
+//                let max_value: $DstT = Bound::upper_bound();
+//                if zero <= $slf && $slf as u64 <= max_value as u64
+//                {
+//                    Some($slf as $DstT)
+//                }
+//                else
+//                {
+//                    None
+//                }
+//            }
         }
     )
 }
@@ -187,67 +193,69 @@ macro_rules! impl_to_primitive_uint
         impl ToPrimitive for $T
         {
 
-            fn to_i8(&self) -> Option<i8>
+            fn to_i8(&self) -> i8
             {
             	impl_to_primitive_uint_to_int!(i8, *self)
             }
 
 
-            fn to_i16(&self) -> Option<i16>
+            fn to_i16(&self) -> i16
             {
             	impl_to_primitive_uint_to_int!(i16, *self)
             }
 
 
-            fn to_i32(&self) -> Option<i32>
+            fn to_i32(&self) -> i32
             {
             	impl_to_primitive_uint_to_int!(i32, *self)
             }
 
 
-            fn to_i64(&self) -> Option<i64>
+            fn to_i64(&self) -> i64
             {
             	impl_to_primitive_uint_to_int!(i64, *self)
             }
 
-			fn to_i128(&self) -> Option<i128>
+			fn to_i128(&self) -> i128
             {
             	impl_to_primitive_uint_to_int!(i128, *self)
             }
 
-            fn to_u8(&self) -> Option<u8>
+            fn to_u8(&self) -> u8
             {
             	impl_to_primitive_uint_to_uint!($T, u8, *self)
             }
 
-            fn to_u16(&self) -> Option<u16>
+            fn to_u16(&self) -> u16
             {
             	impl_to_primitive_uint_to_uint!($T, u16, *self)
             }
 
-            fn to_u32(&self) -> Option<u32>
+            fn to_u32(&self) -> u32
             {
             	impl_to_primitive_uint_to_uint!($T, u32, *self)
             }
 
-            fn to_u64(&self) -> Option<u64>
+            fn to_u64(&self) -> u64
             {
             	impl_to_primitive_uint_to_uint!($T, u64, *self)
             }
 
-            fn to_u128(&self) -> Option<u128>
+            fn to_u128(&self) -> u128
             {
             	impl_to_primitive_uint_to_uint!($T, u128, *self)
             }
 
-            fn to_f32(&self) -> Option<f32>
+            fn to_f32(&self) -> f32
             {
-            	Some(*self as f32)
+            	return *self as f32;
+            	//Some(*self as f32)
             }
 
-            fn to_f64(&self) -> Option<f64>
+            fn to_f64(&self) -> f64
             {
-            	Some(*self as f64)
+            	return *self as f64;
+            	//Some(*self as f64)
             }
         }
     )
@@ -264,25 +272,26 @@ impl_to_primitive_uint!(u128);
 macro_rules! impl_to_primitive_float_to_float
 {
     ($SrcT:ident, $DstT:ident, $slf:expr) => (
-        if size_of::<$SrcT>() <= size_of::<$DstT>()
-        {
-            Some($slf as $DstT)
-        }
-        else
-        {
-            // Make sure the value is in range for the cast.
-            // NaN and +-inf are cast as they are.
-            let n = $slf as f64;
-            let max_value: $DstT = ::std::$DstT::MAX;
-            if !n.is_finite() || (-max_value as f64 <= n && n <= max_value as f64)
-            {
-                Some($slf as $DstT)
-            }
-            else
-            {
-                None
-            }
-        }
+    	return $slf as $DstT;
+//        if size_of::<$SrcT>() <= size_of::<$DstT>()
+//        {
+//            Some($slf as $DstT)
+//        }
+//        else
+//        {
+//            // Make sure the value is in range for the cast.
+//            // NaN and +-inf are cast as they are.
+//            let n = $slf as f64;
+//            let max_value: $DstT = ::std::$DstT::MAX;
+//            if !n.is_finite() || (-max_value as f64 <= n && n <= max_value as f64)
+//            {
+//                Some($slf as $DstT)
+//            }
+//            else
+//            {
+//                None
+//            }
+//        }
     )
 }
 
@@ -294,66 +303,76 @@ macro_rules! impl_to_primitive_float
         impl ToPrimitive for $T
         {
 
-            fn to_i8(&self) -> Option<i8>
+            fn to_i8(&self) -> i8
             {
-            	Some(*self as i8)
+            	return *self as i8;
+            	//Some(*self as i8)
             }
 
 
-            fn to_i16(&self) -> Option<i16>
+            fn to_i16(&self) -> i16
             {
-            	Some(*self as i16)
+            	return *self as i16;
+            	//Some(*self as i16)
             }
 
 
-            fn to_i32(&self) -> Option<i32>
+            fn to_i32(&self) -> i32
             {
-            	Some(*self as i32)
+            	return *self as i32;
+            	//Some(*self as i32)
             }
 
 
-            fn to_i64(&self) -> Option<i64>
+            fn to_i64(&self) -> i64
             {
-            	Some(*self as i64)
+            	return *self as i64;
+            	//Some(*self as i64)
             }
 
-			fn to_i128(&self) -> Option<i128>
+			fn to_i128(&self) -> i128
             {
-            	Some(*self as i128)
+            	return *self as i128;
+            	//Some(*self as i128)
             }
 
-            fn to_u8(&self) -> Option<u8>
+            fn to_u8(&self) -> u8
             {
-            	Some(*self as u8)
+            	return *self as u8;
+            	//Some(*self as u8)
             }
 
 
-            fn to_u16(&self) -> Option<u16>
+            fn to_u16(&self) -> u16
             {
-            	Some(*self as u16)
+            	return *self as u16;
+            	//Some(*self as u16)
             }
 
-            fn to_u32(&self) -> Option<u32>
+            fn to_u32(&self) -> u32
             {
-            	Some(*self as u32)
+            	return *self as u32;
+            	//Some(*self as u32)
             }
 
-            fn to_u64(&self) -> Option<u64>
+            fn to_u64(&self) -> u64
             {
-            	Some(*self as u64)
+            	return *self as u64;
+            	//Some(*self as u64)
             }
 
-			fn to_u128(&self) -> Option<u128>
+			fn to_u128(&self) -> u128
             {
-            	Some(*self as u128)
+            	return *self as u128;
+            	//Some(*self as u128)
             }
 
-            fn to_f32(&self) -> Option<f32>
+            fn to_f32(&self) -> f32
             {
             	impl_to_primitive_float_to_float!($T, f32, *self)
             }
 
-            fn to_f64(&self) -> Option<f64>
+            fn to_f64(&self) -> f64
             {
             	impl_to_primitive_float_to_float!($T, f64, *self)
             }
@@ -369,7 +388,7 @@ impl_to_primitive_float!(f64);
 //    ($T:ty, $conv:ident) => (
 //        impl NumCast for $T
 //        {
-//            fn from<N: ToPrimitive>(n: N) -> Option<$T>
+//            fn from<N: ToPrimitive>(n: N) -> $T>
 //            {
 //                // `$conv` could be generated using `concat_idents!`, but that
 //                // macro seems to be broken at the moment
