@@ -3,7 +3,6 @@ mod ttest
 {
     use mathru::statistics::test::{T};
     use mathru::algebra::linear::Vector;
-    use mathru::statistics::distrib::Normal;
 
 //    #[test]
 //    fn test_independence_identical_means()
