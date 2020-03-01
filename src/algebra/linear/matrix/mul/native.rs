@@ -154,7 +154,7 @@ impl<'a, 'b, T> Mul<&'b Matrix<T>> for &'a Matrix<T>
                 let mut sum: T = T::zero();
                 for k in 0..l_cols
                 {
-                    sum += self.get(i, k).clone() * rhs.get(k, j).clone();
+                    sum += *self.get(i, k) * *rhs.get(k, j);
                 }
                 *prod.get_mut(i, j) = sum;
             }

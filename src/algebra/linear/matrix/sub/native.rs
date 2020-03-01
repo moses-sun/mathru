@@ -42,15 +42,6 @@ impl<'a, 'b, T> Sub<&'b Matrix<T>> for &'a Matrix<T>
     fn sub(self: Self, rhs: &'b Matrix<T>) -> Self::Output
     {
         assert_eq!(self.dim(), rhs.dim());
-        return self.sub_r(rhs);
-    }
-}
-
-impl<'a, 'b, T> Matrix<T>
-    where T: Field + Scalar
-{
-    fn sub_r(self: &Self, rhs: &'b Matrix<T>) -> Matrix<T>
-    {
         let (m, n) = rhs.dim();
         Matrix
         {
@@ -60,7 +51,6 @@ impl<'a, 'b, T> Matrix<T>
         }
     }
 }
-
 
 ///
 /// Subtracts scalar from all matrix elements
@@ -84,7 +74,7 @@ impl<'a, 'b, T> Sub<&'b T> for &'a Matrix<T>
     /// ```
     fn sub(self: Self, rhs: &T) -> Self::Output
     {
-        return self.apply(&|x: &T| -> T {x.clone() - rhs.clone()});
+        return self.apply(&|x: &T| -> T {*x - *rhs});
     }
 }
 

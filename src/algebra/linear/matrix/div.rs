@@ -23,7 +23,7 @@ impl<T> Div<T> for Matrix<T>
     /// ```
     fn div(self, m: T) -> Matrix<T>
     {
-        (&self).div(&m)
+        return self * (T::one() / m);
     }
 }
 

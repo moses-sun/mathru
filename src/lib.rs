@@ -44,7 +44,7 @@ document.addEventListener(\"DOMContentLoaded\", function () {
 //!
 //! ```toml
 //! [dependencies]
-//! mathru = "0.6"
+//! mathru = "0.6.*"
 //! ```
 //!
 //!

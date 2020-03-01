@@ -37,7 +37,6 @@ impl<T> QRDec<T>
 
     /// Return the r matrix of the qr decomposition
     ///
-    /// # Re
     pub fn r(self: Self) -> Matrix<T>
     {
         return self.r;
@@ -77,11 +76,6 @@ impl<T> Matrix<T>
         let (m, n) = self.dim();
         assert!(m >= n);
 
-        return self.dec_qr_r()
-    }
-
-    fn dec_qr_r<'a>(self: &'a Self) -> QRDec<T>
-    {
         let mut q: Matrix<T> = Matrix::one(self.m);
         let mut r: Matrix<T> = self.clone();
 
@@ -92,12 +86,11 @@ impl<T> Matrix<T>
                 let a_jj: T = *r.get(j, j);
                 let a_ij: T = *r.get(i, j);
                 //let k: T = a_jj.sgn();
-                let p: T = (a_jj.clone() * a_jj.clone() + a_ij.clone() * a_ij.clone()).pow(&T::from_f64
-                (0.5).unwrap());
+                let p: T = (a_jj * a_jj + a_ij * a_ij).pow(&T::from_f64(0.5).unwrap());
                 if (p != T::zero()) && (a_jj != T::zero()) && (a_ij != T::zero())
                 {
-                    let c : T = a_jj / p.clone();
-                    let s : T = -a_ij / p;
+                    let c: T = a_jj / p;
+                    let s: T = -a_ij / p;
                     let g_ij: Matrix<T> = Matrix::givens(r.m, i, j, c, s);
 
                     r = &g_ij * &r;

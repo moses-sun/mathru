@@ -49,31 +49,6 @@ impl<'a, 'b, T> Add<&'b Matrix<T>> for &'a Matrix<T>
     fn add(self: Self, rhs: &'b Matrix<T>) -> Self::Output
     {
         assert_eq!(self.dim(), rhs.dim());
-        return self.add_r(rhs);
-    }
-}
-
-impl<'a, 'b, T> Matrix<T>
-    where T: Field + Scalar
-{
-    fn add_r(self: &Self, rhs: &'b Matrix<T>) -> Matrix<T>
-    {
-        let (m, n) = self.dim();
-        Matrix
-            {
-            m: m,
-            n: n,
-            data: self.data.iter().zip(rhs.data.iter()).map(|(x, y)| *x + *y).collect::<Vec<T>>()
-        }
-    }
-
-}
-
-impl<T> Matrix<T>
-    where T: Field + Scalar
-{
-    pub fn add_func(self: &Self, rhs: &Matrix<T>) -> Matrix<T>
-    {
         let (m, n) = self.dim();
         Matrix
             {

@@ -20,29 +20,9 @@ impl<T> Solve<Vector<T>> for  Matrix<T>
     ///
     fn solve(self: &Self, rhs: &Vector<T>) -> Option<Vector<T>>
     {
-        return self.solve_vector_r(rhs);
-    }
-
-}
-
-impl<T> Solve<Matrix<T>> for Matrix<T>
-    where T: Field + Scalar
-{
-    fn solve(self: &Self, rhs: &Matrix<T>) -> Option<Matrix<T>>
-    {
-        return self.solve_matrix_r(rhs);
-    }
-}
-
-impl<T> Matrix<T>
-    where T: Field + Scalar
-{
-
-    fn solve_vector_r(self: &Self, y: &Vector<T>) -> Option<Vector<T>>
-    {
         let (l, u, p): (Matrix<T>, Matrix<T>, Matrix<T>) = self.dec_lu().lup();
 
-        let b_hat: Vector<T> = &p * y;
+        let b_hat: Vector<T> = &p * rhs;
 
         let y: Vector<T> = l.substitute_forward(b_hat);
 
@@ -53,12 +33,11 @@ impl<T> Matrix<T>
 
 }
 
-impl<T> Matrix<T>
+impl<T> Solve<Matrix<T>> for Matrix<T>
     where T: Field + Scalar
 {
-    #[cfg(feature = "native")]
-    pub fn solve_matrix_r(self: &Self, y: &Matrix<T>) -> Option<Matrix<T>>
+    fn solve(self: &Self, rhs: &Matrix<T>) -> Option<Matrix<T>>
     {
-        return self.dec_lu().solve(y);
+        return self.dec_lu().solve(rhs);
     }
 }

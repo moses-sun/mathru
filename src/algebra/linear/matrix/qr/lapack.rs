@@ -77,11 +77,6 @@ impl<T> Matrix<T>
         let (m, n) = self.dim();
         assert!(m >= n);
 
-        return self.dec_qr_r()
-    }
-
-    fn dec_qr_r<'a>(self: &'a Self) -> QRDec<T>
-    {
         let (m, n) : (usize, usize) = self.dim();
 
         //lapack(fortran) uses column major order
