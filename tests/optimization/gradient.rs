@@ -5,7 +5,7 @@ mod gradient
 {
 	use mathru::algebra::linear::{Vector, Matrix};
 	use mathru::optimization::Gradient;
-	use mathru::optimization::{Jacobian};
+	use mathru::analysis::{Function, Jacobian};
 
 	pub struct Rosenbrock
 	{
@@ -21,8 +21,10 @@ mod gradient
 		}
 	}
 
-	impl Jacobian<f64> for Rosenbrock
+	impl Function<Vector<f64>> for Rosenbrock
 	{
+		type Codomain = Vector<f64>;
+
 		fn eval(self: &Self, input: &Vector<f64>) -> Vector<f64>
 		{
 			let x_1: f64 = *input.get(0);
@@ -30,7 +32,10 @@ mod gradient
 
 			return vector![(1.0 - x_1) * (1.0 - x_1) + 100.0 * (x_2 - x_1 * x_1) * (x_2 - x_1 * x_1)];
 		}
+	}
 
+	impl Jacobian<f64> for Rosenbrock
+	{
 		fn jacobian(self: &Self, input: &Vector<f64>) -> Matrix<f64>
 		{
 			let x_1: f64 = *input.get(0);
@@ -54,10 +59,19 @@ mod gradient
 		}
 	}
 
+	impl Function<Vector<f64>> for QuadraticFunctionMinimization
+	{
+		type Codomain = Vector<f64>;
+
+		fn eval(&self, x: &Vector<f64>) -> Vector<f64>
+		{
+			return vector![x.dotp(x) * x.dotp(x) * 0.5];
+		}
+	}
+
 	// Ix
 	impl Jacobian<f64> for QuadraticFunctionMinimization
 	{
-
 		fn jacobian(&self, input: &Vector<f64>) -> Matrix<f64>
 		{
 			let mut jacobian: Matrix<f64> = Matrix::zero(1, 2);
@@ -68,13 +82,7 @@ mod gradient
 
 			return jacobian;
 		}
-
-		fn eval(&self, x: &Vector<f64>) -> Vector<f64>
-		{
-			return vector![x.dotp(x) * x.dotp(x) * 0.5];
-		}
 	}
-
 
 	#[test]
 	fn minimization_quadratic()

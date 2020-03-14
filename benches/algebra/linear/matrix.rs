@@ -12,10 +12,10 @@ use na::DMatrix;
 criterion_group!(
 	matrix,
 	mat1000_add_mat1000,
-	//nalgebra_mat1000_add_mat1000,
-	//mat1000_mul_mat1000,
-	//nalgebra_mat1000_mul_mat1000,
-    //mat1000_add_mat1000_func,
+	nalgebra_mat1000_add_mat1000,
+    //mat1000_mul_mat1000,
+    nalgebra_mat1000_mul_mat1000,
+//    mat1000_add_mat1000_func,
 //	mat200_add_mat200,
 //	mat500_add_mat500,
 //	mat100_mul_mat100,
@@ -47,8 +47,8 @@ fn nalgebra_mat1000_add_mat1000(bench: &mut Criterion)
 
 fn mat1000_mul_mat1000(bench: &mut Criterion)
 {
-    let a: Matrix<f64> = Matrix::new_random(200, 200);
-    let b: Matrix<f64> = Matrix::new_random(200, 200);
+    let a: Matrix<f64> = Matrix::new_random(1000, 1000);
+    let b: Matrix<f64> = Matrix::new_random(1000, 1000);
 
     bench.bench_function("mat1000_mul_mat1000", move |bh| bh.iter(|| &a * &b));
 }

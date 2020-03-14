@@ -1,9 +1,9 @@
 #[cfg(test)]
-mod euler
+mod implicit_euler
 {
 	extern crate mathru;
 	use mathru::algebra::linear::{Vector};
-	use mathru::analysis::ode::{BackwardEuler, ImplicitODE};
+	use mathru::analysis::ode::{ImplicitEuler, ImplicitODE};
 
 	use super::super::problem::{ImplicitODE1}; //, ExplicitODE2};
 
@@ -22,7 +22,7 @@ mod euler
 	fn fn1()
 	{
 		let problem: ImplicitODE1 = ImplicitODE1::default();
-		let solver: BackwardEuler<f64> = BackwardEuler::new(0.00001);
+		let solver: ImplicitEuler<f64> = ImplicitEuler::new(0.01);
 
 		let (t, y): (Vec<f64>, Vec<Vector<f64>>) = solver.solve(&problem).unwrap();
 
@@ -32,8 +32,11 @@ mod euler
 		let init_cond: Vector<f64> = problem.init_cond();
 
 		assert!(compare_epsilon(time_span.1, t[len - 1], 0.000000001));
-		assert!(compare_epsilon(*init_cond.get(0) * (2.0 * time_span.1).exp() , *y[len - 1].get(0), 0.002));
+		//assert_eq!(true, false);
+		assert!(compare_epsilon(2.0 - (-4.0 * time_span.1).exp() , *y[len - 1].get(0), 0.00002));
 	}
+
+
 
 //	#[test]
 //	fn fn2()

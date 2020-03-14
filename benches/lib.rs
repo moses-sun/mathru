@@ -12,6 +12,6 @@ mod analysis;
 criterion_main!
 (
     algebra::linear::matrix::matrix,
-    //analysis::ode::ode,
+    analysis::ode::ode,
 );
 

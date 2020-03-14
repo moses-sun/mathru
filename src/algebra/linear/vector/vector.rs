@@ -585,6 +585,34 @@ impl<T> Vector<T>
 }
 
 impl<T> Vector<T>
+    where T: Field + Scalar
+{
+    /// Returns the one vector
+    ///
+    /// # Example
+	///
+	/// ```
+	/// use mathru::algebra::linear::{Vector};
+	///
+	/// let a: Vector<f64> = Vector::new_column(4, vec![1.0, 1.0, 1.0, 1.0]);
+	/// let b: Vector<f64> = Vector::one(4);
+	///
+	/// assert_eq!(a, b)
+    /// ```
+    pub fn one(m: usize) -> Self
+    {
+        let mut vec: Vec<T> = Vec::with_capacity(m);
+
+        for i in  0..m
+        {
+            vec[i] = T::one();
+        }
+
+        return Vector::new_column(4, vec);
+    }
+}
+
+impl<T> Vector<T>
 {
     /// Returns the vector dimension
     ///

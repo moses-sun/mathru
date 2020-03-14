@@ -1,7 +1,8 @@
 use crate::algebra::abstr::Real;
 use crate::algebra::linear::{Vector, Matrix};
 use crate::algebra::linear::matrix::Solve;
-use crate::optimization::{OptimResult, Jacobian};
+use crate::optimization::{OptimResult};
+use crate::analysis::{Function, Jacobian};
 
 
 /// Levenberg-Marquardt method
@@ -50,7 +51,8 @@ impl<T> LevenbergMarquardt<T>
     /// # Return
     ///
     /// local minimum
-    pub fn minimize<F: Jacobian<T>>(self: &Self, func: &F, x_0: &Vector<T>) -> OptimResult<Vector<T>>
+    pub fn minimize<F>(self: &Self, func: &F, x_0: &Vector<T>) -> OptimResult<Vector<T>>
+        where F: Function<Vector<T>, Codomain = Vector<T>> + Jacobian<T>
     {
         let mut x_n: Vector<T> = x_0.clone();
         let mut mu_n: T = T::from_f64(0.5);

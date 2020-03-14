@@ -5,7 +5,7 @@ mod conjugategradient
 {
 	use mathru::algebra::linear::{Vector, Matrix};
 	use mathru::optimization::ConjugateGradient;
-	use mathru::optimization::{Jacobian};
+	use mathru::analysis::{Function, Jacobian};
 	use mathru::algebra::abstr::{Real};
 
 
@@ -29,6 +29,17 @@ mod conjugategradient
 		}
 	}
 
+	/// f(x) = b-Ax
+	impl Function<Vector<f64>> for LinearEquation
+	{
+		type Codomain = Vector<f64>;
+
+		fn eval(&self, x: &Vector<f64>) -> Vector<f64>
+		{
+			return self.b.clone() - self.a.clone() * x.clone()
+		}
+	}
+
 	//
 	impl Jacobian<f64> for LinearEquation
 	{
@@ -36,12 +47,6 @@ mod conjugategradient
 		fn jacobian(&self, _input: &Vector<f64>) -> Matrix<f64>
 		{
 			return self.a.clone();
-		}
-
-		// f = b-Ax
-		fn eval(&self, x: &Vector<f64>) -> Vector<f64>
-		{
-			return self.b.clone() - self.a.clone() * x.clone()
 		}
 	}
 

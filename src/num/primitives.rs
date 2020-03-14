@@ -18,24 +18,6 @@ macro_rules! impl_to_primitive_int_to_int
     ($SrcT:ty, $DstT:ty, $slf:expr) => (
         {
         	$slf as $DstT
-//            if size_of::<$SrcT>() <= size_of::<$DstT>()
-//            {
-//                Some($slf as $DstT)
-//            }
-//            else
-//            {
-//                let n = $slf as i64;
-//                let min_value: $DstT = Bound::lower_bound();
-//                let max_value: $DstT = Bound::upper_bound();
-//                if min_value as i64 <= n && n <= max_value as i64
-//                {
-//                    Some($slf as $DstT)
-//                }
-//                else
-//                {
-//                	None
-//               	}
-//            }
         }
     )
 }
@@ -45,16 +27,6 @@ macro_rules! impl_to_primitive_int_to_uint
     ($SrcT:ty, $DstT:ty, $slf:expr) => (
         {
         	return $slf as $DstT;
-//            let zero: $SrcT = Identity::<Addition>::id();
-//            let max_value: $DstT = Bound::upper_bound();
-//            if zero <= $slf && $slf as u64 <= max_value as u64
-//           	{
-//               Some($slf as $DstT)
-//           	}
-//           	else
-//            {
-//            	None
-//            }
         }
     )
 }
@@ -125,14 +97,12 @@ macro_rules! impl_to_primitive_int
             fn to_f32(&self) -> f32
             {
             	return *self as f32;
-            	//Some(*self as f32)
             }
 
 
             fn to_f64(&self) -> f64
             {
             	return *self as f64;
-            	//Some(*self as f64)
             }
         }
     )
@@ -148,15 +118,6 @@ macro_rules! impl_to_primitive_uint_to_int {
     ($DstT:ty, $slf:expr) => (
         {
         	return $slf as $DstT;
-//            let max_value: $DstT = Bound::upper_bound();
-//            if $slf as u64 <= max_value as u64
-//            {
-//                Some($slf as $DstT)
-//            }
-//            else
-//            {
-//                None
-//            }
         }
     )
 }
@@ -165,23 +126,6 @@ macro_rules! impl_to_primitive_uint_to_uint {
     ($SrcT:ty, $DstT:ty, $slf:expr) => (
         {
         	return $slf as $DstT;
-//            if size_of::<$SrcT>() <= size_of::<$DstT>()
-//            {
-//                Some($slf as $DstT)
-//            }
-//            else
-//            {
-//                let zero: $SrcT = Identity::<Addition>::id();
-//                let max_value: $DstT = Bound::upper_bound();
-//                if zero <= $slf && $slf as u64 <= max_value as u64
-//                {
-//                    Some($slf as $DstT)
-//                }
-//                else
-//                {
-//                    None
-//                }
-//            }
         }
     )
 }
@@ -249,13 +193,11 @@ macro_rules! impl_to_primitive_uint
             fn to_f32(&self) -> f32
             {
             	return *self as f32;
-            	//Some(*self as f32)
             }
 
             fn to_f64(&self) -> f64
             {
             	return *self as f64;
-            	//Some(*self as f64)
             }
         }
     )
@@ -273,25 +215,6 @@ macro_rules! impl_to_primitive_float_to_float
 {
     ($SrcT:ident, $DstT:ident, $slf:expr) => (
     	return $slf as $DstT;
-//        if size_of::<$SrcT>() <= size_of::<$DstT>()
-//        {
-//            Some($slf as $DstT)
-//        }
-//        else
-//        {
-//            // Make sure the value is in range for the cast.
-//            // NaN and +-inf are cast as they are.
-//            let n = $slf as f64;
-//            let max_value: $DstT = ::std::$DstT::MAX;
-//            if !n.is_finite() || (-max_value as f64 <= n && n <= max_value as f64)
-//            {
-//                Some($slf as $DstT)
-//            }
-//            else
-//            {
-//                None
-//            }
-//        }
     )
 }
 
@@ -306,65 +229,55 @@ macro_rules! impl_to_primitive_float
             fn to_i8(&self) -> i8
             {
             	return *self as i8;
-            	//Some(*self as i8)
             }
 
 
             fn to_i16(&self) -> i16
             {
             	return *self as i16;
-            	//Some(*self as i16)
             }
 
 
             fn to_i32(&self) -> i32
             {
             	return *self as i32;
-            	//Some(*self as i32)
             }
 
 
             fn to_i64(&self) -> i64
             {
             	return *self as i64;
-            	//Some(*self as i64)
             }
 
 			fn to_i128(&self) -> i128
             {
             	return *self as i128;
-            	//Some(*self as i128)
             }
 
             fn to_u8(&self) -> u8
             {
             	return *self as u8;
-            	//Some(*self as u8)
             }
 
 
             fn to_u16(&self) -> u16
             {
             	return *self as u16;
-            	//Some(*self as u16)
             }
 
             fn to_u32(&self) -> u32
             {
             	return *self as u32;
-            	//Some(*self as u32)
             }
 
             fn to_u64(&self) -> u64
             {
             	return *self as u64;
-            	//Some(*self as u64)
             }
 
 			fn to_u128(&self) -> u128
             {
             	return *self as u128;
-            	//Some(*self as u128)
             }
 
             fn to_f32(&self) -> f32
@@ -382,42 +295,6 @@ macro_rules! impl_to_primitive_float
 
 impl_to_primitive_float!(f32);
 impl_to_primitive_float!(f64);
-
-//macro_rules! impl_num_cast
-//{
-//    ($T:ty, $conv:ident) => (
-//        impl NumCast for $T
-//        {
-//            fn from<N: ToPrimitive>(n: N) -> $T>
-//            {
-//                // `$conv` could be generated using `concat_idents!`, but that
-//                // macro seems to be broken at the moment
-//                n.$conv()
-//            }
-//        }
-//    )
-//}
-//
-//impl_num_cast!(u8, to_u8);
-//impl_num_cast!(u16, to_u16);
-//impl_num_cast!(u32, to_u32);
-//impl_num_cast!(u64, to_u64);
-//impl_num_cast!(u128, to_u128);
-//impl_num_cast!(usize, to_usize);
-//impl_num_cast!(i8, to_i8);
-//impl_num_cast!(i16, to_i16);
-//impl_num_cast!(i32, to_i32);
-//impl_num_cast!(i64, to_i64);
-//impl_num_cast!(i128, to_i128);
-//impl_num_cast!(isize, to_isize);
-//impl_num_cast!(f32, to_f32);
-//impl_num_cast!(f64, to_f64);
-
-
-
-
-
-
 
 
 macro_rules! trigonometry_impl

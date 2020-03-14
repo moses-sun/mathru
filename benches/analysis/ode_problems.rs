@@ -1,7 +1,9 @@
 //! Often used ODEs
-extern crate mathru;
-use mathru::algebra::linear::{Vector};
+//extern crate mathru;
+use mathru::algebra::linear::{Vector, Matrix};
 use mathru::analysis::ode::{ImplicitODE, ExplicitODE};
+use mathru::analysis::Jacobian;
+use mathru::algebra::abstr::Real;
 use std::default::Default;
 
 /// Define ODE
@@ -124,9 +126,10 @@ impl ExplicitODE<f64> for ExplicitODE3
 }
 
 /// Define ODE
-/// $`y^{'} = ay = f(x, y, y^{'}) `$
-/// $`y = C a e^{at}`$
-/// $'y(t_{s}) = C a e^{at_s} => C = \frac{y(t_s)}{ae^{at_s}}`$
+/// $`y^{'}(t) = -4y(t) + 8 `$
+/// $`y(0) = 1 `$
+///
+/// $` y(t) = 2 - exp(-4t) `$
 pub struct ImplicitODE1
 {
 	time_span: (f64, f64),
@@ -141,16 +144,18 @@ impl Default for ImplicitODE1
 		ImplicitODE1
 		{
 			time_span: (0.0, 2.0),
-			init_cond: vector![0.5]
+			init_cond: vector![1.0]
 		}
 	}
 }
 
 impl ImplicitODE<f64> for ImplicitODE1
 {
-   	fn func(self: &Self, _t: &f64, x: &Vector<f64>) -> Vector<f64>
+   	fn func(self: &Self, t: &f64, x: &Vector<f64>) -> Vector<f64>
 	{
-		return x * &2.0f64;
+		let result = (x * &-4.0) + 8.0;
+		println!("f(x)= {}", result);
+		return result;
 	}
 
     fn time_span(self: &Self) -> (f64, f64)
@@ -161,5 +166,16 @@ impl ImplicitODE<f64> for ImplicitODE1
     fn init_cond(self: &Self) -> Vector<f64>
 	{
 		return self.init_cond.clone();
+	}
+}
+
+
+impl Jacobian<f64> for ImplicitODE1
+{
+    fn jacobian(self: &Self, input: &Vector<f64>) -> Matrix<f64>
+	{
+		let jacobian = matrix![-4.0];
+		println!("J(x) = {}", jacobian);
+		return jacobian;
 	}
 }

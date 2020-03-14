@@ -5,7 +5,7 @@
 
 
 mod euler;
-mod backwardeuler;
+mod implicit_euler;
 mod midpoint;
 mod heun;
 mod kutta3;
@@ -26,7 +26,7 @@ mod fixed_stepper;
 mod adaptive_stepper;
 
 pub use euler::Euler;
-pub use backwardeuler::BackwardEuler;
+pub use implicit_euler::ImplicitEuler;
 pub use midpoint::Midpoint;
 pub use heun::Heun;
 pub use kutta3::Kutta3;

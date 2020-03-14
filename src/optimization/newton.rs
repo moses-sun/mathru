@@ -1,7 +1,7 @@
 use crate::algebra::linear::{Vector, Matrix};
 use crate::algebra::linear::matrix::Solve;
-use crate::optimization::{OptimResult, Jacobian, Hessian};
-use std::marker::PhantomData;
+use crate::optimization::{OptimResult};
+use crate::analysis::{Function, Jacobian, Hessian};
 use crate::algebra::abstr::Real;
 
 
@@ -43,7 +43,6 @@ pub struct Newton<T>
     iters: u64,
     sigma: T,
     rho: T,
-    __phantom: PhantomData<T>
 }
 
 impl<T> Newton<T>
@@ -60,7 +59,6 @@ impl<T> Newton<T>
             iters: iters,
             sigma: sigma,
             rho: rho,
-            __phantom: PhantomData
         }
     }
 
@@ -79,7 +77,8 @@ impl<T> Newton<T>
     /// # Return
     ///
     /// local minimum
-    pub fn minimize<F: Jacobian<T> + Hessian<T>>(self: &Self, func: &F, x_0: &Vector<T>) -> OptimResult<Vector<T>>
+    pub fn minimize<F>(self: &Self, func: &F, x_0: &Vector<T>) -> OptimResult<Vector<T>>
+        where F: Function<Vector<T>, Codomain = Vector<T>> + Jacobian<T> + Hessian<T>
     {
         let mut x_n: Vector<T> = x_0.clone();
 
