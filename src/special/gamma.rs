@@ -20,8 +20,8 @@ use crate::algebra::abstr::Real;
 /// # Example
 ///
 /// ```
-/// extern crate mathru;
 /// use mathru::special::gamma;
+///
 /// let z: f64 = 0.3_f64;
 /// let gamma: f64 = gamma::gamma(z);
 /// ```
@@ -64,10 +64,9 @@ pub fn gamma<T>(z: T) -> T
 /// # Example
 ///
 /// ```
-/// extern crate mathru;
 /// use mathru::special::gamma;
-/// let x: f64 = 0.3_f64;
 ///
+/// let x: f64 = 0.3_f64;
 /// let ln_gamma: f64 = gamma::ln_gamma(x);
 /// ```
 pub fn ln_gamma<T>(x: T) -> T
@@ -135,8 +134,8 @@ pub fn ln_gamma<T>(x: T) -> T
 /// # Example
 ///
 /// ```
-/// extern crate mathru;
 /// use mathru::special::gamma;
+///
 /// let x: f64 = 0.3_f64;
 /// let digamma: f64 = gamma::digamma(x);
 /// ```
@@ -216,7 +215,6 @@ pub fn digamma<T>(x: T) -> T
 /// # Example
 ///
 /// ```
-/// extern crate mathru;
 /// use mathru::special::gamma;
 ///
 /// let a: f64 = 0.5_f64;
@@ -248,12 +246,10 @@ pub fn gamma_u<T>(a: T, x: T) -> T
 /// # Example
 ///
 /// ```
-/// extern crate mathru;
 /// use mathru::special::gamma;
 ///
 /// let a: f64 = 0.5_f64;
 /// let x: f64 = 0.3_f64;
-///
 /// let gamma_u: f64 = gamma::gamma_ur(a, x);
 /// ```
 pub fn gamma_ur<T>(a: T, x: T) -> T
@@ -280,12 +276,10 @@ pub fn gamma_ur<T>(a: T, x: T) -> T
 /// # Example
 ///
 /// ```
-/// extern crate mathru;
 /// use mathru::special::gamma;
 ///
 /// let a: f64 = 0.5_f64;
 /// let x: f64 = 0.3_f64;
-///
 /// let gamma_u: f64 = gamma::gamma_ur(a, x);
 /// ```
 pub fn gamma_l<T>(a: T, x: T) -> T
@@ -313,12 +307,10 @@ pub fn gamma_l<T>(a: T, x: T) -> T
 /// # Example
 ///
 /// ```
-/// extern crate mathru;
 /// use mathru::special::gamma;
 ///
 /// let a: f64 = 0.5_f64;
 /// let x: f64 = 0.3_f64;
-///
 /// let gamma_u: f64 = gamma::gamma_ur(a, x);
 /// ```
 pub fn gamma_lr<T>(a: T, x: T) -> T

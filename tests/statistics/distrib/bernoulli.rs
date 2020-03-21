@@ -1,8 +1,6 @@
-
 #[cfg(test)]
 mod bernoullidistrib
 {
-    use mathru;
     use mathru::statistics::distrib::{Discrete, Bernoulli};
 
     #[test]

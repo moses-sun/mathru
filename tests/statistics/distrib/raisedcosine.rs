@@ -1,7 +1,6 @@
 #[cfg(test)]
 mod raisedcosine
 {
-    use mathru;
     use mathru::statistics::distrib::{Continuous, RaisedCosine};
     use std::f64::consts::PI;
 

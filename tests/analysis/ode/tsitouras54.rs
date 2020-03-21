@@ -1,7 +1,6 @@
 #[cfg(test)]
 mod tsitouras54
 {
-	extern crate mathru;
 	use mathru::algebra::linear::{Vector};
 	use mathru::analysis::ode::{ExplicitODE, Tsitouras54};
 

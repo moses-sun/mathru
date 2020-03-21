@@ -1,5 +1,3 @@
-extern crate mathru;
-
 #[cfg(test)]
 mod combins
 {
@@ -41,5 +39,4 @@ mod combins
         let n : u32 = 5;
         assert_eq!(120, combins::factorial(n));
     }
-
 }

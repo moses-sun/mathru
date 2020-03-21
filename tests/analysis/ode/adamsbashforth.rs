@@ -1,7 +1,6 @@
 #[cfg(test)]
 mod adamsbashforth
 {
-	extern crate mathru;
 	use mathru::algebra::linear::{Vector};
 	use mathru::analysis::ode::{ExplicitODE, AdamsBashforth};
 

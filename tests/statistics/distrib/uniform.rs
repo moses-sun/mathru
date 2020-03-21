@@ -1,8 +1,7 @@
 #[cfg(test)]
 mod uniformdistrib
 {
-	use mathru::statistics::distrib::Uniform;
-	use mathru::statistics::distrib::Continuous;
+	use mathru::statistics::distrib::{Continuous, Uniform};
 
 	#[test]
 	fn pdf_lower_a()

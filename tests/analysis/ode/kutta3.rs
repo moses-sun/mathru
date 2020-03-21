@@ -1,7 +1,6 @@
 #[cfg(test)]
 mod kutta3
 {
-	extern crate mathru;
 	use mathru::algebra::linear::{Vector};
 	use mathru::analysis::ode::{ExplicitODE, Kutta3};
 

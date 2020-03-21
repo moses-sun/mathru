@@ -57,6 +57,7 @@ document.addEventListener(\"DOMContentLoaded\", function () {
 //! # {
 //! use mathru::algebra::linear::{Vector, Matrix};
 //! use mathru::algebra::linear::matrix::{Substitute};
+//!
 //! // Compute the LU decomposition of a 2x2 matrix
 //! let a: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 2.0, -3.0, -7.0]);
 //! let b: Vector<f64> = vector![1.0; 3.0];
@@ -80,7 +81,6 @@ extern crate blas_src;
 #[cfg(feature = "blaslapack")]
 extern crate lapack;
 
-//extern crate serde;
 
 #[macro_use]
 pub mod algebra;

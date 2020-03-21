@@ -3,6 +3,12 @@
 //! Fore more information:<br>
 //! <a href="https://en.wikipedia.org/wiki/Ordinary_differential_equation">https://en.wikipedia.org/wiki/Ordinary_differential_equation</a>
 
+//! Because ODE higher order can always be reduced to a system of first order ODEs,  the implemented algorithms only support to solve
+//! first order ODEs.
+//!
+//! ```math
+//! \frac{dy}{dt}=f(t, y)
+//! ```
 
 mod euler;
 mod implicit_euler;
@@ -28,7 +34,10 @@ mod adaptive_stepper;
 pub use euler::Euler;
 pub use implicit_euler::ImplicitEuler;
 pub use midpoint::Midpoint;
+
+
 pub use heun::Heun;
+
 pub use kutta3::Kutta3;
 pub use rungekutta4::RungeKutta4;
 pub use ralston::Ralston;

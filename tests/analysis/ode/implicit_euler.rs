@@ -1,12 +1,9 @@
 #[cfg(test)]
 mod implicit_euler
 {
-	extern crate mathru;
 	use mathru::algebra::linear::{Vector};
 	use mathru::analysis::ode::{ImplicitEuler, ODEProblem};
-
 	use super::super::problem::{ImplicitODE1};
-
 
 	fn compare_epsilon(a: f64, b: f64, epsilon: f64) -> bool
     {

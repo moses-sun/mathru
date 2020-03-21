@@ -1,7 +1,6 @@
 #[cfg(test)]
 mod bogackishampine
 {
-	extern crate mathru;
 	use mathru::algebra::linear::{Vector};
 	use mathru::analysis::ode::{ExplicitODE, BogackiShampine32};
 

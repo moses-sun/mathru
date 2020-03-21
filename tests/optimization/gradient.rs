@@ -1,5 +1,3 @@
-extern crate mathru;
-
 #[cfg(test)]
 mod gradient
 {

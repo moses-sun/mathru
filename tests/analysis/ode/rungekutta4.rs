@@ -1,7 +1,6 @@
 #[cfg(test)]
 mod rungekutta4
 {
-	extern crate mathru;
 	use mathru::algebra::linear::{Vector};
 	use mathru::analysis::ode::{ExplicitODE, RungeKutta4};
 

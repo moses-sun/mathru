@@ -1,5 +1,3 @@
-extern crate mathru;
-
 #[cfg(test)]
 mod chisquared
 {
@@ -16,5 +14,4 @@ mod chisquared
         assert_eq!(2, test.df());
         assert_eq!(0.8730282833800732, test.p_value());
     }
-
 }

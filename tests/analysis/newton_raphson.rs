@@ -1,7 +1,6 @@
 #[cfg(test)]
 mod newton_raphson
 {
-	extern crate mathru;
 	use mathru::algebra::linear::{Vector, Matrix};
 	use mathru::analysis::NewtonRaphson;
 	use mathru::analysis::{Function, Jacobian};

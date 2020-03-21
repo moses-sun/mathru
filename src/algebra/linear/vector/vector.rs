@@ -15,17 +15,17 @@ use super::VectorIteratorMut;
 /// Macro to construct vectors
 ///
 /// ```
-/// #[macro_use]
-/// extern crate mathru;
-/// fn main()
-/// {
-///     use mathru::algebra::linear::Vector;
+/// # #[macro_use]
+/// # extern crate mathru;
+/// # fn main()
+/// # {
+/// use mathru::algebra::linear::Vector;
 ///
-///     // Construct a column vector of f64
-///     let v1: Vector<f64> = vector![1.0; 2.0; 3.0];
-///     // Construct a row vector of f32
-///     let v2: Vector<f32> = vector![2.0, 3.0, 4.0];
-/// }
+/// // Construct a column vector of f64
+/// let v1: Vector<f64> = vector![1.0; 2.0; 3.0];
+/// // Construct a row vector of f32
+/// let v2: Vector<f32> = vector![2.0, 3.0, 4.0];
+/// # }
 /// ```
 #[macro_export]
 macro_rules! vector

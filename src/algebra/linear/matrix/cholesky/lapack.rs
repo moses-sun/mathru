@@ -50,19 +50,18 @@ impl<T> Matrix<T>
     /// # Example
     ///
     /// ```
-    /// #[macro_use]
-    /// extern crate mathru;
-    /// fn main()
-    /// {
-    ///     use mathru::algebra::linear::Matrix;
+    /// # #[macro_use]
+    /// # extern crate mathru;
+    /// # fn main()
+    /// # {
+    /// use mathru::algebra::linear::Matrix;
     ///
-    ///     let a: Matrix<f64> = matrix![   2.0, -1.0, 0.0;
+    /// let a: Matrix<f64> = matrix![   2.0, -1.0, 0.0;
     ///                                -1.0, 2.0, -1.0;
     ///                                 0.0, -1.0,  2.0];
     ///
-    ///     let l: (Matrix<f64>) = a.dec_cholesky().unwrap().l();
-    /// }
-    ///
+    /// let l: (Matrix<f64>) = a.dec_cholesky().unwrap().l();
+    /// # }
     /// ```
     pub fn dec_cholesky<'a>(self: &'a Self) -> Option<CholeskyDec<T>>
     {

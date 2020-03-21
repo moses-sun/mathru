@@ -21,8 +21,8 @@ use crate::algebra::abstr::Real;
 /// # Example
 ///
 /// ```
-/// extern crate mathru;
 /// use mathru::special::beta;
+///
 /// let x: f64 = 0.3_f64;
 /// let y: f64 = 0.6_f64;
 ///
@@ -56,8 +56,8 @@ pub fn beta<T>(x: T, y: T) -> T
 /// # Example
 ///
 /// ```
-/// extern crate mathru;
 /// use mathru::special::beta;
+///
 /// let a: f64 = 0.3_f64;
 /// let b: f64 = 0.6_f64;
 /// let x: f64 = 0.2_f64;

@@ -1,7 +1,6 @@
 #[cfg(test)]
 mod midpoint
 {
-	extern crate mathru;
 	use mathru::algebra::linear::{Vector};
 	use mathru::analysis::ode::{Midpoint, ExplicitODE};
 

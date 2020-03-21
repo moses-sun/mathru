@@ -1,5 +1,4 @@
 //! Often used ODEs
-//extern crate mathru;
 use mathru::algebra::linear::{Vector, Matrix};
 use mathru::algebra::abstr::Real;
 use std::default::Default;

@@ -19,19 +19,19 @@ use std::convert::From;
 /// Macro to construct matrices
 ///
 /// ```
-/// #[macro_use]
-/// extern crate mathru;
-/// fn main()
-/// {
-///     use mathru::algebra::linear::Matrix;
+/// # #[macro_use]
+/// # extern crate mathru;
+/// # fn main()
+/// # {
+/// use mathru::algebra::linear::Matrix;
 ///
-///     // Construct a 2x3 matrix of f32
-///     let mat: Matrix<f32> = matrix![1.0, 2.0, 3.0; 4.0, 5.0, 6.0];
-///     let (m, n) = mat.dim();
+/// // Construct a 2x3 matrix of f32
+/// let mat: Matrix<f32> = matrix![1.0, 2.0, 3.0; 4.0, 5.0, 6.0];
+/// let (m, n) = mat.dim();
 ///
-///     assert_eq!(m, 2);
-///     assert_eq!(n, 3);
-/// }
+/// assert_eq!(m, 2);
+/// assert_eq!(n, 3);
+/// # }
 /// ```
 #[macro_export]
 macro_rules! matrix

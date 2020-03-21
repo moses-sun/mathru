@@ -1,11 +1,8 @@
-extern crate mathru;
-
 #[cfg(test)]
 mod gamma
 {
     use mathru::special::gamma;
-    //use mathru::num::Complex;
-    
+
     #[test]
     fn gamma0()
     {

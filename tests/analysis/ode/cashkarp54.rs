@@ -1,8 +1,6 @@
 #[cfg(test)]
 mod cashkarp54
 {
-	extern crate mathru;
-
 	use mathru::algebra::linear::{Vector};
 	use mathru::analysis::ode::{ExplicitODE, CashKarp54};
 	use super::super::problem::{ExplicitODE1, ExplicitODE2};

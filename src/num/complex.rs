@@ -312,7 +312,6 @@ impl<T> Sign for Complex<T>
 	/// # Example
 	///
 	/// ```
-	/// extern crate mathru;
 	/// use mathru::algebra::abstr::{Sign};
 	/// use mathru::num::Complex;
 	/// use mathru::algebra::abstr::cast::ToPrimitive;
@@ -626,7 +625,6 @@ impl<T> Exponential for Complex<T>
 	/// # Example
 	///
 	/// ```
-	/// extern crate mathru;
 	/// use mathru::num::{Complex};
 	/// use mathru::elementary::Exponential;
 	///
@@ -648,7 +646,6 @@ impl<T> Exponential for Complex<T>
 	/// # Example
 	///
 	/// ```
-	/// extern crate mathru;
 	/// use mathru::num::Complex;
 	/// use mathru::elementary::Exponential;
 	///
@@ -685,7 +682,6 @@ impl<T> Trigonometry for Complex<T>
 	/// # Example
 	///
 	/// ```
-	/// extern crate mathru;
 	/// use mathru::num::Complex;
 	/// use mathru::elementary::Trigonometry;
 	///
@@ -714,7 +710,6 @@ impl<T> Trigonometry for Complex<T>
 	/// # Example
 	///
 	/// ```
-	/// extern crate mathru;
 	/// use mathru::num::Complex;
 	/// use mathru::elementary::Trigonometry;
 	///
@@ -751,7 +746,6 @@ impl<T> Trigonometry for Complex<T>
 	/// # Example
 	///
 	/// ```
-	/// extern crate mathru;
 	/// use mathru::num::Complex;
 	/// use mathru::elementary::Trigonometry;
 	///
@@ -777,7 +771,6 @@ impl<T> Trigonometry for Complex<T>
 	/// # Example
 	///
 	/// ```
-	/// extern crate mathru;
 	/// use mathru::num::Complex;
 	/// use mathru::elementary::Trigonometry;
 	///
@@ -799,7 +792,6 @@ impl<T> Trigonometry for Complex<T>
 	/// # Example
 	///
 	/// ```
-	/// extern crate mathru;
 	/// use mathru::num::Complex;
 	/// use mathru::elementary::Trigonometry;
 	///
@@ -821,7 +813,6 @@ impl<T> Trigonometry for Complex<T>
 	/// # Example
 	///
 	/// ```
-	/// extern crate mathru;
 	/// use mathru::num::Complex;
 	/// use mathru::elementary::Trigonometry;
 	///
@@ -845,7 +836,6 @@ impl<T> Trigonometry for Complex<T>
 	/// # Example
 	///
 	/// ```
-	/// extern crate mathru;
 	/// use mathru::num::Complex;
 	/// use mathru::elementary::{Trigonometry};
 	///
@@ -873,7 +863,6 @@ impl<T> Trigonometry for Complex<T>
 	/// # Example
 	///
 	/// ```
-	/// extern crate mathru;
 	/// use mathru::num::Complex;
 	/// use mathru::elementary::{Trigonometry};
 	///
@@ -900,7 +889,6 @@ impl<T> Trigonometry for Complex<T>
 	/// # Example
 	///
 	/// ```
-	/// extern crate mathru;
 	/// use mathru::num::Complex;
 	/// use mathru::elementary::{Trigonometry};
 	///
@@ -980,7 +968,6 @@ impl<T> Trigonometry for Complex<T>
 	/// # Example
 	///
 	/// ```
-	/// extern crate mathru;
 	/// use mathru::num::Complex;
 	/// use mathru::algebra::abstr::One;
 	/// use mathru::elementary::{Trigonometry};
@@ -1015,7 +1002,6 @@ impl<T> Trigonometry for Complex<T>
 	/// # Example
 	///
 	/// ```
-	/// extern crate mathru;
 	/// use mathru::num::Complex;
 	/// use mathru::algebra::abstr::One;
 	/// use mathru::elementary::{Trigonometry};
@@ -1049,7 +1035,6 @@ impl<T> Trigonometry for Complex<T>
 	/// # Example
 	///
 	/// ```
-	/// extern crate mathru;
 	/// use mathru::num::Complex;
 	/// use mathru::algebra::abstr::One;
 	/// use mathru::elementary::{Trigonometry};
@@ -1074,7 +1059,6 @@ impl<T> Power for Complex<T>
 	/// # Example
 	///
 	/// ```
-	/// extern crate mathru;
 	/// use mathru::num::Complex;
 	/// use mathru::elementary::Power;
 	///

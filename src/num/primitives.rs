@@ -1,8 +1,5 @@
-//use crate::algebra::abstr::{Identity, Addition};
 use crate::algebra::abstr::cast::{ToPrimitive, AsPrimitive};
 use crate::elementary::{Exponential, Trigonometry, Power, Hyperbolic};
-//use crate::num::bound::Bound;
-//use std::mem::size_of;
 use std::{u8, u16, u32, u64, u128, i8, i16, i32, i64, i128, f32, f64};
 
 
@@ -522,7 +519,6 @@ macro_rules! hyperbolic_impl
     		/// # Example
     		///
     		/// ```
-    		/// extern crate mathru;
    			/// use mathru::elementary::Hyperbolic;
     		///
     		/// let x: f64 = 0.0_f64;
@@ -551,7 +547,6 @@ macro_rules! hyperbolic_impl
     		/// # Example
     		///
     		/// ```
-    		/// extern crate mathru;
    			/// use mathru::elementary::Hyperbolic;
     		///
     		/// let x: f64 = 1.0_f64;
@@ -581,7 +576,6 @@ macro_rules! hyperbolic_impl
     		/// # Example
     		///
     		/// ```
-    		/// extern crate mathru;
    			/// use mathru::elementary::Hyperbolic;
     		///
     		/// let x: f64 = 0.0_f64;
@@ -611,7 +605,6 @@ macro_rules! hyperbolic_impl
     		///
     		///
     		/// ```
-    		/// extern crate mathru;
    			/// use mathru::elementary::Hyperbolic;
     		///
     		/// let x: f64 = 1.0_f64;
@@ -667,7 +660,6 @@ macro_rules! hyperbolic_impl
    			/// # Example
     		///
     		/// ```
-    		/// extern crate mathru;
    			/// use mathru::algebra::abstr::{Field};
     		/// use mathru::elementary::{Exponential, Hyperbolic};
     		///
@@ -701,7 +693,6 @@ macro_rules! hyperbolic_impl
     		/// # Example
     		///
     		/// ```
-    		/// extern crate mathru;
     		/// use mathru::elementary::{Exponential, Hyperbolic};
     		///
     		/// let x: f64 = 0.5_f64;
@@ -734,7 +725,6 @@ macro_rules! hyperbolic_impl
     		/// # Example
     		///
     		/// ```
-    		/// extern crate mathru;
    			/// use mathru::algebra::abstr::{Field};
     		/// use mathru::elementary::{Exponential, Hyperbolic};
     		///

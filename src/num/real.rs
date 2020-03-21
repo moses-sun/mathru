@@ -637,7 +637,6 @@ impl<T> Hyperbolic for Real<T>
     /// # Example
     ///
     /// ```
-    /// extern crate mathru;
     /// use mathru::num::{Real};
    	/// use mathru::elementary::Hyperbolic;
     ///
@@ -669,7 +668,6 @@ impl<T> Hyperbolic for Real<T>
     /// # Example
     ///
     /// ```
-    /// extern crate mathru;
     /// use mathru::num::{Real};
    	/// use mathru::elementary::Hyperbolic;
     ///
@@ -702,7 +700,6 @@ impl<T> Hyperbolic for Real<T>
     /// # Example
     ///
     /// ```
-    /// extern crate mathru;
     /// use mathru::num::{Real};
     /// use mathru::elementary::Hyperbolic;
     ///
@@ -734,7 +731,6 @@ impl<T> Hyperbolic for Real<T>
     /// # Example
     ///
     /// ```
-    /// extern crate mathru;
     /// use mathru::num::{Real};
     /// use mathru::elementary::Hyperbolic;
     ///
@@ -789,7 +785,6 @@ impl<T> Hyperbolic for Real<T>
     /// # Example
     ///
     /// ```
-    /// extern crate mathru;
     /// use mathru::num::Real;
    	/// use mathru::algebra::abstr::{Field};
     /// use mathru::elementary::{Exponential, Hyperbolic};
@@ -816,7 +811,6 @@ impl<T> Hyperbolic for Real<T>
     /// # Example
     ///
     /// ```
-    /// extern crate mathru;
     /// use mathru::num::Real;
    	/// use mathru::algebra::abstr::{Field};
     /// use mathru::elementary::{Exponential, Hyperbolic};
@@ -843,7 +837,6 @@ impl<T> Hyperbolic for Real<T>
     /// # Example
     ///
     /// ```
-    /// extern crate mathru;
     /// use mathru::num::Real;
    	/// use mathru::algebra::abstr::{Field};
     /// use mathru::elementary::{Exponential, Hyperbolic};
