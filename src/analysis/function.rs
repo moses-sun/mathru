@@ -1,5 +1,3 @@
-use crate::algebra::linear::{Vector, Matrix};
-use crate::algebra::abstr::Real;
 
 pub trait Function<Domain>
 {

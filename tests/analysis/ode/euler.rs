@@ -3,8 +3,7 @@ mod euler
 {
 	extern crate mathru;
 	use mathru::algebra::linear::{Vector};
-	use mathru::analysis::ode::{Euler, ExplicitODE};
-
+	use mathru::analysis::ode::{ExplicitODE, Euler};
 	use super::super::problem::{ExplicitODE1, ExplicitODE2};
 
 	fn compare_epsilon(a: f64, b: f64, epsilon: f64) -> bool

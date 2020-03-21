@@ -603,12 +603,12 @@ impl<T> Vector<T>
     {
         let mut vec: Vec<T> = Vec::with_capacity(m);
 
-        for i in  0..m
+        for _i in  0..m
         {
-            vec[i] = T::one();
+            vec.push(T::one());
         }
 
-        return Vector::new_column(4, vec);
+        return Vector::new_column(m, vec);
     }
 }
 

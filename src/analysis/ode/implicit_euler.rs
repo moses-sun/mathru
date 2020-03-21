@@ -3,8 +3,8 @@ use crate::algebra::abstr::Real;
 use super::implicit_method::{ImplicitFixedStepSizeMethod};
 use super::ImplicitODE;
 use crate::analysis::NewtonRaphson;
-use crate::analysis::ode::fixed_stepper::ImplicitFixedStepper;
 use crate::analysis::{Function, Jacobian};
+use crate::analysis::ode::fixed_stepper::ImplicitFixedStepper;
 use std::marker::PhantomData;
 
 /// Solves an ordinary differential equation using Euler's method.
@@ -81,7 +81,7 @@ struct ImplicitEulerHelper<'a, T, F>
 
 
 impl<'a, T, F> ImplicitEulerHelper<'a, T, F>
-    where T: Real, F: ImplicitODE<T> + Jacobian<T>
+    where T: Real, F: ImplicitODE<T>
 {
     pub fn new(function: &'a F, t: &'a T, x: &'a Vector<T>, h: &'a T) -> ImplicitEulerHelper<'a, T, F>
     {
@@ -118,14 +118,15 @@ impl<'a, T, F> Function<Vector<T>> for ImplicitEulerHelper<'a, T, F>
 }
 
 impl<'a, T, F> Jacobian<T> for ImplicitEulerHelper<'a, T, F>
-    where T: Real, F: ImplicitODE<T> + Jacobian<T>
+    where T: Real, F: ImplicitODE<T>
 {
     ///
     /// $` \frac{\partial g(z)}{\partial z} = h \frac{\partial f(t_{n+1}, z)}{\partial z} - I`$
     fn jacobian(self: &Self, z: &Vector<T>) -> Matrix<T>
     {
         let (m, _n): (usize, usize) = z.dim();
-        let jacobian =  self.function.jacobian(z) * *self.h - Matrix::one(m);
+        let t_n1 = *self.t + *self.h;
+        let jacobian = crate::analysis::ode::implicit_ode::ImplicitODE::jacobian(self.function, &t_n1, z) * *self.h - Matrix::one(m);
 
         //println!("J_g(x) = {}", jacobian);
 

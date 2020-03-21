@@ -1,10 +1,9 @@
 //! Often used ODEs
 //extern crate mathru;
 use mathru::algebra::linear::{Vector, Matrix};
-use mathru::analysis::ode::{ImplicitODE, ExplicitODE};
-use mathru::analysis::Jacobian;
 use mathru::algebra::abstr::Real;
 use std::default::Default;
+use mathru::analysis::ode::{ExplicitODE, ImplicitODE};
 
 /// Define ODE
 /// $`y^{'} = ay = f(x, y) `$
@@ -167,15 +166,12 @@ impl ImplicitODE<f64> for ImplicitODE1
 	{
 		return self.init_cond.clone();
 	}
-}
 
-
-impl Jacobian<f64> for ImplicitODE1
-{
-    fn jacobian(self: &Self, input: &Vector<f64>) -> Matrix<f64>
+	fn jacobian(self: &Self, t: &f64, input: &Vector<f64>) -> Matrix<f64>
 	{
 		let jacobian = matrix![-4.0];
 		println!("J(x) = {}", jacobian);
 		return jacobian;
 	}
 }
+

@@ -3,9 +3,11 @@
 //!
 use std::default::Default;
 use crate::algebra::abstr::Real;
-use crate::analysis::{Function, Jacobian};
 use crate::algebra::linear::{Vector, Matrix};
 use crate::algebra::linear::matrix::Solve;
+use crate::analysis::{Function, Jacobian};
+
+
 /// Newton Raphson
 pub struct NewtonRaphson<T>
 {

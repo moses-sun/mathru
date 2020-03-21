@@ -1,6 +1,5 @@
 use crate::algebra::linear::{Vector, Matrix};
-use crate::optimization::{OptimResult};
-use crate::analysis::{Function, Jacobian};
+use crate::optimization::{Optim, OptimResult};
 use std::marker::PhantomData;
 use crate::algebra::abstr::Real;
 
@@ -41,7 +40,7 @@ impl<T> GaussNewton<T>
     ///
     /// local minimum
     pub fn minimize<F>(self: &Self, func: &F, x_0: &Vector<T>) -> OptimResult<Vector<T>>
-        where F: Function<Vector<T>, Codomain = Vector<T>> + Jacobian<T>
+        where F: Optim<T>
     {
         let mut x_n: Vector<T> = x_0.clone();
 

@@ -3,8 +3,7 @@ mod kutta3
 {
 	extern crate mathru;
 	use mathru::algebra::linear::{Vector};
-	use mathru::analysis::ode::{ExplicitODE};
-	use mathru::analysis::ode::Kutta3;
+	use mathru::analysis::ode::{ExplicitODE, Kutta3};
 
 	use super::super::problem::{ExplicitODE1, ExplicitODE2};
 

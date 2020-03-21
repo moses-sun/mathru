@@ -4,8 +4,7 @@ extern crate mathru;
 mod newton
 {
 	use mathru::algebra::linear::{Vector, Matrix};
-	use mathru::optimization::{Newton};
-	use mathru::analysis::{Function, Jacobian, Hessian};
+	use mathru::optimization::{Optim, Newton};
 
 	pub struct Rosenbrock
 	{
@@ -21,10 +20,8 @@ mod newton
 		}
 	}
 
-	impl Function<Vector<f64>> for Rosenbrock
+	impl Optim<f64> for Rosenbrock
 	{
-		type Codomain = Vector<f64>;
-
 		fn eval(self: &Self, input: &Vector<f64>) -> Vector<f64>
 		{
 			let x_1: f64 = *input.get(0);
@@ -32,10 +29,7 @@ mod newton
 
 			return vector![(1.0 - x_1) * (1.0 - x_1) + 100.0 * (x_2 - x_1 * x_1) * (x_2 - x_1 * x_1)];
 		}
-	}
 
-	impl Jacobian<f64> for Rosenbrock
-	{
 		fn jacobian(self: &Self, input: &Vector<f64>) -> Matrix<f64>
 		{
 			let x_1: f64 = *input.get(0);
@@ -43,10 +37,6 @@ mod newton
 
 			return matrix![-2.0 * (1.0 - x_1) - 400.0 * (x_2 - x_1 * x_1) * x_1, 200.0 * (x_2 - x_1 * x_1)];
 		}
-	}
-
-	impl Hessian<f64> for Rosenbrock
-	{
 
 		fn hessian(self: &Self, input: &Vector<f64>) -> Matrix<f64>
 		{

@@ -3,8 +3,7 @@ mod adamsbashforth
 {
 	extern crate mathru;
 	use mathru::algebra::linear::{Vector};
-	use mathru::analysis::ode::{ExplicitODE};
-	use mathru::analysis::ode::AdamsBashforth;
+	use mathru::analysis::ode::{ExplicitODE, AdamsBashforth};
 
 	use super::super::problem::{ExplicitODE1, ExplicitODE2, ExplicitODE3};
 

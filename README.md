@@ -38,7 +38,9 @@ mathru is a numeric library containing algorithms for linear algebra, analysis a
             - Bogacki-Shampine 2(3)
             - Adams-Bashforth
         - Automatic step size control with starting step size
-        
+        - Implizit methods
+            - Implizit Euler
+             
     - Optimization
         - Gauss-Newton algorithm
         - Gradient descent

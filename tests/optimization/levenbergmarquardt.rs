@@ -4,8 +4,7 @@ extern crate mathru;
 mod levenbergmarquardt
 {
 	use mathru::algebra::linear::{Vector, Matrix};
-	use mathru::optimization::{LevenbergMarquardt};
-	use mathru::analysis::{Function, Jacobian};
+	use mathru::optimization::{Optim, LevenbergMarquardt};
 	use mathru::algebra::abstr::Real;
 
 	struct QuadraticFunction
@@ -22,19 +21,12 @@ mod levenbergmarquardt
 		}
 	}
 
-	impl Function<Vector<f64>> for QuadraticFunction
+	impl Optim<f64> for QuadraticFunction
 	{
-		type Codomain = Vector<f64>;
-
 		fn eval(&self, x: &Vector<f64>) -> Vector<f64>
 		{
 			return vector![x.dotp(x) * x.dotp(x) * 0.5];
 		}
-	}
-
-	// Ix
-	impl Jacobian<f64> for QuadraticFunction
-	{
 
 		fn jacobian(&self, input: &Vector<f64>) -> Matrix<f64>
 		{
@@ -46,8 +38,6 @@ mod levenbergmarquardt
 
 			return jacobian;
 		}
-
-
 	}
 
 	#[test]

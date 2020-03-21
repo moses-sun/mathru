@@ -1,6 +1,5 @@
 use crate::algebra::linear::{Vector, Matrix};
-use crate::optimization::{OptimResult};
-use crate::analysis::{Function, Jacobian};
+use crate::optimization::{Optim, OptimResult};
 use crate::algebra::abstr::Real;
 
 /// Conjugate Gradient method
@@ -25,8 +24,7 @@ use crate::algebra::abstr::Real;
 /// ```
 /// use mathru::*;
 /// use mathru::algebra::linear::{Vector, Matrix};
-/// use mathru::optimization::ConjugateGradient;
-///	use mathru::optimization::{Jacobian};
+/// use mathru::optimization::{Optim, ConjugateGradient};
 ///
 /// struct LinearEquation
 ///	{
@@ -47,9 +45,10 @@ use crate::algebra::abstr::Real;
 ///		}
 ///	}
 ///
-///	impl Jacobian<f64> for LinearEquation
+///	impl Optim<f64> for LinearEquation
 ///	{
-///		// A
+///
+///     // A
 ///		fn jacobian(&self, _input: &Vector<f64>) -> Matrix<f64>
 ///		{
 ///			return self.a.clone();
@@ -60,6 +59,13 @@ use crate::algebra::abstr::Real;
 ///		{
 ///			return self.b.clone() - self.a.clone() * x.clone()
 ///		}
+///
+///     //Computes the Hessian at the given value x
+///     fn hessian(&self, _x: &Vector<f64>) -> Matrix<f64>
+///     {
+///         unimplemented!();
+///     }
+///
 ///	}
 ///
 /// //create optimizer instance
@@ -114,7 +120,7 @@ impl<T> ConjugateGradient<T>
     ///
     /// local minimum
     pub fn minimize<F>(self: &Self, func: &F, x_0: &Vector<T>) -> OptimResult<Vector<T>>
-        where F: Function<Vector<T>, Codomain = Vector<T>> + Jacobian<T>
+        where F: Optim<T>
     {
         let mut x_n: Vector<T> = x_0.clone();
 

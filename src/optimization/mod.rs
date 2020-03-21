@@ -2,6 +2,8 @@
 //!
 //! This module provides functions for minimizing objective functions. It includes solvers
 //! for nonlinear problems, nonlinear least-squares.
+
+mod optim;
 mod gaussnewton;
 mod gradient;
 mod newton;
@@ -9,6 +11,8 @@ mod levenbergmarquardt;
 mod conjugategradient;
 mod optimresult;
 mod nonlinearcg;
+
+pub use self::optim::Optim;
 
 /// Gradient mehtod
 pub use self::gradient::Gradient;

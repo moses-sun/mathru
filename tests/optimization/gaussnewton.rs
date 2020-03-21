@@ -4,8 +4,7 @@ extern crate mathru;
 mod gaussnewton
 {
 	use mathru::algebra::linear::{Vector, Matrix};
-	use mathru::optimization::{GaussNewton};
-	use mathru::analysis::{Function, Jacobian};
+	use mathru::optimization::{Optim, GaussNewton};
 
 	pub struct Rosenbrock
 	{
@@ -23,9 +22,8 @@ mod gaussnewton
 		}
 	}
 
-	impl Function<Vector<f64>> for Rosenbrock
+	impl Optim<f64> for Rosenbrock
 	{
-		type Codomain = Vector<f64>;
 
 		fn eval(self: &Self, input: &Vector<f64>) -> Vector<f64>
 		{
@@ -35,10 +33,7 @@ mod gaussnewton
 			return vector![	f64::sqrt(2.0) * (1.0 - x_1);
 							f64::sqrt(200.0) * (x_2 - x_1 * x_1)];
 		}
-	}
 
-	impl Jacobian<f64> for Rosenbrock
-	{
 		fn jacobian(self: &Self, input: &Vector<f64>) -> Matrix<f64>
 		{
 			return matrix![	-f64::sqrt(2.0), 0.0;

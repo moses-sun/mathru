@@ -1,7 +1,6 @@
 use crate::algebra::linear::{Vector, Matrix};
 use crate::algebra::linear::matrix::Solve;
-use crate::optimization::{OptimResult};
-use crate::analysis::{Function, Jacobian, Hessian};
+use crate::optimization::{Optim, OptimResult};
 use crate::algebra::abstr::Real;
 
 
@@ -78,7 +77,7 @@ impl<T> Newton<T>
     ///
     /// local minimum
     pub fn minimize<F>(self: &Self, func: &F, x_0: &Vector<T>) -> OptimResult<Vector<T>>
-        where F: Function<Vector<T>, Codomain = Vector<T>> + Jacobian<T> + Hessian<T>
+        where F: Optim<T>
     {
         let mut x_n: Vector<T> = x_0.clone();
 

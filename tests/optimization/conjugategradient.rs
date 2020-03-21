@@ -5,9 +5,8 @@ mod conjugategradient
 {
 	use mathru::algebra::linear::{Vector, Matrix};
 	use mathru::optimization::ConjugateGradient;
-	use mathru::analysis::{Function, Jacobian};
 	use mathru::algebra::abstr::{Real};
-
+	use mathru::optimization::Optim;
 
 	struct LinearEquation
 	{
@@ -30,19 +29,14 @@ mod conjugategradient
 	}
 
 	/// f(x) = b-Ax
-	impl Function<Vector<f64>> for LinearEquation
+	impl Optim<f64> for LinearEquation
 	{
-		type Codomain = Vector<f64>;
 
 		fn eval(&self, x: &Vector<f64>) -> Vector<f64>
 		{
 			return self.b.clone() - self.a.clone() * x.clone()
 		}
-	}
 
-	//
-	impl Jacobian<f64> for LinearEquation
-	{
 		// A
 		fn jacobian(&self, _input: &Vector<f64>) -> Matrix<f64>
 		{

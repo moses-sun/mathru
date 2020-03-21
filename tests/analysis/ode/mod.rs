@@ -10,6 +10,6 @@ mod rungekutta4;
 mod rungekuttafehlberg54;
 mod dormandprince54;
 mod cashkarp54;
-mod implicit_euler;
+//mod implicit_euler;
 //mod tsitouras54;
 mod adamsbashforth;
