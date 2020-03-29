@@ -1,6 +1,3 @@
-include:
-    - template: License-Scanning.gitlab-ci.yml
-
 stages:
     - build
     - test
