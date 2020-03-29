@@ -1,6 +1,6 @@
 [package]
 name = "mathru"
-version = "0.6.4"
+version = "0.6.5"
 description = "Mathematics library written in Rust"
 authors = ["Matthias Eiholzer <matthias.eiholzer@gmail.com>"]
 exclude = ["literature/*", "tests/*", "backup/*", ".gitignore"]
@@ -14,8 +14,6 @@ documentation = "https://docs.rs/crate/mathru/latest/"
 autobenches = false
 edition = "2018"
 
-[badges]
-maintenance = { status = "actively-developed" }
 
 [package.metadata.docs.rs]
 rustdoc-args = [
