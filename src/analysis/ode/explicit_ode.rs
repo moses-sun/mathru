@@ -1,11 +1,10 @@
-//! Explicit Ordinary Differential Equation
-
+//! Explicit ODE
 use crate::algebra::linear::{Vector};
 
-
-/// Explicit ordinary differential equation
+/// Explicit ODE algrithm interface
 ///
-/// $`x^{n}(t) = f(t, x(t), x^{'}(t), \dots, x^{n-1}(t))`$
+/// This trait has to be implemented by every ODE which shall be solved with
+/// and explicit ODE solving algorithm.
 pub trait ExplicitODE<T>
 {
     fn func(self: &Self, t: &T, x: &Vector<T>) -> Vector<T>;

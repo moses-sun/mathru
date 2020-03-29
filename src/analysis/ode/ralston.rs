@@ -1,10 +1,11 @@
+//! Solves an ODE using Ralston's method.
 use crate::algebra::linear::{Vector};
 use crate::algebra::abstr::Real;
 use super::explicit_method::{ExplicitFixedStepSizeMethod};
 use super::ExplicitODE;
 use crate::analysis::ode::fixed_stepper::ExplicitFixedStepper;
 
-/// Solves an ordinary differential equation using Ralston's method.
+/// Solves an ODE using Ralston's method.
 ///
 /// Ralston's method is a second-order metho
 ///

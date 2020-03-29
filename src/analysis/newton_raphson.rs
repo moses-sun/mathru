@@ -1,6 +1,4 @@
 //! Newton-Raphson's root finding algorithm
-//!
-//!
 use std::default::Default;
 use crate::algebra::abstr::Real;
 use crate::algebra::linear::{Vector, Matrix};
@@ -50,30 +48,25 @@ impl<T> NewtonRaphson<T>
     {
         let mut x = x_0.clone();
 
-        //println!("x_0 = {}", x_0);
-
         for _i in 0..self.iters
         {
 
             let func_x: Vector<T> = func.eval(&x);
-            //println!("g(x): {}", func_x);
 
             let jacobian_x: Matrix<T> = func.jacobian(&x);
-            //println!("J_f: {}", jacobian_x);
 
             let b: Vector<T> = jacobian_x.solve(&func_x).unwrap();
 
-            //println!("J_g^-1(x)g(x): {}", b);
             let x_current: Vector<T> = &x - &b;
 
             if (&x - &x_current).p_norm(&T::from_f64(2.0)) < self.tolerance_abs
             {
+                //println!("{}", x);
                 return Ok(x);
             }
+            //println!("{}", x);
             x = x_current;
         }
-
-        //println!("{}", x);
 
         return Err("Maxmimum number of iterations reached");
     }

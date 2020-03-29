@@ -1,10 +1,11 @@
+//! Solves an ODE using the 4th order Runge-Kutta algorithm.
 use crate::algebra::linear::{Vector};
 use crate::algebra::abstr::Real;
 use super::explicit_method::{ExplicitFixedStepSizeMethod};
 use super::ExplicitODE;
 use crate::analysis::ode::fixed_stepper::ExplicitFixedStepper;
 
-/// Solves an ordinary differential equation using the 4th order Runge-Kutta algorithm.
+/// Solves an ODE using the 4th order Runge-Kutta algorithm.
 ///
 ///<a href="https://en.wikipedia.org/wiki/Runge%E2%80%93Kutta_methods">https://en.wikipedia
 /// .org/wiki/Rung-Kutta_methods</a>

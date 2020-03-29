@@ -82,7 +82,7 @@ Add this to your `Cargo.toml` for the native Rust implementation:
 
 ```toml
 [dependencies.mathru]
-version = "0.6"
+version = "0.6.*"
 ```
 Add the following lines to 'Cargo.toml' if the blas/lapack backend should be used:
 
@@ -97,6 +97,7 @@ Then import the modules and it is ready to be used.
 
 ## Example
 
+### Calculate the LU decomposition of a matrix
 ```rust
 use mathru::algebra::linear::{Matrix};
 
@@ -109,71 +110,150 @@ let (l, u, p): (Matrix<f64>, Matrix<f64>, Matrix<f64>) = a.dec_lu();
 assert_eq!(l_ref, l);
 ```
 
-### Solve an initial value problem with Dormand-Prince method :
+### Solve an initial value problem with Dormand-Prince method:
 
 ```rust
-use mathru::*;
 use mathru::algebra::linear::{Vector};
-use mathru::analysis::ode::{DormandPrince54};
-use mathru::analysis::ode::ExplicitODE;
+use mathru::analysis::ode::{ExplicitODE, DormandPrince54};
+use mathru::analysis::ode::problem::Euler;
+use plotters::prelude::*;
 
-// Define the ODE
-// x' = (5t^2 - x) / e^(t + x) `$
-// x(0) = 1
-pub struct ExplicitODE1
+fn main()
 {
-	time_span: (f64, f64),
-	init_cond: Vector<f64>
-}
+	// Create an ODE instance
+    let problem: Euler<f64> = Euler::default();
 
-impl Default for ExplicitODE1
-{
-	fn default() -> ExplicitODE1
-	{
-		ExplicitODE1
-		{
-			time_span: (0.0, 10.0),
-			init_cond: vector![1.0],
-		}
-	}
-}
+	let (x_start, x_end) = problem.time_span();
 
-impl ExplicitODE<f64> for ExplicitODE1
-{
-   	fn func(self: &Self, t: &f64, x: &Vector<f64>) -> Vector<f64>
-	{
-		return vector!((5.0 * t * t - *x.get(0)) / (t + *x.get(0)).exp());
-	}
-    
-    // Returns the time span
-    fn time_span(self: &Self) -> (f64, f64)
-	{
-		return self.time_span;
-	}
-
-    // Initial value at x(0)
-    fn init_cond(self: &Self) -> Vector<f64>
-	{
-		return self.init_cond.clone();
-	}
-}
-
-
-fn main() {
-	let h_0: f64 = 0.001;
-	let n_max: u32 = 300;
+	// Create a ODE solver instance
+    let h_0: f64 = 0.001;
+	let n_max: u32 = 800;
 	let abs_tol: f64 = 10e-7;
 
 	let solver: DormandPrince54<f64> = DormandPrince54::new(abs_tol, h_0, n_max);
 
-	let (t, x): (Vec<f64>, Vec<Vector<f64>>) = solver.solve(&problem).unwrap();
+	// Solve ODE
+	let (x, y): (Vec<f64>, Vec<Vector<f64>>) = solver.solve(&problem).unwrap();
+
+	//Create chart
+    let mut graph_x1: Vec<(f64, f64)> = Vec::with_capacity(x.len());
+	let mut graph_x2: Vec<(f64, f64)> = Vec::with_capacity(x.len());
+	let mut graph_x3: Vec<(f64, f64)> = Vec::with_capacity(x.len());
+
+    for i in 0..x.len()
+    {
+        let x_i = x[i];
+        graph_x1.push((x_i, *y[i].get(0)));
+       	graph_x2.push((x_i, *y[i].get(1)));
+       	graph_x3.push((x_i, *y[i].get(2)));
+    }
+
+	let root_area = BitMapBackend::new("../figure/ode_explicit.png", (1200, 800))
+        .into_drawing_area();
+    root_area.fill(&WHITE).unwrap();
+
+    let mut ctx = ChartBuilder::on(&root_area)
+		.margin(20)
+        .set_label_area_size(LabelAreaPosition::Left, 40)
+        .set_label_area_size(LabelAreaPosition::Bottom, 40)
+        .caption("ODE solved with Dormand-Prince", ("Arial", 40))
+        .build_ranged(x_start..x_end, -1.0f64..1.5f64)
+        .unwrap();
+
+    ctx.configure_mesh()
+  		.x_desc("Time t")
+  		.axis_desc_style(("sans-serif", 25).into_font())
+       	.draw().unwrap();
+
+
+    ctx.draw_series(
+        LineSeries::new(graph_x1, &BLACK)
+    ).unwrap();
+
+    ctx.draw_series(
+        LineSeries::new(graph_x2, &BLACK)
+    ).unwrap();
+
+    ctx.draw_series(
+        LineSeries::new(graph_x3, &BLACK)
+    ).unwrap();
 }
 ```
-![Example image](figure/ode_simple3.png)
+![Example image](figure/ode_explicit.png)
+
+
+### Solve an initial value problem with implicit Euler method:
+
+```rust
+use mathru::algebra::linear::{Vector};
+use mathru::analysis::ode::{ImplicitODE, ImplicitEuler};
+use mathru::analysis::ode::problem::VanDerPolOsc;
+use plotters::prelude::*;
+
+fn main()
+{
+	// Create an ODE instance
+    let problem: VanDerPolOsc<f64> = VanDerPolOsc::default();
+
+	// Create a ODE solver instance
+    let solver: ImplicitEuler<f64> = ImplicitEuler::new(0.0005);
+
+	// Solve ODE
+	let (t, x): (Vec<f64>, Vec<Vector<f64>>) = solver.solve(&problem).unwrap();
+
+	//Create chart
+    let mut graph_x1: Vec<(f64, f64)> = Vec::with_capacity(x.len());
+	let mut graph_x2: Vec<(f64, f64)> = Vec::with_capacity(x.len());
+
+    for i in 0..x.len()
+    {
+        let t_i = t[i];
+        graph_x1.push((t_i, *x[i].get(0)));
+       	graph_x2.push((t_i, *x[i].get(1)));
+    }
+
+	let root_area = BitMapBackend::new("../figure/ode_implicit.png", (1200, 800))
+        .into_drawing_area();
+    root_area.fill(&WHITE).unwrap();
+
+	let (t_start, t_end) = problem.time_span();
+
+    let mut ctx = ChartBuilder::on(&root_area)
+		.margin(20)
+        .set_label_area_size(LabelAreaPosition::Left, 40)
+        .set_label_area_size(LabelAreaPosition::Bottom, 40)
+        .caption("ODE solved with implicit Euler", ("Arial", 40))
+        .build_ranged(t_start..t_end, -2.0f64..2.0f64)
+        .unwrap();
+
+  	ctx.configure_mesh()
+  		.x_desc("Time t")
+		.y_desc("x, x'")
+  		.axis_desc_style(("sans-serif", 25).into_font())
+       	.draw().unwrap();
+
+    ctx.configure_mesh().draw().unwrap();
+
+    ctx.draw_series(
+        LineSeries::new(graph_x1, &BLACK)
+    ).unwrap();
+
+    ctx.draw_series(
+        LineSeries::new(graph_x2, &RED)
+    ).unwrap();
+}
+```
+
+![Example image](figure/ode_implicit.png)
 
 ### Fitting with Levenberg-Marquardt
 
 ```rust
+use mathru::*;
+use mathru::algebra::linear::{Vector, Matrix};
+use mathru::statistics::distrib::{Distribution, Normal};
+use mathru::optimization::{Optim, LevenbergMarquardt};
+
 ///y = a + b * exp(c * t) = f(t)
 pub struct Example
 {
@@ -203,8 +283,9 @@ impl Example
 	}
 }
 
-impl Jacobian<f64> for Example
+impl Optim<f64> for Example
 {
+	// y(x_i) - f(x_i)
 	fn eval(self: &Self, beta: &Vector<f64>) -> Vector<f64>
 	{
 		let f_x = self.x.clone().apply(&|x: &f64| Example::function(*x, beta));
@@ -224,6 +305,7 @@ impl Jacobian<f64> for Example
 
 		for i in 0..x_m
 		{
+			//let beta_0: f64 = *beta.get(0);
 			let beta_1: f64 = *beta.get(1);
 			let beta_2: f64 = *beta.get(2);
 
@@ -232,17 +314,20 @@ impl Jacobian<f64> for Example
 			*jacobian_f.get_mut(i, 0) = 1.0;
 			*jacobian_f.get_mut(i, 1) = (beta_2 * x_i).exp();
 			*jacobian_f.get_mut(i, 2) = beta_1 * x_i * (beta_2 * x_i).exp();
+
 		}
 
-		return (residual.transpose() * jacobian_f * -2.0).into();
+		let jacobian: Matrix<f64> = (residual.transpose() * jacobian_f * -2.0).into();
+		return jacobian;
 	}
 }
+
 
 fn main()
 {
 	let num_samples: usize = 100;
 
-	let noise: Normal = Normal::new(0.0, 0.05);
+	let noise: Normal<f64> = Normal::new(0.0, 0.05);
 
 	let mut t_vec: Vec<f64> = Vec::with_capacity(num_samples);
 	// Start time
@@ -255,7 +340,6 @@ fn main()
 	// True function parameters
 	let beta: Vector<f64> = vector![0.5; 5.0; -1.0];
 
-    // Create samples with noise
 	for i in 0..num_samples
 	{
 		let t_i: f64 = (t_1 - t_0) / (num_samples as f64) * (i as f64);
@@ -265,34 +349,28 @@ fn main()
 
 		t_vec.push(t_i);
 	}
-    	
+
 	let t: Vector<f64> = Vector::new_column(num_samples, t_vec.clone());
 	let y: Vector<f64> = Vector::new_column(num_samples, y_vec.clone());
 
 	let example_function = Example::new(t, y);
-     
-    // Optimise fitting parameters with Levenberg-Marquard algorithm
-    let optim: LevenbergMarquardt<f64> = LevenbergMarquardt::new(100, 0.3, 0.95);
-	let beta_opt: Vector<f64> = optim.minimize(&example_function, &vector![-1.5; 1.0; -2.0]).arg();
+
+	let optim: LevenbergMarquardt<f64> = LevenbergMarquardt::new(100, 0.3, 0.95);
+
+	let beta_0: Vector<f64> = vector![-1.5; 1.0; -2.0];
+	let beta_opt: Vector<f64> = optim.minimize(&example_function, &beta_0).arg();
 
     println!("{}", beta_opt);
 }
 ```
-![Fitting with Levenberg-Marquardt](figure/fit.png)
+![Fitting with Levenberg-Marquardt](figure/fit_lm.png)
 
 ## License
 
-Licensed under either of
+Licensed under
 
- * Apache License, Version 2.0, ([LICENSE-APACHE](LICENSE-APACHE) or http://www.apache.org/licenses/LICENSE-2.0)
  * MIT license ([LICENSE-MIT](LICENSE-MIT) or http://opensource.org/licenses/MIT)
 
-at your option.
-
 ### Contribution
-
-Unless you explicitly state otherwise, any contribution intentionally submitted
-for inclusion in the work by you, as defined in the Apache-2.0 license, shall be dual licensed as above, without any
-additional terms or conditions.
 
 Any contribution is welcome!

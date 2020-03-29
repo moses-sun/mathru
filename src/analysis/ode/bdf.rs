@@ -1,9 +1,10 @@
-//! Solves an ODE using Adam-Bashforth method.
+//! Solves an ODE using backward differntiation formula
 use crate::analysis::ode::explicit_ode::{ExplicitODE};
 use crate::algebra::linear::vector::vector::Vector;
 use crate::algebra::abstr::Real;
 
-/// Adams-Bashforth method
+/// Backward differentitation formula
+///
 /// # Example
 ///
 /// For this example, we want to solve the following ordinary differiential equation:

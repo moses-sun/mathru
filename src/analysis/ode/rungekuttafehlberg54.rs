@@ -1,3 +1,4 @@
+//! Solves an ODE using the 4th order Runge-Kutta-Fehlberg algorithm.
 use crate::algebra::linear::{Vector};
 use crate::algebra::abstr::Real;
 use super::explicit_method::{ExplicitAdaptiveMethod};
@@ -5,7 +6,7 @@ use super::ExplicitODE;
 use std::default::Default;
 use super::adaptive_stepper::AdaptiveStepper;
 
-/// Solves an ordinary differential equation using the 4th order Runge-Kutta-Fehlberg algorithm.
+/// Solves an ODE using the 4th order Runge-Kutta-Fehlberg algorithm.
 ///
 /// ```math
 /// order \mathcal{O}(h^4) with an error estimator of order \mathcal{O}(h^5)
@@ -14,6 +15,85 @@ use super::adaptive_stepper::AdaptiveStepper;
 ///<a href="https://en.wikipedia.org/wiki/Runge-Kutta-Fehlberg_method">https://en.wikipedia
 /// .org/wiki/Runge-Kutta-Fehlberg_method</a>
 ///
+/// # Example
+///
+/// For this example, we want to solve the following ordinary differiential equation:
+/// ```math
+/// \frac{dy}{dt} = ay = f(t, y)
+/// ```
+/// The inial condition is $`y(0) = 0.5`$ and we solve it in the interval $`\lbrack 0, 2\rbrack`$
+/// The following equation is the closed solution for this ODE:
+/// ```math
+/// y(t) = C a e^{at}
+/// ```
+/// $`C`$ is a parameter and depends on the initial condition $`y(t_{0})`$
+/// ```math
+/// C = \frac{y(t_{0})}{ae^{at_{0}}}
+/// ```
+///
+/// In this example, we set $`a=2`$
+/// ```
+/// # #[macro_use]
+/// # extern crate mathru;
+/// # fn main()
+/// # {
+///	use mathru::algebra::linear::{Vector};
+///	use mathru::analysis::ode::{ExplicitODE, RungeKuttaFehlberg54};
+///
+/// pub struct ExplicitODE1
+/// {
+///	    time_span: (f64, f64),
+///     init_cond: Vector<f64>
+/// }
+///
+/// impl Default for ExplicitODE1
+/// {
+///	    fn default() -> ExplicitODE1
+///	    {
+///         ExplicitODE1
+///         {
+///             time_span: (0.0, 2.0),
+///             init_cond: vector![0.5]
+///	        }
+///     }
+/// }
+///
+/// impl ExplicitODE<f64> for ExplicitODE1
+/// {
+/// 	fn func(self: &Self, _t: &f64, x: &Vector<f64>) -> Vector<f64>
+///     {
+///		    return x * &2.0f64;
+///     }
+///
+///     fn time_span(self: &Self) -> (f64, f64)
+///     {
+///     	return self.time_span;
+///     }
+///
+///     fn init_cond(self: &Self) -> Vector<f64>
+///	    {
+///	        return self.init_cond.clone();
+///     }
+/// }
+///
+/// // We instanciate CashKarp algorithm
+/// let h_0: f64 = 0.0001;
+/// let fac: f64 = 0.9;
+/// let fac_min: f64 = 0.01;
+///	let fac_max: f64 = 2.0;
+///	let n_max: u32 = 100;
+/// let abs_tol: f64 = 10e-6;
+///	let rel_tol: f64 = 10e-3;
+///
+///	let solver: RungeKuttaFehlberg54<f64> = RungeKuttaFehlberg54::new(n_max, h_0, fac, fac_min, fac_max, abs_tol, rel_tol);
+///
+/// let problem: ExplicitODE1 = ExplicitODE1::default();
+///
+/// // Solve the ODE
+/// let (t, y): (Vec<f64>, Vec<Vector<f64>>) = solver.solve(&problem).unwrap();
+///
+/// # }
+/// ```
 pub struct RungeKuttaFehlberg54<T>
 {
     stepper: AdaptiveStepper<T>
@@ -32,67 +112,6 @@ impl<T> RungeKuttaFehlberg54<T>
         }
     }
 
-    /// # Example
-    ///
-    /// ```
-    /// use mathru::*;
-    /// use mathru::algebra::linear::{Vector, Matrix};
-    /// use mathru::analysis::ode::{ExplicitODE, RungeKuttaFehlberg54};
-    ///
-    /// // Define ODE
-    /// // $`y^{'} = ay = f(x, y) `$
-    /// // $`y = C a e^{at}`$
-    /// // $'y(t_{s}) = C a e^{at_s} => C = \frac{y(t_s)}{ae^{at_s}}`$
-    /// pub struct ExplicitODEProblem
-    /// {
-    ///	    time_span: (f64, f64),
-    ///	    init_cond: Vector<f64>
-    /// }
-    ///
-    /// impl Default for ExplicitODEProblem
-    /// {
-    ///	    fn default() -> ExplicitODEProblem
-    ///	    {
-    ///		    ExplicitODEProblem
-    ///		    {
-    ///			    time_span: (0.0, 2.0),
-    ///			    init_cond: vector![0.5],
-    ///		    }
-    ///	    }
-    /// }
-    ///
-    /// impl ExplicitODE<f64> for ExplicitODEProblem
-    /// {
-    ///   	fn func(self: &Self, t: &f64, x: &Vector<f64>) -> Vector<f64>
-    ///     {
-    ///		    return x * &2.0f64;
-    ///	    }
-    ///
-    ///     fn time_span(self: &Self) -> (f64, f64)
-    ///     {
-    ///		    return self.time_span;
-    ///     }
-    ///
-    ///    fn init_cond(self: &Self) -> Vector<f64>
-    ///    {
-    ///	        return self.init_cond.clone();
-    ///    }
-    /// }
-    ///
-    ///	let problem: ExplicitODEProblem = ExplicitODEProblem::default();
-   	///
-    /// let h_0: f64 = 0.0001;
-    /// let fac: f64 = 0.9;
-    /// let fac_min: f64 = 0.01;
-    ///	let fac_max: f64 = 2.0;
-    ///	let n_max: u32 = 100;
-    /// let abs_tol: f64 = 10e-6;
-    ///	let rel_tol: f64 = 10e-3;
-    ///
-	///	let solver: RungeKuttaFehlberg54<f64> = RungeKuttaFehlberg54::new(n_max, h_0, fac, fac_min, fac_max, abs_tol, rel_tol);
-    ///
-    /// let (t, y): (Vec<f64>, Vec<Vector<f64>>) = solver.solve(&problem).unwrap();
-    /// ```
     pub fn solve<F>(self: &Self, prob: &F) -> Result<(Vec<T>, Vec<Vector<T>>), &'static str>
         where F: ExplicitODE<T>,
     {

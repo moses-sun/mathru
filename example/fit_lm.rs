@@ -1,9 +1,8 @@
 use mathru::*;
 use mathru::algebra::linear::{Vector, Matrix};
-use mathru_plot::{Figure, PlottingArea, Plot, Graph, Color};
 use mathru::statistics::distrib::{Distribution, Normal};
-use mathru::optimization::{Jacobian, LevenbergMarquardt};
-
+use mathru::optimization::{Optim, LevenbergMarquardt};
+use plotters::prelude::*;
 
 ///y = a + b * exp(c * t) = f(t)
 ///
@@ -36,7 +35,7 @@ impl Example
 	}
 }
 
-impl Jacobian<f64> for Example
+impl Optim<f64> for Example
 {
 	// y(x_i) - f(x_i)
 	fn eval(self: &Self, beta: &Vector<f64>) -> Vector<f64>
@@ -88,7 +87,7 @@ fn main()
 	// End time
 	let t_1 = 5.0f64;
 
-	let mut y_vec: Vec<f64> = Vec::with_capacity(num_samples);
+	let mut x_vec: Vec<f64> = Vec::with_capacity(num_samples);
 
 	// True function parameters
 	let beta: Vector<f64> = vector![0.5; 5.0; -1.0];
@@ -98,50 +97,58 @@ fn main()
 		let t_i: f64 = (t_1 - t_0) / (num_samples as f64) * (i as f64);
 
 		//Add some noise
-		y_vec.push(Example::function(t_i, &beta) + noise.random());
-
+		x_vec.push(Example::function(t_i, &beta) + noise.random());
 		t_vec.push(t_i);
 	}
 
 	let t: Vector<f64> = Vector::new_column(num_samples, t_vec.clone());
-	let y: Vector<f64> = Vector::new_column(num_samples, y_vec.clone());
+	let x: Vector<f64> = Vector::new_column(num_samples, x_vec.clone());
 
-	let example_function = Example::new(t, y);
+	let example_function = Example::new(t, x);
 
 	let optim: LevenbergMarquardt<f64> = LevenbergMarquardt::new(100, 0.3, 0.95);
-	let beta_opt: Vector<f64> = optim.minimize(&example_function, &vector![-1.5; 1.0; -2.0]).arg();
 
-
-  	let mut graph_y: Vec<(f64, f64)> = Vec::new();
-
-    for i in 0..num_samples
-    {
-        graph_y.push((t_vec[i], y_vec[i]));
-    }
-
-    let mut graph_y_hat: Vec<(f64, f64)> = Vec::new();
-
-    for i in 0..num_samples
-    {
-    	let t_i: f64 = t_vec[i];
-        let y_hat_i = Example::function(t_i, &beta_opt);
-        graph_y_hat.push((t_i, y_hat_i));
-    }
+	// Fit parameter
+	let beta_0: Vector<f64> = vector![-1.5; 1.0; -2.0];
+	let beta_opt: Vector<f64> = optim.minimize(&example_function, &beta_0).arg();
 
 	//Create chart
-    let mut figure: Figure = Figure::new(1024, 768);
-    let area: &mut PlottingArea = figure.get_plottingarea();
-    let plot: &mut Plot = area.get_plot();
+    let mut graph_x: Vec<(f64, f64)> = Vec::with_capacity(x_vec.len());
+	let mut graph_x_hat: Vec<(f64, f64)> = Vec::with_capacity(x_vec.len());
 
-    plot.set_x_range(t_0, t_1);
-    plot.set_y_range(-0.5f64, 6.0f64);
+    for i in 0..x_vec.len()
+    {
+        let t_i = t_vec[i];
+        graph_x.push((t_i, x_vec[i]));
 
-    plot.add_graph(Graph::new(graph_y, Color::Black));
-    plot.add_graph(Graph::new(graph_y_hat, Color::Red));
+      	let x_hat = Example::function(t_i, &beta_opt);
+       	graph_x_hat.push((t_i, x_hat));
+    }
 
-    plot.set_x_axis_designator("Time t");
-    plot.set_y_axis_designator("x(t)");
-    plot.set_title("Fitting with Levenberg-Marquardt");
+	let root_area = BitMapBackend::new("../figure/fit_lm.png", (1200, 800))
+        .into_drawing_area();
+    root_area.fill(&WHITE).unwrap();
 
-    figure.save("../figure/fit.png").unwrap();
+    let mut ctx = ChartBuilder::on(&root_area)
+		.margin(20)
+        .set_label_area_size(LabelAreaPosition::Left, 40)
+        .set_label_area_size(LabelAreaPosition::Bottom, 40)
+        .caption("Parameter fitting with Levenberg Marquardt", ("Arial", 40))
+        .build_ranged(t_0..t_1, -0.5f64..6.0f64)
+        .unwrap();
+
+    ctx.configure_mesh()
+  		.x_desc("Time t")
+  		.axis_desc_style(("sans-serif", 25).into_font())
+       	.draw().unwrap();
+
+
+    ctx.draw_series(
+        LineSeries::new(graph_x, &BLACK)
+    ).unwrap();
+
+    ctx.draw_series(
+        LineSeries::new(graph_x_hat, &RED)
+    ).unwrap();
+
 }

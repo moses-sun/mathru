@@ -6,14 +6,12 @@ edition = "2018"
 
 [[bin]]
 name = "ode_simple"
-path = "fit.rs"
+path = "fit_lm.rs"
 
 [dependencies.mathru]
-#version = "0.5"
 path = "../"
 default-features = false
 features = ["native"]
 
-[dependencies.mathru-plot]
-path = "../../mathru-plot"
-version = "0.0.1"
+[dependencies.plotters]
+version = "0.2.12"

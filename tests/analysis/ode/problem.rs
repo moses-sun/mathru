@@ -1,7 +1,8 @@
 //! Often used ODEs
-use mathru::algebra::linear::{Vector, Matrix};
-use mathru::analysis::ode::{ExplicitODE, ImplicitODE};
+use mathru::algebra::linear::{Vector};
+use mathru::analysis::ode::{ExplicitODE};
 use std::default::Default;
+use std::f64;
 
 /// Define ODE
 /// $`y^{'} = ay = f(x, y) `$
@@ -121,53 +122,4 @@ impl ExplicitODE<f64> for ExplicitODE3
 		return self.init_cond.clone();
 	}
 }
-
-/// Define ODE
-/// $`0 = -4(y(t) -2) -y(x)^{'} = f(x, y, y^{'}) `$
-/// $`y(t) = 2 - e^{-x}`$
-pub struct StiffODE1
-{
-	time_span: (f64, f64),
-	init_cond: Vector<f64>
-
-}
-
-impl Default for StiffODE1
-{
-	fn default() -> StiffODE1
-	{
-		StiffODE1
-		{
-			time_span: (0.0, 2.0),
-			init_cond: vector![1.0]
-		}
-	}
-}
-
-impl ImplicitODE<f64> for StiffODE1
-{
-	///$`0 = -4(y(x) -2) -y(x)^{'} = f(x, y, y^{'}) `$
-   	fn func(self: &Self, _t: &f64, x: &Vector<f64>) -> Vector<f64>
-	{
-		let result = (x * &-4.0) + 8.0;
-		return result;
-	}
-
-    fn time_span(self: &Self) -> (f64, f64)
-	{
-		return self.time_span;
-	}
-
-    fn init_cond(self: &Self) -> Vector<f64>
-	{
-		return self.init_cond.clone();
-	}
-
-	fn jacobian(self: &Self, _t: &f64, _input: &Vector<f64>) -> Matrix<f64>
-	{
-		let jacobian = matrix![-4.0];
-		return jacobian;
-	}
-}
-
 

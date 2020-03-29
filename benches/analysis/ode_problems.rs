@@ -152,7 +152,6 @@ impl ImplicitODE<f64> for ImplicitODE1
    	fn func(self: &Self, t: &f64, x: &Vector<f64>) -> Vector<f64>
 	{
 		let result = (x * &-4.0) + 8.0;
-		println!("f(x)= {}", result);
 		return result;
 	}
 
@@ -169,7 +168,6 @@ impl ImplicitODE<f64> for ImplicitODE1
 	fn jacobian(self: &Self, t: &f64, input: &Vector<f64>) -> Matrix<f64>
 	{
 		let jacobian = matrix![-4.0];
-		println!("J(x) = {}", jacobian);
 		return jacobian;
 	}
 }

@@ -31,6 +31,8 @@ mod implicit_method;
 mod fixed_stepper;
 mod adaptive_stepper;
 
+pub mod problem;
+
 pub use euler::Euler;
 pub use implicit_euler::ImplicitEuler;
 pub use midpoint::Midpoint;

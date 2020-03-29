@@ -1,10 +1,11 @@
+//! Solves an ODE using midpoint method.
 use crate::algebra::linear::{Vector};
 use crate::algebra::abstr::Real;
 use super::explicit_method::{ExplicitFixedStepSizeMethod};
 use super::ExplicitODE;
 use crate::analysis::ode::fixed_stepper::ExplicitFixedStepper;
 
-/// Solves an ordinary differential equation using midpoint method.
+/// Solves an ODE using midpoint method.
 ///
 /// <a href="https://en.wikipedia.org/wiki/Midpoint_method">https://en.wikipedia.org/wiki/Midpoint_method</a>
 pub struct Midpoint<T>

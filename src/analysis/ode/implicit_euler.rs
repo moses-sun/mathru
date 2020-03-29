@@ -1,3 +1,4 @@
+//! Solves an implicit ODE equation using backward Euler.
 use crate::algebra::linear::{Vector, Matrix};
 use crate::algebra::abstr::Real;
 use super::implicit_method::{ImplicitFixedStepSizeMethod};
@@ -7,9 +8,83 @@ use crate::analysis::{Function, Jacobian};
 use crate::analysis::ode::fixed_stepper::ImplicitFixedStepper;
 use std::marker::PhantomData;
 
-/// Solves an ordinary differential equation using Euler's method.
+/// Solves an ODE using backward Euler
 ///
 /// <a href="https://en.wikipedia.org/wiki/Backward_Euler_method">https://en.wikipedia.org/wiki/Backward_Euler_method</a>
+/// # Example
+///
+/// For this example, we want to solve the following stiff ordinary differiential equation:
+/// ```math
+/// 0 = -4(y(t) -2) -y(t)^{'} = f(t, y, y^{'})
+/// ```
+/// The inial condition is $`y(0) = 1.0`$ and we solve it in the interval $`\lbrack 0, 2\rbrack`$.\
+/// The following equation is the closed solution for this ODE:
+/// ```math
+/// y(t) = 2 - e^{-t}
+/// ```
+///
+/// ```
+/// # #[macro_use]
+/// # extern crate mathru;
+/// # fn main()
+/// # {
+///	use mathru::algebra::linear::{Vector, Matrix};
+///	use mathru::analysis::ode::{ImplicitODE, ImplicitEuler};
+///
+/// pub struct StiffODE
+/// {
+///	    time_span: (f64, f64),
+///	    init_cond: Vector<f64>
+///
+/// }
+///
+/// impl Default for StiffODE
+/// {
+///     fn default() -> StiffODE
+///	    {
+///		    StiffODE
+///		    {
+///			    time_span: (0.0, 2.0),
+///			    init_cond: vector![1.0]
+///		    }
+///     }
+/// }
+///
+/// impl ImplicitODE<f64> for StiffODE
+/// {
+///     fn func(self: &Self, _t: &f64, x: &Vector<f64>) -> Vector<f64>
+///     {
+///		    let result = (x * &-4.0) + 8.0;
+///		    return result;
+/// 	}
+///
+///     fn time_span(self: &Self) -> (f64, f64)
+///	    {
+///		    return self.time_span;
+///     }
+///
+///    fn init_cond(self: &Self) -> Vector<f64>
+///	    {
+///         return self.init_cond.clone();
+///     }
+///
+///     fn jacobian(self: &Self, _t: &f64, _input: &Vector<f64>) -> Matrix<f64>
+///     {
+///         let jacobian = matrix![-4.0];
+///         return jacobian;
+///     }
+/// }
+///
+/// // We instanciate Euler's backward algorithm with a stepsize of 0.001
+/// let step_size: f64 = 0.0001;
+/// let solver: ImplicitEuler<f64> = ImplicitEuler::new(step_size);
+///
+/// let problem: StiffODE = StiffODE::default();
+///
+/// // Solve the ODE
+/// let (t, y): (Vec<f64>, Vec<Vector<f64>>) = solver.solve(&problem).unwrap();
+/// # }
+/// ```
 pub struct ImplicitEuler<T>
 {
     stepper: ImplicitFixedStepper<T>,
@@ -27,7 +102,7 @@ impl<T> ImplicitEuler<T>
         return ImplicitEuler
         {
             stepper: ImplicitFixedStepper::new(step_size),
-            root_finder: NewtonRaphson::new(100, T::from_f64(1.0e-6))
+            root_finder: NewtonRaphson::new(20000, T::from_f64(1.0e-6))
         };
     }
 
@@ -55,10 +130,8 @@ impl<T> ImplicitFixedStepSizeMethod<T> for ImplicitEuler<T>
         where F: ImplicitODE<T>
     {
         let ie_helper = ImplicitEulerHelper::new(prob, t_n, x_n, h);
-        //println!("x_n = {}", x_n);
         let x_n = self.root_finder.find_root(&ie_helper, x_n).unwrap();
 
-        //println!("x_n+1 = {}", x_n);
         return x_n;
     }
 
@@ -109,10 +182,8 @@ impl<'a, T, F> Function<Vector<T>> for ImplicitEulerHelper<'a, T, F>
     fn eval(self: &Self, z: &Vector<T>) -> Vector<T>
     {
         let t_n1 = *self.t + *self.h;
-        //println!("y_n: {}, x:{}", self.x, z);
         let result = &(self.x + &(&self.function.func(&t_n1, z) * self.h)) - z;
 
-        //println!("g(x): {}", result);
         return result;
     }
 }
@@ -127,8 +198,6 @@ impl<'a, T, F> Jacobian<T> for ImplicitEulerHelper<'a, T, F>
         let (m, _n): (usize, usize) = z.dim();
         let t_n1 = *self.t + *self.h;
         let jacobian = crate::analysis::ode::implicit_ode::ImplicitODE::jacobian(self.function, &t_n1, z) * *self.h - Matrix::one(m);
-
-        //println!("J_g(x) = {}", jacobian);
 
         return jacobian;
     }

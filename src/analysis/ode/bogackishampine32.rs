@@ -1,14 +1,13 @@
+//! Solves an ODE using the Bogacki Shampine algorithm.
 use crate::algebra::linear::{Vector};
 use crate::algebra::abstr::Real;
 use super::{ExplicitODE};
 use super::explicit_method::{ExplicitAdaptiveMethod};
 use super::adaptive_stepper::AdaptiveStepper;
 
-/// Solves an ordinary differential equation using the Bogacki Shamepine 2 algorithm.
-///
+/// Solves an ODE using the Bogacki Shampine algorithm.
 ///
 ///<a href="https://en.wikipedia.org/wiki/Bogacki-Shampine_method">https://en.wikipedia.org/wiki/Bogacki-Shampine_method</a>
-///
 pub struct BogackiShampine32<T>
 {
     stepper: AdaptiveStepper<T>
@@ -19,7 +18,6 @@ impl<T> BogackiShampine32<T>
     where T: Real
 {
     /// Creates a Bogacki-Shampine 2 3 instance
-     /// Creates a DormandPrince54 instance, also known as explicit Runge-Kutta method of order 5(4) with step-size control
     pub fn new(n_max: u32, h_0: T, fac: T, fac_min: T, fac_max: T, abs_tol: T, rel_tol: T) -> BogackiShampine32<T>
     {
         return BogackiShampine32

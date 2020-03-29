@@ -20,7 +20,7 @@ mod implicit_euler
 	fn fn1()
 	{
 		let problem: ImplicitODE1 = ImplicitODE1::default();
-		let solver: ImplicitEuler<f64> = ImplicitEuler::new(0.01);
+		let solver: ImplicitEuler<f64> = ImplicitEuler::new(0.001);
 
 		let (t, y): (Vec<f64>, Vec<Vector<f64>>) = solver.solve(&problem).unwrap();
 

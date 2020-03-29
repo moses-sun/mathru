@@ -82,7 +82,6 @@ mod gradient
 
 		let x_min: Vector<f64> = optim.minimize(&function, &x_0).arg();
 
-		println!("{}", x_min);
 		assert!(*x_min.get(0) < 0.05);
 		assert!(*x_min.get(1) < 0.05);
 	}
