@@ -1,16 +1,26 @@
+include:
+  - template: License-Scanning.gitlab-ci.yml
+
 stages:
   - build
   - test
 
-rust-build:
-  stage: build
-  image: rust:latest
-  script:
-    - cargo build --verbose
+build:
+  master:
+    only:
+        - master@matthiaseiholze/mathru
+    stage: build
+    image: rust:latest
+    script:
+      - cargo build --verbose
 
 
-rust-test:
-  stage: test
-  image: rust:latest
-  script:
-    - cargo test --verbose
+test:
+  master:
+    only:
+      - master@matthiaseiholze/mathru
+    stage: test
+    needs: build
+    image: rust:latest
+    script:
+      - cargo test --verbose
