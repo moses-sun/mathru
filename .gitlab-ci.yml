@@ -1,14 +1,11 @@
 include:
-  - template: License-Scanning.gitlab-ci.yml
+    - template: License-Scanning.gitlab-ci.yml
 
 stages:
-  - build
-  - test
+    - build
+    - test
 
 cargo-build:
-  master:
-    only:
-        - master@matthiaseiholze/mathru
     stage: build
     image: rust:latest
     script:
@@ -16,9 +13,6 @@ cargo-build:
 
 
 cargo-test:
-  master:
-    only:
-        - master@matthiaseiholze/mathru
     stage: test
     needs: build
     image: rust:latest
