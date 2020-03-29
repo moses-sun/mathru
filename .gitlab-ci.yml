@@ -5,7 +5,7 @@ stages:
   - build
   - test
 
-build:
+cargo-build:
   master:
     only:
         - master@matthiaseiholze/mathru
@@ -15,10 +15,10 @@ build:
       - cargo build --verbose
 
 
-test:
+cargo-test:
   master:
     only:
-      - master@matthiaseiholze/mathru
+        - master@matthiaseiholze/mathru
     stage: test
     needs: build
     image: rust:latest
