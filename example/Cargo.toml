@@ -6,7 +6,7 @@ edition = "2018"
 
 [[bin]]
 name = "ode_simple"
-path = "fit_lm.rs"
+path = "ode_implicit.rs"
 
 [dependencies.mathru]
 path = "../"

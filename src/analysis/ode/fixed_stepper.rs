@@ -139,7 +139,6 @@ impl<T> ImplicitFixedStepper<T>
 
         let steps: usize = limit.to_u64() as usize;
 
-        println!("Steps: {}", steps);
         let mut t_vec: Vec<T> = Vec::with_capacity(steps);
         let mut res_vec: Vec<Vector<T>> = Vec::with_capacity(steps);
 
