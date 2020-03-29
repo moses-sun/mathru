@@ -14,7 +14,7 @@ cargo-build:
 
 cargo-test:
     stage: test
-    needs: ["carbo-build"]
+    needs: ["cargo-build"]
     image: rust:latest
     script:
       - cargo test --verbose
