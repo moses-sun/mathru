@@ -11,7 +11,7 @@
 //! ```
 
 mod euler;
-mod implicit_euler;
+//mod implicit_euler;
 mod midpoint;
 mod heun;
 mod kutta3;
@@ -23,7 +23,7 @@ mod dormandprince54;
 mod cashkarp54;
 //mod tsitouras54;
 mod adamsbashforth;
-//mod adamsmoulton;
+mod bdf;
 mod explicit_ode;
 mod implicit_ode;
 mod explicit_method;
@@ -34,12 +34,9 @@ mod adaptive_stepper;
 pub mod problem;
 
 pub use euler::Euler;
-pub use implicit_euler::ImplicitEuler;
+
 pub use midpoint::Midpoint;
-
-
 pub use heun::Heun;
-
 pub use kutta3::Kutta3;
 pub use rungekutta4::RungeKutta4;
 pub use ralston::Ralston;
@@ -48,8 +45,10 @@ pub use rungekuttafehlberg54::RungeKuttaFehlberg54;
 pub use dormandprince54::DormandPrince54;
 pub use cashkarp54::CashKarp54;
 
+//pub use implicit_euler::ImplicitEuler;
+pub use bdf::BDF;
+
 pub use adamsbashforth::AdamsBashforth;
-//pub use adamsmoulton::AM;
 //pub use tsitouras54::Tsitouras54;
 pub use explicit_ode::ExplicitODE;
 pub use implicit_ode::ImplicitODE;

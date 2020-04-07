@@ -144,9 +144,6 @@ impl<T> ImplicitFixedStepSizeMethod<T> for ImplicitEuler<T>
     }
 }
 
-
-/// this structure is implemented, therewith it is possible to implement the traits needed by NewtonRaphson
-/// without exposing this traits.
 struct ImplicitEulerHelper<'a, T, F>
     where T: Real, F: ImplicitODE<T>
 {
