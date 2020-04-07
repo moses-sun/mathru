@@ -2,8 +2,8 @@
 mod implicit_euler
 {
 	use mathru::algebra::linear::{Vector};
-	use mathru::analysis::ode::{ImplicitEuler, ImplicitODE};
-	use mathru::analysis::ode::problem::{VanDerPolOsc};
+	use mathru::analysis::ode::{ImplicitEuler, ODEProblem};
+	use super::super::problem::{ImplicitODE1};
 
 	fn compare_epsilon(a: f64, b: f64, epsilon: f64) -> bool
     {
@@ -19,8 +19,8 @@ mod implicit_euler
 	#[test]
 	fn fn1()
 	{
-		let problem: VanDerPolOsc<f64> = VanDerPolOsc::default();
-		let solver: ImplicitEuler<f64> = ImplicitEuler::new(0.0005);
+		let problem: ImplicitODE1 = ImplicitODE1::default();
+		let solver: ImplicitEuler<f64> = ImplicitEuler::new(0.001);
 
 		let (t, y): (Vec<f64>, Vec<Vector<f64>>) = solver.solve(&problem).unwrap();
 
