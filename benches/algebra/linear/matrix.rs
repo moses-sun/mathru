@@ -12,20 +12,19 @@ use na::DMatrix;
 criterion_group!(
 	matrix,
 	mat1000_add_mat1000,
+	mat1000_mul_mat1000,
 	nalgebra_mat1000_add_mat1000,
-    //mat1000_mul_mat1000,
     nalgebra_mat1000_mul_mat1000,
-//    mat1000_add_mat1000_func,
-//	mat200_add_mat200,
-//	mat500_add_mat500,
-//	mat100_mul_mat100,
-//	mat200_mul_mat200,
-//	mat500_mul_mat500,
-//	mat500_add_scalar_borrow,
-//	mat500_add_scalar_ownership,
-//	dec_lu_100x100,
-//	dec_lu_200x200,
-//	dec_lu_500x500,
+	mat200_add_mat200,
+	mat500_add_mat500,
+	mat100_mul_mat100,
+	mat200_mul_mat200,
+	mat500_mul_mat500,
+	mat500_add_scalar_borrow,
+	mat500_add_scalar_ownership,
+	dec_lu_100x100,
+	dec_lu_200x200,
+	dec_lu_500x500,
 );
 
 
@@ -60,14 +59,6 @@ fn nalgebra_mat1000_mul_mat1000(bench: &mut Criterion)
 
     bench.bench_function("nalgebra_mat1000_mul_mat1000", move |bh| bh.iter(|| &a * &b));
 }
-
-//fn mat1000_add_mat1000_func(bench: &mut Criterion)
-//{
-//    let a: Matrix<f64> = Matrix::new_random(1000, 1000);
-//    let b: Matrix<f64> = Matrix::new_random(1000, 1000);
-//
-//    bench.bench_function("mat1000_add_mat1000_func", move |bh| bh.iter(|| a.add_func(&b)));
-//}
 
 fn mat200_add_mat200(bench: &mut Criterion)
 {
