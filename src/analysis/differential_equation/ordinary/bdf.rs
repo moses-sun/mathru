@@ -1,9 +1,10 @@
-//! Solves an ODE using Adam-Bashforth method.
-use crate::analysis::ode::explicit_ode::{ExplicitODE};
+//! Solves an ODE using backward differntiation formula
+use crate::analysis::differential_equation::ordinary::explicit_ode::{ExplicitODE};
 use crate::algebra::linear::vector::vector::Vector;
 use crate::algebra::abstr::Real;
 
-/// Adams-Bashforth method
+/// Backward differentitation formula
+///
 /// # Example
 ///
 /// For this example, we want to solve the following ordinary differiential equation:
@@ -27,7 +28,7 @@ use crate::algebra::abstr::Real;
 /// # fn main()
 /// # {
 ///	use mathru::algebra::linear::{Vector};
-///	use mathru::analysis::ode::{ExplicitODE, AdamsBashforth};
+///	use mathru::analysis::differential_equation::ordinary::{ExplicitODE, AdamsBashforth};
 ///
 /// pub struct ExplicitODE1
 /// {
@@ -76,19 +77,19 @@ use crate::algebra::abstr::Real;
 ///
 /// # }
 /// ```
-pub struct AdamsBashforth<T>
+pub struct BDF<T>
 {
 	k: u8,
 	step_size: T
 }
 
-impl<T> AdamsBashforth<T>
+impl<T> BDF<T>
 	where T: Real
 {
 	///
-	pub fn new(k: u8, step_size: T) -> AdamsBashforth<T>
+	pub fn new(k: u8, step_size: T) -> BDF<T>
 	{
-		if k == 0 || k > 5
+		if k == 0 || k > 6
 		{
 			panic!();
 		}
@@ -98,7 +99,7 @@ impl<T> AdamsBashforth<T>
         }
 
 		return
-		AdamsBashforth
+		BDF
 		{
 			k: k,
 			step_size: step_size
@@ -106,11 +107,11 @@ impl<T> AdamsBashforth<T>
 	}
 }
 
-impl<T> AdamsBashforth<T>
+impl<T> BDF<T>
     where T: Real
 {
 
-    /// Solves `func` using Adams' method.
+    /// Solves `func` using BDF method.
     ///
     /// # Arguments
     ///
@@ -154,7 +155,7 @@ impl<T> AdamsBashforth<T>
 		if self.k >= 2
 		{
 			let h: T = self.step_size.min(t_stop - t_n);
-			let x_n = AdamsBashforth::step_s1(prob, &t_vec, &res_vec, h);
+			let x_n = BDF::step_s1(prob, &t_vec, &res_vec, h);
 			t_n = t_n + h;
 
 			t_vec.push(t_n);
@@ -164,7 +165,7 @@ impl<T> AdamsBashforth<T>
 		if self.k >= 3
 		{
 			let h: T = self.step_size.min(t_stop - t_n);
-			let x_n = AdamsBashforth::step_s2(prob, &t_vec, &res_vec, h);
+			let x_n = BDF::step_s2(prob, &t_vec, &res_vec, h);
 			t_n = t_n + h;
 
 			t_vec.push(t_n);
@@ -174,7 +175,7 @@ impl<T> AdamsBashforth<T>
 		if self.k >= 4
 		{
 			let h: T = self.step_size.min(t_stop - t_n);
-			let x_n = AdamsBashforth::step_s3(prob, &t_vec, &res_vec, h);
+			let x_n = BDF::step_s3(prob, &t_vec, &res_vec, h);
 			t_n = t_n + h;
 
 			t_vec.push(t_n);
@@ -184,7 +185,17 @@ impl<T> AdamsBashforth<T>
 		if self.k >= 5
 		{
 			let h: T = self.step_size.min(t_stop - t_n);
-			let x_n = AdamsBashforth::step_s4(prob, &t_vec, &res_vec, h);
+			let x_n = BDF::step_s4(prob, &t_vec, &res_vec, h);
+			t_n = t_n + h;
+
+			t_vec.push(t_n);
+            res_vec.push(x_n.clone());
+		}
+
+		if self.k >= 6
+		{
+			let h: T = self.step_size.min(t_stop - t_n);
+			let x_n = BDF::step_s5(prob, &t_vec, &res_vec, h);
 			t_n = t_n + h;
 
 			t_vec.push(t_n);
@@ -193,11 +204,12 @@ impl<T> AdamsBashforth<T>
 
 		let step = match self.k
 		{
-			1 => AdamsBashforth::step_s1,
-			2 => AdamsBashforth::step_s2,
-			3 => AdamsBashforth::step_s3,
-			4 => AdamsBashforth::step_s4,
-			5 => AdamsBashforth::step_s5,
+			1 => BDF::step_s1,
+			2 => BDF::step_s2,
+			3 => BDF::step_s3,
+			4 => BDF::step_s4,
+			5 => BDF::step_s5,
+			6 => BDF::step_s6,
 			_ => panic!(),
 		};
 
@@ -217,7 +229,7 @@ impl<T> AdamsBashforth<T>
 	}
 }
 
-impl<T> AdamsBashforth<T>
+impl<T> BDF<T>
 	where T: Real
 {
 	fn step_s1<F>(prob: &F, t: &Vec<T>, x: &Vec<Vector<T>>, h: T) -> Vector<T>
@@ -271,6 +283,25 @@ impl<T> AdamsBashforth<T>
 	}
 
 	fn step_s5<F>(prob: &F, t: &Vec<T>, x: &Vec<Vector<T>>, h: T) -> Vector<T>
+		where F: ExplicitODE<T>
+	{
+		let n: usize = x.len() - 1;
+		let x_n: &Vector<T> = &x[n];
+		let t_n: &T = &t[n];
+		let x_n1: &Vector<T> = &x[n - 1];
+		let t_n1: &T = &t[n - 1];
+		let x_n2: &Vector<T> = &x[n - 2];
+		let t_n2: &T = &t[n - 2];
+		let x_n3: &Vector<T> = &x[n - 3];
+		let t_n3: &T = &t[n - 3];
+		let x_n4: &Vector<T> = &x[n - 4];
+		let t_n4: &T = &t[n - 4];
+		return x_n + &((prob.func(t_n, x_n) * T::from_f64(1901.0/720.0)  + prob.func(t_n1, x_n1) * T::from_f64(-2774.0/720.0)
+		 + prob.func(t_n2, x_n2) * T::from_f64(2616.0/720.0) + prob.func(t_n3, x_n3) * T::from_f64(-1274.0/720.0)
+		 + prob.func(t_n4, x_n4) * T::from_f64(251.0/720.0)) * h);
+	}
+
+	fn step_s6<F>(prob: &F, t: &Vec<T>, x: &Vec<Vector<T>>, h: T) -> Vector<T>
 		where F: ExplicitODE<T>
 	{
 		let n: usize = x.len() - 1;

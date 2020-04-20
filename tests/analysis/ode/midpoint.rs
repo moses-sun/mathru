@@ -2,7 +2,7 @@
 mod midpoint
 {
 	use mathru::algebra::linear::{Vector};
-	use mathru::analysis::ode::{Midpoint, ExplicitODE};
+	use mathru::analysis::differential_equation::ordinary::{Midpoint, ExplicitODE};
 
 	use super::super::problem::{ExplicitODE1, ExplicitODE2};
 

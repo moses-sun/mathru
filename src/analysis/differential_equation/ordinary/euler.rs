@@ -1,13 +1,14 @@
-//! Solves an ODE using the 3th order Runge-Kutta algorithm.
+//! Solves an ODE using Euler's method.
 use crate::algebra::linear::{Vector};
 use crate::algebra::abstr::Real;
 use super::explicit_method::{ExplicitFixedStepSizeMethod};
 use super::ExplicitODE;
-use crate::analysis::ode::fixed_stepper::ExplicitFixedStepper;
+use crate::analysis::differential_equation::ordinary::fixed_stepper::ExplicitFixedStepper;
 
-/// Solves an ODE using the 3th order Runge-Kutta algorithm.
+/// Solves an ODE using Euler's method.
 ///
-///<a href="https://en.wikipedia.org/wiki/Runge-Kutta_methods">https://en.wikipedia.org/wiki/Rung-Kutta_methods</a>
+/// <a href="https://en.wikipedia.org/wiki/Euler_method">https://en.wikipedia.org/wiki/Euler_method</a>
+///
 /// # Example
 ///
 /// For this example, we want to solve the following ordinary differiential equation:
@@ -31,7 +32,7 @@ use crate::analysis::ode::fixed_stepper::ExplicitFixedStepper;
 /// # fn main()
 /// # {
 ///	use mathru::algebra::linear::{Vector};
-///	use mathru::analysis::ode::{ExplicitODE, Kutta3};
+///	use mathru::analysis::differential_equation::ordinary::{ExplicitODE, Euler};
 ///
 /// pub struct ExplicitODE1
 /// {
@@ -69,33 +70,32 @@ use crate::analysis::ode::fixed_stepper::ExplicitFixedStepper;
 ///     }
 /// }
 ///
-/// // We instanciate CashKarp algorithm
+/// // We instanciate Eulers algorithm with a stepsize of 0.001
 /// let step_size: f64 = 0.001;
-/// let solver: Kutta3<f64> = Kutta3::new(step_size);
+/// let solver: Euler<f64> = Euler::new(step_size);
 ///
 /// let problem: ExplicitODE1 = ExplicitODE1::default();
 ///
 /// // Solve the ODE
 /// let (t, y): (Vec<f64>, Vec<Vector<f64>>) = solver.solve(&problem).unwrap();
-///
 /// # }
 /// ```
-pub struct Kutta3<T>
+pub struct Euler<T>
 {
     stepper: ExplicitFixedStepper<T>
 }
 
-impl<T> Kutta3<T>
+impl<T> Euler<T>
     where T: Real
 {
-    /// Creates a Kutta3 instance with step size 'step_size'
+    /// Creates a Euler instance
     ///
-    pub fn new(step_size: T) -> Kutta3<T>
+    pub fn new(step_size: T) -> Euler<T>
     {
-        return Kutta3
+        return Euler
         {
             stepper: ExplicitFixedStepper::new(step_size)
-        }
+        };
     }
 
     pub fn solve<F>(self: &Self, prob: &F) -> Result<(Vec<T>, Vec<Vector<T>>), ()>
@@ -115,28 +115,18 @@ impl<T> Kutta3<T>
     }
 }
 
-impl<T> ExplicitFixedStepSizeMethod<T> for Kutta3<T>
+impl<T> ExplicitFixedStepSizeMethod<T> for Euler<T>
     where T: Real
 {
     fn do_step<F>(self: &Self, prob: &F, t_n: &T, x_n: &Vector<T>, h: &T) -> Vector<T>
         where F: ExplicitODE<T>
     {
-        // k1 = f(t_n, x_n)
-        let k1: Vector<T> = prob.func(&t_n, &x_n);
-
-        // k2 = func(t_n + h / 2, x_n + h / 2 k1)
-        let k2: Vector<T> = prob.func(&(*t_n + (*h / T::from_f64(2.0))), &(x_n + &((&k1 * h) / T::from_f64(2.0))));
-
-        // k3 = func(t_n + h, x_n + - h k1 + 2h *k2)
-        let k3: Vector<T> = prob.func(&(*t_n + *h), &(x_n + &(&(&(&k2 * &T::from_f64(2.0)) - &k1) * h))) ;
-
-        // x[n+1] = xn + h*(k1 + 4*k2 + k3)/6
-        return x_n + &((k1 + k2 * T::from_f64(4.0) + k3) * *h / T::from_f64(6.0));
+        return x_n + &(&prob.func(t_n, x_n) * h);
     }
 
-    /// Kuttas method is a 3rd order method
+    /// Euler's method is a first order method
     fn order(self: &Self) -> u8
     {
-        return 3;
+        return 1;
     }
 }

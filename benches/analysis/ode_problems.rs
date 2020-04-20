@@ -1,7 +1,7 @@
 //! Often used ODEs
 use mathru::algebra::linear::{Vector, Matrix};
 use std::default::Default;
-use mathru::analysis::ode::{ExplicitODE, ImplicitODE};
+use mathru::analysis::differential_equation::ordinary::{ExplicitODE, ImplicitODE};
 
 /// Define ODE
 /// $`y^{'} = ay = f(x, y) `$

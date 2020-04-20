@@ -37,8 +37,8 @@ use super::adaptive_stepper::AdaptiveStepper;
 /// # extern crate mathru;
 /// # fn main()
 /// # {
-///	use mathru::algebra::linear::{Vector};
-///	use mathru::analysis::ode::{ExplicitODE, RungeKuttaFehlberg54};
+///	use mathru::algebra::linear::Vector;
+///	use mathru::analysis::differential_equation::ordinary::{ExplicitODE, RungeKuttaFehlberg54};
 ///
 /// pub struct ExplicitODE1
 /// {

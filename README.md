@@ -53,8 +53,7 @@ mathru is a numeric library containing algorithms for linear algebra, analysis a
         - probability distribution
             - Bernoulli
             - Beta
-            - Binomial
-            - Chisquared
+            - Binomial 
             - Exponential
             - Gamma
             - Chi-squared
@@ -83,13 +82,13 @@ Add this to your `Cargo.toml` for the native Rust implementation:
 
 ```toml
 [dependencies.mathru]
-version = "0.6.*"
+version = "^0.6"
 ```
 Add the following lines to 'Cargo.toml' if the blas/lapack backend should be used:
 
 ```toml
 [dependencies.mathru]
-version = "0.6.*"
+version = "^0.6"
 default-features = false
 features = ["blaslapack"]
 ```

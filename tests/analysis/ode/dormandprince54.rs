@@ -2,7 +2,7 @@
 mod dormandprince54
 {
 	use mathru::algebra::linear::{Vector};
-	use mathru::analysis::ode::{ExplicitODE, DormandPrince54};
+	use mathru::analysis::differential_equation::ordinary::{ExplicitODE, DormandPrince54};
 	use super::super::problem::{ExplicitODE1, ExplicitODE2};
 
 	fn compare_epsilon(a: f64, b: f64, epsilon: f64) -> bool

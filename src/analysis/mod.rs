@@ -5,12 +5,13 @@
 
 //pub mod interpolation;
 #[macro_use]
-pub mod ode;
 mod function;
 mod jacobian;
 mod hessian;
 
 mod newton_raphson;
+
+pub mod differential_equation;
 
 pub use newton_raphson::NewtonRaphson;
 pub use function::Function;

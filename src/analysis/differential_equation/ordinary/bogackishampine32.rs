@@ -30,7 +30,7 @@ impl<T> BogackiShampine32<T>
     /// ```
     /// use mathru::*;
     /// use mathru::algebra::linear::{Vector, Matrix};
-    /// use mathru::analysis::ode::{ExplicitODE, BogackiShampine32};
+    /// use mathru::analysis::differential_equation::ordinary::{ExplicitODE, BogackiShampine32};
     ///
     /// // Define ODE
     /// // $`y^{'} = ay = f(x, y) `$

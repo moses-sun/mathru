@@ -2,7 +2,7 @@
 mod adamsbashforth
 {
 	use mathru::algebra::linear::{Vector};
-	use mathru::analysis::ode::{ExplicitODE, AdamsBashforth};
+	use mathru::analysis::differential_equation::ordinary::{ExplicitODE, AdamsBashforth};
 
 	use super::super::problem::{ExplicitODE1, ExplicitODE2};
 

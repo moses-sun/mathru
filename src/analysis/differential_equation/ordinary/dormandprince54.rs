@@ -32,7 +32,7 @@ use super::ExplicitODE;
 /// # fn main()
 /// # {
 ///	use mathru::algebra::linear::{Vector};
-///	use mathru::analysis::ode::{ExplicitODE, DormandPrince54};
+///	use mathru::analysis::differential_equation::ordinary::{ExplicitODE, DormandPrince54};
 ///
 /// pub struct ExplicitODE1
 /// {
