@@ -244,7 +244,7 @@ use mathru::statistics::distrib::{Distribution, Normal};
 use mathru::optimization::{Optim, LevenbergMarquardt};
 use plotters::prelude::*;
 
-///y = a + b * exp(c * t) = f(t)
+///y(t) = a + b * exp(c * t) = f(t)
 pub struct Example
 {
     x: Vector<f64>,

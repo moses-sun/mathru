@@ -1,6 +1,6 @@
 use mathru::algebra::linear::{Vector};
-use mathru::analysis::ode::{ExplicitODE, DormandPrince54};
-use mathru::analysis::ode::problem::Euler;
+use mathru::analysis::differential_equation::ordinary::{ExplicitODE, DormandPrince54};
+use mathru::analysis::differential_equation::ordinary::problem::Euler;
 use plotters::prelude::*;
 
 fn main()
