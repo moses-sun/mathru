@@ -1,6 +1,6 @@
 use crate::statistics::distrib::{Continuous, Normal};
-use crate::algebra::linear::{Vector};
 use crate::statistics::distrib::T as TD;
+use crate::statistics::test::Test;
 use crate::algebra::abstr::Real;
 
 /// T-Test
@@ -14,8 +14,8 @@ use crate::algebra::abstr::Real;
 /// use mathru::statistics::distrib::{Distribution, Normal};
 /// use mathru::statistics::test::T;
 ///
-/// let rv1 = Normal::new(1.0, 0.5).random_vector(100);
-/// let rv2 = Normal::new(1.0, 0.5).random_vector(100);
+/// let rv1 = Normal::new(1.0, 0.5).random_sequence(100);
+/// let rv2 = Normal::new(1.0, 0.5).random_sequence(100);
 ///
 /// //Test with sample with identical means
 /// let mut measure: T<f64> = T::test_independence_unequal_variance(&rv1, &rv2);
@@ -24,7 +24,7 @@ use crate::algebra::abstr::Real;
 /// println!("{}", measure.t());
 ///
 /// // Test with different equal mean, but unequal variances
-/// let rv3 = Normal::new(1.0, 1.5).random_vector(100);
+/// let rv3 = Normal::new(1.0, 1.5).random_sequence(100);
 /// measure = T::test_independence_unequal_variance(&rv1, &rv3);
 /// println!("{}", measure.t());
 /// measure = T::test_independence_equal_variance(&rv1, &rv3);
@@ -32,14 +32,14 @@ use crate::algebra::abstr::Real;
 ///
 /// // When the sample size is not equal anymore
 /// //the equal variance t-statistic is no longer equal to the unequal variance t-statistic:
-///	let rv4 = Normal::new(2.0, 0.5).random_vector(300);
+///	let rv4 = Normal::new(2.0, 0.5).random_sequence(300);
 /// measure = T::test_independence_unequal_variance(&rv1, &rv4);
 /// println!("{}", measure.t());
 /// measure = T::test_independence_equal_variance(&rv1, &rv4);
 /// println!("{}", measure.t());
 ///
 /// //t-Test with different mean, variance and sample size
-///	let rv5 = Normal::new(2.0, 1.0).random_vector(300);
+///	let rv5 = Normal::new(2.0, 1.0).random_sequence(300);
 /// measure = T::test_independence_unequal_variance(&rv1, &rv5);
 /// println!("{}", measure.t());
 /// measure = T::test_independence_equal_variance(&rv1, &rv5);
@@ -48,31 +48,64 @@ use crate::algebra::abstr::Real;
 pub struct T<K>
 {
 	p: K,
-	t: K
+	t: K,
+}
+
+impl<K> Test<K> for T<K>
+	where K: Real
+{
+
+	///Test value
+	fn value(self: &Self) -> K
+	{
+		return self.t;
+	}
+
+	/// Degree of freedom
+	fn df(self: &Self) -> u32
+	{
+		return 0;
+	}
+
+	///
+	fn p_value(self: &Self) -> K
+	{
+		return self.p;
+	}
 }
 
 impl<K> T<K>
 	where K: Real
 {
-	pub fn t(self: &Self) -> K
-	{
-		self.t
-	}
 
-	pub fn p_value(self: &Self) -> K
+	/// This is a one-sided test for the null hypothesis that the expected value (mean) of a sample of independent observations a is equal
+	/// to the given mean.
+	///
+	/// x: observation
+	pub fn one_sample(x: &Vec<K>, mu_0: K) -> T<K>
 	{
-		return self.p
-	}
+		let n: u32 = x.len() as u32;
 
+	    let normal: Normal<K> = Normal::from_data(x);
+
+        let x_bar: K = normal.mean();
+        let s: K = normal.variance().sqrt();
+
+		T
+		{
+			t: K::from_u32(n).sqrt() * (x_bar - mu_0) / s,
+			p: K::zero()
+		}
+	}
 
 	/// Calculates the T-test for the means of two independent samples of scores
 	///
 	/// This is a two-sided test for the null hypothesis that two independent samples have identical expected values.
 	/// It is assumed, that the populations have identical variances.
-	pub fn test_independence_equal_variance(x: &Vector<K>, y: &Vector<K>) -> T<K>
+	pub fn test_independence_equal_variance(x: &Vec<K>, y: &Vec<K>) -> T<K>
 	{
-		let (_, n_x) : (usize, usize) = x.dim();
-		let (_, n_y) : (usize, usize) = y.dim();
+		let n_x: usize = x.len();
+		let n_y: usize = y.len();
 
 		let x_dist: Normal<K> = Normal::from_data(&x);
 		let y_dist: Normal<K> = Normal::from_data(&y);
@@ -102,10 +135,10 @@ impl<K> T<K>
 	///
 	/// This is a two-sided test for the null hypothesis that two independent samples have identical expected values.
 	/// It is assumed, that the populations have NOT identical variances. It performs the Welch’s t-test
-	pub fn test_independence_unequal_variance(x: &Vector<K>, y: &Vector<K>) -> T<K>
+	pub fn test_independence_unequal_variance(x: &Vec<K>, y: &Vec<K>) -> T<K>
 	{
-		let (_, n_x) : (usize, usize) = x.dim();
-		let (_, n_y) : (usize, usize) = y.dim();
+		let n_x: usize = x.len();
+		let n_y: usize = y.len();
 
 		let x_dist: Normal<K> = Normal::from_data(&x);
 		let y_dist: Normal<K> = Normal::from_data(&y);

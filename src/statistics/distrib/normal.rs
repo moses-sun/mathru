@@ -1,5 +1,4 @@
 use crate::statistics::distrib::{Distribution, Continuous};
-use crate::algebra::linear::{Vector};
 use crate::special;
 use rand;
 use crate::algebra::abstr::Real;
@@ -55,9 +54,9 @@ impl<T> Normal<T>
     ///
     /// data.len() >= 2
     ///
-    pub fn from_data<'a>(data: &'a Vector<T>) -> Self
+    pub fn from_data<'a>(data: &'a Vec<T>) -> Self
     {
-        let (_m, n): (usize, usize) = data.dim();
+        let n: usize = data.len();
         if n < 2
         {
                 panic!()
@@ -69,9 +68,9 @@ impl<T> Normal<T>
         return Normal::new(mean, variance)
     }
 
-    fn calc_mean<'a>(data: &'a Vector<T>) -> T
+    fn calc_mean<'a>(data: &'a Vec<T>) -> T
     {
-        let (_m, n) = data.dim();
+        let n: usize = data.len();
         let mut sum: T = T::zero();
 
         for x in data.iter()
@@ -82,9 +81,9 @@ impl<T> Normal<T>
         return sum / T::from_u64(n as u64);
     }
 
-    fn calc_variance<'a>(data: &'a Vector<T>, mean: T) -> T
+    fn calc_variance<'a>(data: &'a Vec<T>, mean: T) -> T
     {
-        let (_m, n): (usize, usize) = data.dim();
+        let n: usize = data.len();
         let mut sum: T = T::zero();
 
         for x in data.iter()

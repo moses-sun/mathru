@@ -1,8 +1,10 @@
 #[cfg(test)]
 mod ttest
 {
-    use mathru::statistics::test::{T};
-    use mathru::algebra::linear::Vector;
+    use mathru::statistics::test::Test;
+    use mathru::statistics::test::T;
+    use mathru::statistics::distrib::{Distribution, Continuous, Normal};
+    use mathru::statistics::distrib::T as TDistrib;
 
 //    #[test]
 //    fn test_independence_identical_means()
@@ -57,27 +59,43 @@ mod ttest
 //        assert!((measure2.t().abs() - 0.6971).abs() < 0.001);
 //    }
 
+    #[test]
+    fn test_()
+    {
+        let mean: f64 = 3.50;
+        let variance: f64 = 0.31;
+        let sample_size: u32 = 1000;
+        let rv: Vec<f64> = Normal::new(mean, variance).random_sequence(sample_size);
+
+        let alpha: f64 = 0.05;
+        let test: T<f64> = T::one_sample(&rv, mean);
+
+        let t: f64 = TDistrib::new((sample_size - 1) as f64).pdf(1.0 - alpha);
+
+        println!("{}", test.value());
+        assert_eq!(true, false);
+    }
 
     #[test]
     fn test_independence_equal_variance()
     {
-        let rv1: Vector<f64> = vector![1.0, 4.0, 5.0, 2.0, 1.0];
-        let rv2: Vector<f64> = vector![1.0, 4.0, 5.0, 3.0, 4.0];
+        let rv1: Vec<f64> = vec![1.0, 4.0, 5.0, 2.0, 1.0];
+        let rv2: Vec<f64> = vec![1.0, 4.0, 5.0, 3.0, 4.0];
 
         let t_measure: T<f64> = T::test_independence_equal_variance(&rv1, &rv2);
 
-        assert!((t_measure.t().abs() - 0.7559).abs() < 0.0001);
+        assert!((t_measure.value().abs() - 0.7559).abs() < 0.0001);
     }
 
     #[test]
     fn test_independence_unequal_variance()
     {
-        let rv1: Vector<f64> = vector![1.0, 4.0, 5.0, 2.0, 1.0];
-        let rv2: Vector<f64> = vector![1.0, 4.0, 5.0, 3.0, 4.0];
+        let rv1: Vec<f64> = vec![1.0, 4.0, 5.0, 2.0, 1.0];
+        let rv2: Vec<f64> = vec![1.0, 4.0, 5.0, 3.0, 4.0];
 
         let measure: T<f64> = T::test_independence_unequal_variance(&rv1, &rv2);
 
-        assert!((measure.t().abs() - 0.756).abs() < 0.001);
+        assert!((measure.value().abs() - 0.756).abs() < 0.001);
         assert!((measure.p_value() - 0.472).abs() < 0.001);
     }
 }

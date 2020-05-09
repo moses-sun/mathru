@@ -10,22 +10,24 @@ mathru is a numeric library containing algorithms for linear algebra, analysis a
 
 ## Features
     - Linear algebra
-        - Vector
-        - Matrix
+        - [Vector](http://matthiaseiholzer.gitlab.io/mathru/documentation/algebra/linear/vector/)
+        - [Matrix](http://matthiaseiholzer.gitlab.io/mathru/documentation/algebra/linear/matrix/)
             - Basic matrix operations(+,-,*)
             - Transposition
-            - LU decomposition (native/lapack)
-            - QR decomposition (native/lapack)
-            - Hessenberg decomposition (native/lapack)
+            - [LU decomposition](http://matthiaseiholzer.gitlab.io/mathru/documentation/algebra/linear/matrix/#lu-with-partial-pivoting)
+            - [QR decomposition](http://matthiaseiholzer.gitlab.io/mathru/documentation/algebra/linear/matrix/#qr)
+            - [Hessenberg decomposition] (native/lapack)(http://matthiaseiholzer.gitlab.io/mathru/documentation/algebra/linear/matrix/#hessenberg)
+            - [Cholesky decomposition](http://matthiaseiholzer.gitlab.io/mathru/documentation/algebra/linear/matrix/#cholesky)
             - Singular value decomposition
-            - Inverse (native/lapack)
-            - Pseudo inverse (native/lapack)
-            - Determinant (native/lapack)
+            - Inverse
+            - Pseudo inverse
+            - Determinant
             - Trace
-            - Eigenvalue (native/lapack)
+            - Eigenvalue
+            - [Solve linear system](http://matthiaseiholzer.gitlab.io/mathru/documentation/algebra/linear/matrix/#linear-system-resolution)
 
-    - Ordinary differential equation (ODE)
-        - Explicit methods
+    - [Ordinary differential equation (ODE)][(http://matthiaseiholzer.gitlab.io/mathru/documentation/analysis/differentialeq/ordinary/)
+        - [Explicit methods](http://matthiaseiholzer.gitlab.io/mathru/documentation/analysis/differentialeq/ordinary/)
             - Heun's method
             - Euler method
             - Midpoint method
@@ -33,7 +35,7 @@ mathru is a numeric library containing algorithms for linear algebra, analysis a
             - Kutta 3rd order
             - Runge-Kutta 4th order
             - Runge-Kutta-Felhberg 4(5)
-            - Dormand-Prince 4(5)
+            - [Dormand-Prince 4(5)](http://matthiaseiholzer.gitlab.io/mathru/documentation/analysis/differentialeq/ordinary/explicit/#dormand-prince)
             - Cash-Karp 4(5)
             - Tsitouras 4(5)
             - Bogacki-Shampine 2(3)

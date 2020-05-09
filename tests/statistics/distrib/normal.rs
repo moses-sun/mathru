@@ -1,7 +1,7 @@
 #[cfg(test)]
 mod normal
 {
-    use mathru::statistics::distrib::{Continuous, Normal};
+    use mathru::statistics::distrib::{Distribution, Continuous, Normal};
 
     #[test]
     fn pdf0()
@@ -15,27 +15,27 @@ mod normal
         assert_eq!(0.3989422804014327, prob);
     }
 
-// Does not work all the time, because the used function random is not mocked.
-//    #[test]
-//    fn random()
-//    {
-//        let mean_1 : f64 = 0.0;
-//        let variance_1: f64 = 1.0;
-//        let distrib_1 : NormalDistrib = NormalDistrib::new(&mean_1, &variance_1);
-//        let mut data: Vec<f64> = Vec::new();
-//
-//        for _i in 0..10000
-//        {
-//            data.push(distrib_1.random());
-//        }
-//
-//        let distrib_2: NormalDistrib = NormalDistrib::from_data(&data);
-//        println!("{}", distrib_2.variance());
-//        assert!(distrib_2.mean() < 0.01);
-//        assert!(distrib_2.mean() > -0.01);
-//        assert!(distrib_2.variance() < 1.02 * variance_1);
-//        assert!(distrib_2.variance() > 0.98 * variance_1);
-//    }
+    //Does not work all the time, because the used function random is not mocked.
+    #[test]
+    fn random()
+    {
+       let mean_1 : f64 = 0.0;
+       let variance_1: f64 = 1.0;
+       let distrib_1 : Normal<f64> = Normal::new(mean_1, variance_1);
+       let mut data: Vec<f64> = Vec::new();
+
+       for _i in 0..10000
+       {
+           data.push(distrib_1.random());
+       }
+
+       let distrib_2: Normal<f64> = Normal::from_data(&data);
+
+       assert!(distrib_2.mean() < mean_1 + 0.01);
+       assert!(distrib_2.mean() > mean_1 - 0.01);
+       assert!(distrib_2.variance() < 1.02 * variance_1);
+       assert!(distrib_2.variance() > 0.98 * variance_1);
+    }
 
     #[test]
     fn cdf0()

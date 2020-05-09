@@ -1,14 +1,15 @@
-use crate::algebra::linear::{Vector};
 use crate::algebra::abstr::Real;
+use std::iter;
 
 pub trait Distribution<T>
 	where T: Real
 {
     fn random(self: &Self) -> T;
 
-    fn random_vector(self: &Self, size: usize) -> Vector<T>
+    fn random_sequence(self: &Self, size: u32) -> Vec<T>
 	{
-        let v: Vector<T> = Vector::zero(size).transpose().apply(&|_x| self.random());
+		let mut v: Vec<T> = Vec::new();
+		v.extend(iter::repeat_with(&|| {self.random()}).take(size as usize));
 
         return v;
 	}

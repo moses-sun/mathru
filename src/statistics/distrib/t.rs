@@ -10,6 +10,7 @@ use crate::algebra::abstr::Real;
 ///
 pub struct T<K>
 {
+    // degree of freedom
     n: K,
 }
 
@@ -40,6 +41,7 @@ impl<K> T<K>
         {
             panic!()
         }
+
         T
         {
             n: n,
@@ -62,7 +64,7 @@ impl<K> Continuous<K> for T<K>
     /// ```
     /// use mathru::statistics::distrib::{Continuous, T};
     ///
-    /// let distrib: T<f64> = T::new(1.2);
+    /// let distrib: T<f64> = T::new(2.0);
     /// let x: f64 = 0.5;
     /// let p: f64 = distrib.pdf(x);
     /// ```
