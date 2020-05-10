@@ -12,38 +12,38 @@ use crate::algebra::abstr::Real;
 /// ```
 /// use mathru;
 /// use mathru::statistics::distrib::{Distribution, Normal};
-/// use mathru::statistics::test::T;
+/// use mathru::statistics::test::{Test, T};
 ///
 /// let rv1 = Normal::new(1.0, 0.5).random_sequence(100);
 /// let rv2 = Normal::new(1.0, 0.5).random_sequence(100);
 ///
 /// //Test with sample with identical means
 /// let mut measure: T<f64> = T::test_independence_unequal_variance(&rv1, &rv2);
-/// println!("{}", measure.t());
+/// println!("{}", measure.value());
 /// measure = T::test_independence_equal_variance(&rv1, &rv2);
-/// println!("{}", measure.t());
+/// println!("{}", measure.value());
 ///
 /// // Test with different equal mean, but unequal variances
 /// let rv3 = Normal::new(1.0, 1.5).random_sequence(100);
 /// measure = T::test_independence_unequal_variance(&rv1, &rv3);
-/// println!("{}", measure.t());
+/// println!("{}", measure.value());
 /// measure = T::test_independence_equal_variance(&rv1, &rv3);
-/// println!("{}", measure.t());
+/// println!("{}", measure.value());
 ///
 /// // When the sample size is not equal anymore
 /// //the equal variance t-statistic is no longer equal to the unequal variance t-statistic:
 ///	let rv4 = Normal::new(2.0, 0.5).random_sequence(300);
 /// measure = T::test_independence_unequal_variance(&rv1, &rv4);
-/// println!("{}", measure.t());
+/// println!("{}", measure.value());
 /// measure = T::test_independence_equal_variance(&rv1, &rv4);
-/// println!("{}", measure.t());
+/// println!("{}", measure.value());
 ///
 /// //t-Test with different mean, variance and sample size
 ///	let rv5 = Normal::new(2.0, 1.0).random_sequence(300);
 /// measure = T::test_independence_unequal_variance(&rv1, &rv5);
-/// println!("{}", measure.t());
+/// println!("{}", measure.value());
 /// measure = T::test_independence_equal_variance(&rv1, &rv5);
-/// println!("{}", measure.t());
+/// println!("{}", measure.value());
 /// ```
 pub struct T<K>
 {
