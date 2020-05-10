@@ -59,22 +59,6 @@ mod ttest
 //        assert!((measure2.t().abs() - 0.6971).abs() < 0.001);
 //    }
 
-    #[test]
-    fn test_()
-    {
-        let mean: f64 = 3.50;
-        let variance: f64 = 0.31;
-        let sample_size: u32 = 1000;
-        let rv: Vec<f64> = Normal::new(mean, variance).random_sequence(sample_size);
-
-        let alpha: f64 = 0.05;
-        let test: T<f64> = T::one_sample(&rv, mean);
-
-        let t: f64 = TDistrib::new((sample_size - 1) as f64).pdf(1.0 - alpha);
-
-        println!("{}", test.value());
-        assert_eq!(true, false);
-    }
 
     #[test]
     fn test_independence_equal_variance()
