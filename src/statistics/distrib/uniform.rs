@@ -67,7 +67,8 @@ impl<T> Continuous<T> for Uniform<T>
     ///
     /// # Arguments
     ///
-    /// x: random variable
+    /// x:
+    ///
     /// # Example
     ///
     /// ```
@@ -93,7 +94,7 @@ impl<T> Continuous<T> for Uniform<T>
     ///
     /// # Arguments
     ///
-    /// * `x` Random variable
+    /// * `x`
     ///
     /// # Example
     ///
