@@ -6,6 +6,7 @@ pub trait Distribution<T>
 {
     fn random(self: &Self) -> T;
 
+
     fn random_sequence(self: &Self, size: u32) -> Vec<T>
 	{
 		let mut v: Vec<T> = Vec::new();
@@ -23,7 +24,7 @@ pub trait Continuous<T>
    	///
    	/// # Arguments
    	///
-   	/// *`x`: random variable
+   	/// *`x`:
    	///
     fn pdf(self: &Self, x: T) -> T;
 
@@ -31,9 +32,10 @@ pub trait Continuous<T>
     ///
     /// # Arguments
     ///
-    /// *`x`: random variable
+    /// *`x`:
     ///
     fn cdf(self: &Self, x: T) -> T;
+
 
 	/// Quantile function, inverse cdf
     fn quantile(self: &Self, p: T) -> T;
@@ -44,6 +46,23 @@ pub trait Continuous<T>
 	/// Variance
 	fn variance(self: &Self) -> T;
 
+	/// Skewness is a measure of the asymmetry of the probability distribution of a real-valued random variable about its mean
+	fn skewness(self: &Self) -> T
+	{
+		unimplemented!();
+	}
+
+	/// Median is the value separating the higher half from the lower half of a probability distribution.
+	fn median(self: &Self) -> T
+	{
+		unimplemented!();
+	}
+
+	///
+	fn entropy(self: &Self) -> T
+	{
+		unimplemented!();
+	}
 }
 
 /// Discrete distribution
@@ -53,7 +72,7 @@ pub trait Discrete<T, A, B>
    	///
    	/// # Arguments
    	///
-   	/// *`x`: random variable
+   	/// *`x`:
    	///
     fn pmf<'a, 'b>(self: &'a Self, x: A) -> T;
 
@@ -61,7 +80,7 @@ pub trait Discrete<T, A, B>
     ///
     /// # Arguments
     ///
-    /// * `x`: random variable
+    /// * `x`:
     ///
     fn cdf<'a, 'b>(self: &'a Self, x: B) -> T;
 
