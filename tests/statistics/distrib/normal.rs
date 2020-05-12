@@ -1,7 +1,9 @@
 #[cfg(test)]
 mod normal
 {
-    use mathru::statistics::distrib::{Distribution, Continuous, Normal};
+    use mathru::statistics::distrib::{Continuous, Normal};
+    use std::f64::consts::PI as PI;
+    use std::f64::consts::E as E;
 
     #[test]
     fn pdf0()
@@ -65,6 +67,46 @@ mod normal
         let distrib: Normal<f64> = Normal::new(mean, variance);
 
         assert_eq!(1.0, distrib.quantile(0.5));
+    }
+
+    #[test]
+    fn mean()
+    {
+        let mean: f64 = 1.0;
+        let variance: f64 = 0.5;
+        let distrib: Normal<f64> = Normal::new(mean, variance);
+
+        assert_eq!(mean, distrib.mean());
+    }
+
+    #[test]
+    fn median()
+    {
+        let mean: f64 = 1.0;
+        let variance: f64 = 0.5;
+        let distrib: Normal<f64> = Normal::new(mean, variance);
+
+        assert_eq!(mean, distrib.median());
+    }
+
+    #[test]
+    fn skewness()
+    {
+        let mean: f64 = 1.0;
+        let variance: f64 = 0.5;
+        let distrib: Normal<f64> = Normal::new(mean, variance);
+
+        assert_eq!(0.0, distrib.skewness());
+    }
+
+    #[test]
+    fn entropy()
+    {
+        let mean: f64 = 1.0;
+        let variance: f64 = 0.5;
+        let distrib: Normal<f64> = Normal::new(mean, variance);
+
+        assert_eq!(2.0 * PI * E * variance, distrib.entropy());
     }
 
 //    #[test]

@@ -17,8 +17,11 @@ pub struct Uniform<T>
 impl<T> Uniform<T>
     where T: Real
 {
+    /// Uniform distribution
     ///
     /// # Arguments
+    ///
+    /// -\inf < a < b < \inf
     ///
     /// a: lower bound
     /// b: upper bound

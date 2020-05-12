@@ -17,7 +17,7 @@ pub struct Normal<T>
 impl<T> Normal<T>
     where T: Real
 {
-     /// Creates a probability distribution
+    /// Creates a probability distribution
     ///
     /// # Arguments
     ///
@@ -103,8 +103,7 @@ impl<T> Continuous<T> for Normal<T>
     ///
     /// # Arguments
     ///
-    /// * `x`: Random variable x &isin; &#x2115
-    ///
+    /// * `x`:  x &isin; &#x2115
     ///
     /// # Example
     ///
@@ -127,7 +126,7 @@ impl<T> Continuous<T> for Normal<T>
     ///
     /// # Arguments
     ///
-    /// * `x`: Random variable
+    /// * `x`:
     ///
     /// # Example
     ///
@@ -239,6 +238,63 @@ impl<T> Continuous<T> for Normal<T>
     {
         return self.variance
     }
+
+    /// Median
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// use mathru;
+    /// use mathru::statistics::distrib::{Continuous, Normal};
+    ///
+    /// let mean: f64 = 0.0;
+    ///
+    /// let distrib: Normal<f64> = Normal::new(mean, 0.2);
+    /// let median: f64 = distrib.median();
+    /// assert_eq!(median, mean);
+    /// ```
+    fn median(self: &Self) -> T
+    {
+        return self.mean;
+    }
+
+    /// Skewness
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// use mathru;
+    /// use mathru::statistics::distrib::{Continuous, Normal};
+    /// let mean: f64 = 1.0;
+    /// let variance: f64 = 0.5;
+    /// let distrib: Normal<f64> = Normal::new(mean, variance);
+    /// assert_eq!(0.0, distrib.skewness());
+    /// ```
+    fn skewness(self: &Self) -> T
+	{
+        return T::zero();
+	}
+
+    /// Entropy
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// use std::f64::consts::PI as PI;
+    ///  use std::f64::consts::E as E;
+    /// use mathru;
+    /// use mathru::statistics::distrib::{Continuous, Normal};
+    ///
+    /// let mean: f64 = 1.0;
+    /// let variance: f64 = 0.5;
+    /// let distrib: Normal<f64> = Normal::new(mean, variance);
+    ///
+    /// assert_eq!(2.0 * PI * E * variance, distrib.entropy());
+    /// ```
+    fn entropy(self: &Self) -> T
+	{
+        return T::from_f64(2.0) * T::pi() * T::e() * self.variance;
+	}
 }
 
 
