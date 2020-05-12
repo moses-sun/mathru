@@ -33,18 +33,18 @@ impl<T> Beta<T>
     /// ```
     /// use mathru::statistics::distrib::{Continuous, Beta};
     ///
-    /// let distrib: Beta<f64> = Beta::new(&0.2, &0.3);
+    /// let distrib: Beta<f64> = Beta::new(0.2, 0.3);
     /// ```
-    pub fn new(p: &T, q: &T) -> Beta<T>
+    pub fn new(p: T, q: T) -> Beta<T>
     {
-        if *p < T::zero() || *q <= T::zero()
+        if p < T::zero() || q <= T::zero()
         {
             panic!()
         }
         Beta
         {
-            p: *p,
-            q: *q
+            p: p,
+            q: q
         }
     }
 }
@@ -56,22 +56,26 @@ impl<T> Continuous<T> for Beta<T>
     ///
     /// # Arguments
     ///
-    /// * `x` Random variable x &isin &#2115;
+    /// * `x` &isin &#2115;
     ///
     /// # Example
     ///
     /// ```
     /// use mathru::statistics::distrib::{Continuous, Beta};
     ///
-    /// let distrib: Beta<f64> = Beta::new(&0.2, &0.3);
+    /// let distrib: Beta<f64> = Beta::new(0.2, 0.3);
     /// let x: f64 = 0.5;
     /// let p: f64 = distrib.pdf(x);
     /// ```
     fn pdf(self: &Self, x: T) -> T
     {
-        if T::zero() > x || x > T::one()
+        if x < T::zero()
         {
             panic!();
+        }
+        if x > T::one()
+        {
+            return T::one()
         }
         return x.pow(&(self.p - T::one())) * (T::one() - x).pow(&(self.q - T::one())) / special::beta::beta(self.p, self.q);
     }
@@ -80,14 +84,14 @@ impl<T> Continuous<T> for Beta<T>
     ///
     /// # Arguments
     ///
-    /// * `x` Random variable
+    /// * `x`
     ///
     /// # Example
     ///
     /// ```
     /// use mathru::statistics::distrib::{Continuous, Beta};
     ///
-    /// let distrib: Beta<f64> = Beta::new(&0.3, &0.2);
+    /// let distrib: Beta<f64> = Beta::new(0.3, 0.2);
     /// let x: f64 = 0.4;
     /// let p: f64 = distrib.cdf(x);
     /// ```
@@ -95,7 +99,6 @@ impl<T> Continuous<T> for Beta<T>
     {
         beta::beta_inc_reg(x, self.p, self.q)
     }
-
 
     /// Quantile function of inverse cdf
     ///
@@ -111,7 +114,7 @@ impl<T> Continuous<T> for Beta<T>
     /// ```
     /// use mathru::statistics::distrib::{Continuous, Beta};
     ///
-    /// let distrib: Beta<f64> = Beta::new(&0.2, &0.3);
+    /// let distrib: Beta<f64> = Beta::new(0.2, 0.3);
     /// let mean: f64 = distrib.mean();
     /// ```
 	fn mean(self: &Self) -> T
@@ -126,11 +129,37 @@ impl<T> Continuous<T> for Beta<T>
     /// ```
     /// use mathru::statistics::distrib::{Continuous, Beta};
     ///
-    /// let distrib: Beta<f64> = Beta::new(&0.2, &0.3);
+    /// let distrib: Beta<f64> = Beta::new(0.2, 0.3);
     /// let var: f64 = distrib.variance();
     /// ```
 	fn variance(self: &Self) -> T
     {
         self.p * self.q / ((self.p + self.q + T::one()) * (self.p + self.q).pow(&T::from_f64(2.0)))
+    }
+
+    /// Skewness
+    ///
+    /// # Example
+    ///
+        /// ```
+    /// use mathru::statistics::distrib::{Continuous, Beta};
+    ///
+    /// let distrib: Beta<f64> = Beta::new(0.2, 0.3);
+    /// let skewness: f64 = distrib.skewness();
+    /// ```
+    fn skewness(self: &Self) -> T
+	{
+        return T::from_f64(2.0) * (self.q - self.p) * (self.p + self.q + T::one()).sqrt() / ((self.p + self.q + T::from_f64(2.0)) *
+            (self.q * self.p).sqrt())
+	}
+
+	fn median (self: &Self) -> T
+    {
+        unimplemented!();
+    }
+
+    fn entropy(self: &Self) -> T
+    {
+        unimplemented!();
     }
 }
