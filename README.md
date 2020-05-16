@@ -18,7 +18,7 @@ The following features are impelmented in this create:
         * Transposition
         * [LU decomposition](https://matthiaseiholzer.gitlab.io/mathru/documentation/algebra/linear/matrix/#lu-with-partial-pivoting)
         * [QR decomposition](https://matthiaseiholzer.gitlab.io/mathru/documentation/algebra/linear/matrix/#qr)
-        * [Hessenberg decomposition] (native/lapack)(https://matthiaseiholzer.gitlab.io/mathru/documentation/algebra/linear/matrix/#hessenberg)
+        * [Hessenberg decomposition](https://matthiaseiholzer.gitlab.io/mathru/documentation/algebra/linear/matrix/#hessenberg)
         * [Cholesky decomposition](https://matthiaseiholzer.gitlab.io/mathru/documentation/algebra/linear/matrix/#cholesky)
         * Singular value decomposition
         * Inverse
@@ -28,7 +28,7 @@ The following features are impelmented in this create:
         * Eigenvalue
         * [Solve linear system](https://matthiaseiholzer.gitlab.io/mathru/documentation/algebra/linear/matrix/#linear-system-resolution)
 
-* [Ordinary differential equation (ODE)][(https://matthiaseiholzer.gitlab.io/mathru/documentation/analysis/differentialeq/ordinary/)
+* [Ordinary differential equation (ODE)](https://matthiaseiholzer.gitlab.io/mathru/documentation/analysis/differentialeq/ordinary/)
     * [Explicit methods](https://matthiaseiholzer.gitlab.io/mathru/documentation/analysis/differentialeq/ordinary/)
         * Heun's method
         * Euler method
@@ -103,7 +103,7 @@ Then import the modules and it is ready to be used.
 ## Documentation
 
 See [project page](https://matthiaseiholzer.gitlab.io/mathru) for more information and examples.
-The API is documented on [docs.rs](https://docs.rs/mathru)
+The API is documented on [docs.rs](https://docs.rs/mathru).
 
 ## License
 
