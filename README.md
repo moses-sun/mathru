@@ -11,75 +11,75 @@ Mathru is a numeric library containing algorithms for linear algebra, analysis a
 ## Features
 The following features are impelmented in this create:
 
-    * [Linear algebra](https://matthiaseiholzer.gitlab.io/mathru/documentation/algebra/linear/)
-        * [Vector](https://matthiaseiholzer.gitlab.io/mathru/documentation/algebra/linear/vector/)
-        * [Matrix](https://matthiaseiholzer.gitlab.io/mathru/documentation/algebra/linear/matrix/)
-            * Basic matrix operations(+,-,*)
-            * Transposition
-            * [LU decomposition](https://matthiaseiholzer.gitlab.io/mathru/documentation/algebra/linear/matrix/#lu-with-partial-pivoting)
-            * [QR decomposition](https://matthiaseiholzer.gitlab.io/mathru/documentation/algebra/linear/matrix/#qr)
-            * [Hessenberg decomposition] (native/lapack)(https://matthiaseiholzer.gitlab.io/mathru/documentation/algebra/linear/matrix/#hessenberg)
-            * [Cholesky decomposition](https://matthiaseiholzer.gitlab.io/mathru/documentation/algebra/linear/matrix/#cholesky)
-            * Singular value decomposition
-            * Inverse
-            * Pseudo inverse
-            * Determinant
-            * Trace
-            * Eigenvalue
-            * [Solve linear system](https://matthiaseiholzer.gitlab.io/mathru/documentation/algebra/linear/matrix/#linear-system-resolution)
+* [Linear algebra](https://matthiaseiholzer.gitlab.io/mathru/documentation/algebra/linear/)
+    * [Vector](https://matthiaseiholzer.gitlab.io/mathru/documentation/algebra/linear/vector/)
+    * [Matrix](https://matthiaseiholzer.gitlab.io/mathru/documentation/algebra/linear/matrix/)
+        * Basic matrix operations(+,-,*)
+        * Transposition
+        * [LU decomposition](https://matthiaseiholzer.gitlab.io/mathru/documentation/algebra/linear/matrix/#lu-with-partial-pivoting)
+        * [QR decomposition](https://matthiaseiholzer.gitlab.io/mathru/documentation/algebra/linear/matrix/#qr)
+        * [Hessenberg decomposition] (native/lapack)(https://matthiaseiholzer.gitlab.io/mathru/documentation/algebra/linear/matrix/#hessenberg)
+        * [Cholesky decomposition](https://matthiaseiholzer.gitlab.io/mathru/documentation/algebra/linear/matrix/#cholesky)
+        * Singular value decomposition
+        * Inverse
+        * Pseudo inverse
+        * Determinant
+        * Trace
+        * Eigenvalue
+        * [Solve linear system](https://matthiaseiholzer.gitlab.io/mathru/documentation/algebra/linear/matrix/#linear-system-resolution)
 
-    * [Ordinary differential equation (ODE)][(https://matthiaseiholzer.gitlab.io/mathru/documentation/analysis/differentialeq/ordinary/)
-        * [Explicit methods](https://matthiaseiholzer.gitlab.io/mathru/documentation/analysis/differentialeq/ordinary/)
-            * Heun's method
-            * Euler method
-            * Midpoint method
-            * Ralston's method
-            * Kutta 3rd order
-            * Runge-Kutta 4th order
-            * Runge-Kutta-Felhberg 4(5)
-            * [Dormand-Prince 4(5)](https://matthiaseiholzer.gitlab.io/mathru/documentation/analysis/differentialeq/ordinary/explicit/#dormand-prince)
-            * Cash-Karp 4(5)
-            * Tsitouras 4(5)
-            * Bogacki-Shampine 2(3)
-            * Adams-Bashforth
-        * Automatic step size control with starting step size
-        * Implizit methods
-            * Implizit Euler
-             
-    * [Optimization](https://matthiaseiholzer.gitlab.io/mathru/documentation/optimization)
-        * Gauss-Newton algorithm
-        * Gradient descent
-        * Newton method
-        * Levenberg-Marquardt algorithm
-        * Conjugate gradient method
+* [Ordinary differential equation (ODE)][(https://matthiaseiholzer.gitlab.io/mathru/documentation/analysis/differentialeq/ordinary/)
+    * [Explicit methods](https://matthiaseiholzer.gitlab.io/mathru/documentation/analysis/differentialeq/ordinary/)
+        * Heun's method
+        * Euler method
+        * Midpoint method
+        * Ralston's method
+        * Kutta 3rd order
+        * Runge-Kutta 4th order
+        * Runge-Kutta-Felhberg 4(5)
+        * [Dormand-Prince 4(5)](https://matthiaseiholzer.gitlab.io/mathru/documentation/analysis/differentialeq/ordinary/explicit/#dormand-prince)
+        * Cash-Karp 4(5)
+        * Tsitouras 4(5)
+        * Bogacki-Shampine 2(3)
+        * Adams-Bashforth
+    * Automatic step size control with starting step size
+    * Implizit methods
+        * Implizit Euler
 
-    * [Statistics](https://matthiaseiholzer.gitlab.io/mathru/documentation/statistics)
-        * probability distribution
-            * Bernoulli
-            * Beta
-            * Binomial
-            * Exponential
-            * Gamma
-            * Chi-squared
-            * Normal
-            * Poisson
-            * Raised cosine
-            * Student-t
-            * Uniform
-        * test
-            * Chi-squared
-            * G
-            * Student-t
+* [Optimization](https://matthiaseiholzer.gitlab.io/mathru/documentation/optimization)
+    * Gauss-Newton algorithm
+    * Gradient descent
+    * Newton method
+    * Levenberg-Marquardt algorithm
+    * Conjugate gradient method
 
-    * elementary functions
-        * trigonometric functions
-        * hyperbolic functions
-        * exponential functions
+* [Statistics](https://matthiaseiholzer.gitlab.io/mathru/documentation/statistics)
+    * probability distribution
+        * Bernoulli
+        * Beta
+        * Binomial
+        * Exponential
+        * Gamma
+        * Chi-squared
+        * Normal
+        * Poisson
+        * Raised cosine
+        * Student-t
+        * Uniform
+    * test
+        * Chi-squared
+        * G
+        * Student-t
 
-    * special functions
-        * gamma functions
-        * beta functions
-        * hypergeometrical functions
+* elementary functions
+    * trigonometric functions
+    * hyperbolic functions
+    * exponential functions
+
+* special functions
+    * gamma functions
+    * beta functions
+    * hypergeometrical functions
 
 ## Usage
 
