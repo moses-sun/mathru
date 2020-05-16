@@ -1,6 +1,6 @@
 //! Often used ODEs
 use mathru::algebra::linear::{Vector};
-use mathru::analysis::ode::{ExplicitODE};
+use mathru::analysis::differential_equation::ordinary::{ExplicitODE};
 use std::default::Default;
 use std::f64;
 

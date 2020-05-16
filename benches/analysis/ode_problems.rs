@@ -1,8 +1,7 @@
 //! Often used ODEs
 use mathru::algebra::linear::{Vector, Matrix};
-use mathru::algebra::abstr::Real;
 use std::default::Default;
-use mathru::analysis::ode::{ExplicitODE, ImplicitODE};
+use mathru::analysis::differential_equation::ordinary::{ExplicitODE, ImplicitODE};
 
 /// Define ODE
 /// $`y^{'} = ay = f(x, y) `$
@@ -149,7 +148,7 @@ impl Default for ImplicitODE1
 
 impl ImplicitODE<f64> for ImplicitODE1
 {
-   	fn func(self: &Self, t: &f64, x: &Vector<f64>) -> Vector<f64>
+   	fn func(self: &Self, _t: &f64, x: &Vector<f64>) -> Vector<f64>
 	{
 		let result = (x * &-4.0) + 8.0;
 		return result;
@@ -165,7 +164,7 @@ impl ImplicitODE<f64> for ImplicitODE1
 		return self.init_cond.clone();
 	}
 
-	fn jacobian(self: &Self, t: &f64, input: &Vector<f64>) -> Matrix<f64>
+	fn jacobian(self: &Self, _t: &f64, _input: &Vector<f64>) -> Matrix<f64>
 	{
 		let jacobian = matrix![-4.0];
 		return jacobian;

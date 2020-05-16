@@ -1,6 +1,6 @@
 use mathru::algebra::linear::{Vector};
-use mathru::analysis::ode::{ExplicitODE, DormandPrince54};
-use mathru::analysis::ode::problem::Euler;
+use mathru::analysis::differential_equation::ordinary::{ExplicitODE, DormandPrince54};
+use mathru::analysis::differential_equation::ordinary::problem::Euler;
 use plotters::prelude::*;
 
 fn main()
@@ -33,7 +33,7 @@ fn main()
        	graph_x3.push((x_i, *y[i].get(2)));
     }
 
-	let root_area = BitMapBackend::new("../figure/ode_explicit.png", (1200, 800))
+	let root_area = BitMapBackend::new("./figure/ode_explicit.png", (1200, 800))
         .into_drawing_area();
     root_area.fill(&WHITE).unwrap();
 
@@ -56,11 +56,11 @@ fn main()
     ).unwrap();
 
     ctx.draw_series(
-        LineSeries::new(graph_x2, &BLACK)
+        LineSeries::new(graph_x2, &RED)
     ).unwrap();
 
     ctx.draw_series(
-        LineSeries::new(graph_x3, &BLACK)
+        LineSeries::new(graph_x3, &BLUE)
     ).unwrap();
 }
 

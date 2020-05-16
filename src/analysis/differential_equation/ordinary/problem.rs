@@ -1,6 +1,6 @@
 use crate::algebra::abstr::{Real};
 use crate::algebra::linear::{Vector, Matrix};
-use crate::analysis::ode::{ExplicitODE, ImplicitODE};
+use crate::analysis::differential_equation::ordinary::{ExplicitODE, ImplicitODE};
 
 
 ///

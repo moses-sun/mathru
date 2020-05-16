@@ -2,7 +2,7 @@
 mod heun
 {
 	use mathru::algebra::linear::{Vector};
-	use mathru::analysis::ode::{ExplicitODE, Heun};
+	use mathru::analysis::differential_equation::ordinary::{ExplicitODE, Heun};
 
 	use super::super::problem::{ExplicitODE1, ExplicitODE2};
 

@@ -3,7 +3,7 @@ use criterion::Criterion;
 
 extern crate mathru;
 
-use mathru::analysis::ode::{Euler, Heun, Kutta3, RungeKutta4, RungeKuttaFehlberg54, DormandPrince54};
+use mathru::analysis::differential_equation::ordinary::{Euler, Heun, Kutta3, RungeKutta4, RungeKuttaFehlberg54, DormandPrince54};
 use super::ode_problems::ExplicitODE1;
 
 criterion_group!(

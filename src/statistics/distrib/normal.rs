@@ -1,5 +1,4 @@
 use crate::statistics::distrib::{Distribution, Continuous};
-use crate::algebra::linear::{Vector};
 use crate::special;
 use rand;
 use crate::algebra::abstr::Real;
@@ -18,7 +17,7 @@ pub struct Normal<T>
 impl<T> Normal<T>
     where T: Real
 {
-     /// Creates a probability distribution
+    /// Creates a probability distribution
     ///
     /// # Arguments
     ///
@@ -55,9 +54,9 @@ impl<T> Normal<T>
     ///
     /// data.len() >= 2
     ///
-    pub fn from_data<'a>(data: &'a Vector<T>) -> Self
+    pub fn from_data<'a>(data: &'a Vec<T>) -> Self
     {
-        let (_m, n): (usize, usize) = data.dim();
+        let n: usize = data.len();
         if n < 2
         {
                 panic!()
@@ -69,9 +68,9 @@ impl<T> Normal<T>
         return Normal::new(mean, variance)
     }
 
-    fn calc_mean<'a>(data: &'a Vector<T>) -> T
+    fn calc_mean<'a>(data: &'a Vec<T>) -> T
     {
-        let (_m, n) = data.dim();
+        let n: usize = data.len();
         let mut sum: T = T::zero();
 
         for x in data.iter()
@@ -82,9 +81,9 @@ impl<T> Normal<T>
         return sum / T::from_u64(n as u64);
     }
 
-    fn calc_variance<'a>(data: &'a Vector<T>, mean: T) -> T
+    fn calc_variance<'a>(data: &'a Vec<T>, mean: T) -> T
     {
-        let (_m, n): (usize, usize) = data.dim();
+        let n: usize = data.len();
         let mut sum: T = T::zero();
 
         for x in data.iter()
@@ -104,8 +103,7 @@ impl<T> Continuous<T> for Normal<T>
     ///
     /// # Arguments
     ///
-    /// * `x`: Random variable x &isin; &#x2115
-    ///
+    /// * `x`:  x &isin; &#x2115
     ///
     /// # Example
     ///
@@ -128,7 +126,7 @@ impl<T> Continuous<T> for Normal<T>
     ///
     /// # Arguments
     ///
-    /// * `x`: Random variable
+    /// * `x`:
     ///
     /// # Example
     ///
@@ -240,6 +238,63 @@ impl<T> Continuous<T> for Normal<T>
     {
         return self.variance
     }
+
+    /// Median
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// use mathru;
+    /// use mathru::statistics::distrib::{Continuous, Normal};
+    ///
+    /// let mean: f64 = 0.0;
+    ///
+    /// let distrib: Normal<f64> = Normal::new(mean, 0.2);
+    /// let median: f64 = distrib.median();
+    /// assert_eq!(median, mean);
+    /// ```
+    fn median(self: &Self) -> T
+    {
+        return self.mean;
+    }
+
+    /// Skewness
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// use mathru;
+    /// use mathru::statistics::distrib::{Continuous, Normal};
+    /// let mean: f64 = 1.0;
+    /// let variance: f64 = 0.5;
+    /// let distrib: Normal<f64> = Normal::new(mean, variance);
+    /// assert_eq!(0.0, distrib.skewness());
+    /// ```
+    fn skewness(self: &Self) -> T
+	{
+        return T::zero();
+	}
+
+    /// Entropy
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// use std::f64::consts::PI as PI;
+    ///  use std::f64::consts::E as E;
+    /// use mathru;
+    /// use mathru::statistics::distrib::{Continuous, Normal};
+    ///
+    /// let mean: f64 = 1.0;
+    /// let variance: f64 = 0.5;
+    /// let distrib: Normal<f64> = Normal::new(mean, variance);
+    ///
+    /// assert_eq!(2.0 * PI * E * variance, distrib.entropy());
+    /// ```
+    fn entropy(self: &Self) -> T
+	{
+        return T::from_f64(2.0) * T::pi() * T::e() * self.variance;
+	}
 }
 
 

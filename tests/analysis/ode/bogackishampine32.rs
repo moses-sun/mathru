@@ -2,7 +2,7 @@
 mod bogackishampine
 {
 	use mathru::algebra::linear::{Vector};
-	use mathru::analysis::ode::{ExplicitODE, BogackiShampine32};
+	use mathru::analysis::differential_equation::ordinary::{ExplicitODE, BogackiShampine32};
 
 	use super::super::problem::{ExplicitODE1, ExplicitODE2};
 

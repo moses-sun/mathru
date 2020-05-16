@@ -1,8 +1,8 @@
 #[cfg(test)]
 mod ttest
 {
-    use mathru::statistics::test::{T};
-    use mathru::algebra::linear::Vector;
+    use mathru::statistics::test::Test;
+    use mathru::statistics::test::T;
 
 //    #[test]
 //    fn test_independence_identical_means()
@@ -61,23 +61,23 @@ mod ttest
     #[test]
     fn test_independence_equal_variance()
     {
-        let rv1: Vector<f64> = vector![1.0, 4.0, 5.0, 2.0, 1.0];
-        let rv2: Vector<f64> = vector![1.0, 4.0, 5.0, 3.0, 4.0];
+        let rv1: Vec<f64> = vec![1.0, 4.0, 5.0, 2.0, 1.0];
+        let rv2: Vec<f64> = vec![1.0, 4.0, 5.0, 3.0, 4.0];
 
         let t_measure: T<f64> = T::test_independence_equal_variance(&rv1, &rv2);
 
-        assert!((t_measure.t().abs() - 0.7559).abs() < 0.0001);
+        assert!((t_measure.value().abs() - 0.7559).abs() < 0.0001);
     }
 
     #[test]
     fn test_independence_unequal_variance()
     {
-        let rv1: Vector<f64> = vector![1.0, 4.0, 5.0, 2.0, 1.0];
-        let rv2: Vector<f64> = vector![1.0, 4.0, 5.0, 3.0, 4.0];
+        let rv1: Vec<f64> = vec![1.0, 4.0, 5.0, 2.0, 1.0];
+        let rv2: Vec<f64> = vec![1.0, 4.0, 5.0, 3.0, 4.0];
 
         let measure: T<f64> = T::test_independence_unequal_variance(&rv1, &rv2);
 
-        assert!((measure.t().abs() - 0.756).abs() < 0.001);
+        assert!((measure.value().abs() - 0.756).abs() < 0.001);
         assert!((measure.p_value() - 0.472).abs() < 0.001);
     }
 }

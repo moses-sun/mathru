@@ -17,8 +17,11 @@ pub struct Uniform<T>
 impl<T> Uniform<T>
     where T: Real
 {
+    /// Uniform distribution
     ///
     /// # Arguments
+    ///
+    /// -\inf < a < b < \inf
     ///
     /// a: lower bound
     /// b: upper bound
@@ -64,7 +67,8 @@ impl<T> Continuous<T> for Uniform<T>
     ///
     /// # Arguments
     ///
-    /// x: random variable
+    /// x:
+    ///
     /// # Example
     ///
     /// ```
@@ -90,7 +94,7 @@ impl<T> Continuous<T> for Uniform<T>
     ///
     /// # Arguments
     ///
-    /// * `x` Random variable
+    /// * `x`
     ///
     /// # Example
     ///
@@ -120,14 +124,44 @@ impl<T> Continuous<T> for Uniform<T>
         }
     }
 
-
-    /// Quantile function of inverse cdf
+    /// Quantile function or inverse cdf
     ///
-    fn quantile(self: &Self, _p: T) -> T
+    /// # Arguments
+    ///
+    /// * `q`: quantile 0 <= q <= 1
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// use mathru::statistics::distrib::{Continuous, Uniform};
+    ///
+    /// let distrib: Uniform<f64> = Uniform::new(0.0, 0.5);
+    /// let q: f64 = 0.3;
+    /// let x: f64 = distrib.quantile(q);
+    /// ```
+    fn quantile(self: &Self, q: T) -> T
     {
-        unimplemented!();
-    }
+        if q > T::one() || q < T::zero()
+        {
+            panic!("Quantile q is out of bounds");
+        }
 
+        return q * (self.b - self.a) + self.a;
+    }
+    /// Mean
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// use mathru::statistics::distrib::{Continuous, Uniform};
+    ///
+    /// let a: f64 = 0.2;
+    /// let b: f64 = 0.5;
+    ///
+    /// let distrib: Uniform<f64> = Uniform::new(a, b);
+    /// let mean: f64 = distrib.mean();
+    /// assert_eq!((a + b) / 2.0, mean);
+    /// ```
 	fn mean(self: &Self) -> T
     {
         return (self.a +  self.b) / T::from_f64(2.0);
@@ -147,4 +181,58 @@ impl<T> Continuous<T> for Uniform<T>
     {
         return (self.b - self.a) * (self.b - self.a) / T::from_f64(12.0);
     }
+
+    /// Skewness
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// use mathru::statistics::distrib::{Continuous, Uniform};
+    ///
+    /// let distrib: Uniform<f64> = Uniform::new(0.2, 0.5);
+    /// let skewness: f64 = distrib.skewness();
+    /// assert_eq!(0.0, skewness);
+    /// ```
+	fn skewness(self: &Self) -> T
+	{
+	    return T::zero();
+	}
+
+	/// Median
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// use mathru::statistics::distrib::{Continuous, Uniform};
+    ///
+    /// let a: f64 = 0.2;
+    /// let b: f64 = 0.5;
+    ///
+    /// let distrib: Uniform<f64> = Uniform::new(a, b);
+    /// let median: f64 = distrib.median();
+    /// assert_eq!((a + b) / 2.0, median);
+    /// ```
+	fn median(self: &Self) -> T
+	{
+		return self.mean();
+	}
+
+	/// Entropy
+	///
+    /// # Example
+    ///
+    /// ```
+    /// use mathru::statistics::distrib::{Continuous, Uniform};
+    ///
+    /// let a: f64 = 0.2;
+    /// let b: f64 = 0.5;
+    ///
+    /// let distrib: Uniform<f64> = Uniform::new(a, b);
+    /// let entropy: f64 = distrib.entropy();
+    /// assert_eq!((b - a).ln(), entropy);
+    /// ```
+	fn entropy(self: &Self) -> T
+	{
+		return (self.b - self.a).ln();
+	}
 }

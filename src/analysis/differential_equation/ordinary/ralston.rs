@@ -3,7 +3,7 @@ use crate::algebra::linear::{Vector};
 use crate::algebra::abstr::Real;
 use super::explicit_method::{ExplicitFixedStepSizeMethod};
 use super::ExplicitODE;
-use crate::analysis::ode::fixed_stepper::ExplicitFixedStepper;
+use crate::analysis::differential_equation::ordinary::fixed_stepper::ExplicitFixedStepper;
 
 /// Solves an ODE using Ralston's method.
 ///

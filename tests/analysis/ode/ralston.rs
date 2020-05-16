@@ -2,7 +2,7 @@
 mod ralston
 {
 	use mathru::algebra::linear::{Vector};
-	use mathru::analysis::ode::{ExplicitODE, Ralston};
+	use mathru::analysis::differential_equation::ordinary::{ExplicitODE, Ralston};
 
 	use super::super::problem::{ExplicitODE1, ExplicitODE2};
 

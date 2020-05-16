@@ -158,4 +158,22 @@ impl<T> Continuous<T> for RaisedCosine<T>
     {
         return self.s * self.s * (T::from_f64(1.0 / 3.0) - T::from_f64(2.0) / (T::pi() * T::pi()));
     }
+
+    ///
+	fn skewness(self: &Self) -> T
+    {
+        return T::zero();
+    }
+
+	/// Median is the value separating the higher half from the lower half of a probability distribution.
+	fn median(self: &Self) -> T
+    {
+        return self.mu;
+    }
+
+	///
+	fn entropy(self: &Self) -> T
+    {
+        unimplemented!();
+    }
 }

@@ -1,6 +1,5 @@
 use crate::statistics::distrib::Continuous;
-use crate::special::gamma;
-use crate::special::hypergeometrical;
+use crate::special::{beta, gamma, hypergeometrical};
 use crate::algebra::abstr::Real;
 
 /// T distribution
@@ -10,6 +9,7 @@ use crate::algebra::abstr::Real;
 ///
 pub struct T<K>
 {
+    // degrees of freedom
     n: K,
 }
 
@@ -40,6 +40,7 @@ impl<K> T<K>
         {
             panic!()
         }
+
         T
         {
             n: n,
@@ -62,7 +63,7 @@ impl<K> Continuous<K> for T<K>
     /// ```
     /// use mathru::statistics::distrib::{Continuous, T};
     ///
-    /// let distrib: T<f64> = T::new(1.2);
+    /// let distrib: T<f64> = T::new(2.0);
     /// let x: f64 = 0.5;
     /// let p: f64 = distrib.pdf(x);
     /// ```
@@ -151,5 +152,34 @@ impl<K> Continuous<K> for T<K>
         {
             panic!();
         }
+    }
+
+    ///
+    /// # Panics
+    ///
+    /// if self.n <= 3
+    ///
+	fn skewness(self: &Self) -> K
+    {
+        if self.n <= K::from_f64(3.0)
+        {
+            panic!("Skewness is not defined if degrees of freedom is smaller or equal 3");
+        }
+        return K::zero();
+    }
+
+	/// Median is the value separating the higher half from the lower half of a probability distribution.
+	fn median(self: &Self) -> K
+    {
+        return K::zero();
+    }
+
+	///
+	fn entropy(self: &Self) -> K
+    {
+        let a: K = (self.n + K::one()) / K::from_f64(2.0);
+        let b: K = self.n / K::from_f64(2.0);
+
+        return (a * (gamma::gamma(a) - gamma::gamma(b))) + (self.n.sqrt() * beta::beta(a, K::from_f64(0.5))).ln();
     }
 }

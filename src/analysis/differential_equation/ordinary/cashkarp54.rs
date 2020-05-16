@@ -33,7 +33,7 @@ use super::adaptive_stepper::AdaptiveStepper;
 /// # fn main()
 /// # {
 ///	use mathru::algebra::linear::{Vector};
-///	use mathru::analysis::ode::{ExplicitODE, CashKarp54};
+///	use mathru::analysis::differential_equation::ordinary::{ExplicitODE, CashKarp54};
 ///
 /// pub struct ExplicitODE1
 /// {
@@ -111,7 +111,7 @@ impl<T> CashKarp54<T>
     /// ```
     /// use mathru::*;
     /// use mathru::algebra::linear::{Vector, Matrix};
-    /// use mathru::analysis::ode::{ExplicitODE, CashKarp54};
+    /// use mathru::analysis::differential_equation::ordinary::{ExplicitODE, CashKarp54};
     ///
     /// // Define ODE
     /// // $`y^{'} = ay = f(x, y) `$

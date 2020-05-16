@@ -104,4 +104,17 @@ mod gammadistrib
 
         assert_eq!(0.44217459962892536_f64, distrib.cdf(x));
     }
+
+
+   	#[test]
+	fn skewness()
+    {
+    	let alpha: f64 = 2.0_f64;
+        let beta: f64 = 5.0_f64;
+
+        let distrib: Gamma<f64> = Gamma::new(alpha, beta);
+
+       	assert_eq!(distrib.skewness(), 2.0 / alpha.sqrt());
+    }
+
 }

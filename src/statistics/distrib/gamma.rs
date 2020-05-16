@@ -9,8 +9,8 @@ use crate::algebra::abstr::Real;
 ///
 pub struct Gamma<T>
 {
-    p: T,
-    b: T,
+    alpha: T,
+    beta: T,
 }
 
 
@@ -22,12 +22,12 @@ impl<T> Gamma<T>
     ///
     /// # Arguments
     ///
-    /// * `p` (alpha) p > 0.0
-    /// * `b` (beta)  b > 0.0
+    /// * `alpha` > 0.0
+    /// * `beta` > 0.0
     ///
     /// # Panics
     ///
-    /// if p <= 0.0 || b <= 0.0
+    /// if alpha <= 0.0 || beta <= 0.0
     ///
     /// # Example
     ///
@@ -36,16 +36,16 @@ impl<T> Gamma<T>
     ///
     /// let distrib: Gamma<f64> = Gamma::new(0.3, 0.2);
     /// ```
-    pub fn new(p: T, b: T) -> Gamma<T>
+    pub fn new(alpha: T, beta: T) -> Gamma<T>
     {
-        if p <= T::zero() || b <= T::zero()
+        if alpha <= T::zero() || beta <= T::zero()
         {
             panic!()
         }
         Gamma
         {
-            p: p,
-            b: b
+            alpha: alpha,
+            beta: beta
         }
     }
 }
@@ -79,7 +79,7 @@ impl<T> Continuous<T> for Gamma<T>
         {
             panic!();
         }
-        self.b.pow(&self.p) / gamma::gamma(self.p) * x.pow(&(self.p - T::one())) * (-self.b * x).exp()
+        self.beta.pow(&self.alpha) / gamma::gamma(self.alpha) * x.pow(&(self.alpha - T::one())) * (-self.beta * x).exp()
     }
 
     /// Cumulative distribution function
@@ -103,7 +103,7 @@ impl<T> Continuous<T> for Gamma<T>
         {
             return T::zero()
         }
-        return gamma::gamma_lr(self.p, self.b * x)
+        return gamma::gamma_lr(self.alpha, self.beta * x)
     }
 
 
@@ -118,7 +118,7 @@ impl<T> Continuous<T> for Gamma<T>
     ///
 	fn mean(self: &Self) -> T
     {
-        return self.p / self.b;
+        return self.alpha / self.beta;
     }
 
     /// Variance
@@ -133,6 +133,24 @@ impl<T> Continuous<T> for Gamma<T>
     /// ```
 	fn variance(self: &Self) -> T
     {
-        return self.p / self.b.pow(&T::from_f64(2.0));
+        return self.alpha / self.beta.pow(&T::from_f64(2.0));
+    }
+
+       ///
+	fn skewness(self: &Self) -> T
+    {
+        return T::from_f64(2.0) / self.alpha.sqrt();
+    }
+
+	/// Median is the value separating the higher half from the lower half of a probability distribution.
+	fn median(self: &Self) -> T
+    {
+        unimplemented!();
+    }
+
+	///
+	fn entropy(self: &Self) -> T
+    {
+        return self.alpha - self.beta.ln()  + gamma::gamma(self.alpha).ln()  + (T::one() - self.alpha) * gamma::digamma(self.alpha);
     }
 }
