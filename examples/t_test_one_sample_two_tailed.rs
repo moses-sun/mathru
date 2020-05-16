@@ -4,7 +4,6 @@ use mathru::statistics::distrib::{T};
 use mathru::statistics::distrib::{Continuous, Normal};
 
 /// One sample, two tailed
-/// A 95% confidence interval, is used(alpha = 0.05)
 fn main()
 {
        let mean: f64 = 0.0;

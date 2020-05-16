@@ -18,7 +18,7 @@ fn main()
         graph_1.push((x, distrib.pdf(x)));
     }
 
-    let root_area = BitMapBackend::new("../figure/pdf_normal_distribution.png", (1200, 800))
+    let root_area = BitMapBackend::new("./figure/pdf_normal_distribution.png", (1200, 800))
         .into_drawing_area();
     root_area.fill(&WHITE).unwrap();
 

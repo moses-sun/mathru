@@ -3,8 +3,6 @@ mod ttest
 {
     use mathru::statistics::test::Test;
     use mathru::statistics::test::T;
-    use mathru::statistics::distrib::{Distribution, Continuous, Normal};
-    use mathru::statistics::distrib::T as TDistrib;
 
 //    #[test]
 //    fn test_independence_identical_means()

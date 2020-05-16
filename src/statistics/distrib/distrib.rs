@@ -47,22 +47,13 @@ pub trait Continuous<T>
 	fn variance(self: &Self) -> T;
 
 	/// Skewness is a measure of the asymmetry of the probability distribution of a real-valued random variable about its mean
-	fn skewness(self: &Self) -> T
-	{
-		unimplemented!();
-	}
+	fn skewness(self: &Self) -> T;
 
 	/// Median is the value separating the higher half from the lower half of a probability distribution.
-	fn median(self: &Self) -> T
-	{
-		unimplemented!();
-	}
+	fn median(self: &Self) -> T;
 
 	///
-	fn entropy(self: &Self) -> T
-	{
-		unimplemented!();
-	}
+	fn entropy(self: &Self) -> T;
 }
 
 /// Discrete distribution

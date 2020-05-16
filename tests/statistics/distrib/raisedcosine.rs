@@ -97,4 +97,24 @@ mod raisedcosine
 
         assert_eq!(s * s * (1.0 / 3.0  - 2.0 / PI / PI), variance);
     }
+
+    #[test]
+    fn median()
+    {
+        let mu: f64 = PI;
+        let s: f64 = 2.0 * PI;
+        let distrib: RaisedCosine<f64> = RaisedCosine::new(mu, s);
+
+        assert_eq!(mu, distrib.median());
+    }
+
+    #[test]
+    fn skewness()
+    {
+        let mu: f64 = PI;
+        let s: f64 = 2.0 * PI;
+        let distrib: RaisedCosine<f64> = RaisedCosine::new(mu, s);
+
+        assert_eq!(0.0, distrib.skewness());
+    }
 }

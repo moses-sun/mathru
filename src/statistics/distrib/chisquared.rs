@@ -167,4 +167,25 @@ impl<T> Continuous<T> for ChiSquared<T>
     {
         return T::from_f64(2.0) * self.k
     }
+
+    /// Skewness is a measure of the asymmetry of the probability distribution of a real-valued random variable about its mean
+	fn skewness(self: &Self) -> T
+    {
+        return (T::from_f64(8.0) / self.k).sqrt();
+    }
+
+	/// Median is the value separating the higher half from the lower half of a probability distribution.
+	fn median(self: &Self) -> T
+    {
+        let t: T = T::one() - T::from_f64(2.0 / 9.0) / self.k;
+
+        return self.k * t * t * t;
+    }
+
+	///
+	fn entropy(self: &Self) -> T
+    {
+        let d: T = T::from_f64(2.0) / self.k;
+        return d + (T::from_f64(2.0) * gamma::gamma(d)).ln() + (T::one() - d) * gamma::digamma(d);
+    }
 }

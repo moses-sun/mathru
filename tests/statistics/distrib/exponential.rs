@@ -53,4 +53,31 @@ mod exponential
 
         assert_eq!(1.3862943611198906, distrib.quantile(0.5))
     }
+
+    #[test]
+	fn skewnes()
+    {
+        let lambda: f64 = 0.5;
+        let distrib: Exponential<f64> = Exponential::new(lambda);
+
+        assert_eq!(2.0, distrib.skewness());
+    }
+
+	#[test]
+	fn median()
+    {
+        let lambda: f64 = 0.5;
+        let distrib: Exponential<f64> = Exponential::new(lambda);
+
+        assert_eq!((2.0f64).ln() / lambda, distrib.median());
+    }
+
+    #[test]
+	fn entropy()
+    {
+        let lambda: f64 = 0.5;
+        let distrib: Exponential<f64> = Exponential::new(lambda);
+
+		assert_eq!(1.0 - lambda.ln(), distrib.entropy());
+    }
 }

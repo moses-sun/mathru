@@ -125,7 +125,7 @@ fn main()
        	graph_x_hat.push((t_i, x_hat));
     }
 
-	let root_area = BitMapBackend::new("../figure/fit_lm.png", (1200, 800))
+	let root_area = BitMapBackend::new("./figure/fit_lm.png", (1200, 800))
         .into_drawing_area();
     root_area.fill(&WHITE).unwrap();
 

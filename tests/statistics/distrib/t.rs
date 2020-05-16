@@ -57,4 +57,25 @@ mod tdistrib
 
        	assert!((t.pdf(x) - 0.283).abs() < 0.001);
     }
+
+ 	#[test]
+  	#[should_panic(expected = "Skewness is not defined if degrees of freedom is smaller or equal 3")]
+	fn skewness()
+    {
+        let n: f64 = 3.0;
+
+        let t: T<f64> = T::new(n);
+
+       	assert_eq!(t.skewness(), 0.0);
+    }
+
+    #[test]
+	fn median()
+    {
+        let n: f64 = 3.0;
+
+        let t: T<f64> = T::new(n);
+
+       	assert_eq!(t.median(), 0.0);
+    }
 }

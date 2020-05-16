@@ -153,6 +153,24 @@ impl<T> Continuous<T> for Exponential<T>
 	{
 		return T::one() / self.lambda.pow(&T::from_u8(2))
 	}
+
+	///
+	fn skewness(self: &Self) -> T
+    {
+    	return T::from_f64(2.0);
+    }
+
+	///
+	fn median(self: &Self) -> T
+    {
+        return T::from_f64(2.0).ln() / self.lambda;
+    }
+
+	///
+	fn entropy(self: &Self) -> T
+    {
+		return T::one() - self.lambda.ln();
+    }
 }
 
 
