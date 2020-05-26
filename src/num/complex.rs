@@ -348,14 +348,14 @@ impl<T> Sign for Complex<T>
 //
 //}
 
-impl<T> Scalar for Complex<T>
-	where T: Real
-{
-	fn epsilon() -> Self
-	{
-		unimplemented!();
-	}
-}
+// impl<T> Scalar for Complex<T>
+// 	where T: Real
+// {
+// 	fn epsilon() -> Self
+// 	{
+// 		unimplemented!();
+// 	}
+// }
 
 /// Compares to complex numbers
 impl<T> PartialEq for Complex<T>

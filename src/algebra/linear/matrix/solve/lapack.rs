@@ -8,27 +8,24 @@ pub trait Solve<T>
     /// A * x = b
     ///
     ///
-    fn solve(self: &Self, rhs: &T) -> Option<T>;
+    fn solve(self: &Self, rhs: &T) -> Result<T, ()>;
 }
 
 impl<T> Solve<Vector<T>> for Matrix<T>
     where T: Field + Scalar
 {
     /// Solves Ax = y
-    ///  where A \in R^{m * n}, x \in R^n, y \in R^m
-    ///
-    ///
-    fn solve(self: &Self, rhs: &Vector<T>) -> Option<Vector<T>>
+    /// where A \in R^{m * n}, x \in R^n, y \in R^m
+    fn solve(self: &Self, rhs: &Vector<T>) -> Result<Vector<T>, ()>
     {
         return self.solve_vector_r(rhs);
     }
-
 }
 
 impl<T> Solve<Matrix<T>> for Matrix<T>
     where T: Field + Scalar
 {
-    fn solve(self: &Self, rhs: &Matrix<T>) -> Option<Matrix<T>>
+    fn solve(self: &Self, rhs: &Matrix<T>) -> Result<Matrix<T>, ()>
     {
         return self.solve_matrix_r(rhs);
     }
@@ -38,7 +35,7 @@ impl<T> Matrix<T>
     where T: Field + Scalar
 {
 
-    fn solve_vector_r(self: &Self, y: &Vector<T>) -> Option<Vector<T>>
+    fn solve_vector_r(self: &Self, y: &Vector<T>) -> Result<Vector<T>, ()>
     {
         let (m, n): (usize, usize) = self.dim();
         let m_i32: i32 = m as i32;
@@ -66,7 +63,7 @@ impl<T> Matrix<T>
 
         if info < 0
         {
-            return None
+            return Err(())
         }
 
         T::xgetrs(
@@ -82,10 +79,10 @@ impl<T> Matrix<T>
 
         if info != 0
         {
-            return None
+            return Err(())
         }
 
-        return Some(Vector::new_column(y_m, y_data));
+        return Ok(Vector::new_column(y_m, y_data));
     }
 
 }
@@ -95,7 +92,7 @@ impl<T> Matrix<T>
 impl<T> Matrix<T>
     where T: Field + Scalar
 {
-    pub fn solve_matrix_r(self: &Self, y: &Matrix<T>) -> Option<Matrix<T>>
+    pub fn solve_matrix_r(self: &Self, y: &Matrix<T>) -> Result<Matrix<T>, ()>
     {
         let (m, n): (usize, usize) = self.dim();
         let m_i32: i32 = m as i32;
@@ -123,7 +120,7 @@ impl<T> Matrix<T>
 
         if info < 0
         {
-            return None;
+            return Err(());
         }
 
         T::xgetrs(
@@ -139,10 +136,10 @@ impl<T> Matrix<T>
 
         if info != 0
         {
-            return None
+            return Err(())
         }
 
-        return Some(Matrix::new(y_m, y_n, y_data));
+        return Ok(Matrix::new(y_m, y_n, y_data));
     }
 
 }

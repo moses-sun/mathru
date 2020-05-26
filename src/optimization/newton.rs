@@ -85,12 +85,12 @@ impl<T> Newton<T>
         {
             let hessian_x_n: Matrix<T> = func.hessian(&x_n);
             let grad_x_n: Vector<T> = func.jacobian(&x_n).get_row(0).transpose();
-            let res_solve: Option<Vector<T>> = hessian_x_n.solve(&-grad_x_n.clone());
+            let res_solve: Result<Vector<T>, ()> = hessian_x_n.solve(&-grad_x_n.clone());
             let d_k: Vector<T>;
 
             match res_solve
             {
-                Some(d_k_temp) =>
+                Ok(d_k_temp) =>
                 {
                     let grad_x_n_abs: T = grad_x_n.dotp(&grad_x_n);
                     let grad_d_k_temp: T = grad_x_n.dotp(&d_k_temp);
@@ -103,7 +103,7 @@ impl<T> Newton<T>
                         d_k = -grad_x_n.clone();
                     }
                 }
-                None =>
+                Err(_e) =>
                 {
                     d_k = -grad_x_n.clone();
                 }

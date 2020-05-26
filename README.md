@@ -25,7 +25,7 @@ The following features are impelmented in this create:
         * Pseudo inverse
         * Determinant
         * Trace
-        * Eigenvalue
+        * Eigenvalue, Eigenvectors
         * [Solve linear system](https://matthiaseiholzer.gitlab.io/mathru/documentation/algebra/matrix/#linear-system-resolution)
 
 * [Ordinary differential equation (ODE)](https://matthiaseiholzer.gitlab.io/mathru/documentation/analysis/differentialeq/)

@@ -61,7 +61,7 @@ document.addEventListener(\"DOMContentLoaded\", function () {
 //! let a: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 2.0, -3.0, -7.0]);
 //! let b: Vector<f64> = vector![1.0; 3.0];
 //!
-//! let (l, u, p): (Matrix<f64>, Matrix<f64>, Matrix<f64>) = a.dec_lu().lup();
+//! let (l, u, p): (Matrix<f64>, Matrix<f64>, Matrix<f64>) = a.dec_lu().unwrap().lup();
 //!
 //! let b_hat = &p * &b;
 //!

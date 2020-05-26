@@ -1,11 +1,10 @@
 mod matrix;
 mod cholesky;
 mod qr;
-//mod eigenvalue;
+mod eigen;
 mod hessenberg;
 mod lu;
 mod inverse;
 mod mul;
 mod add;
 mod sub;
-//pub use self::matrix::Matrix;

@@ -3,7 +3,6 @@ pub mod native;
 #[cfg(feature = "blaslapack")]
 pub mod lapack;
 
-#[cfg(feature = "native")]
-pub use self::native::QRDec;
-#[cfg(feature = "blaslapack")]
-pub use self::lapack::QRDec;
+pub mod qrdec;
+pub use self::qrdec::QRDec;
+

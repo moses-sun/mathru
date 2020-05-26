@@ -2,7 +2,7 @@
 mod lu
 {
     use mathru::algebra::linear::{Vector, Matrix};
-    use mathru::algebra::linear::matrix::{Solve, LUDec, Inverse};
+    use mathru::algebra::linear::matrix::{Solve, LUDec, Inverse, Substitute};
 
     #[test]
     fn decompose_lu_0()
@@ -23,7 +23,7 @@ mod lu
                                         2.0, -5.0, 12.0;
                                         0.0, 2.0, -10.0];
 
-        let (l, u, p) : (Matrix<f64>, Matrix<f64>, Matrix<f64>) = a.dec_lu().lup();
+        let (l, u, p) : (Matrix<f64>, Matrix<f64>, Matrix<f64>) = a.dec_lu().unwrap().lup();
 
         assert!(l.compare_neighbourhood(&l_ref, 1.0e-10));
         assert!(u.compare_neighbourhood(&u_ref, 1.0e-10));
@@ -55,7 +55,7 @@ mod lu
                                             0.0, 1.0, 0.0, 0.0;
                                             0.0, 0.0, 0.0, 1.0];
 
-        let (l, u, p) : (Matrix<f64>, Matrix<f64>, Matrix<f64>) = a.dec_lu().lup();
+        let (l, u, p) : (Matrix<f64>, Matrix<f64>, Matrix<f64>) = a.dec_lu().unwrap().lup();
 
         assert!(l.compare_neighbourhood(&l_ref, 1.0e-10));
         assert!(u.compare_neighbourhood(&u_ref, 1.0e-10));
@@ -69,10 +69,27 @@ mod lu
         let l_ref: Matrix<f64> = matrix![1.0, 0.0; 1.0 / 3.0, 1.0];
         let u_ref: Matrix<f64> = matrix![3.0, -7.0; 0.0, 1.0/3.0];
 
-        let (l, u, _p): (Matrix<f64>, Matrix<f64>, Matrix<f64>) = a.dec_lu().lup();
+        let (l, u, _p): (Matrix<f64>, Matrix<f64>, Matrix<f64>) = a.dec_lu().unwrap().lup();
 
         assert!(l.compare_neighbourhood(&l_ref, 1.0e-10));
         assert!(u.compare_neighbourhood(&u_ref, 1.0e-10));
+    }
+
+    #[test]
+    fn decompose_lu3()
+    {
+        let a: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 2.0, -3.0, -7.0]);
+        let b: Vector<f64> = vector![1.0; 3.0];
+        let x_ref: Vector<f64> = vector![-2.25; 8.5];
+        let (l, u, p): (Matrix<f64>, Matrix<f64>, Matrix<f64>) = a.dec_lu().unwrap().lup();
+
+        let b_hat = &p * &b;
+
+        let y = u.substitute_backward(b_hat);
+
+        let x = p * l.substitute_forward(y);
+
+        assert!(x.compare_neighbourhood(&x_ref, 1.0e-10));
     }
 
     #[test]
@@ -81,7 +98,7 @@ mod lu
         let a: Matrix<f64> = matrix![6.0, 2.0, -1.0; -3.0, 5.0, 3.0; -2.0, 1.0, 3.0];
         let b: Vector<f64> = vector![48.0; 49.0; 24.0];
 
-        let lu_dec: LUDec<f64> = a.dec_lu();
+        let lu_dec: LUDec<f64> = a.dec_lu().unwrap();
         let x: Vector<f64> = lu_dec.solve(&b).unwrap();
         let x_ref: Vector<f64> = vector![7.0; 8.0; 10.0];
 
@@ -117,7 +134,7 @@ mod lu
                                                 -10.0, 5.0, 3.0;
                                                 -2.0, 1.0, 0.5];
 
-        let a_inv: Matrix<f64> = a.dec_lu().inv().unwrap();
+        let a_inv: Matrix<f64> = a.dec_lu().unwrap().inv().unwrap();
 
         assert!(a_inv.compare_neighbourhood(&a_inv_ref, 1.0e-10));
     }
@@ -133,7 +150,7 @@ mod lu
                                                 0.17647058823529413, 0.17647058823529413, 0.03921568627450981;
                                                 0.05882352941176471, 0.05882352941176471, -0.09803921568627452];
 
-        let a_inv: Matrix<f64> = a.dec_lu().inv().unwrap();
+        let a_inv: Matrix<f64> = a.dec_lu().unwrap().inv().unwrap();
 
         assert!(a_inv.compare_neighbourhood(&a_inv_ref, 1.0e-10));
     }
@@ -154,7 +171,7 @@ mod lu
         -0.024517816279830296, 0.06390977443609022, -0.033671134357633165, -0.02631578947368421, 0.020594965675057208;
         0.2953293559986926, -0.03007518796992481, -0.030414351095129147, 0.019736842105263157, -0.004576659038901602];
 
-        let a_inv: Matrix<f64> = a.dec_lu().inv().unwrap();
+        let a_inv: Matrix<f64> = a.dec_lu().unwrap().inv().unwrap();
 
         assert!(a_inv.compare_neighbourhood(&a_inv_ref, 1.0e-10));
     }

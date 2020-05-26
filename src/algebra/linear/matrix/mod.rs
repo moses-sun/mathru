@@ -8,13 +8,18 @@ mod matrixrowiteratormut;
 mod matrixcolumniterator;
 mod matrixcolumniteratormut;
 
-mod eigenvalue;
+mod eigen;
+pub use self::eigen::EigenDec;
+
 mod hessenberg;
+pub use self::hessenberg::HessenbergDec;
 
 mod lu;
 pub use self::lu::LUDec;
 
 mod qr;
+pub use self::qr::QRDec;
+
 mod inverse;
 mod mul;
 mod add;

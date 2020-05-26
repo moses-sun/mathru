@@ -17,7 +17,7 @@ pub trait Inverse<T>
     /// let b_inv: Matrix<f64> = a.inv().unwrap();
     ///
     /// ```
-    fn inv(self: &Self) -> Option<Matrix<T>>;
+    fn inv(self: &Self) -> Result<Matrix<T>, ()>;
 }
 
 impl<T> Inverse<T> for Matrix<T>
@@ -35,7 +35,7 @@ impl<T> Inverse<T> for Matrix<T>
     /// let b_inv: Matrix<f64> = a.inv().unwrap();
     ///
     /// ```
-    fn inv(self: & Self) -> Option<Matrix<T>>
+    fn inv(self: & Self) -> Result<Matrix<T>, ()>
     {
         return self.inv_r();
     }
@@ -44,9 +44,9 @@ impl<T> Inverse<T> for Matrix<T>
 impl<T> Matrix<T>
     where T: Field + Scalar
 {
-    pub fn inv_r(self: &Self) -> Option<Matrix<T>>
+    pub fn inv_r(self: &Self) -> Result<Matrix<T>, ()>
     {
-        let lu_dec: LUDec<T> = self.dec_lu();
+        let lu_dec: LUDec<T> = self.dec_lu()?;
         return lu_dec.inv();
     }
 }

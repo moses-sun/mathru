@@ -10,7 +10,6 @@ use rand::Rng;
 use serde::{Deserialize, Serialize};
 use super::{MatrixIntoIterator, MatrixIterator, MatrixIteratorMut, MatrixRowIterator, MatrixRowIteratorMut, MatrixColumnIterator,
 MatrixColumnIteratorMut};
-//use std::cmp::min;
 use crate::algebra::linear::matrix::{Substitute};
 use crate::elementary::Power;
 
@@ -76,10 +75,7 @@ impl<T> From<Vector<T>> for Matrix<T>
 
         return Matrix::new(v_m, v_n, v.convert_to_vec());
     }
-
 }
-
-
 
 impl<T> IntoIterator for Matrix<T>
     where T: Field + Scalar
@@ -92,7 +88,6 @@ impl<T> IntoIterator for Matrix<T>
         MatrixIntoIterator
         {
             iter: self.data.into_iter(),
-            //_phantom: PhantomData::default()
         }
     }
 }
@@ -407,7 +402,14 @@ impl<T> Matrix<T>
             {
                 *b.get_mut(k) = *b.get(k) - *self.get(k, l) * *b.get(l);
             }
-            *b.get_mut(k) = *b.get(k) / *self.get(k, k);
+            if *self.get(k, k) != T::zero()
+            {
+                *b.get_mut(k) = *b.get(k) / *self.get(k, k);
+            }
+            else
+            {
+                *b.get_mut(k) = T::one();
+            }
         }
 
         return b;
@@ -492,24 +494,29 @@ impl<T> Matrix<T>
 
         if self.m == 1
         {
-            return self.get(0, 0).clone();
+            return *self.get(0, 0);
         }
 
         if self.m == 2
         {
-            let a_11: T = self.get(0, 0).clone();
-            let a_12: T = self.get(0, 1).clone();
-            let a_21: T = self.get(1, 0).clone();
-            let a_22: T = self.get(1, 1).clone();
+            let a_11: T = *self.get(0, 0);
+            let a_12: T = *self.get(0, 1);
+            let a_21: T = *self.get(1, 0);
+            let a_22: T = *self.get(1, 1);
             return a_11 * a_22 - a_12 * a_21;
         }
 
-        let (_l, u, p): (Matrix<T>, Matrix<T>, Matrix<T>) = self.dec_lu().lup();
+        let (_l, u, p) = match self.dec_lu()
+        {
+           Err(e) => return T::zero(),
+           Ok(dec) => dec.lup()
+        };
+
         let mut det: T = T::one();
 
         for i in 0..self.m
         {
-			det *= u.get(i, i).clone();
+			det *= *u.get(i, i);
         }
 
         let mut counter: usize = 0;
@@ -524,10 +531,10 @@ impl<T> Matrix<T>
         let mut perm: T = T::one();
         if counter != 0
         {
-            perm = (-T::one()).pow( &T::from_u128(counter as u128 - 1));
+           perm = (-T::one()).pow( &T::from_u128(counter as u128 - 1));
         }
 
-        perm * det
+        return perm * det;
     }
 
 
@@ -562,7 +569,7 @@ impl<T> Matrix<T>
         let mut sum: T = T::zero();
         for i in 0..m
         {
-            sum += self.get(i, i).clone();
+            sum += *self.get(i, i);
         }
 
         return sum;
@@ -574,14 +581,14 @@ impl<T> Matrix<T>
 
 #[cfg(feature = "native")]
 impl<T> Matrix<T>
-    where T: Clone
+    where T: Scalar
 {
     pub(super) fn swap_rows<'a>(self: &'a mut Self, i: usize, j: usize)
     {
         for k in 0..self.n
         {
-            let temp: T = self.get(i, k).clone();
-            *(self.get_mut(i, k)) = self.get(j, k).clone();
+            let temp: T = *self.get(i, k);
+            *(self.get_mut(i, k)) = *self.get(j, k);
             *(self.get_mut(j, k)) = temp;
         }
     }
@@ -681,9 +688,9 @@ impl<T> Matrix<T>
         }
 
         let mut givens: Matrix<T> = Matrix::one(m);
-        *(givens.get_mut(i,i)) = c.clone();
+        *(givens.get_mut(i,i)) = c;
         *(givens.get_mut(j,j)) = c;
-        *(givens.get_mut(i,j)) = s.clone();
+        *(givens.get_mut(i,j)) = s;
         *(givens.get_mut(j,i)) = -s;
         givens
     }

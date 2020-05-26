@@ -1,9 +1,10 @@
 use crate::algebra::linear::{Vector, Matrix};
-use crate::algebra::abstr::{Field, Scalar};
-use crate::elementary::Power;
+use crate::algebra::abstr::{Real};
+use crate::algebra::linear::matrix::{Solve, EigenDec, LUDec};
+use std::ops::Sub;
 
 impl<T> Matrix<T>
-     where T: Field + Scalar + Power
+     where T: Real
 {
     /// Computes the eigenvalues of a real matrix
     ///
@@ -12,25 +13,26 @@ impl<T> Matrix<T>
     ///
     ///
     ///
-    /// # Return
-    ///
-    /// Vector with unsorted eigenvalues
     ///
     /// # Example
     ///
     /// ```
     /// use mathru::algebra::linear::{Vector, Matrix};
+    /// use mathru::algebra::linear::matrix::EigenDec;
     ///
     /// let a: Matrix<f64> = Matrix::new(3, 3, vec![1.0, -3.0, 3.0, 3.0, -5.0, 3.0, 6.0, -6.0, 4.0]);
-    /// let eig: Vector<f64> = a.eigenvalue();
+    /// let eigen: EigenDec<f64> = a.dec_eigen();
     ///
     /// ```
-    pub fn eigenvalue(self: &Self) -> Vector<T>
+    pub fn dec_eigen(self: Self) -> EigenDec<T>
     {
         let (m, n) : (usize, usize) = self.dim();
         assert!(m == n, "Unable to compute the eigen value of a non-square matrix");
         assert!(m != 0, "Unable to compute the eigen vlaue of an empty matrix.");
-        self.eigenvalue_r()
+
+        let value: Vector<T> = self.eigenvalue_r();
+        let vector: Matrix<T> = self.eigenvector_r(&value);
+        return EigenDec::new(value, vector);
     }
 
     #[cfg(feature = "native")]
@@ -40,16 +42,17 @@ impl<T> Matrix<T>
 
         let h: Matrix<T> = self.dec_hessenberg().h();
 
-        let (_u, t): (Matrix<T>, Matrix<T>) = h.clone().francis();
+        let (_u, t): (Matrix<T>, Matrix<T>) = h.francis();
 
         let mut eig: Vector<T> = Vector::zero(m);
 
         for i in 0..m
         {
-            *eig.get_mut(i) = t.get(i, i).clone();
+            *eig.get_mut(i) = *t.get(i, i);
         }
 
-        return eig;
+        return eig
+
     }
 
     #[cfg(feature = "native")]
@@ -133,7 +136,7 @@ impl<T> Matrix<T>
             // check for convergence
             let m: T = self.get(q - 1,q - 1).abs();
             let n: T = self.get(p - 1,p - 1).abs();
-            if self.get(p - 1 ,q - 1).abs() < epsilon.clone() * (m + n)
+            if self.get(p - 1 ,q - 1).abs() < epsilon * (m + n)
             {
                 *self.get_mut(p - 1, q - 1) = T::zero();
                 p = p - 1;
@@ -142,7 +145,7 @@ impl<T> Matrix<T>
             {
                 let k: T = self.get(q - 2,q - 2).abs();
                 let l: T = self.get(q - 1,q - 1).abs();
-                if self.get(p - 2, q - 2).abs() < epsilon.clone() * (k + l)
+                if self.get(p - 2, q - 2).abs() < epsilon * (k + l)
                 {
                     *self.get_mut(p - 2, q - 2) = T::zero();
                     p = p - 2;
@@ -152,5 +155,22 @@ impl<T> Matrix<T>
         }
 
         return (u, self);
+    }
+
+    #[cfg(feature = "native")]
+    pub fn eigenvector_r(self: &Self, value: &Vector<T>) -> Matrix<T>
+    {
+        let eye: Matrix<T> = Matrix::one(self.m);
+        let zero_vector: Vector<T> = Vector::zero(self.m);
+        let mut vectors: Matrix<T> = Matrix::zero(self.m , self.m);
+
+        for (c, val) in value.iter().enumerate()
+        {
+            let diff: Matrix<T> = self - &(&eye * val);
+            let vec: Vector<T> = diff.solve(&zero_vector).unwrap();
+            vectors = vectors.set_column(&vec, c);
+        }
+
+        return vectors;
     }
 }

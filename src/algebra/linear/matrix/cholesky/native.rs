@@ -1,37 +1,7 @@
 use crate::algebra::linear::{Matrix};
 use crate::elementary::Power;
 use crate::algebra::abstr::{Field, Scalar};
-use std::clone::Clone;
-use serde::{Deserialize, Serialize};
-
-/// Result of a cholesky decomposition
-///
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct CholeskyDec<T>
-{
-    l: Matrix<T>
-}
-
-impl<T> CholeskyDec<T>
-    where T: Field + Scalar
-{
-    pub fn new(m: Matrix<T>) -> CholeskyDec<T>
-    {
-        CholeskyDec
-        {
-            l: m
-        }
-    }
-}
-
-impl<T> CholeskyDec<T>
-{
-    /// Return the l matrix
-    pub fn l(self: Self) -> Matrix<T>
-    {
-        return self.l
-    }
-}
+use crate::algebra::linear::matrix::CholeskyDec;
 
 impl<T> Matrix<T>
     where T: Field + Scalar + Power
@@ -63,14 +33,14 @@ impl<T> Matrix<T>
     /// let l: (Matrix<f64>) = a.dec_cholesky().unwrap().l();
     /// # }
     /// ```
-    pub fn dec_cholesky<'a>(self: &'a Self) -> Option<CholeskyDec<T>>
+    pub fn dec_cholesky<'a>(self: &'a Self) -> Result<CholeskyDec<T>, ()>
     {
         let (m, n): (usize, usize) = self.dim();
         assert_eq!(m, n);
         self.dec_cholesky_r()
     }
 
-    fn dec_cholesky_r<'a>(self: &'a Self) -> Option<CholeskyDec<T>>
+    fn dec_cholesky_r<'a>(self: &'a Self) -> Result<CholeskyDec<T>, ()>
     {
         let (m, n) = self.dim();
         let exponent_sqrt: T = T::from_f64(0.5);
@@ -96,7 +66,7 @@ impl<T> Matrix<T>
                 }
             }
         }
-        return Some(CholeskyDec::new(l));
+        return Ok(CholeskyDec::new(l));
     }
 
 }

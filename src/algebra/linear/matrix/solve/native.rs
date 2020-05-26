@@ -8,19 +8,19 @@ pub trait Solve<T>
     /// A * x = b
     ///
     ///
-    fn solve(self: &Self, rhs: &T) -> Option<T>;
+    fn solve(self: &Self, rhs: &T) -> Result<T, ()>;
 }
 
-impl<T> Solve<Vector<T>> for  Matrix<T>
+impl<T> Solve<Vector<T>> for Matrix<T>
     where T: Field + Scalar
 {
     /// Solves Ax = y
     ///  where A \in R^{m * n}, x \in R^n, y \in R^m
     ///
     ///
-    fn solve(self: &Self, rhs: &Vector<T>) -> Option<Vector<T>>
+    fn solve(self: &Self, rhs: &Vector<T>) -> Result<Vector<T>, ()>
     {
-        let (l, u, p): (Matrix<T>, Matrix<T>, Matrix<T>) = self.dec_lu().lup();
+        let (l, u, p): (Matrix<T>, Matrix<T>, Matrix<T>) = self.dec_lu().unwrap().lup();
 
         let b_hat: Vector<T> = &p * rhs;
 
@@ -28,7 +28,7 @@ impl<T> Solve<Vector<T>> for  Matrix<T>
 
         let x: Vector<T> = u.substitute_backward(y);
 
-        return Some(x);
+        return Ok(x);
     }
 
 }
@@ -36,8 +36,8 @@ impl<T> Solve<Vector<T>> for  Matrix<T>
 impl<T> Solve<Matrix<T>> for Matrix<T>
     where T: Field + Scalar
 {
-    fn solve(self: &Self, rhs: &Matrix<T>) -> Option<Matrix<T>>
+    fn solve(self: &Self, rhs: &Matrix<T>) -> Result<Matrix<T>, ()>
     {
-        return self.dec_lu().solve(rhs);
+        return self.dec_lu()?.solve(rhs);
     }
 }

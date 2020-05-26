@@ -16,7 +16,7 @@ pub trait Inverse<T>
     /// let b_inv: Matrix<f64> = a.inv().unwrap();
     ///
     /// ```
-    fn inv(self: &Self) -> Option<Matrix<T>>;
+    fn inv(self: &Self) -> Result<Matrix<T>, ()>;
 }
 
 impl<T> Inverse<T> for Matrix<T>
@@ -34,7 +34,7 @@ impl<T> Inverse<T> for Matrix<T>
     /// let b_inv: Matrix<f64> = a.inv().unwrap();
     ///
     /// ```
-    fn inv(self: & Self) -> Option<Matrix<T>>
+    fn inv(self: & Self) -> Result<Matrix<T>, ()>
     {
         return self.inv_r();
     }
@@ -43,7 +43,7 @@ impl<T> Inverse<T> for Matrix<T>
 impl<T> Matrix<T>
     where T: Field + Scalar
 {
-    pub fn inv_r(self: & Self) -> Option<Matrix<T>>
+    pub fn inv_r(self: & Self) -> Result<Matrix<T>, ()>
     {
         let (m, n): (usize, usize) = self.dim();
         let m_i32: i32 = m as i32;
@@ -67,15 +67,14 @@ impl<T> Matrix<T>
 
         if info != 0
         {
-            return None;
+            return Err(());
         }
 
         let lwork: i32 = T::xgetri_work_size(n_i32, &mut self_data[..], n_i32, &mut ipiv, &mut info);
 
-
         if info != 0
         {
-            return None;
+            return Err(());
         }
 
        	let mut work: Vec<T> = vec![T::zero(); lwork as usize];
@@ -84,11 +83,11 @@ impl<T> Matrix<T>
 
         if info != 0
         {
-            return None;
+            return Err(());
         }
 
         let self_inv: Matrix<T> = Matrix::new(n, m, self_data);
 
-        return Some(self_inv.transpose());
+        return Ok(self_inv.transpose());
     }
 }
