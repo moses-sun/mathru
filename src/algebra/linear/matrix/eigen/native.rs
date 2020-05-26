@@ -1,7 +1,6 @@
 use crate::algebra::linear::{Vector, Matrix};
 use crate::algebra::abstr::{Real};
-use crate::algebra::linear::matrix::{Solve, EigenDec, LUDec};
-use std::ops::Sub;
+use crate::algebra::linear::matrix::{Solve, EigenDec};
 
 impl<T> Matrix<T>
      where T: Real
