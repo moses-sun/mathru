@@ -10,7 +10,6 @@ use crate::algebra::abstr::Zero;
 #[cfg(feature = "native")]
 pub trait Scalar<Rhs = Self, Output = Self>: Sized + Display + ToPrimitive + FromPrimitive + NumCast + Debug + Copy + PartialOrd + Sign
 {
-    fn epsilon() -> Self;
 }
 
 /// comparisons, basic numeric operations, and string conversion.
@@ -18,7 +17,6 @@ pub trait Scalar<Rhs = Self, Output = Self>: Sized + Display + ToPrimitive + Fro
 pub trait Scalar<Rhs = Self, Output = Self>: Sized + Display + ToPrimitive + FromPrimitive + NumCast + Debug + Copy + PartialOrd + Sign +
  Blas + Lapack
 {
-    fn epsilon() -> Self;
 }
 
 macro_rules! impl_scalar
@@ -27,10 +25,6 @@ macro_rules! impl_scalar
     {
         impl Scalar for $t
         {
-            fn epsilon() -> Self
-            {
-                return $eps;
-            }
         }
     };
 }
