@@ -15,4 +15,4 @@ cargo-test:
     needs: ["cargo-build"]
     image: rust:latest
     script:
-      - cargo test --verbos
+      - cargo test --verbose
