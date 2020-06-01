@@ -25,13 +25,10 @@ use crate::algebra::abstr::Real;
 /// 2. calculate antigradient $`d_{k} := -\nabla f(x_{k}) `$
 ///
 ///     set $` \alpha_{k} := 1 `$
-/// 3. while $`f(x_{k} + \alpha_{k} d_{k}) > f(x_k) + \sigma \alpha_{k} \lvert
-/// \lvert d_{k} \rvert \rvert_{2}^{2} `$
-///
+/// 3. while $`f(x_{k} + \alpha_{k} d_{k}) > f(x_k) + \sigma \alpha_{k} \lvert \lvert d_{k} \rvert \rvert_{2}^{2} `$
 ///     set  $` \alpha_{k} := \alpha_{k} /2 `$
 /// 4. $` x_{k + 1} := x_{k} + \alpha_{k} d_{k} `$
 /// 5. $` k := k + 1 `$ go to 2.
-/// ```
 #[derive(Clone, Copy, Debug)]
 pub struct Gradient<T>
 {
