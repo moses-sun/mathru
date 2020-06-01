@@ -1,29 +1,29 @@
 #[cfg(test)]
 mod semigroup
 {
-	use mathru::algebra::abstr::{Semigroup, Addition, Multiplication};
+    use mathru::algebra::abstr::{Addition, Multiplication, Semigroup};
 
-	#[test]
-	fn addition_f64()
-	{
-		let a: f64 = 8.0;
-		let b: f64 = 2.0;
-		let c: f64 = 1.0;
+    #[test]
+    fn addition_f64()
+    {
+        let a: f64 = 8.0;
+        let b: f64 = 2.0;
+        let c: f64 = 1.0;
 
-		assert_eq!(true, Semigroup::<Addition>::is_associative(a, b, c));
-	}
+        assert_eq!(true, Semigroup::<Addition>::is_associative(a, b, c));
+    }
 
-	#[test]
-	fn multiplication_f64()
-	{
-		let a: f64 = 8.0;
-		let b: f64 = 2.0;
-		let c: f64 = 1.0;
+    #[test]
+    fn multiplication_f64()
+    {
+        let a: f64 = 8.0;
+        let b: f64 = 2.0;
+        let c: f64 = 1.0;
 
-		assert_eq!(true, Semigroup::<Multiplication>::is_associative(a, b, c));
-	}
+        assert_eq!(true, Semigroup::<Multiplication>::is_associative(a, b, c));
+    }
 
-	macro_rules! test_magma
+    macro_rules! test_magma
 	{
 		($a:expr, $b:expr, $(($id:ident, $s:ty)),*) =>
 		{
@@ -54,7 +54,19 @@ mod semigroup
 		};
 	}
 
-	test_magma!(5, 2, (u8, u8), (u16, u16), (u32, u32), (u64, u64), (u128, u128));
-	test_magma!(-5, 2, (i8, i8), (i16, i16), (i32, i32), (i64, i64), (i128, i128));
-	test_magma!(5.0, 2.0, (f32, f32), (f64, f64));
+    test_magma!(5,
+                2,
+                (u8, u8),
+                (u16, u16),
+                (u32, u32),
+                (u64, u64),
+                (u128, u128));
+    test_magma!(-5,
+                2,
+                (i8, i8),
+                (i16, i16),
+                (i32, i32),
+                (i64, i64),
+                (i128, i128));
+    test_magma!(5.0, 2.0, (f32, f32), (f64, f64));
 }

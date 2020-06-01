@@ -1,10 +1,9 @@
-use crate::algebra::linear::{Matrix};
 use crate::algebra::abstr::{Field, Scalar};
-use crate::elementary::Power;
 use crate::algebra::linear::matrix::QRDec;
+use crate::algebra::linear::Matrix;
+use crate::elementary::Power;
 
-impl<T> Matrix<T>
-    where T: Field + Scalar + Power
+impl<T> Matrix<T> where T: Field + Scalar + Power
 {
     /// QR Decomposition with Givens rotations
     ///
@@ -19,12 +18,11 @@ impl<T> Matrix<T>
     /// # Example
     ///
     /// ```
-    /// use mathru::algebra::linear::{Matrix};
+    /// use mathru::algebra::linear::Matrix;
     ///
     /// let a: Matrix<f64> = Matrix::new(2, 2, vec![1.0, -2.0, 3.0, -7.0]);
     ///
     /// let (q, r): (Matrix<f64>, Matrix<f64>) = a.dec_qr().qr();
-    ///
     /// ```
     pub fn dec_qr<'a>(self: &'a Self) -> QRDec<T>
     {

@@ -1,19 +1,18 @@
 //! Fixed step size Stepper
-use crate::algebra::linear::{Vector};
-use crate::algebra::abstr::Real;
-use super::explicit_method::{ExplicitFixedStepSizeMethod};
+use super::explicit_method::ExplicitFixedStepSizeMethod;
 use super::implicit_method::ImplicitFixedStepSizeMethod;
 use super::{ExplicitODE, ImplicitODE};
+use crate::algebra::abstr::Real;
+use crate::algebra::linear::Vector;
 
 /// Fixed step size Stepper
 pub struct ExplicitFixedStepper<T>
 {
-     /// Step size
-    step_size: T
+    /// Step size
+    step_size: T,
 }
 
-impl<T> ExplicitFixedStepper<T>
-    where T: Real
+impl<T> ExplicitFixedStepper<T> where T: Real
 {
     /// Creates an instance with the given step size
     ///
@@ -30,17 +29,14 @@ impl<T> ExplicitFixedStepper<T>
         {
             panic!();
         }
-        return ExplicitFixedStepper
-        {
-            step_size: step_size
-        }
+        return ExplicitFixedStepper { step_size };
     }
 
     pub fn solve<F, M>(self: &Self, prob: &F, method: &M) -> Result<(Vec<T>, Vec<Vector<T>>), ()>
         where F: ExplicitODE<T>,
-               M: ExplicitFixedStepSizeMethod<T>
+              M: ExplicitFixedStepSizeMethod<T>
     {
-        let t_span =  prob.time_span();
+        let t_span = prob.time_span();
         let init = prob.init_cond();
         let t_start = t_span.0;
         let t_stop = t_span.1;
@@ -89,12 +85,11 @@ impl<T> ExplicitFixedStepper<T>
 /// Fixed step size Stepper
 pub struct ImplicitFixedStepper<T>
 {
-     /// Step size
-    step_size: T
+    /// Step size
+    step_size: T,
 }
 
-impl<T> ImplicitFixedStepper<T>
-    where T: Real
+impl<T> ImplicitFixedStepper<T> where T: Real
 {
     /// Creates an instance with the given step size
     ///
@@ -111,17 +106,14 @@ impl<T> ImplicitFixedStepper<T>
         {
             panic!();
         }
-        return ImplicitFixedStepper
-        {
-            step_size: step_size
-        }
+        return ImplicitFixedStepper { step_size };
     }
 
     pub fn solve<F, M>(self: &Self, prob: &F, method: &M) -> Result<(Vec<T>, Vec<Vector<T>>), ()>
         where F: ImplicitODE<T>,
-               M: ImplicitFixedStepSizeMethod<T>
+              M: ImplicitFixedStepSizeMethod<T>
     {
-        let t_span =  prob.time_span();
+        let t_span = prob.time_span();
         let init = prob.init_cond();
         let t_start = t_span.0;
         let t_stop = t_span.1;

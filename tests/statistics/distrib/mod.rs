@@ -1,13 +1,12 @@
-mod normal;
 mod bernoulli;
-mod binomial;
-mod exponential;
-mod chisquared;
-mod poisson;
 mod beta;
+mod binomial;
+mod chisquared;
+mod exponential;
 mod gamma;
+mod normal;
+mod poisson;
 mod t;
 //mod multinomial;
 mod raisedcosine;
 mod uniform;
-

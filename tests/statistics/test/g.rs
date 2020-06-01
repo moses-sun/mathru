@@ -1,7 +1,7 @@
 #[cfg(test)]
 mod gtest
 {
-    use mathru::statistics::test::{G};
+    use mathru::statistics::test::G;
 
     #[test]
     fn test0()
@@ -25,5 +25,4 @@ mod gtest
         assert_eq!(5.608511956526968, test.g());
         assert_eq!(1, test.df());
     }
-
 }

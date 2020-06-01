@@ -1,5 +1,5 @@
 //! Explicit ODE
-use crate::algebra::linear::{Vector};
+use crate::algebra::linear::Vector;
 
 /// Explicit ODE algrithm interface
 ///
@@ -11,5 +11,3 @@ pub trait ExplicitODE<T>
     fn time_span(self: &Self) -> (T, T);
     fn init_cond(self: &Self) -> Vector<T>;
 }
-
-

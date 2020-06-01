@@ -1,11 +1,11 @@
 //! Magma
-use std::cmp::PartialEq;
-use super::operator::{Addition, Multiplication};
 use super::operator::Operator;
-use std::ops::{Add, Mul, AddAssign, MulAssign};
+use super::operator::{Addition, Multiplication};
+use std::cmp::PartialEq;
+use std::ops::{Add, AddAssign, Mul, MulAssign};
 
-/// A Magma is a pair $`(\mathbb{M}, \circ)`$, composed by a set $`\mathbb{M}`$ and a binary inner operation $`\circ`$:
-/// # Definition
+/// A Magma is a pair $`(\mathbb{M}, \circ)`$, composed by a set $`\mathbb{M}`$
+/// and a binary inner operation $`\circ`$: # Definition
 ///
 /// ```math
 /// \circ: \mathbb{M} \times \mathbb{M} \rightarrow \mathbb{M} , (x, y) \mapsto x \circ y
@@ -14,7 +14,6 @@ pub trait Magma<O: Operator>: Sized + PartialEq + Clone
 {
     /// binary operation
     fn operate(self, rhs: Self) -> Self;
-
 }
 
 macro_rules! impl_magma
@@ -39,7 +38,6 @@ impl_magma!(Multiplication; mul; u8, u16, u32, u64, u128, i8, i16, i32, i64, i12
 /// Syntactic sugar for Magma::<Addition>::operate(a, b)
 pub trait MagmaAdd: Magma<Addition> + Add<Self, Output = Self> + AddAssign<Self>
 {
-
 }
 
 macro_rules! impl_magmaadd
@@ -57,11 +55,9 @@ macro_rules! impl_magmaadd
 
 impl_magmaadd!(u8, u16, u32, u64, u128, i8, i16, i32, i64, i128, f32, f64);
 
-
 /// Syntactic sugar for Magma::<Multiplication>::operate(a, b)
 pub trait MagmaMul: Magma<Multiplication> + Mul<Self, Output = Self> + MulAssign<Self>
 {
-
 }
 
 macro_rules! impl_magmamul

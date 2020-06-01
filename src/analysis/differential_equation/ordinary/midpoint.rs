@@ -1,8 +1,8 @@
 //! Solves an ODE using midpoint method.
-use crate::algebra::linear::{Vector};
-use crate::algebra::abstr::Real;
-use super::explicit_method::{ExplicitFixedStepSizeMethod};
+use super::explicit_method::ExplicitFixedStepSizeMethod;
 use super::ExplicitODE;
+use crate::algebra::abstr::Real;
+use crate::algebra::linear::Vector;
 use crate::analysis::differential_equation::ordinary::fixed_stepper::ExplicitFixedStepper;
 
 /// Solves an ODE using midpoint method.
@@ -10,20 +10,15 @@ use crate::analysis::differential_equation::ordinary::fixed_stepper::ExplicitFix
 /// <a href="https://en.wikipedia.org/wiki/Midpoint_method">https://en.wikipedia.org/wiki/Midpoint_method</a>
 pub struct Midpoint<T>
 {
-    stepper: ExplicitFixedStepper<T>
+    stepper: ExplicitFixedStepper<T>,
 }
 
-impl<T> Midpoint<T>
-    where T: Real
+impl<T> Midpoint<T> where T: Real
 {
     /// Creates a Euler instance with step size 'step_size'
-    ///
     pub fn new(step_size: T) -> Midpoint<T>
     {
-        return Midpoint
-        {
-            stepper: ExplicitFixedStepper::new(step_size)
-        }
+        return Midpoint { stepper: ExplicitFixedStepper::new(step_size) };
     }
 
     pub fn solve<F>(self: &Self, prob: &F) -> Result<(Vec<T>, Vec<Vector<T>>), ()>
@@ -43,12 +38,11 @@ impl<T> Midpoint<T>
     }
 }
 
-impl<T> ExplicitFixedStepSizeMethod<T> for Midpoint<T>
-    where T: Real
+impl<T> ExplicitFixedStepSizeMethod<T> for Midpoint<T> where T: Real
 {
-     fn do_step<F>(self: &Self, prob: &F, t_n: &T, x_n: &Vector<T>, h: &T) -> Vector<T>
+    fn do_step<F>(self: &Self, prob: &F, t_n: &T, x_n: &Vector<T>, h: &T) -> Vector<T>
         where F: ExplicitODE<T>
-     {
+    {
         let x_n_1_2: Vector<T> = x_n + &(&prob.func(t_n, x_n) * &(*h / T::from_f64(2.0)));
         return x_n + &(&prob.func(&(*t_n + *h / T::from_f64(2.0)), &x_n_1_2) * h);
     }
@@ -58,5 +52,4 @@ impl<T> ExplicitFixedStepSizeMethod<T> for Midpoint<T>
     {
         return 2;
     }
-
 }

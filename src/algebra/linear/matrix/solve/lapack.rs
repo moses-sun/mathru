@@ -1,18 +1,14 @@
-use crate::algebra::linear::{Vector, Matrix};
+use crate::algebra::abstr::Zero;
 use crate::algebra::abstr::{Field, Scalar};
-use crate::algebra::abstr::{Zero};
-
+use crate::algebra::linear::{Matrix, Vector};
 
 pub trait Solve<T>
 {
     /// A * x = b
-    ///
-    ///
     fn solve(self: &Self, rhs: &T) -> Result<T, ()>;
 }
 
-impl<T> Solve<Vector<T>> for Matrix<T>
-    where T: Field + Scalar
+impl<T> Solve<Vector<T>> for Matrix<T> where T: Field + Scalar
 {
     /// Solves Ax = y
     /// where A \in R^{m * n}, x \in R^n, y \in R^m
@@ -22,8 +18,7 @@ impl<T> Solve<Vector<T>> for Matrix<T>
     }
 }
 
-impl<T> Solve<Matrix<T>> for Matrix<T>
-    where T: Field + Scalar
+impl<T> Solve<Matrix<T>> for Matrix<T> where T: Field + Scalar
 {
     fn solve(self: &Self, rhs: &Matrix<T>) -> Result<Matrix<T>, ()>
     {
@@ -31,10 +26,8 @@ impl<T> Solve<Matrix<T>> for Matrix<T>
     }
 }
 
-impl<T> Matrix<T>
-    where T: Field + Scalar
+impl<T> Matrix<T> where T: Field + Scalar
 {
-
     fn solve_vector_r(self: &Self, y: &Vector<T>) -> Result<Vector<T>, ()>
     {
         let (m, n): (usize, usize) = self.dim();
@@ -44,7 +37,7 @@ impl<T> Matrix<T>
         let (y_m, _y_n): (usize, usize) = y.dim();
         let y_m_i32: i32 = y_m as i32;
 
-        let dim_min: i32= m_i32.min(n_i32);
+        let dim_min: i32 = m_i32.min(n_i32);
         let mut ipiv: Vec<i32> = vec![Zero::zero(); dim_min as usize];
 
         let mut info: i32 = 0;
@@ -52,45 +45,37 @@ impl<T> Matrix<T>
         let mut self_data: Vec<T> = self.clone().data;
         let mut y_data: Vec<T> = y.clone().convert_to_vec();
 
-        T::xgetrf(
-            m_i32,
-            n_i32,
-            self_data.as_mut_slice(),
-            m_i32,
-            ipiv.as_mut_slice(),
-            &mut info,
-        );
+        T::xgetrf(m_i32,
+                  n_i32,
+                  self_data.as_mut_slice(),
+                  m_i32,
+                  ipiv.as_mut_slice(),
+                  &mut info);
 
         if info < 0
         {
-            return Err(())
+            return Err(());
         }
 
-        T::xgetrs(
-            m_i32,
-            1,
-            self_data.as_mut_slice(),
-            n_i32,
-            ipiv.as_mut_slice(),
-            y_data.as_mut_slice(),
-            y_m_i32,
-            &mut info
-        );
+        T::xgetrs(m_i32,
+                  1,
+                  self_data.as_mut_slice(),
+                  n_i32,
+                  ipiv.as_mut_slice(),
+                  y_data.as_mut_slice(),
+                  y_m_i32,
+                  &mut info);
 
         if info != 0
         {
-            return Err(())
+            return Err(());
         }
 
         return Ok(Vector::new_column(y_m, y_data));
     }
-
 }
 
-
-
-impl<T> Matrix<T>
-    where T: Field + Scalar
+impl<T> Matrix<T> where T: Field + Scalar
 {
     pub fn solve_matrix_r(self: &Self, y: &Matrix<T>) -> Result<Matrix<T>, ()>
     {
@@ -101,7 +86,7 @@ impl<T> Matrix<T>
         let (y_m, y_n): (usize, usize) = y.dim();
         let y_n_i32: i32 = y_n as i32;
 
-        let dim_min: i32= m_i32.min(n_i32);
+        let dim_min: i32 = m_i32.min(n_i32);
         let mut ipiv: Vec<i32> = vec![Zero::zero(); dim_min as usize];
 
         let mut info: i32 = 0;
@@ -109,37 +94,32 @@ impl<T> Matrix<T>
         let mut self_data: Vec<T> = self.clone().data;
         let mut y_data: Vec<T> = y.clone().convert_to_vec();
 
-        T::xgetrf(
-            m_i32,
-            n_i32,
-            self_data.as_mut_slice(),
-            m_i32,
-            ipiv.as_mut_slice(),
-            &mut info,
-        );
+        T::xgetrf(m_i32,
+                  n_i32,
+                  self_data.as_mut_slice(),
+                  m_i32,
+                  ipiv.as_mut_slice(),
+                  &mut info);
 
         if info < 0
         {
             return Err(());
         }
 
-        T::xgetrs(
-            n_i32,
-            y_n_i32,
-            self_data.as_mut_slice(),
-            m_i32,
-            ipiv.as_mut_slice(),
-            y_data.as_mut_slice(),
-            y_n_i32,
-            &mut info
-        );
+        T::xgetrs(n_i32,
+                  y_n_i32,
+                  self_data.as_mut_slice(),
+                  m_i32,
+                  ipiv.as_mut_slice(),
+                  y_data.as_mut_slice(),
+                  y_n_i32,
+                  &mut info);
 
         if info != 0
         {
-            return Err(())
+            return Err(());
         }
 
         return Ok(Matrix::new(y_m, y_n, y_data));
     }
-
 }

@@ -1,10 +1,10 @@
 //! Solves an ODE using the 4th order Cash-Karp algorithm.
-use crate::algebra::linear::{Vector};
-use crate::algebra::abstr::Real;
-use super::explicit_method::{ExplicitAdaptiveMethod};
-use super::ExplicitODE;
-use std::default::Default;
 use super::adaptive_stepper::AdaptiveStepper;
+use super::explicit_method::ExplicitAdaptiveMethod;
+use super::ExplicitODE;
+use crate::algebra::abstr::Real;
+use crate::algebra::linear::Vector;
+use std::default::Default;
 
 /// Solves an ODE using the 4th order Cash-Karp algorithm.
 ///
@@ -12,13 +12,13 @@ use super::adaptive_stepper::AdaptiveStepper;
 ///
 /// # Example
 ///
-/// For this example, we want to solve the following ordinary differiential equation:
-/// ```math
+/// For this example, we want to solve the following ordinary differiential
+/// equation: ```math
 /// \frac{dy}{dt} = ay = f(t, y)
 /// ```
-/// The inial condition is $`y(0) = 0.5`$ and we solve it in the interval $`\lbrack 0, 2\rbrack`$
-/// The following equation is the closed solution for this ODE:
-/// ```math
+/// The inial condition is $`y(0) = 0.5`$ and we solve it in the interval
+/// $`\lbrack 0, 2\rbrack`$ The following equation is the closed solution for
+/// this ODE: ```math
 /// y(t) = C a e^{at}
 /// ```
 /// $`C`$ is a parameter and depends on the initial condition $`y(t_{0})`$
@@ -32,42 +32,39 @@ use super::adaptive_stepper::AdaptiveStepper;
 /// # extern crate mathru;
 /// # fn main()
 /// # {
-///	use mathru::algebra::linear::{Vector};
-///	use mathru::analysis::differential_equation::ordinary::{ExplicitODE, CashKarp54};
+/// use mathru::algebra::linear::Vector;
+/// use mathru::analysis::differential_equation::ordinary::{CashKarp54, ExplicitODE};
 ///
 /// pub struct ExplicitODE1
 /// {
-///	    time_span: (f64, f64),
-///     init_cond: Vector<f64>
+///     time_span: (f64, f64),
+///     init_cond: Vector<f64>,
 /// }
 ///
 /// impl Default for ExplicitODE1
 /// {
-///	    fn default() -> ExplicitODE1
-///	    {
-///         ExplicitODE1
-///         {
-///             time_span: (0.0, 2.0),
-///             init_cond: vector![0.5]
-///	        }
+///     fn default() -> ExplicitODE1
+///     {
+///         ExplicitODE1 { time_span: (0.0, 2.0),
+///                        init_cond: vector![0.5] }
 ///     }
 /// }
 ///
 /// impl ExplicitODE<f64> for ExplicitODE1
 /// {
-/// 	fn func(self: &Self, _t: &f64, x: &Vector<f64>) -> Vector<f64>
+///     fn func(self: &Self, _t: &f64, x: &Vector<f64>) -> Vector<f64>
 ///     {
-///		    return x * &2.0f64;
+///         return x * &2.0f64;
 ///     }
 ///
 ///     fn time_span(self: &Self) -> (f64, f64)
 ///     {
-///     	return self.time_span;
+///         return self.time_span;
 ///     }
 ///
 ///     fn init_cond(self: &Self) -> Vector<f64>
-///	    {
-///	        return self.init_cond.clone();
+///     {
+///         return self.init_cond.clone();
 ///     }
 /// }
 ///
@@ -75,12 +72,13 @@ use super::adaptive_stepper::AdaptiveStepper;
 /// let h_0: f64 = 0.0001;
 /// let fac: f64 = 0.9;
 /// let fac_min: f64 = 0.01;
-///	let fac_max: f64 = 2.0;
-///	let n_max: u32 = 100;
+/// let fac_max: f64 = 2.0;
+/// let n_max: u32 = 100;
 /// let abs_tol: f64 = 10e-6;
-///	let rel_tol: f64 = 10e-3;
+/// let rel_tol: f64 = 10e-3;
 ///
-///	let solver: CashKarp54<f64> = CashKarp54::new(n_max, h_0, fac, fac_min, fac_max, abs_tol, rel_tol);
+/// let solver: CashKarp54<f64> =
+///     CashKarp54::new(n_max, h_0, fac, fac_min, fac_max, abs_tol, rel_tol);
 ///
 /// let problem: ExplicitODE1 = ExplicitODE1::default();
 ///
@@ -91,27 +89,31 @@ use super::adaptive_stepper::AdaptiveStepper;
 /// ```
 pub struct CashKarp54<T>
 {
-    stepper: AdaptiveStepper<T>
+    stepper: AdaptiveStepper<T>,
 }
 
-impl<T> CashKarp54<T>
-    where T: Real
+impl<T> CashKarp54<T> where T: Real
 {
-     /// Creates a Cash-Karp 4 (5) instance
-    ///
-    pub fn new(n_max: u32, h_0: T, fac: T, fac_min: T, fac_max: T, abs_tol: T, rel_tol: T) -> CashKarp54<T>
+    /// Creates a Cash-Karp 4 (5) instance
+    pub fn new(n_max: u32,
+               h_0: T,
+               fac: T,
+               fac_min: T,
+               fac_max: T,
+               abs_tol: T,
+               rel_tol: T)
+               -> CashKarp54<T>
     {
-        return CashKarp54
-        {
-            stepper: AdaptiveStepper::new(n_max, h_0, fac, fac_min, fac_max, abs_tol, rel_tol)
-        }
+        return CashKarp54 { stepper: AdaptiveStepper::new(n_max, h_0, fac, fac_min, fac_max,
+                                                          abs_tol, rel_tol) };
     }
+
     /// # Example
     ///
     /// ```
+    /// use mathru::algebra::linear::{Matrix, Vector};
+    /// use mathru::analysis::differential_equation::ordinary::{CashKarp54, ExplicitODE};
     /// use mathru::*;
-    /// use mathru::algebra::linear::{Vector, Matrix};
-    /// use mathru::analysis::differential_equation::ordinary::{ExplicitODE, CashKarp54};
     ///
     /// // Define ODE
     /// // $`y^{'} = ay = f(x, y) `$
@@ -119,56 +121,54 @@ impl<T> CashKarp54<T>
     /// // $'y(t_{s}) = C a e^{at_s} => C = \frac{y(t_s)}{ae^{at_s}}`$
     /// pub struct ExplicitODEProblem
     /// {
-    ///	    time_span: (f64, f64),
-    ///	    init_cond: Vector<f64>
+    ///     time_span: (f64, f64),
+    ///     init_cond: Vector<f64>,
     /// }
     ///
     /// impl Default for ExplicitODEProblem
     /// {
-    ///	    fn default() -> ExplicitODEProblem
-    ///	    {
-    ///		    ExplicitODEProblem
-    ///		    {
-    ///			    time_span: (0.0, 2.0),
-    ///			    init_cond: vector![0.5],
-    ///		    }
-    ///	    }
+    ///     fn default() -> ExplicitODEProblem
+    ///     {
+    ///         ExplicitODEProblem { time_span: (0.0, 2.0),
+    ///                              init_cond: vector![0.5] }
+    ///     }
     /// }
     ///
     /// impl ExplicitODE<f64> for ExplicitODEProblem
     /// {
-    ///   	fn func(self: &Self, t: &f64, x: &Vector<f64>) -> Vector<f64>
+    ///     fn func(self: &Self, t: &f64, x: &Vector<f64>) -> Vector<f64>
     ///     {
-    ///		    return x * &2.0f64;
-    ///	    }
+    ///         return x * &2.0f64;
+    ///     }
     ///
     ///     fn time_span(self: &Self) -> (f64, f64)
     ///     {
-    ///		    return self.time_span;
+    ///         return self.time_span;
     ///     }
     ///
-    ///    fn init_cond(self: &Self) -> Vector<f64>
-    ///    {
-    ///	        return self.init_cond.clone();
-    ///    }
+    ///     fn init_cond(self: &Self) -> Vector<f64>
+    ///     {
+    ///         return self.init_cond.clone();
+    ///     }
     /// }
     ///
-    ///	let problem: ExplicitODEProblem = ExplicitODEProblem::default();
-   	///
+    /// let problem: ExplicitODEProblem = ExplicitODEProblem::default();
+    ///
     /// let h_0: f64 = 0.0001;
     /// let fac: f64 = 0.9;
     /// let fac_min: f64 = 0.01;
-    ///	let fac_max: f64 = 2.0;
-    ///	let n_max: u32 = 100;
+    /// let fac_max: f64 = 2.0;
+    /// let n_max: u32 = 100;
     /// let abs_tol: f64 = 10e-6;
-    ///	let rel_tol: f64 = 10e-3;
+    /// let rel_tol: f64 = 10e-3;
     ///
-	///	let solver: CashKarp54<f64> = CashKarp54::new(n_max, h_0, fac, fac_min, fac_max, abs_tol, rel_tol);
+    /// let solver: CashKarp54<f64> =
+    ///     CashKarp54::new(n_max, h_0, fac, fac_min, fac_max, abs_tol, rel_tol);
     ///
     /// let (t, y): (Vec<f64>, Vec<Vector<f64>>) = solver.solve(&problem).unwrap();
     /// ```
     pub fn solve<F>(self: &Self, prob: &F) -> Result<(Vec<T>, Vec<Vector<T>>), &'static str>
-        where F: ExplicitODE<T>,
+        where F: ExplicitODE<T>
     {
         return self.stepper.solve(prob, self);
     }
@@ -194,10 +194,8 @@ impl<T> CashKarp54<T>
     }
 }
 
-impl<T> Default for CashKarp54<T>
-    where T: Real
+impl<T> Default for CashKarp54<T> where T: Real
 {
-
     fn default() -> CashKarp54<T>
     {
         let h_0: T = T::from_f64(0.0001);
@@ -211,10 +209,8 @@ impl<T> Default for CashKarp54<T>
     }
 }
 
-impl<T> ExplicitAdaptiveMethod<T> for CashKarp54<T>
-    where T: Real
+impl<T> ExplicitAdaptiveMethod<T> for CashKarp54<T> where T: Real
 {
-
     fn do_step<F>(self: &Self, prob: &F, t_n: &T, x_n: &Vector<T>, h: &T) -> (Vector<T>, Vector<T>)
         where F: ExplicitODE<T>
     {
@@ -222,13 +218,14 @@ impl<T> ExplicitAdaptiveMethod<T> for CashKarp54<T>
         let k_1: Vector<T> = &prob.func(t_n, x_n) * h;
 
         // k_2 = h f(t_n + h/5, x_n + k1/5);
-        let k_2: Vector<T> = &prob.func(&(*t_n + *h / T::from_f64(1.0 / 5.0)), &(x_n + &(&k_1 / &T::from_f64(1.0
-        / 5.0)))) * h;
+        let k_2: Vector<T> = &prob.func(&(*t_n + *h / T::from_f64(1.0 / 5.0)),
+                                        &(x_n + &(&k_1 / &T::from_f64(1.0 / 5.0))))
+                             * h;
 
         //k_3 = h f(t_n + h3/10, x_n + k_1*3/40 + k2*9/40)
         let k_31: Vector<T> = x_n + &(&k_1 * &T::from_f64(3.0 / 40.0));
         let k_32: Vector<T> = k_31 + (&k_2 * &T::from_f64(9.0 / 40.0));
-        let k_3: Vector<T> = &prob.func(&(*t_n + *h * T::from_f64(3.0 / 10.0)),  &k_32) * h;
+        let k_3: Vector<T> = &prob.func(&(*t_n + *h * T::from_f64(3.0 / 10.0)), &k_32) * h;
 
         // k_4 = h f(t_n + 3/5h, x_n + 3/10k_1 - 9/10k_2 + 6/5k_3)
         let k_41: Vector<T> = x_n + &(&k_1 * &T::from_f64(3.0 / 10.0));
@@ -241,9 +238,10 @@ impl<T> ExplicitAdaptiveMethod<T> for CashKarp54<T>
         let k_52: Vector<T> = k_51 + (&k_2 * &T::from_f64(5.0 / 2.0));
         let k_53: Vector<T> = k_52 - (&k_3 * &T::from_f64(70.0 / 27.0));
         let k_54: Vector<T> = k_53 + (&k_4 * &T::from_f64(35.0 / 27.0));
-        let k_5: Vector<T> = &prob.func(&(*t_n + *h) , &k_54) * h;
+        let k_5: Vector<T> = &prob.func(&(*t_n + *h), &k_54) * h;
 
-        // k_6 = h f(t_n + 7/8h, x_n + 1631/55296k_1 + 175/512k_2 + 575/13824k_3 + 44275/110592k_4 - 253/4096k_5)
+        // k_6 = h f(t_n + 7/8h, x_n + 1631/55296k_1 + 175/512k_2 + 575/13824k_3 +
+        // 44275/110592k_4 - 253/4096k_5)
         let k_61: Vector<T> = x_n + &(&k_1 * &T::from_f64(1631.0 / 55296.0));
         let k_62: Vector<T> = k_61 + (&k_2 * &T::from_f64(175.0 / 512.0));
         let k_63: Vector<T> = k_62 + (&k_3 * &T::from_f64(575.0 / 13824.0));
@@ -252,7 +250,8 @@ impl<T> ExplicitAdaptiveMethod<T> for CashKarp54<T>
         let k_6: Vector<T> = &prob.func(&(*t_n + *h * T::from_f64(7.0 / 8.0)), &k_65) * h;
 
         // order 4
-        // y(n +1) = x_n + 2825/27648k_1 + 18575/48384k_3 + 13525/55296k_4 + 277/14336k_5 + 1/4k_6
+        // y(n +1) = x_n + 2825/27648k_1 + 18575/48384k_3 + 13525/55296k_4 +
+        // 277/14336k_5 + 1/4k_6
         let ck4_1: Vector<T> = x_n + &(&k_1 * &T::from_f64(2825.0 / 27648.0));
         let ck4_2: Vector<T> = ck4_1 + (&k_3 * &T::from_f64(18575.0 / 48384.0));
         let ck4_3: Vector<T> = ck4_2 + (&k_4 * &T::from_f64(13525.0 / 55296.0));
@@ -267,12 +266,10 @@ impl<T> ExplicitAdaptiveMethod<T> for CashKarp54<T>
         let ck5: Vector<T> = ck5_3 + (&k_6 * &T::from_f64(512.0 / 1771.0));
 
         return (ck4, ck5);
-
     }
 
     fn order(self: &Self) -> (u8, u8)
     {
         return (4, 5);
     }
-
 }

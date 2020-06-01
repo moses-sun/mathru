@@ -1,29 +1,29 @@
 //! Optimization
 //!
-//! This module provides functions for minimizing objective functions. It includes solvers
-//! for nonlinear problems, nonlinear least-squares.
+//! This module provides functions for minimizing objective functions. It
+//! includes solvers for nonlinear problems, nonlinear least-squares.
 
-mod optim;
+mod conjugategradient;
 mod gaussnewton;
 mod gradient;
-mod newton;
 mod levenbergmarquardt;
-mod conjugategradient;
-mod optimresult;
+mod newton;
 mod nonlinearcg;
+mod optim;
+mod optimresult;
 
 pub use self::optim::Optim;
 
-/// Gradient mehtod
-pub use self::gradient::Gradient;
-/// Gauss-Newton method
-pub use self::gaussnewton::GaussNewton;
-/// Newton's method
-pub use self::newton::Newton;
-/// Levenberg Marquardt method
-pub use self::levenbergmarquardt::LevenbergMarquardt;
 /// Conjugate Gradient method
 pub use self::conjugategradient::ConjugateGradient;
+/// Gauss-Newton method
+pub use self::gaussnewton::GaussNewton;
+/// Gradient mehtod
+pub use self::gradient::Gradient;
+/// Levenberg Marquardt method
+pub use self::levenbergmarquardt::LevenbergMarquardt;
+/// Newton's method
+pub use self::newton::Newton;
 
 //pub use self::nonlinearcg::NonlinearConjugateGradient;
 pub use self::optimresult::OptimResult;

@@ -2,47 +2,47 @@
 //!
 //! <a href="https://en.wikipedia.org/wiki/Abstract_algebra">https://en.wikipedia.org/wiki/Abstract_algebra</a>
 
-mod scalar;
 pub mod cast;
 mod field;
 mod ring;
+mod scalar;
 mod sign;
 //mod semiring;
 
-mod identity;
-mod natural;
-mod integer;
-mod real;
+mod abeliangroup;
 mod complex;
+mod group;
+mod identity;
+mod integer;
+mod lattice;
+mod loop_;
 mod magma;
 mod monoid;
-mod loop_;
-mod quasigroup;
-mod group;
-mod semigroup;
+mod natural;
 mod operator;
-mod abeliangroup;
-mod lattice;
+mod quasigroup;
+mod real;
+mod semigroup;
 
-pub use self::operator::{Operator, Addition, Multiplication};
-pub use self::identity::Identity;
-pub use self::monoid::{Monoid, MonoidAdd, MonoidMul, Zero, One};
-pub use self::magma::{Magma, MagmaAdd, MagmaMul};
+pub use self::abeliangroup::{AbelianGroup, AbelianGroupAdd, AbelianGroupMul};
 pub use self::group::{Group, GroupAdd, GroupMul};
+pub use self::identity::Identity;
+pub use self::lattice::Lattice;
 pub use self::loop_::Loop;
+pub use self::magma::{Magma, MagmaAdd, MagmaMul};
+pub use self::monoid::{Monoid, MonoidAdd, MonoidMul, One, Zero};
+pub use self::operator::{Addition, Multiplication, Operator};
 pub use self::quasigroup::Quasigroup;
 pub use self::semigroup::{Semigroup, SemigroupAdd, SemigroupMul};
-pub use self::abeliangroup::{AbelianGroup, AbelianGroupAdd, AbelianGroupMul};
-pub use self::lattice::Lattice;
 
 //pub use self::semiring::{Semiring, Zero, One};
-pub use self::ring::{Ring, CommutativeRing};
-pub use self::sign::{Sign};
-pub use self::field::{Field};
-pub use self::scalar::{Scalar};
-pub use self::natural::Natural;
+pub use self::complex::Complex;
+pub use self::field::Field;
 pub use self::integer::Integer;
+pub use self::natural::Natural;
 pub use self::real::Real;
+pub use self::ring::{CommutativeRing, Ring};
+pub use self::scalar::Scalar;
 #[cfg(feature = "blaslapack")]
 pub use self::scalar::{Blas, Lapack};
-pub use self::complex::Complex;
+pub use self::sign::Sign;

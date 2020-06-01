@@ -1,13 +1,12 @@
-use crate::algebra::linear::matrix::MatrixIteratorMut;
 use crate::algebra::abstr::{Field, Scalar};
+use crate::algebra::linear::matrix::MatrixIteratorMut;
 
 pub struct VectorIteratorMut<'a, T>
 {
-    pub iter: MatrixIteratorMut<'a, T>
+    pub iter: MatrixIteratorMut<'a, T>,
 }
 
-impl<'a, T> Iterator for VectorIteratorMut<'a, T>
-    where T: Field + Scalar
+impl<'a, T> Iterator for VectorIteratorMut<'a, T> where T: Field + Scalar
 {
     type Item = T;
 

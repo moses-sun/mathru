@@ -1,21 +1,19 @@
-use crate::statistics::distrib::{Distribution, Continuous};
-use rand::{Rng};
-use rand::rngs::ThreadRng;
 use crate::algebra::abstr::Real;
+use crate::statistics::distrib::{Continuous, Distribution};
+use rand::rngs::ThreadRng;
+use rand::Rng;
 
 /// Uniform distribution
 ///
 /// Fore more information:
 /// <a href="https://en.wikipedia.org/wiki/Uniform_distribution_(continuous)">https://en.wikipedia.org/wiki/Uniform_distribution_(continuous)</a>
-///
 pub struct Uniform<T>
 {
-	a: T,
-	b: T
+    a: T,
+    b: T,
 }
 
-impl<T> Uniform<T>
-    where T: Real
+impl<T> Uniform<T> where T: Real
 {
     /// Uniform distribution
     ///
@@ -31,7 +29,6 @@ impl<T> Uniform<T>
     /// # Panic
     ///
     /// a >= b
-    ///
     pub fn new(a: T, b: T) -> Uniform<T>
     {
         if a >= b
@@ -39,18 +36,11 @@ impl<T> Uniform<T>
             panic!();
         }
 
-        return
-        Uniform
-        {
-            a,
-            b
-        }
-        ;
+        return Uniform { a, b };
     }
 }
 
-impl<T> Distribution<T> for Uniform<T>
-    where T: Real
+impl<T> Distribution<T> for Uniform<T> where T: Real
 {
     fn random(self: &Self) -> T
     {
@@ -59,10 +49,8 @@ impl<T> Distribution<T> for Uniform<T>
     }
 }
 
-impl<T> Continuous<T> for Uniform<T>
-    where T: Real
+impl<T> Continuous<T> for Uniform<T> where T: Real
 {
-
     /// Probability density function
     ///
     /// # Arguments
@@ -148,6 +136,7 @@ impl<T> Continuous<T> for Uniform<T>
 
         return q * (self.b - self.a) + self.a;
     }
+
     /// Mean
     ///
     /// # Example
@@ -162,9 +151,9 @@ impl<T> Continuous<T> for Uniform<T>
     /// let mean: f64 = distrib.mean();
     /// assert_eq!((a + b) / 2.0, mean);
     /// ```
-	fn mean(self: &Self) -> T
+    fn mean(self: &Self) -> T
     {
-        return (self.a +  self.b) / T::from_f64(2.0);
+        return (self.a + self.b) / T::from_f64(2.0);
     }
 
     /// Variance
@@ -177,7 +166,7 @@ impl<T> Continuous<T> for Uniform<T>
     /// let distrib: Uniform<f64> = Uniform::new(0.2, 0.5);
     /// let var: f64 = distrib.variance();
     /// ```
-	fn variance(self: &Self) -> T
+    fn variance(self: &Self) -> T
     {
         return (self.b - self.a) * (self.b - self.a) / T::from_f64(12.0);
     }
@@ -193,12 +182,12 @@ impl<T> Continuous<T> for Uniform<T>
     /// let skewness: f64 = distrib.skewness();
     /// assert_eq!(0.0, skewness);
     /// ```
-	fn skewness(self: &Self) -> T
-	{
-	    return T::zero();
-	}
+    fn skewness(self: &Self) -> T
+    {
+        return T::zero();
+    }
 
-	/// Median
+    /// Median
     ///
     /// # Example
     ///
@@ -212,13 +201,13 @@ impl<T> Continuous<T> for Uniform<T>
     /// let median: f64 = distrib.median();
     /// assert_eq!((a + b) / 2.0, median);
     /// ```
-	fn median(self: &Self) -> T
-	{
-		return self.mean();
-	}
+    fn median(self: &Self) -> T
+    {
+        return self.mean();
+    }
 
-	/// Entropy
-	///
+    /// Entropy
+    ///
     /// # Example
     ///
     /// ```
@@ -231,8 +220,8 @@ impl<T> Continuous<T> for Uniform<T>
     /// let entropy: f64 = distrib.entropy();
     /// assert_eq!((b - a).ln(), entropy);
     /// ```
-	fn entropy(self: &Self) -> T
-	{
-		return (self.b - self.a).ln();
-	}
+    fn entropy(self: &Self) -> T
+    {
+        return (self.b - self.a).ln();
+    }
 }

@@ -1,7 +1,7 @@
 #[cfg(test)]
 mod eigen
 {
-    use mathru::algebra::linear::{Vector, Matrix};
+    use mathru::algebra::linear::{Matrix, Vector};
 
     #[test]
     fn eigenvalue_0()

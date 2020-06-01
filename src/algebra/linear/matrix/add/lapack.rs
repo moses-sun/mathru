@@ -1,9 +1,8 @@
-use crate::algebra::linear::{Matrix};
-use crate::algebra::abstr::{Scalar, Field};
-use std::ops::{Add};
+use crate::algebra::abstr::{Field, Scalar};
+use crate::algebra::linear::Matrix;
+use std::ops::Add;
 
-impl<T> Add<Self> for Matrix<T>
-    where T: Field + Scalar
+impl<T> Add<Self> for Matrix<T> where T: Field + Scalar
 {
     type Output = Matrix<T>;
 
@@ -12,7 +11,7 @@ impl<T> Add<Self> for Matrix<T>
     /// # Example
     ///
     /// ```
-    /// use mathru::algebra::linear::{Matrix};
+    /// use mathru::algebra::linear::Matrix;
     ///
     /// let a: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
     /// let b: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
@@ -25,12 +24,9 @@ impl<T> Add<Self> for Matrix<T>
     }
 }
 
-
 ///
 ///Adds two matrices
-///
-impl<'a, 'b, T> Add<&'b Matrix<T>> for &'a Matrix<T>
-    where T: Field + Scalar
+impl<'a, 'b, T> Add<&'b Matrix<T>> for &'a Matrix<T> where T: Field + Scalar
 {
     type Output = Matrix<T>;
 
@@ -39,7 +35,7 @@ impl<'a, 'b, T> Add<&'b Matrix<T>> for &'a Matrix<T>
     /// # Example
     ///
     /// ```
-    /// use mathru::algebra::linear::{Matrix};
+    /// use mathru::algebra::linear::Matrix;
     ///
     /// let a: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
     /// let b: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
@@ -53,8 +49,7 @@ impl<'a, 'b, T> Add<&'b Matrix<T>> for &'a Matrix<T>
     }
 }
 
-impl<'a, 'b, T> Matrix<T>
-    where T: Field + Scalar
+impl<'a, 'b, T> Matrix<T> where T: Field + Scalar
 {
     fn add_r(self: &Self, rhs: &'b Matrix<T>) -> Matrix<T>
     {
@@ -66,33 +61,42 @@ impl<'a, 'b, T> Matrix<T>
         let n: i32 = b_n as i32;
         let k: i32 = b_m as i32;
 
-        T::xgemm('N' as u8, 'N' as u8, m, n, k, T::one(), &a.data[..], m, &self.data[..], k, T::one(), &mut c.data[..],
-         m);
+        T::xgemm('N' as u8,
+                 'N' as u8,
+                 m,
+                 n,
+                 k,
+                 T::one(),
+                 &a.data[..],
+                 m,
+                 &self.data[..],
+                 k,
+                 T::one(),
+                 &mut c.data[..],
+                 m);
 
         return c;
     }
 }
 
-impl<T> Matrix<T>
-    where T: Field + Scalar
+impl<T> Matrix<T> where T: Field + Scalar
 {
     pub fn add_func(self: &Self, rhs: &Matrix<T>) -> Matrix<T>
     {
         let (m, n) = self.dim();
-        Matrix
-            {
-            m: m,
-            n: n,
-            data: self.data.iter().zip(rhs.data.iter()).map(|(x, y)| *x + *y).collect::<Vec<T>>()
-        }
+        Matrix { m,
+                 n,
+                 data: self.data
+                           .iter()
+                           .zip(rhs.data.iter())
+                           .map(|(x, y)| *x + *y)
+                           .collect::<Vec<T>>() }
     }
 }
 
 ///
 /// Add scalar to matrix
-///
-impl<'a, 'b, T> Add<&'b T> for &'a Matrix<T>
-    where T: Field + Scalar
+impl<'a, 'b, T> Add<&'b T> for &'a Matrix<T> where T: Field + Scalar
 {
     type Output = Matrix<T>;
 
@@ -101,7 +105,7 @@ impl<'a, 'b, T> Add<&'b T> for &'a Matrix<T>
     /// # Example
     ///
     /// ```
-    /// use mathru::algebra::linear::{Matrix};
+    /// use mathru::algebra::linear::Matrix;
     ///
     /// let a: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
     /// let b: Matrix<f64> = Matrix::new(2, 2, vec![-3.0, -4.0, -1.0, -11.0]);
@@ -110,15 +114,13 @@ impl<'a, 'b, T> Add<&'b T> for &'a Matrix<T>
     /// ```
     fn add(self: Self, rhs: &T) -> Self::Output
     {
-        return self.apply(&|x: &T| -> T {x.clone() + rhs.clone()});
+        return self.apply(&|x: &T| -> T { x.clone() + rhs.clone() });
     }
 }
 
 ///
 /// Add scalar to matrix
-///
-impl<T> Add<T> for Matrix<T>
-    where T: Field + Scalar
+impl<T> Add<T> for Matrix<T> where T: Field + Scalar
 {
     type Output = Matrix<T>;
 
@@ -127,7 +129,7 @@ impl<T> Add<T> for Matrix<T>
     /// # Example
     ///
     /// ```
-    /// use mathru::algebra::linear::{Matrix};
+    /// use mathru::algebra::linear::Matrix;
     ///
     /// let a: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
     /// let b: Matrix<f64> = Matrix::new(2, 2, vec![-3.0, -4.0, -1.0, -11.0]);
@@ -139,4 +141,3 @@ impl<T> Add<T> for Matrix<T>
         return (&self).add(&rhs);
     }
 }
-

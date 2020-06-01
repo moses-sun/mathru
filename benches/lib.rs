@@ -9,9 +9,4 @@ extern crate criterion;
 mod algebra;
 mod analysis;
 
-criterion_main!
-(
-    algebra::linear::matrix::matrix,
-    analysis::ode::ode,
-);
-
+criterion_main!(algebra::linear::matrix::matrix, analysis::ode::ode,);

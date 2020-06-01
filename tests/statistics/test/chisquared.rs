@@ -1,7 +1,7 @@
 #[cfg(test)]
 mod chisquared
 {
-    use mathru::statistics::test::{Test, ChiSquared};
+    use mathru::statistics::test::{ChiSquared, Test};
 
     #[test]
     fn test0()

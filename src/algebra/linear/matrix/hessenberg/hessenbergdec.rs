@@ -1,4 +1,4 @@
-use crate::algebra::linear::{Matrix};
+use crate::algebra::linear::Matrix;
 use serde::{Deserialize, Serialize};
 use std::clone::Clone;
 
@@ -6,19 +6,14 @@ use std::clone::Clone;
 pub struct HessenbergDec<T>
 {
     q: Matrix<T>,
-    h: Matrix<T>
+    h: Matrix<T>,
 }
 
 impl<T> HessenbergDec<T>
 {
     pub(super) fn new(q: Matrix<T>, h: Matrix<T>) -> HessenbergDec<T>
     {
-        return
-        HessenbergDec
-        {
-            q: q,
-            h: h
-        };
+        return HessenbergDec { q, h };
     }
 
     pub fn q(self: Self) -> Matrix<T>
@@ -33,6 +28,6 @@ impl<T> HessenbergDec<T>
 
     pub fn qh(self: Self) -> (Matrix<T>, Matrix<T>)
     {
-        return (self.q, self.h)
+        return (self.q, self.h);
     }
 }

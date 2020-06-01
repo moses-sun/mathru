@@ -18,8 +18,8 @@ fn main()
         graph_1.push((x, distrib.pdf(x)));
     }
 
-    let root_area = BitMapBackend::new("./figure/pdf_normal_distribution.png", (1200, 800))
-        .into_drawing_area();
+    let root_area =
+        BitMapBackend::new("./figure/pdf_normal_distribution.png", (1200, 800)).into_drawing_area();
     root_area.fill(&WHITE).unwrap();
 
     let mut ctx = ChartBuilder::on(&root_area)
@@ -31,13 +31,10 @@ fn main()
         .unwrap();
 
     ctx.configure_mesh()
-  		.x_desc("x")
-  		.axis_desc_style(("sans-serif", 25).into_font())
-       	.draw().unwrap();
+       .x_desc("x")
+       .axis_desc_style(("sans-serif", 25).into_font())
+       .draw()
+       .unwrap();
 
-
-    ctx.draw_series(
-        LineSeries::new(graph_1, &BLUE)
-    ).unwrap();
-
+    ctx.draw_series(LineSeries::new(graph_1, &BLUE)).unwrap();
 }

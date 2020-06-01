@@ -1,7 +1,7 @@
 #[cfg(test)]
 mod cholesky
 {
-    use mathru::algebra::linear::{Matrix};
+    use mathru::algebra::linear::Matrix;
 
     #[test]
     fn cholesky_decomposition()

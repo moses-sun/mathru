@@ -1,8 +1,8 @@
 //! Identity
-use super::operator::{Operator, Addition, Multiplication};
+use super::operator::{Addition, Multiplication, Operator};
 
 /// A type that is equipped with identity.
-pub trait Identity<O: Operator> : Clone
+pub trait Identity<O: Operator>: Clone
 {
     /// The identity element.
     fn id() -> Self;

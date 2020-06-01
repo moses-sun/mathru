@@ -1,15 +1,15 @@
 #[cfg(test)]
 mod chisquareddistrib
 {
-    use mathru::statistics::distrib::{Continuous, ChiSquared};
+    use mathru::statistics::distrib::{ChiSquared, Continuous};
 
     #[test]
     fn pdf0()
     {
         let df: u32 = 4;
         let distrib: ChiSquared<f64> = ChiSquared::new(df);
-        let x : f64 = 0.0;
-        let prob : f64 = distrib.pdf(x);
+        let x: f64 = 0.0;
+        let prob: f64 = distrib.pdf(x);
 
         assert_eq!(0.0, prob);
     }
@@ -18,9 +18,9 @@ mod chisquareddistrib
     fn pdf1()
     {
         let df: u32 = 4;
-        let distrib : ChiSquared<f64> = ChiSquared::new(df);
-        let x : f64 = 1.0;
-        let prob : f64 = distrib.pdf(x);
+        let distrib: ChiSquared<f64> = ChiSquared::new(df);
+        let x: f64 = 1.0;
+        let prob: f64 = distrib.pdf(x);
 
         assert_eq!(0.1516326649281583, prob);
     }

@@ -1,13 +1,12 @@
-use crate::algebra::linear::{Matrix};
-use crate::elementary::Power;
 use crate::algebra::abstr::{Field, Scalar};
 use crate::algebra::linear::matrix::CholeskyDec;
+use crate::algebra::linear::Matrix;
+use crate::elementary::Power;
 
-impl<T> Matrix<T>
-    where T: Field + Scalar + Power
+impl<T> Matrix<T> where T: Field + Scalar + Power
 {
-    /// Decomposes the symetric, positive definite quadractic matrix A into a lower triangular matrix L
-    /// A = L L^T
+    /// Decomposes the symetric, positive definite quadractic matrix A into a
+    /// lower triangular matrix L A = L L^T
     ///
     /// # Arguments
     ///
@@ -48,7 +47,7 @@ impl<T> Matrix<T>
 
         for i in 0..n
         {
-            for j in 0..i+1
+            for j in 0..i + 1
             {
                 let mut sum = T::zero();
                 for k in 0..j
@@ -68,5 +67,4 @@ impl<T> Matrix<T>
         }
         return Ok(CholeskyDec::new(l));
     }
-
 }

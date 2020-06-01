@@ -1,11 +1,9 @@
-
-use crate::algebra::linear::{Vector, Matrix};
 use crate::algebra::abstr::Real;
+use crate::algebra::linear::{Matrix, Vector};
 
 pub trait Optim<T>
     where T: Real
 {
-
     fn eval(&self, _x: &Vector<T>) -> Vector<T>
     {
         unimplemented!();

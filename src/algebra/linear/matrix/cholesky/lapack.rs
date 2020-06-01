@@ -1,13 +1,12 @@
-use crate::algebra::linear::{Matrix};
-use crate::elementary::Power;
 use crate::algebra::abstr::{Field, Scalar};
 use crate::algebra::linear::matrix::CholeskyDec;
+use crate::algebra::linear::Matrix;
+use crate::elementary::Power;
 
-impl<T> Matrix<T>
-    where T: Field + Scalar + Power
+impl<T> Matrix<T> where T: Field + Scalar + Power
 {
-    /// Decomposes the symetric, positive definite quadractic matrix A into a lower triangular matrix L
-    /// A = L L^T
+    /// Decomposes the symetric, positive definite quadractic matrix A into a
+    /// lower triangular matrix L A = L L^T
     ///
     /// # Arguments
     ///
@@ -50,21 +49,15 @@ impl<T> Matrix<T>
 
         let mut l_data: Vec<T> = self.clone().data;
 
-        T::xpotrf(
-            'L',
-            n_i32,
-            l_data.as_mut_slice(),
-            n_i32,
-            &mut info,
-        );
+        T::xpotrf('L', n_i32, l_data.as_mut_slice(), n_i32, &mut info);
 
         if info < 0
         {
-            return Err(())
+            return Err(());
         }
         //assert!(info >= 0);
 
-        let mut l: Matrix<T> =  Matrix::new(n, n, l_data);
+        let mut l: Matrix<T> = Matrix::new(n, n, l_data);
 
         //fill above diagonal with zeros
         for i in 0..n

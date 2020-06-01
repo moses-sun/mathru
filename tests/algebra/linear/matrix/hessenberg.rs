@@ -1,7 +1,7 @@
 #[cfg(test)]
 mod hessenberg
 {
-    use mathru::algebra::linear::{Matrix};
+    use mathru::algebra::linear::Matrix;
 
     #[cfg(feature = "native")]
     #[test]
@@ -24,7 +24,6 @@ mod hessenberg
         assert!(q.compare_neighbourhood(&q_ref, 1.0e-10));
         assert!(h.compare_neighbourhood(&h_ref, 1.0e-10));
     }
-
 
     #[cfg(feature = "blaslapack")]
     #[test]

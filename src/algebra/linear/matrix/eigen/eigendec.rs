@@ -1,4 +1,4 @@
-use crate::algebra::linear::{Vector, Matrix};
+use crate::algebra::linear::{Matrix, Vector};
 use serde::{Deserialize, Serialize};
 use std::clone::Clone;
 
@@ -6,19 +6,14 @@ use std::clone::Clone;
 pub struct EigenDec<T>
 {
     value: Vector<T>,
-    vector: Matrix<T>
+    vector: Matrix<T>,
 }
 
 impl<T> EigenDec<T>
 {
     pub(super) fn new(value: Vector<T>, vector: Matrix<T>) -> EigenDec<T>
     {
-        return
-        EigenDec
-        {
-            value: value,
-            vector: vector
-        };
+        return EigenDec { value, vector };
     }
 
     pub fn value(self: Self) -> Vector<T>
@@ -31,7 +26,7 @@ impl<T> EigenDec<T>
         return self.vector;
     }
 
-    pub fn pair(self: Self)  -> (Vector<T>, Matrix<T>)
+    pub fn pair(self: Self) -> (Vector<T>, Matrix<T>)
     {
         return (self.value, self.vector);
     }

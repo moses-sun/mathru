@@ -1,22 +1,19 @@
-use crate::statistics::distrib::Continuous;
-use crate::special::gamma;
-use crate::special;
 use super::Normal;
 use crate::algebra::abstr::Real;
-
+use crate::special;
+use crate::special::gamma;
+use crate::statistics::distrib::Continuous;
 
 /// Chi-Squared distribution
 ///
 /// Fore more information:
 /// <a href="https://en.wikipedia.org/wiki/Chi-squared_distribution">https://en.wikipedia.org/wiki/Chi-squared_distribution</a>
-///
 pub struct ChiSquared<T>
 {
-    k: T //degree of freedom
+    k: T, //degree of freedom
 }
 
-impl<T> ChiSquared<T>
-    where T: Real
+impl<T> ChiSquared<T> where T: Real
 {
     /// Creates a probability distribution
     ///
@@ -41,18 +38,12 @@ impl<T> ChiSquared<T>
         {
             panic!()
         }
-        ChiSquared
-        {
-            k: T::from_u32(df)
-        }
+        ChiSquared { k: T::from_u32(df) }
     }
 }
 
-
-impl<T> Continuous<T> for ChiSquared<T>
-    where T: Real
+impl<T> Continuous<T> for ChiSquared<T> where T: Real
 {
-
     /// Probability density function
     ///
     /// # Arguments
@@ -62,7 +53,7 @@ impl<T> Continuous<T> for ChiSquared<T>
     /// # Example
     ///
     /// ```
-    /// use mathru::statistics::distrib::{Continuous, ChiSquared};
+    /// use mathru::statistics::distrib::{ChiSquared, Continuous};
     ///
     /// let distrib: ChiSquared<f64> = ChiSquared::new(2);
     /// let x: f64 = 5.0;
@@ -72,9 +63,11 @@ impl<T> Continuous<T> for ChiSquared<T>
     {
         if x < T::zero()
         {
-            return T::zero()
+            return T::zero();
         }
-        let t1: T = T::one() / (T::from_f64(2.0).pow(&(self.k / T::from_f64(2.0))) * gamma::gamma(self.k / T::from_f64(2.0)));
+        let t1: T = T::one()
+                    / (T::from_f64(2.0).pow(&(self.k / T::from_f64(2.0)))
+                       * gamma::gamma(self.k / T::from_f64(2.0)));
         let t2: T = x.pow(&(self.k / T::from_f64(2.0) - T::one())) * (-x / T::from_f64(2.0)).exp();
         let chisquared: T = t1 * t2;
 
@@ -90,7 +83,7 @@ impl<T> Continuous<T> for ChiSquared<T>
     /// # Example
     ///
     /// ```
-    /// use mathru::statistics::distrib::{Continuous, ChiSquared};
+    /// use mathru::statistics::distrib::{ChiSquared, Continuous};
     ///
     /// let distrib: ChiSquared<f64> = ChiSquared::new(3);
     /// let x: f64 = 0.4;
@@ -108,7 +101,8 @@ impl<T> Continuous<T> for ChiSquared<T>
             let mut sum: T = T::zero();
             for i in 0..(self.k / T::from_f64(2.0)).to_u32()
             {
-                sum += (x / T::from_f64(2.0)).pow(&T::from_u32(i)) / gamma::gamma(T::from_u32(i + 1))
+                sum +=
+                    (x / T::from_f64(2.0)).pow(&T::from_u32(i)) / gamma::gamma(T::from_u32(i + 1))
             }
 
             p = T::one() - t1 * sum;
@@ -118,8 +112,8 @@ impl<T> Continuous<T> for ChiSquared<T>
             let mut sum: T = T::zero();
             for i in 0..(self.k / T::from_f64(2.0)).to_u32()
             {
-                sum += (x / T::from_f64(2.0)).pow(&T::from_f64((i as f64) + 0.5)) / gamma::gamma(T::from_f64((i as f64) +
-                1.5));
+                sum += (x / T::from_f64(2.0)).pow(&T::from_f64((i as f64) + 0.5))
+                       / gamma::gamma(T::from_f64((i as f64) + 1.5));
             }
 
             p = special::erf((x / T::from_f64(2.0)).sqrt()) - t1 * sum;
@@ -129,7 +123,6 @@ impl<T> Continuous<T> for ChiSquared<T>
     }
 
     /// Quantile function of inverse cdf
-    ///
     fn quantile(self: &Self, p: T) -> T
     {
         let std_distrib: Normal<T> = Normal::new(T::zero(), T::one());
@@ -143,14 +136,14 @@ impl<T> Continuous<T> for ChiSquared<T>
     /// # Example
     ///
     /// ```
-    /// use mathru::statistics::distrib::{Continuous, ChiSquared};
+    /// use mathru::statistics::distrib::{ChiSquared, Continuous};
     ///
     /// let distrib: ChiSquared<f64> = ChiSquared::new(2);
     /// let mean: f64 = distrib.mean();
     /// ```
-	fn mean(self: &Self) -> T
+    fn mean(self: &Self) -> T
     {
-        return self.k
+        return self.k;
     }
 
     /// Variance
@@ -158,32 +151,34 @@ impl<T> Continuous<T> for ChiSquared<T>
     /// # Example
     ///
     /// ```
-    /// use mathru::statistics::distrib::{Continuous, ChiSquared};
+    /// use mathru::statistics::distrib::{ChiSquared, Continuous};
     ///
     /// let distrib: ChiSquared<f64> = ChiSquared::new(2);
     /// let var: f64 = distrib.variance();
     /// ```
-	fn variance(self: &Self) -> T
+    fn variance(self: &Self) -> T
     {
-        return T::from_f64(2.0) * self.k
+        return T::from_f64(2.0) * self.k;
     }
 
-    /// Skewness is a measure of the asymmetry of the probability distribution of a real-valued random variable about its mean
-	fn skewness(self: &Self) -> T
+    /// Skewness is a measure of the asymmetry of the probability distribution
+    /// of a real-valued random variable about its mean
+    fn skewness(self: &Self) -> T
     {
         return (T::from_f64(8.0) / self.k).sqrt();
     }
 
-	/// Median is the value separating the higher half from the lower half of a probability distribution.
-	fn median(self: &Self) -> T
+    /// Median is the value separating the higher half from the lower half of a
+    /// probability distribution.
+    fn median(self: &Self) -> T
     {
         let t: T = T::one() - T::from_f64(2.0 / 9.0) / self.k;
 
         return self.k * t * t * t;
     }
 
-	///
-	fn entropy(self: &Self) -> T
+    ///
+    fn entropy(self: &Self) -> T
     {
         let d: T = T::from_f64(2.0) / self.k;
         return d + (T::from_f64(2.0) * gamma::gamma(d)).ln() + (T::one() - d) * gamma::digamma(d);

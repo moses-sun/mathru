@@ -1,5 +1,3 @@
-include:
-    - template: License-Scanning.gitlab-ci.yml
 
 stages:
     - build
@@ -17,4 +15,5 @@ cargo-test:
     needs: ["cargo-build"]
     image: rust:latest
     script:
-      - cargo test --verbose
+      - cargo test --verbos
+      - cargo fmt -- --check

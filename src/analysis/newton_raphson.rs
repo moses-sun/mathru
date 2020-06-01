@@ -1,16 +1,15 @@
 //! Newton-Raphson's root finding algorithm
-use std::default::Default;
 use crate::algebra::abstr::Real;
-use crate::algebra::linear::{Vector, Matrix};
 use crate::algebra::linear::matrix::Solve;
+use crate::algebra::linear::{Matrix, Vector};
 use crate::analysis::{Function, Jacobian};
-
+use std::default::Default;
 
 /// Newton Raphson
 pub struct NewtonRaphson<T>
 {
     iters: u64,
-    tolerance_abs: T
+    tolerance_abs: T,
 }
 
 impl<T> NewtonRaphson<T>
@@ -22,16 +21,12 @@ impl<T> NewtonRaphson<T>
     /// * 'iters': Number of iterations
     pub fn new(iters: u64, tolerance_abs: T) -> NewtonRaphson<T>
     {
-        NewtonRaphson
-        {
-            iters: iters,
-            tolerance_abs: tolerance_abs,
-        }
+        NewtonRaphson { iters,
+                        tolerance_abs }
     }
 }
 
-impl<T> Default for NewtonRaphson<T>
-    where T: Real
+impl<T> Default for NewtonRaphson<T> where T: Real
 {
     fn default() -> NewtonRaphson<T>
     {
@@ -39,9 +34,7 @@ impl<T> Default for NewtonRaphson<T>
     }
 }
 
-
-impl<T> NewtonRaphson<T>
-    where T: Real
+impl<T> NewtonRaphson<T> where T: Real
 {
     pub fn find_root<F>(self: &Self, func: &F, x_0: &Vector<T>) -> Result<Vector<T>, &'static str>
         where F: Function<Vector<T>, Codomain = Vector<T>> + Jacobian<T>
@@ -50,7 +43,6 @@ impl<T> NewtonRaphson<T>
 
         for _i in 0..self.iters
         {
-
             let func_x: Vector<T> = func.eval(&x);
 
             let jacobian_x: Matrix<T> = func.jacobian(&x);
@@ -71,4 +63,3 @@ impl<T> NewtonRaphson<T>
         return Err("Maxmimum number of iterations reached");
     }
 }
-

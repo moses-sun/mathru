@@ -1,22 +1,18 @@
-use crate::statistics::distrib::Continuous;
-use crate::special::gamma;
 use crate::algebra::abstr::Real;
+use crate::special::gamma;
+use crate::statistics::distrib::Continuous;
 
 /// Gamma distribution
 ///
 /// Fore more information:
 /// <a href="https://en.wikipedia.org/wiki/Gamma_distribution">https://en.wikipedia.org/wiki/Gamma_distribution</a>
-///
 pub struct Gamma<T>
 {
     alpha: T,
     beta: T,
 }
 
-
-
-impl<T> Gamma<T>
-    where T: Real
+impl<T> Gamma<T> where T: Real
 {
     /// Creates a probability distribution
     ///
@@ -42,18 +38,12 @@ impl<T> Gamma<T>
         {
             panic!()
         }
-        Gamma
-        {
-            alpha: alpha,
-            beta: beta
-        }
+        Gamma { alpha, beta }
     }
 }
 
-impl<T> Continuous<T> for Gamma<T>
-    where T: Real
+impl<T> Continuous<T> for Gamma<T> where T: Real
 {
-
     /// Probability density function
     ///
     /// # Arguments
@@ -79,7 +69,9 @@ impl<T> Continuous<T> for Gamma<T>
         {
             panic!();
         }
-        self.beta.pow(&self.alpha) / gamma::gamma(self.alpha) * x.pow(&(self.alpha - T::one())) * (-self.beta * x).exp()
+        self.beta.pow(&self.alpha) / gamma::gamma(self.alpha)
+        * x.pow(&(self.alpha - T::one()))
+        * (-self.beta * x).exp()
     }
 
     /// Cumulative distribution function
@@ -101,22 +93,19 @@ impl<T> Continuous<T> for Gamma<T>
     {
         if x == T::zero()
         {
-            return T::zero()
+            return T::zero();
         }
-        return gamma::gamma_lr(self.alpha, self.beta * x)
+        return gamma::gamma_lr(self.alpha, self.beta * x);
     }
 
-
     /// Quantile function of inverse cdf
-    ///
     fn quantile(self: &Self, _p: T) -> T
     {
         unimplemented!();
     }
 
     /// Expected value
-    ///
-	fn mean(self: &Self) -> T
+    fn mean(self: &Self) -> T
     {
         return self.alpha / self.beta;
     }
@@ -131,26 +120,29 @@ impl<T> Continuous<T> for Gamma<T>
     /// let distrib: Gamma<f64> = Gamma::new(0.2, 0.5);
     /// let var: f64 = distrib.variance();
     /// ```
-	fn variance(self: &Self) -> T
+    fn variance(self: &Self) -> T
     {
         return self.alpha / self.beta.pow(&T::from_f64(2.0));
     }
 
-       ///
-	fn skewness(self: &Self) -> T
+    ///
+    fn skewness(self: &Self) -> T
     {
         return T::from_f64(2.0) / self.alpha.sqrt();
     }
 
-	/// Median is the value separating the higher half from the lower half of a probability distribution.
-	fn median(self: &Self) -> T
+    /// Median is the value separating the higher half from the lower half of a
+    /// probability distribution.
+    fn median(self: &Self) -> T
     {
         unimplemented!();
     }
 
-	///
-	fn entropy(self: &Self) -> T
+    ///
+    fn entropy(self: &Self) -> T
     {
-        return self.alpha - self.beta.ln()  + gamma::gamma(self.alpha).ln()  + (T::one() - self.alpha) * gamma::digamma(self.alpha);
+        return self.alpha - self.beta.ln()
+               + gamma::gamma(self.alpha).ln()
+               + (T::one() - self.alpha) * gamma::digamma(self.alpha);
     }
 }

@@ -1,8 +1,8 @@
 #[cfg(test)]
 mod lu
 {
-    use mathru::algebra::linear::{Vector, Matrix};
-    use mathru::algebra::linear::matrix::{Solve, LUDec, Inverse, Substitute};
+    use mathru::algebra::linear::matrix::{Inverse, LUDec, Solve, Substitute};
+    use mathru::algebra::linear::{Matrix, Vector};
 
     #[test]
     fn decompose_lu_0()
@@ -23,7 +23,7 @@ mod lu
                                         2.0, -5.0, 12.0;
                                         0.0, 2.0, -10.0];
 
-        let (l, u, p) : (Matrix<f64>, Matrix<f64>, Matrix<f64>) = a.dec_lu().unwrap().lup();
+        let (l, u, p): (Matrix<f64>, Matrix<f64>, Matrix<f64>) = a.dec_lu().unwrap().lup();
 
         assert!(l.compare_neighbourhood(&l_ref, 1.0e-10));
         assert!(u.compare_neighbourhood(&u_ref, 1.0e-10));
@@ -55,7 +55,7 @@ mod lu
                                             0.0, 1.0, 0.0, 0.0;
                                             0.0, 0.0, 0.0, 1.0];
 
-        let (l, u, p) : (Matrix<f64>, Matrix<f64>, Matrix<f64>) = a.dec_lu().unwrap().lup();
+        let (l, u, p): (Matrix<f64>, Matrix<f64>, Matrix<f64>) = a.dec_lu().unwrap().lup();
 
         assert!(l.compare_neighbourhood(&l_ref, 1.0e-10));
         assert!(u.compare_neighbourhood(&u_ref, 1.0e-10));
@@ -112,7 +112,7 @@ mod lu
                                         2.0, -5.0, 12.0;
                                         0.0, 2.0, -10.0];
 
-        let x_ref : Matrix<f64> = matrix![  -13.0, 7.0, 4.5;
+        let x_ref: Matrix<f64> = matrix![  -13.0, 7.0, 4.5;
                                                 -10.0, 5.0, 3.0;
                                                 -2.0, 1.0, 0.5];
 
@@ -130,7 +130,7 @@ mod lu
                                         2.0, -5.0, 12.0;
                                         0.0, 2.0, -10.0];
 
-        let a_inv_ref : Matrix<f64> = matrix![  -13.0, 7.0, 4.5;
+        let a_inv_ref: Matrix<f64> = matrix![  -13.0, 7.0, 4.5;
                                                 -10.0, 5.0, 3.0;
                                                 -2.0, 1.0, 0.5];
 
@@ -146,7 +146,7 @@ mod lu
                                         -1.0, 5.0, 0.0;
                                         0.0, 3.0, -9.0];
 
-        let a_inv_ref : Matrix<f64> = matrix![  0.8823529411764706, -0.11764705882352942, 0.19607843137254904;
+        let a_inv_ref: Matrix<f64> = matrix![  0.8823529411764706, -0.11764705882352942, 0.19607843137254904;
                                                 0.17647058823529413, 0.17647058823529413, 0.03921568627450981;
                                                 0.05882352941176471, 0.05882352941176471, -0.09803921568627452];
 
@@ -164,7 +164,7 @@ mod lu
                                         -16.0, -17.0, -18.0, -19.0, 20.0;
                                         -21.0, 22.0, -23.0, 24.0, 25.0];
 
-        let a_inv_ref : Matrix<f64> = matrix![  0.38478669499836576, -0.03759398496240601, -0.08489293886891143, -0.006578947368421052,
+        let a_inv_ref: Matrix<f64> = matrix![  0.38478669499836576, -0.03759398496240601, -0.08489293886891143, -0.006578947368421052,
         -0.005720823798627002;
         0.03571428571428603, -0.07142857142857142, 0.03571428571428571, 0.0, -0.000000000000000001734723475976807;
         -0.021739130434782705, 0.0, 0.04347826086956519, 0.0, -0.021739130434782608;

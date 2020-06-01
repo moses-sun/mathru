@@ -1,10 +1,9 @@
-use crate::algebra::linear::{Matrix};
 use crate::algebra::abstr::{Field, Scalar};
-use std::ops::{Div};
+use crate::algebra::linear::Matrix;
+use std::ops::Div;
 
 //Divides all  matrix elements with a scalar
-impl<T> Div<T> for Matrix<T>
-    where T: Field + Scalar
+impl<T> Div<T> for Matrix<T> where T: Field + Scalar
 {
     type Output = Matrix<T>;
 
@@ -13,7 +12,7 @@ impl<T> Div<T> for Matrix<T>
     /// # Example
     ///
     /// ```
-    /// use mathru::algebra::linear::{Matrix};
+    /// use mathru::algebra::linear::Matrix;
     ///
     /// let res_ref: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
     /// let f: f64 = 7.0;
@@ -27,8 +26,7 @@ impl<T> Div<T> for Matrix<T>
     }
 }
 
-impl<'a, 'b, T> Div<&'b T> for &'a Matrix<T>
-    where T: Field + Scalar
+impl<'a, 'b, T> Div<&'b T> for &'a Matrix<T> where T: Field + Scalar
 {
     type Output = Matrix<T>;
 
@@ -37,7 +35,7 @@ impl<'a, 'b, T> Div<&'b T> for &'a Matrix<T>
     /// # Example
     ///
     /// ```
-    /// use mathru::algebra::linear::{Matrix};
+    /// use mathru::algebra::linear::Matrix;
     ///
     /// let res_ref: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
     /// let a: Matrix<f64> = Matrix::new(2, 2, vec![4.0, 0.0, 12.0, -28.0]);

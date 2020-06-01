@@ -1,24 +1,20 @@
-use std::clone::Clone;
+use crate::algebra::linear::Matrix;
 use serde::{Deserialize, Serialize};
-use crate::algebra::linear::{Matrix};
+use std::clone::Clone;
 
 /// QR decomposition
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct QRDec<T>
 {
     q: Matrix<T>,
-    r: Matrix<T>
+    r: Matrix<T>,
 }
 
 impl<T> QRDec<T>
 {
     pub(super) fn new(q: Matrix<T>, r: Matrix<T>) -> QRDec<T>
     {
-        QRDec
-        {
-            q: q,
-            r: r
-        }
+        QRDec { q, r }
     }
 
     /// Return the q matrix of the QR decomposition
@@ -26,7 +22,6 @@ impl<T> QRDec<T>
     /// # Arguments
     ///
     /// * `self`
-    ///
     pub fn q(self: Self) -> Matrix<T>
     {
         return self.q;

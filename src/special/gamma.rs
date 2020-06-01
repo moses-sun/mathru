@@ -8,7 +8,8 @@ use crate::algebra::abstr::Real;
 
 /// Gamma function
 ///
-/// &Gamma;(z) = &int; <sub>0</sub><sup>&infin;</sup> t<sup>z-1</sup>(1-t)<sup>-x</sup> dx
+/// &Gamma;(z) = &int; <sub>0</sub><sup>&infin;</sup>
+/// t<sup>z-1</sup>(1-t)<sup>-x</sup> dx
 ///
 /// Fore more information:
 /// <a href="https://en.wikipedia.org/wiki/Gamma_function">https://en.wikipedia.org/wiki/Gamma_function</a>
@@ -32,23 +33,24 @@ pub fn gamma<T>(z: T) -> T
 {
     if z < T::from_f64(0.5_f64)
     {
-        return T::pi() / ((T::pi() * z).sin() * gamma (T::one() - z)) //reflection formula
+        return T::pi() / ((T::pi() * z).sin() * gamma(T::one() - z)); //reflection formula
     }
 
- 	let t: T = z + T::from_f64(6.5);
-    let x: T = T::from_f64(0.99999999999980993) +
-        T::from_f64(676.5203681218851) / z -
-        T::from_f64(1259.1392167224028) / (z + T::one()) +
-        T::from_f64(771.32342877765313) / (z + T::from_f64(2.0)) -
-        T::from_f64(176.61502916214059) / (z + T::from_f64(3.0)) +
-        T::from_f64(12.507343278686905) / (z + T::from_f64( 4.0)) -
-        T::from_f64(0.13857109526572012) / (z + T::from_f64(5.0)) +
-        T::from_f64(9.9843695780195716e-6) / (z + T::from_f64(6.0)) +
-        T::from_f64(1.5056327351493116e-7) / (z + T::from_f64(7.0));
+    let t: T = z + T::from_f64(6.5);
+    let x: T = T::from_f64(0.99999999999980993) + T::from_f64(676.5203681218851) / z
+               - T::from_f64(1259.1392167224028) / (z + T::one())
+               + T::from_f64(771.32342877765313) / (z + T::from_f64(2.0))
+               - T::from_f64(176.61502916214059) / (z + T::from_f64(3.0))
+               + T::from_f64(12.507343278686905) / (z + T::from_f64(4.0))
+               - T::from_f64(0.13857109526572012) / (z + T::from_f64(5.0))
+               + T::from_f64(9.9843695780195716e-6) / (z + T::from_f64(6.0))
+               + T::from_f64(1.5056327351493116e-7) / (z + T::from_f64(7.0));
 
-    return T::from_f64(2.0_f64.sqrt() * PI.sqrt()) * t.pow(&(z - T::from_f64(0.5))) * (-t).exp() * x
+    return T::from_f64(2.0_f64.sqrt() * PI.sqrt())
+           * t.pow(&(z - T::from_f64(0.5)))
+           * (-t).exp()
+           * x;
 }
-
 
 /// Log-gamma function
 ///
@@ -70,55 +72,52 @@ pub fn gamma<T>(z: T) -> T
 /// let ln_gamma: f64 = gamma::ln_gamma(x);
 /// ```
 pub fn ln_gamma<T>(x: T) -> T
-    where T: Real//Field + Scalar + Exponential + Trigonometry + Power + Hyperbolic + Neg<Output = T>
+    where T: Real /* Field + Scalar + Exponential + Trigonometry + Power + Hyperbolic +
+                   * Neg<Output = T> */
 {
     // Auxiliary variable when evaluating the `gamma_ln` function
     let gamma_r: T = T::from_f64(10.900511);
 
     // Polynomial coefficients for approximating the `gamma_ln` function
-    let gamma_dk: & [T] = &[
-    T::from_f64(2.48574089138753565546e-5),
-    T::from_f64(1.05142378581721974210),
-    T::from_f64(-3.45687097222016235469),
-    T::from_f64(4.51227709466894823700),
-    T::from_f64(-2.98285225323576655721),
-    T::from_f64(1.05639711577126713077),
-    T::from_f64(-1.95428773191645869583e-1),
-    T::from_f64(1.70970543404441224307e-2),
-    T::from_f64(-5.71926117404305781283e-4),
-    T::from_f64(4.63399473359905636708e-6),
-    T::from_f64(-2.71994908488607703910e-9),
-    ];
+    let gamma_dk: &[T] = &[T::from_f64(2.48574089138753565546e-5),
+                           T::from_f64(1.05142378581721974210),
+                           T::from_f64(-3.45687097222016235469),
+                           T::from_f64(4.51227709466894823700),
+                           T::from_f64(-2.98285225323576655721),
+                           T::from_f64(1.05639711577126713077),
+                           T::from_f64(-1.95428773191645869583e-1),
+                           T::from_f64(1.70970543404441224307e-2),
+                           T::from_f64(-5.71926117404305781283e-4),
+                           T::from_f64(4.63399473359905636708e-6),
+                           T::from_f64(-2.71994908488607703910e-9)];
 
     if x < T::from_f64(0.5)
     {
-        let s = gamma_dk
-            .iter()
-            .enumerate()
-            .skip(1)
-            .fold(gamma_dk[0], |s, t| s + *t.1 / (T::from_u64(t.0 as u64) - x));
+        let s = gamma_dk.iter()
+                        .enumerate()
+                        .skip(1)
+                        .fold(gamma_dk[0], |s, t| s + *t.1 / (T::from_u64(t.0 as u64) - x));
 
         T::pi().ln()
-            - (T::pi() * x).sin().ln()
-            - s.ln()
-            - (T::from_f64(2.0) * (T::e() / T::pi()).pow(&T::from_f64(0.5))).ln()
-            - (T::from_f64(0.5) - x) * ((T::from_f64(0.5) - x + gamma_r) / T::e()).ln()
+        - (T::pi() * x).sin().ln()
+        - s.ln()
+        - (T::from_f64(2.0) * (T::e() / T::pi()).pow(&T::from_f64(0.5))).ln()
+        - (T::from_f64(0.5) - x) * ((T::from_f64(0.5) - x + gamma_r) / T::e()).ln()
     }
-
     else
     {
-        let s = gamma_dk
-            .iter()
-            .enumerate()
-            .skip(1)
-            .fold(gamma_dk[0], |s, t| s + *t.1 / (x + T::from_u64(t.0 as u64) - T::one()));
+        let s = gamma_dk.iter()
+                        .enumerate()
+                        .skip(1)
+                        .fold(gamma_dk[0], |s, t| {
+                            s + *t.1 / (x + T::from_u64(t.0 as u64) - T::one())
+                        });
 
         s.ln()
-            + (T::from_f64(2.0) * (T::e() / T::pi()).pow(&T::from(0.5))).ln()
-            + (x - T::from_f64(0.5)) * ((x - T::from_f64(0.5) + gamma_r) / T::e()).ln()
+        + (T::from_f64(2.0) * (T::e() / T::pi()).pow(&T::from(0.5))).ln()
+        + (x - T::from_f64(0.5)) * ((x - T::from_f64(0.5) + gamma_r) / T::e()).ln()
     }
 }
-
 
 /// Digamma function
 ///
@@ -140,65 +139,69 @@ pub fn ln_gamma<T>(x: T) -> T
 /// let digamma: f64 = gamma::digamma(x);
 /// ```
 pub fn digamma<T>(x: T) -> T
-    where T: Real//Field + Scalar + Exponential + Trigonometry + Power + Hyperbolic + Neg<Output = T>
+    where T: Real /* Field + Scalar + Exponential + Trigonometry + Power + Hyperbolic +
+                   * Neg<Output = T> */
 {
-  	let c: T = T::from_f64(8.5);
- // 	let euler_mascheroni: T = T::from_f64(0.57721566490153286060);
+    let c: T = T::from_f64(8.5);
+    // 	let euler_mascheroni: T = T::from_f64(0.57721566490153286060);
 
-	/*
-  	Check the input.
-	*/
-//	let real_neg: bool;
-//  	if x <= T::zero()
-//  	{
-//  	    real_neg = true;
-//  	}
-//  	else
-//    {
-//        real_neg = false;
-//    }
-//
-//	/*
-//  	Use approximation for small argument.
-//	*/
-//  	if x <= T::from_f64(0.000001)
-//  	{
-//    	return -euler_mascheroni - T::one() / x + T::from_f64(1.6449340668482264365) * x;
-//  	}
+    /*
+      Check the input.
+    */
+    //	let real_neg: bool;
+    //  	if x <= T::zero()
+    //  	{
+    //  	    real_neg = true;
+    //  	}
+    //  	else
+    //    {
+    //        real_neg = false;
+    //    }
+    //
+    //	/*
+    //  	Use approximation for small argument.
+    //	*/
+    //  	if x <= T::from_f64(0.000001)
+    //  	{
+    //    	return -euler_mascheroni - T::one() / x +
+    // T::from_f64(1.6449340668482264365) * x;  	}
 
+    /*
+      Reduce to DIGAMA(X + N).
+    */
+    let mut value: T = T::zero();
+    let mut x2: T = x;
+    //The comparison only compares the real part ot the number
+    while x2 < c
+    {
+        value = value - T::one() / x2;
+        x2 = x2 + T::one();
+    }
+    /*
+      Use Stirling's (actually de Moivre's) expansion.
+    */
+    let mut r: T = T::one() / x2;
+    value = value + x2.ln() - T::from_f64(0.5) * r;
 
-  	/*
-  	Reduce to DIGAMA(X + N).
-	*/
-  	let mut value : T = T::zero();
-  	let mut x2: T = x;
-  	//The comparison only compares the real part ot the number
-  	while  x2 < c
-  	{
-    	value = value - T::one() / x2;
-    	x2 = x2 + T::one();
-  	}
-	/*
-  	Use Stirling's (actually de Moivre's) expansion.
-	*/
-  	let mut r: T = T::one() / x2;
-  	value = value + x2.ln() - T::from_f64(0.5) * r;
+    r = r * r;
 
-  	r = r * r;
+    value = value
+            - r
+              * (T::from_f64(1.0 / 12.0)
+                 - r
+                   * (T::from_f64(1.0 / 120.0)
+                      - r
+                        * (T::from_f64(1.0 / 252.0)
+                           - r
+                             * (T::from_f64(1.0 / 240.0)
+                                - r
+                                  * (T::from_f64(1.0 / 132.0)
+                                     - r
+                                       * (T::from_f64(691.0 / 32760.0)
+                                          - r * (T::from_f64(1.0 / 12.0))))))));
 
-  	value = value
-    - r * ( T::from_f64(1.0 / 12.0)
-    - r * ( T::from_f64(1.0 / 120.0)
-    - r * ( T::from_f64(1.0 / 252.0)
-    - r * ( T::from_f64(1.0 / 240.0)
-    - r * ( T::from_f64(1.0 / 132.0)
-    - r * ( T::from_f64(691.0 / 32760.0)
-    - r * ( T::from_f64(1.0 / 12.0)
-    ) ) ) ) ) ) );
-
-  	return value;
+    return value;
 }
-
 
 /// Upper incomplete gamma function
 ///
@@ -223,11 +226,11 @@ pub fn digamma<T>(x: T) -> T
 /// let gamma_u: f64 = gamma::gamma_u(a, x);
 /// ```
 pub fn gamma_u<T>(a: T, x: T) -> T
-    where T: Real //Field + Scalar + Exponential + Trigonometry + Power + Hyperbolic + Neg<Output = T> + Sign
+    where T: Real /* Field + Scalar + Exponential + Trigonometry + Power + Hyperbolic +
+                   * Neg<Output = T> + Sign */
 {
     gamma_ur(a, x) * gamma(a)
 }
-
 
 /// Upper incomplete regularized gamma function
 ///
@@ -236,7 +239,8 @@ pub fn gamma_u<T>(a: T, x: T) -> T
 /// Fore more information:
 /// <a href="https://en.wikipedia
 /// .org/wiki/Incomplete_gamma_function#Regularized_Gamma_functions_and_Poisson_random_variables">https://en
-/// .wikipedia.org/wiki/Incomplete_gamma_function#Regularized_Gamma_functions_and_Poisson_random_variables</a>
+/// .wikipedia.org/wiki/Incomplete_gamma_function#
+/// Regularized_Gamma_functions_and_Poisson_random_variables</a>
 ///
 /// # Arguments
 ///
@@ -253,20 +257,22 @@ pub fn gamma_u<T>(a: T, x: T) -> T
 /// let gamma_u: f64 = gamma::gamma_ur(a, x);
 /// ```
 pub fn gamma_ur<T>(a: T, x: T) -> T
-    where T: Real //Field + Scalar + Exponential + Trigonometry + Power + Hyperbolic + Neg<Output = T> + Sign
+    where T: Real /* Field + Scalar + Exponential + Trigonometry + Power + Hyperbolic +
+                   * Neg<Output = T> + Sign */
 {
     T::one() - gamma_lr(a, x)
 }
 
-
 /// Lower incomplete gamma function
 ///
-/// &Gamma;(a, x) = &int;<sub>x</sub><sup>&infin;</sup>t<sup>a-1</sup>e<sup>-t</sub>dt
+/// &Gamma;(a, x) =
+/// &int;<sub>x</sub><sup>&infin;</sup>t<sup>a-1</sup>e<sup>-t</sub>dt
 ///
 /// Fore more information:
 /// <a href="https://en.wikipedia
 /// .org/wiki/Incomplete_gamma_function#Regularized_Gamma_functions_and_Poisson_random_variables">https://en
-/// .wikipedia.org/wiki/Incomplete_gamma_function#Regularized_Gamma_functions_and_Poisson_random_variables</a>
+/// .wikipedia.org/wiki/Incomplete_gamma_function#
+/// Regularized_Gamma_functions_and_Poisson_random_variables</a>
 ///
 /// # Arguments
 ///
@@ -283,11 +289,11 @@ pub fn gamma_ur<T>(a: T, x: T) -> T
 /// let gamma_u: f64 = gamma::gamma_ur(a, x);
 /// ```
 pub fn gamma_l<T>(a: T, x: T) -> T
-    where T: Real//Field + Scalar + Exponential + Trigonometry + Power + Hyperbolic + Neg<Output = T> + Sign
+    where T: Real /* Field + Scalar + Exponential + Trigonometry + Power + Hyperbolic +
+                   * Neg<Output = T> + Sign */
 {
     gamma_lr(a, x) * gamma(a)
 }
-
 
 /// Lower regularized incomplete gamma function
 ///
@@ -296,7 +302,8 @@ pub fn gamma_l<T>(a: T, x: T) -> T
 /// Fore more information:
 /// <a href="https://en.wikipedia
 /// .org/wiki/Incomplete_gamma_function#Regularized_Gamma_functions_and_Poisson_random_variables">https://en
-/// .wikipedia.org/wiki/Incomplete_gamma_function#Regularized_Gamma_functions_and_Poisson_random_variables</a>
+/// .wikipedia.org/wiki/Incomplete_gamma_function#
+/// Regularized_Gamma_functions_and_Poisson_random_variables</a>
 ///
 /// https://people.sc.fsu.edu/~jburkardt/c_src/asa239/asa239.c
 /// # Arguments
@@ -314,18 +321,20 @@ pub fn gamma_l<T>(a: T, x: T) -> T
 /// let gamma_u: f64 = gamma::gamma_ur(a, x);
 /// ```
 pub fn gamma_lr<T>(a: T, x: T) -> T
-    where T: Real //Field + Scalar + Exponential + Trigonometry + Power + Hyperbolic + Neg<Output = T> + Sign
+    where T: Real /* Field + Scalar + Exponential + Trigonometry + Power + Hyperbolic +
+                   * Neg<Output = T> + Sign */
 {
-//    if a.is_nan() || x.is_nan()
-//    {
-//        panic!();
-//    }
-//
-//    if a <= T::zero() || a == INFINITY
-//    {
-//        panic!();
-//    }
-    if x <= T::zero() // || x == INFINITY
+    //    if a.is_nan() || x.is_nan()
+    //    {
+    //        panic!();
+    //    }
+    //
+    //    if a <= T::zero() || a == INFINITY
+    //    {
+    //        panic!();
+    //    }
+    if x <= T::zero()
+    // || x == INFINITY
     {
         panic!();
     }
@@ -336,12 +345,12 @@ pub fn gamma_lr<T>(a: T, x: T) -> T
 
     if a == T::zero()
     {
-        return T::one()
+        return T::one();
     }
 
     if x == T::zero()
     {
-        return T::zero()
+        return T::zero();
     }
 
     let ax: T = a * x.ln() - x - ln_gamma(a);
@@ -350,9 +359,9 @@ pub fn gamma_lr<T>(a: T, x: T) -> T
     {
         if a < x
         {
-            return T::one()
+            return T::one();
         }
-        return T::zero()
+        return T::zero();
     }
 
     if x <= T::one() || x <= a
@@ -371,7 +380,7 @@ pub fn gamma_lr<T>(a: T, x: T) -> T
                 break;
             }
         }
-        return ax.exp() * ans2 / a
+        return ax.exp() * ans2 / a;
     }
 
     let mut y: T = T::one() - a;

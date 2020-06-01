@@ -1,4 +1,4 @@
-use crate::algebra::linear::{Vector};
+use crate::algebra::linear::Vector;
 use crate::optimization::{Optim, OptimResult};
 extern crate rand;
 use crate::algebra::abstr::Real;
@@ -14,7 +14,8 @@ use crate::algebra::abstr::Real;
 /// ```
 /// in order that $` f(x_{k + 1}) < f(x_{k}) `$.
 ///
-/// input: Function $` f: \mathbb{R}^n \to \mathbb{R} `$, and initial approximation $` x_{0} \in \mathbb{R}^{n} `$
+/// input: Function $` f: \mathbb{R}^n \to \mathbb{R} `$, and initial
+/// approximation $` x_{0} \in \mathbb{R}^{n} `$
 ///
 /// output: $` x_{k} `$
 ///
@@ -24,7 +25,8 @@ use crate::algebra::abstr::Real;
 /// 2. calculate antigradient $`d_{k} := -\nabla f(x_{k}) `$
 ///
 ///     set $` \alpha_{k} := 1 `$
-/// 3. while $`f(x_{k} + \alpha_{k} d_{k}) > f(x_k) + \sigma \alpha_{k} \lvert \lvert d_{k} \rvert \rvert_{2}^{2} `$
+/// 3. while $`f(x_{k} + \alpha_{k} d_{k}) > f(x_k) + \sigma \alpha_{k} \lvert
+/// \lvert d_{k} \rvert \rvert_{2}^{2} `$
 ///
 ///     set  $` \alpha_{k} := \alpha_{k} /2 `$
 /// 4. $` x_{k + 1} := x_{k} + \alpha_{k} d_{k} `$
@@ -39,9 +41,7 @@ pub struct Gradient<T>
     iters: usize,
 }
 
-
-impl<T> Gradient<T>
-    where T: Real
+impl<T> Gradient<T> where T: Real
 {
     /// Construct an instance of gradient algorithm.
     ///
@@ -60,18 +60,11 @@ impl<T> Gradient<T>
     {
         assert!(sigma <= T::one() && sigma > T::zero());
         assert!(iters > 0);
-        Gradient
-        {
-            sigma: sigma,
-            iters: iters,
-
-        }
+        Gradient { sigma, iters }
     }
-
 }
 
-impl<T> Gradient<T>
-    where T: Real
+impl<T> Gradient<T> where T: Real
 {
     pub fn minimize<F>(self: &Self, func: &F, x_0: &Vector<T>) -> OptimResult<Vector<T>>
         where F: Optim<T>

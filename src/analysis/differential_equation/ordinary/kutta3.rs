@@ -1,8 +1,8 @@
 //! Solves an ODE using the 3th order Runge-Kutta algorithm.
-use crate::algebra::linear::{Vector};
-use crate::algebra::abstr::Real;
-use super::explicit_method::{ExplicitFixedStepSizeMethod};
+use super::explicit_method::ExplicitFixedStepSizeMethod;
 use super::ExplicitODE;
+use crate::algebra::abstr::Real;
+use crate::algebra::linear::Vector;
 use crate::analysis::differential_equation::ordinary::fixed_stepper::ExplicitFixedStepper;
 
 /// Solves an ODE using the 3th order Runge-Kutta algorithm.
@@ -10,13 +10,13 @@ use crate::analysis::differential_equation::ordinary::fixed_stepper::ExplicitFix
 ///<a href="https://en.wikipedia.org/wiki/Runge-Kutta_methods">https://en.wikipedia.org/wiki/Rung-Kutta_methods</a>
 /// # Example
 ///
-/// For this example, we want to solve the following ordinary differiential equation:
-/// ```math
+/// For this example, we want to solve the following ordinary differiential
+/// equation: ```math
 /// \frac{dy}{dt} = ay = f(t, y)
 /// ```
-/// The inial condition is $`y(0) = 0.5`$ and we solve it in the interval $`\lbrack 0, 2\rbrack`$
-/// The following equation is the closed solution for this ODE:
-/// ```math
+/// The inial condition is $`y(0) = 0.5`$ and we solve it in the interval
+/// $`\lbrack 0, 2\rbrack`$ The following equation is the closed solution for
+/// this ODE: ```math
 /// y(t) = C a e^{at}
 /// ```
 /// $`C`$ is a parameter and depends on the initial condition $`y(t_{0})`$
@@ -30,42 +30,39 @@ use crate::analysis::differential_equation::ordinary::fixed_stepper::ExplicitFix
 /// # extern crate mathru;
 /// # fn main()
 /// # {
-///	use mathru::algebra::linear::{Vector};
-///	use mathru::analysis::differential_equation::ordinary::{ExplicitODE, Kutta3};
+/// use mathru::algebra::linear::Vector;
+/// use mathru::analysis::differential_equation::ordinary::{ExplicitODE, Kutta3};
 ///
 /// pub struct ExplicitODE1
 /// {
-///	    time_span: (f64, f64),
-///     init_cond: Vector<f64>
+///     time_span: (f64, f64),
+///     init_cond: Vector<f64>,
 /// }
 ///
 /// impl Default for ExplicitODE1
 /// {
-///	    fn default() -> ExplicitODE1
-///	    {
-///         ExplicitODE1
-///         {
-///             time_span: (0.0, 2.0),
-///             init_cond: vector![0.5]
-///	        }
+///     fn default() -> ExplicitODE1
+///     {
+///         ExplicitODE1 { time_span: (0.0, 2.0),
+///                        init_cond: vector![0.5] }
 ///     }
 /// }
 ///
 /// impl ExplicitODE<f64> for ExplicitODE1
 /// {
-/// 	fn func(self: &Self, _t: &f64, x: &Vector<f64>) -> Vector<f64>
+///     fn func(self: &Self, _t: &f64, x: &Vector<f64>) -> Vector<f64>
 ///     {
-///		    return x * &2.0f64;
+///         return x * &2.0f64;
 ///     }
 ///
 ///     fn time_span(self: &Self) -> (f64, f64)
 ///     {
-///     	return self.time_span;
+///         return self.time_span;
 ///     }
 ///
 ///     fn init_cond(self: &Self) -> Vector<f64>
-///	    {
-///	        return self.init_cond.clone();
+///     {
+///         return self.init_cond.clone();
 ///     }
 /// }
 ///
@@ -82,20 +79,15 @@ use crate::analysis::differential_equation::ordinary::fixed_stepper::ExplicitFix
 /// ```
 pub struct Kutta3<T>
 {
-    stepper: ExplicitFixedStepper<T>
+    stepper: ExplicitFixedStepper<T>,
 }
 
-impl<T> Kutta3<T>
-    where T: Real
+impl<T> Kutta3<T> where T: Real
 {
     /// Creates a Kutta3 instance with step size 'step_size'
-    ///
     pub fn new(step_size: T) -> Kutta3<T>
     {
-        return Kutta3
-        {
-            stepper: ExplicitFixedStepper::new(step_size)
-        }
+        return Kutta3 { stepper: ExplicitFixedStepper::new(step_size) };
     }
 
     pub fn solve<F>(self: &Self, prob: &F) -> Result<(Vec<T>, Vec<Vector<T>>), ()>
@@ -115,8 +107,7 @@ impl<T> Kutta3<T>
     }
 }
 
-impl<T> ExplicitFixedStepSizeMethod<T> for Kutta3<T>
-    where T: Real
+impl<T> ExplicitFixedStepSizeMethod<T> for Kutta3<T> where T: Real
 {
     fn do_step<F>(self: &Self, prob: &F, t_n: &T, x_n: &Vector<T>, h: &T) -> Vector<T>
         where F: ExplicitODE<T>
@@ -125,10 +116,12 @@ impl<T> ExplicitFixedStepSizeMethod<T> for Kutta3<T>
         let k1: Vector<T> = prob.func(&t_n, &x_n);
 
         // k2 = func(t_n + h / 2, x_n + h / 2 k1)
-        let k2: Vector<T> = prob.func(&(*t_n + (*h / T::from_f64(2.0))), &(x_n + &((&k1 * h) / T::from_f64(2.0))));
+        let k2: Vector<T> = prob.func(&(*t_n + (*h / T::from_f64(2.0))),
+                                      &(x_n + &((&k1 * h) / T::from_f64(2.0))));
 
         // k3 = func(t_n + h, x_n + - h k1 + 2h *k2)
-        let k3: Vector<T> = prob.func(&(*t_n + *h), &(x_n + &(&(&(&k2 * &T::from_f64(2.0)) - &k1) * h))) ;
+        let k3: Vector<T> = prob.func(&(*t_n + *h),
+                                      &(x_n + &(&(&(&k2 * &T::from_f64(2.0)) - &k1) * h)));
 
         // x[n+1] = xn + h*(k1 + 4*k2 + k3)/6
         return x_n + &((k1 + k2 * T::from_f64(4.0) + k3) * *h / T::from_f64(6.0));

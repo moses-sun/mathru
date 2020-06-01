@@ -1,14 +1,11 @@
-use crate::algebra::linear::{Matrix};
 use crate::algebra::abstr::{Field, Scalar};
 use crate::algebra::linear::matrix::LUDec;
+use crate::algebra::linear::Matrix;
 
 #[cfg(feature = "blaslapack")]
-use crate::algebra::abstr::{Zero};
+use crate::algebra::abstr::Zero;
 
-
-
-impl<T> Matrix<T>
-    where T: Field + Scalar
+impl<T> Matrix<T> where T: Field + Scalar
 {
     /// Decomposes the matrix into a upper and a lower matrix
     ///
@@ -20,12 +17,11 @@ impl<T> Matrix<T>
     /// # Example
     ///
     /// ```
-    /// use mathru::algebra::linear::{Matrix};
+    /// use mathru::algebra::linear::Matrix;
     ///
     /// let a: Matrix<f64> = Matrix::new(2, 2, vec![1.0, -2.0, 3.0, -7.0]);
     ///
     /// let (l, u, p): (Matrix<f64>, Matrix<f64>, Matrix<f64>) = a.dec_lu().unwrap().lup();
-    ///
     /// ```
     pub fn dec_lu<'a>(self: &'a Self) -> Result<LUDec<T>, ()>
     {
@@ -37,7 +33,6 @@ impl<T> Matrix<T>
     #[cfg(feature = "native")]
     fn dec_lu_r<'a>(self: &'a Self) -> Result<LUDec<T>, ()>
     {
-
         let mut l: Matrix<T> = Matrix::one(self.m);
         let mut u: Matrix<T> = Matrix::one(self.n);
         let mut p: Matrix<T> = Matrix::one(self.m);
@@ -64,7 +59,6 @@ impl<T> Matrix<T>
                 a.swap_rows(i, i_max);
                 p.swap_rows(i, i_max);
             }
-
 
             for j in (i + 1)..a.n
             {
@@ -112,21 +106,19 @@ impl<T> Matrix<T>
         let m_i32: i32 = m as i32;
         let n_i32: i32 = n as i32;
 
-        let dim_min: i32= m_i32.min(n_i32);
+        let dim_min: i32 = m_i32.min(n_i32);
         let mut ipiv: Vec<i32> = vec![Zero::zero(); dim_min as usize];
 
         let mut info: i32 = 0;
 
         let mut self_data = self.clone().data;
 
-        T::xgetrf(
-            m_i32,
-            n_i32,
-            self_data.as_mut_slice(),
-            m_i32,
-            ipiv.as_mut_slice(),
-            &mut info,
-        );
+        T::xgetrf(m_i32,
+                  n_i32,
+                  self_data.as_mut_slice(),
+                  m_i32,
+                  ipiv.as_mut_slice(),
+                  &mut info);
 
         assert!(info >= 0);
 
@@ -155,7 +147,7 @@ impl<T> Matrix<T>
         //set diagonal to 1
         for i in 0..m
         {
-             *mat.get_mut(i, i) = T::one();
+            *mat.get_mut(i, i) = T::one();
         }
 
         mat
@@ -191,10 +183,10 @@ impl<T> Matrix<T>
             perm[i] = i;
         }
 
-        for i in 0..length-1
+        for i in 0..length - 1
         {
-            let temp = perm[(per[i] -1) as usize];
-            perm[(per[i] -1) as usize] = perm[i];
+            let temp = perm[(per[i] - 1) as usize];
+            perm[(per[i] - 1) as usize] = perm[i];
             perm[i] = temp;
         }
 

@@ -1,10 +1,9 @@
 //! Explicit Ordinary Differential Equation
 
-use crate::algebra::linear::{Vector, Matrix};
 use crate::algebra::abstr::Real;
+use crate::algebra::linear::{Matrix, Vector};
 
 /// Implicit ordinary differential equation
-///
 pub trait ImplicitODE<T>
     where T: Real
 {
@@ -21,5 +20,3 @@ pub trait ImplicitODE<T>
         unimplemented!();
     }
 }
-
-

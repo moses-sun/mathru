@@ -1,6 +1,5 @@
-
-mod gradient;
-mod gaussnewton;
-mod newton;
-mod levenbergmarquardt;
 mod conjugategradient;
+mod gaussnewton;
+mod gradient;
+mod levenbergmarquardt;
+mod newton;

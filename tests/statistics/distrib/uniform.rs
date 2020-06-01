@@ -1,14 +1,14 @@
 #[cfg(test)]
 mod uniformdistrib
 {
-	use mathru::statistics::distrib::{Continuous, Uniform};
+    use mathru::statistics::distrib::{Continuous, Uniform};
 
-	#[test]
-	fn pdf_lower_a()
+    #[test]
+    fn pdf_lower_a()
     {
-    	let a: f64 = -0.2;
+        let a: f64 = -0.2;
         let b: f64 = 0.4;
-		let x: f64 = -0.3;
+        let x: f64 = -0.3;
 
         let distrib: Uniform<f64> = Uniform::new(a, b);
 
@@ -16,11 +16,11 @@ mod uniformdistrib
     }
 
     #[test]
-	fn pdf_higher_b()
+    fn pdf_higher_b()
     {
-    	let a: f64 = -0.2;
+        let a: f64 = -0.2;
         let b: f64 = 0.4;
-		let x: f64 = 0.5;
+        let x: f64 = 0.5;
 
         let distrib: Uniform<f64> = Uniform::new(a, b);
 
@@ -28,23 +28,23 @@ mod uniformdistrib
     }
 
     #[test]
-	fn pdf()
+    fn pdf()
     {
-    	let a: f64 = -0.2;
+        let a: f64 = -0.2;
         let b: f64 = 0.4;
-		let x: f64 = 0.3;
+        let x: f64 = 0.3;
 
         let distrib: Uniform<f64> = Uniform::new(a, b);
 
         assert_eq!(1.6666666666666665, distrib.pdf(x));
     }
 
-   	#[test]
-	fn cdf_lower_a()
+    #[test]
+    fn cdf_lower_a()
     {
-    	let a: f64 = -0.2;
+        let a: f64 = -0.2;
         let b: f64 = 0.4;
-		let x: f64 = -0.3;
+        let x: f64 = -0.3;
 
         let distrib: Uniform<f64> = Uniform::new(a, b);
 
@@ -52,11 +52,11 @@ mod uniformdistrib
     }
 
     #[test]
-	fn cdf_higher_b()
+    fn cdf_higher_b()
     {
-    	let a: f64 = -0.2;
+        let a: f64 = -0.2;
         let b: f64 = 0.4;
-		let x: f64 = 0.5;
+        let x: f64 = 0.5;
 
         let distrib: Uniform<f64> = Uniform::new(a, b);
 
@@ -64,34 +64,34 @@ mod uniformdistrib
     }
 
     #[test]
-	fn cdf()
+    fn cdf()
     {
-    	let a: f64 = -0.2;
+        let a: f64 = -0.2;
         let b: f64 = 0.4;
-		let x: f64 = 0.3;
+        let x: f64 = 0.3;
 
         let distrib: Uniform<f64> = Uniform::new(a, b);
 
         assert_eq!(0.8333333333333333, distrib.cdf(x));
     }
 
-  	#[test]
-	fn quantile()
+    #[test]
+    fn quantile()
     {
-    	let a: f64 = -0.2;
+        let a: f64 = -0.2;
         let b: f64 = 0.4;
-		let x: f64 = 0.3;
+        let x: f64 = 0.3;
 
         let distrib: Uniform<f64> = Uniform::new(a, b);
-		let q: f64 = distrib.cdf(x);
+        let q: f64 = distrib.cdf(x);
         assert_eq!(0.8333333333333333, q);
         assert_eq!(x, distrib.quantile(q));
     }
 
-	#[test]
-	fn mean()
+    #[test]
+    fn mean()
     {
-    	let a: f64 = -0.2;
+        let a: f64 = -0.2;
         let b: f64 = 0.4;
 
         let distrib: Uniform<f64> = Uniform::new(a, b);
@@ -100,11 +100,11 @@ mod uniformdistrib
     }
 
     #[test]
-	fn variance()
+    fn variance()
     {
-    	let a: f64 = -0.2;
+        let a: f64 = -0.2;
         let b: f64 = 0.4;
-		let diff: f64 = b - a;
+        let diff: f64 = b - a;
 
         let distrib: Uniform<f64> = Uniform::new(a, b);
 
@@ -112,23 +112,23 @@ mod uniformdistrib
     }
 
     #[test]
-   	fn skewness()
-	{
-		let a: f64 = -0.2;
+    fn skewness()
+    {
+        let a: f64 = -0.2;
         let b: f64 = 0.4;
 
         let distrib: Uniform<f64> = Uniform::new(a, b);
 
         assert_eq!(0.0, distrib.skewness());
-	}
+    }
 
-	#[test]
-   	fn entropy()
-	{
-    	let a: f64 = 0.2;
-    	let b: f64 = 0.5;
-    	let distrib: Uniform<f64> = Uniform::new(a, b);
-   		let entropy: f64 = distrib.entropy();
-    	assert_eq!((b - a).ln(), entropy);
-	}
+    #[test]
+    fn entropy()
+    {
+        let a: f64 = 0.2;
+        let b: f64 = 0.5;
+        let distrib: Uniform<f64> = Uniform::new(a, b);
+        let entropy: f64 = distrib.entropy();
+        assert_eq!((b - a).ln(), entropy);
+    }
 }

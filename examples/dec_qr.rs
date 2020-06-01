@@ -1,11 +1,11 @@
+use mathru::algebra::linear::Matrix;
 use mathru::matrix;
-use mathru::algebra::linear::{Matrix};
 
 fn main()
 {
-    let a : Matrix<f64> = matrix![  6.0, 5.0, 0.0;
+    let a: Matrix<f64> = matrix![  6.0, 5.0, 0.0;
                                     5.0, 1.0, 4.0;
                                     0.0, 4.0, 3.0];
 
-    let (_q,_r) : (Matrix<f64>, Matrix<f64>) =  a.dec_qr().qr();
+    let (_q, _r): (Matrix<f64>, Matrix<f64>) = a.dec_qr().qr();
 }

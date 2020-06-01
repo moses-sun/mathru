@@ -5,7 +5,6 @@ use crate::algebra::abstr::Ring;
 ///<a href="https://en.wikipedia.org/wiki/Integer">https://en.wikipedia.org/wiki/Integer</a>
 pub trait Integer: Ring
 {
-
 }
 
 macro_rules! impl_integer

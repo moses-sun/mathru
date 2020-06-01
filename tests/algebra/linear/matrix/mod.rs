@@ -1,10 +1,10 @@
-mod matrix;
+mod add;
 mod cholesky;
-mod qr;
 mod eigen;
 mod hessenberg;
-mod lu;
 mod inverse;
+mod lu;
+mod matrix;
 mod mul;
-mod add;
+mod qr;
 mod sub;
