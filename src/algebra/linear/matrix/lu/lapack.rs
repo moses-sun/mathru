@@ -22,86 +22,17 @@ impl<T> Matrix<T> where T: Field + Scalar
     ///
     /// let a: Matrix<f64> = Matrix::new(2, 2, vec![1.0, -2.0, 3.0, -7.0]);
     ///
-    /// let (l, u, p): (Matrix<f64>, Matrix<f64>, Matrix<f64>) = a.dec_lu().lup();
+    /// let (l, u, p): (Matrix<f64>, Matrix<f64>, Matrix<f64>) = a.dec_lu().unwrap().lup();
     /// ```
-    pub fn dec_lu<'a>(self: &'a Self) -> LUDec<T>
+    pub fn dec_lu<'a>(self: &'a Self) -> Result<LUDec<T>, ()>
     {
         let (m, n): (usize, usize) = self.dim();
         assert_eq!(m, n);
         return self.dec_lu_r();
     }
 
-    #[cfg(feature = "native")]
-    fn dec_lu_r<'a>(self: &'a Self) -> LUDec<T>
-    {
-        let mut l: Matrix<T> = Matrix::one(self.m);
-        let mut u: Matrix<T> = Matrix::one(self.n);
-        let mut p: Matrix<T> = Matrix::one(self.m);
-
-        let mut a: Matrix<T> = self.clone();
-
-        for i in 0..a.m
-        {
-            //pivoting
-            let mut max: T = a.get(i, i).clone();
-            let mut i_max: usize = i;
-
-            for l in i + 1..a.m
-            {
-                if *a.get(l, i) > max
-                {
-                    max = a.get(l, i).clone();
-                    i_max = l;
-                }
-            }
-
-            if i != i_max
-            {
-                a.swap_rows(i, i_max);
-                p.swap_rows(i, i_max);
-            }
-
-            for j in (i + 1)..a.n
-            {
-                let f: T;
-                if a.get(i, i).clone() != T::zero()
-                {
-                    f = (*(a.get(j, i))).clone() / a.get(i, i).clone();
-                }
-                else
-                {
-                    f = (*(a.get(j, i))).clone();
-                }
-
-                for k in (i + 1)..a.n
-                {
-                    *(a.get_mut(j, k)) = a.get(j, k).clone() - f.clone() * a.get(i, k).clone();
-                }
-                *(a.get_mut(j, i)) = f.clone();
-            }
-        }
-
-        for i in 1..a.n
-        {
-            for j in 0..i
-            {
-                l.data[j * a.m + i] = a.data[j * a.m + i].clone();
-            }
-        }
-
-        for i in 0..a.n
-        {
-            for k in i..a.n
-            {
-                u.data[k * a.m + i] = a.data[k * a.m + i].clone();
-            }
-        }
-
-        return LUDec::new(l, u, p);
-    }
-
     #[cfg(feature = "blaslapack")]
-    fn dec_lu_r<'a>(self: &'a Self) -> LUDec<T>
+    fn dec_lu_r<'a>(self: &'a Self) -> Result<LUDec<T>, ()>
     {
         let (m, n): (usize, usize) = self.dim();
         let m_i32: i32 = m as i32;
@@ -121,14 +52,17 @@ impl<T> Matrix<T> where T: Field + Scalar
                   ipiv.as_mut_slice(),
                   &mut info);
 
-        assert!(info >= 0);
+        if info != 0
+        {
+            return Err(());
+        }
 
         let mat: Matrix<T> = Matrix::new(m, n, self_data);
         let l: Matrix<T> = Matrix::l(mat.clone());
         let u: Matrix<T> = Matrix::u(mat.clone());
         let p: Matrix<T> = Matrix::p(ipiv);
 
-        return LUDec::new(l, u, p);
+        return Ok(LUDec::new(l, u, p));
     }
 
     #[cfg(feature = "blaslapack")]
