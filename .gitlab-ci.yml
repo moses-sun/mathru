@@ -6,7 +6,7 @@ stages:
 
 build-native:
     stage: build
-    image: "rustlang/rust:stable"
+    image: rust:latest
     script:
       - cargo build --features native --verbose
 
@@ -20,20 +20,20 @@ test-native:
 fmt:
   stage: test
   needs: ["build-native"]
-  image: "rustlang/rust:stable"
+  image: rust:latest
   script:
       - rustup component add rustfmt
       - cargo fmt -- --check
 
 build-blaslapack:
     stage: build
-    image: "rustlang/rust:stable"
+    image: rust:latest
     script:
       - cargo build --features blaslapack --verbose
 
 test-blaslapack:
     stage: test
     needs: ["build-blaslapack"]
-    image: "rustlang/rust:stable"
+    image: rust:latest
     script:
       - cargo test --features blaslapack --verbose
