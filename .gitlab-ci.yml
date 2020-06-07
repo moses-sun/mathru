@@ -21,7 +21,7 @@ cargo-test:
 
 fmt:
     stage: test
-    needs: ["cargo-test"]
+    needs: ["cargo-build"]
     image: "rustlang/rust:nightly"
     script:
         - rustup component add rustfmt
