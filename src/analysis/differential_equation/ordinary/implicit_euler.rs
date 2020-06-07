@@ -17,12 +17,14 @@ use crate::{
 /// # Example
 ///
 /// For this example, we want to solve the following stiff ordinary
-/// differiential equation: ```math
+/// differiential equation:
+/// ```math
 /// 0 = -4(y(t) -2) - y(t)^{'} = f(t, y, y^{'})
 /// ```
 /// The inial condition is $`y(0) = 1.0`$ and we solve it in the interval
 /// $`\lbrack 0, 2\rbrack`$.\ The following equation is the closed solution for
-/// this ODE: ```math
+/// this ODE:
+/// ```math
 /// y(t) = 2 - e^{-t}
 /// ```
 ///

@@ -9,6 +9,7 @@ use crate::{
     },
     elementary::{Exponential, Hyperbolic, Power, Trigonometry},
 };
+
 use std::{
     cmp::Ordering,
     fmt,
@@ -396,14 +397,12 @@ impl<T> Sign for Complex<T> where T: Real
 //
 //}
 
-// impl<T> Scalar for Complex<T>
-// 	where T: Real
-// {
-// 	fn epsilon() -> Self
-// 	{
-// 		unimplemented!();
-// 	}
-// }
+impl<T> Scalar for Complex<T>
+	where T: Real
+{
+
+}
+
 
 /// Compares to complex numbers
 impl<T> PartialEq for Complex<T> where T: Real

@@ -6,7 +6,8 @@ control_brace_style = "AlwaysNextLine"
 empty_item_single_line = false
 fn_params_layout = "Compressed"
 fn_single_line = false
-format_code_in_doc_comments = true
+# rustfmt does not work correctly, when there is some ```math in the documentation
+format_code_in_doc_comments = false
 indent_style = "Visual"
 newline_style = "Unix"
 reorder_impl_items = true

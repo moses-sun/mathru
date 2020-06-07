@@ -4,24 +4,36 @@ stages:
     - test
     - deploy
 
-cargo-build:
+cargo-build-native:
     stage: build
     image: "rustlang/rust:nightly"
     script:
-      - cargo build --verbose
+      - cargo build --features native --verbose
+
+cargo-build-blaslapack:
+    stage: build
+    image: "rustlang/rust:nightly"
+    script:
+      - cargo build --features blaslapack --verbose
 
 
-cargo-test:
+cargo-test-native:
     stage: test
-    needs: ["cargo-build"]
+    needs: ["cargo-build-native"]
     image: rust:latest
     script:
-      - cargo test --verbose
+      - cargo test --features native --verbose
 
+cargo-test-blaslapack:
+    stage: test
+    needs: ["cargo-build-blaslapack"]
+    image: rust:latest
+    script:
+      - cargo test --features blaslapack --verbose
 
 fmt:
     stage: test
-    needs: ["cargo-build"]
+    needs: ["cargo-build-native"]
     image: "rustlang/rust:nightly"
     script:
         - rustup component add rustfmt
