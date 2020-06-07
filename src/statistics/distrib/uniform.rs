@@ -1,7 +1,8 @@
-use crate::algebra::abstr::Real;
-use crate::statistics::distrib::{Continuous, Distribution};
-use rand::rngs::ThreadRng;
-use rand::Rng;
+use crate::{
+    algebra::abstr::Real,
+    statistics::distrib::{Continuous, Distribution},
+};
+use rand::{rngs::ThreadRng, Rng};
 
 /// Uniform distribution
 ///

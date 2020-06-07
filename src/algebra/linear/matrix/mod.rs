@@ -32,14 +32,10 @@ pub use self::cholesky::CholeskyDec;
 mod solve;
 mod substitute;
 
-pub use self::inverse::Inverse;
-pub use self::matrix::Matrix;
-pub use self::matrixcolumniterator::MatrixColumnIterator;
-pub use self::matrixcolumniteratormut::MatrixColumnIteratorMut;
-pub use self::matrixintoiterator::MatrixIntoIterator;
-pub use self::matrixiterator::MatrixIterator;
-pub use self::matrixiteratormut::MatrixIteratorMut;
-pub use self::matrixrowiterator::MatrixRowIterator;
-pub use self::matrixrowiteratormut::MatrixRowIteratorMut;
-pub use self::solve::Solve;
-pub use self::substitute::Substitute;
+pub use self::{
+    inverse::Inverse, matrix::Matrix, matrixcolumniterator::MatrixColumnIterator,
+    matrixcolumniteratormut::MatrixColumnIteratorMut, matrixintoiterator::MatrixIntoIterator,
+    matrixiterator::MatrixIterator, matrixiteratormut::MatrixIteratorMut,
+    matrixrowiterator::MatrixRowIterator, matrixrowiteratormut::MatrixRowIteratorMut, solve::Solve,
+    substitute::Substitute,
+};

@@ -1,35 +1,30 @@
 #[cfg(test)]
-mod implicit_euler
+mod bdf
 {
-	use mathru::algebra::linear::{Vector};
-	use mathru::analysis::ode::{ImplicitEuler, ODEProblem};
-	use super::super::problem::{ImplicitODE1};
+    use mathru::{
+        algebra::linear::Vector,
+        analysis::differential_equation::ordinary::{problem, ImplicitODE, BDF},
+    };
 
-	fn compare_epsilon(a: f64, b: f64, epsilon: f64) -> bool
+    fn compare_epsilon(a: f64, b: f64, epsilon: f64) -> bool
     {
-    	if (a - b).abs() > epsilon
+        if (a - b).abs() > epsilon
         {
-        	println!("|a-b|: {}", (a-b).abs());
-        	return false;
+            println!("|a-b|: {}", (a - b).abs());
+            return false;
         }
 
         return true;
     }
 
-	#[test]
-	fn fn1()
-	{
-		let problem: ImplicitODE1 = ImplicitODE1::default();
-		let solver: ImplicitEuler<f64> = ImplicitEuler::new(0.001);
+    #[test]
+    fn fn1()
+    {
+        let problem: problem::Euler<f64> = problem::Euler::default();
+        let solver: BDF<f64> = BDF::new(6, 0.1);
 
-		let (t, y): (Vec<f64>, Vec<Vector<f64>>) = solver.solve(&problem).unwrap();
+        let (x, y): (Vec<f64>, Vec<Vector<f64>>) = solver.solve(&problem).unwrap();
 
-		let len: usize = y.len();
-
-		let time_span: (f64, f64) = problem.time_span();
-		let init_cond: Vector<f64> = problem.init_cond();
-
-		assert!(compare_epsilon(time_span.1, t[len - 1], 0.000000001));
-		assert!(compare_epsilon(2.0 - (-4.0 * time_span.1).exp() , *y[len - 1].get(0), 0.00002));
-	}
+        assert!(compare_epsilon(0.992199, *y.last().unwrap().get(0), 0.0001));
+    }
 }

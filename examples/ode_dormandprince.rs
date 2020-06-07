@@ -1,22 +1,22 @@
-use mathru::algebra::linear::Vector;
-use mathru::analysis::differential_equation::ordinary::problem::Euler;
-use mathru::analysis::differential_equation::ordinary::{DormandPrince54, ExplicitODE};
+use mathru::{
+    algebra::linear::Vector,
+    analysis::differential_equation::ordinary::{problem, DormandPrince54, ExplicitODE},
+};
 use plotters::prelude::*;
 
 fn main()
 {
     // Create an ODE instance
-    let problem: Euler<f64> = Euler::default();
+    let problem: problem::Euler<f64> = problem::Euler::default();
 
     let (x_start, x_end) = problem.time_span();
 
     // Create a ODE solver instance
-    let h_0: f64 = 0.001;
+    let h_0: f64 = 0.0001;
     let n_max: u32 = 800;
     let abs_tol: f64 = 10e-7;
 
     let solver: DormandPrince54<f64> = DormandPrince54::new(abs_tol, h_0, n_max);
-
     // Solve ODE
     let (x, y): (Vec<f64>, Vec<Vector<f64>>) = solver.solve(&problem).unwrap();
 
@@ -34,7 +34,7 @@ fn main()
     }
 
     let root_area =
-        BitMapBackend::new("./figure/ode_explicit.png", (1200, 800)).into_drawing_area();
+        BitMapBackend::new("./figure/ode_dormandprince.png", (1200, 800)).into_drawing_area();
     root_area.fill(&WHITE).unwrap();
 
     let mut ctx =

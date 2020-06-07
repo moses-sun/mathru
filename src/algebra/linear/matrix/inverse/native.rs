@@ -1,6 +1,7 @@
-use crate::algebra::abstr::{Field, Scalar};
-use crate::algebra::linear::matrix::lu::LUDec;
-use crate::algebra::linear::Matrix;
+use crate::algebra::{
+    abstr::{Field, Scalar},
+    linear::{matrix::lu::LUDec, Matrix},
+};
 
 pub trait Inverse<T>
 {
@@ -9,8 +10,7 @@ pub trait Inverse<T>
     /// # Example
     ///
     /// ```
-    /// use mathru::algebra::linear::matrix::Inverse;
-    /// use mathru::algebra::linear::Matrix;
+    /// use mathru::algebra::linear::{matrix::Inverse, Matrix};
     ///
     /// let a: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
     /// let b_inv: Matrix<f64> = a.inv().unwrap();
@@ -25,8 +25,7 @@ impl<T> Inverse<T> for Matrix<T> where T: Field + Scalar
     /// # Example
     ///
     /// ```
-    /// use mathru::algebra::linear::matrix::*;
-    /// use mathru::algebra::linear::Matrix;
+    /// use mathru::algebra::linear::{matrix::*, Matrix};
     ///
     /// let a: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
     /// let b_inv: Matrix<f64> = a.inv().unwrap();

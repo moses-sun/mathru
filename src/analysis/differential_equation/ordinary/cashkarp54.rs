@@ -1,9 +1,8 @@
 //! Solves an ODE using the 4th order Cash-Karp algorithm.
-use super::adaptive_stepper::AdaptiveStepper;
-use super::explicit_method::ExplicitAdaptiveMethod;
-use super::ExplicitODE;
-use crate::algebra::abstr::Real;
-use crate::algebra::linear::Vector;
+use super::{
+    adaptive_stepper::AdaptiveStepper, explicit_method::ExplicitAdaptiveMethod, ExplicitODE,
+};
+use crate::algebra::{abstr::Real, linear::Vector};
 use std::default::Default;
 
 /// Solves an ODE using the 4th order Cash-Karp algorithm.
@@ -34,8 +33,10 @@ use std::default::Default;
 /// # extern crate mathru;
 /// # fn main()
 /// # {
-/// use mathru::algebra::linear::Vector;
-/// use mathru::analysis::differential_equation::ordinary::{CashKarp54, ExplicitODE};
+/// use mathru::{
+///     algebra::linear::Vector,
+///     analysis::differential_equation::ordinary::{CashKarp54, ExplicitODE},
+/// };
 ///
 /// pub struct ExplicitODE1
 /// {
@@ -113,9 +114,11 @@ impl<T> CashKarp54<T> where T: Real
     /// # Example
     ///
     /// ```
-    /// use mathru::algebra::linear::{Matrix, Vector};
-    /// use mathru::analysis::differential_equation::ordinary::{CashKarp54, ExplicitODE};
-    /// use mathru::*;
+    /// use mathru::{
+    ///     algebra::linear::{Matrix, Vector},
+    ///     analysis::differential_equation::ordinary::{CashKarp54, ExplicitODE},
+    ///     *,
+    /// };
     ///
     /// // Define ODE
     /// // $`y^{'} = ay = f(x, y) `$
@@ -213,7 +216,12 @@ impl<T> Default for CashKarp54<T> where T: Real
 
 impl<T> ExplicitAdaptiveMethod<T> for CashKarp54<T> where T: Real
 {
-    fn do_step<F>(self: &Self, prob: &F, t_n: &T, x_n: &Vector<T>, h: &T) -> (Vector<T>, Vector<T>)
+    fn do_step<F>(self: &Self,
+                  prob: &F,
+                  t_n: &T,
+                  x_n: &Vector<T>,
+                  h: &T)
+                  -> (Vector<T>, Vector<T>)
         where F: ExplicitODE<T>
     {
         // k_1 = hf(t_n, x_n)

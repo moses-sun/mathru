@@ -1,5 +1,7 @@
-use crate::algebra::abstr::{Field, Scalar};
-use crate::algebra::linear::Matrix;
+use crate::algebra::{
+    abstr::{Field, Scalar},
+    linear::Matrix,
+};
 use std::ops::Div;
 
 //Divides all  matrix elements with a scalar

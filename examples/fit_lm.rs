@@ -1,7 +1,9 @@
-use mathru::algebra::linear::{Matrix, Vector};
-use mathru::optimization::{LevenbergMarquardt, Optim};
-use mathru::statistics::distrib::{Distribution, Normal};
-use mathru::*;
+use mathru::{
+    algebra::linear::{Matrix, Vector},
+    optimization::{LevenbergMarquardt, Optim},
+    statistics::distrib::{Distribution, Normal},
+    *,
+};
 use plotters::prelude::*;
 
 ///y = a + b * exp(c * t) = f(t)

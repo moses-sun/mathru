@@ -1,8 +1,10 @@
 #[cfg(test)]
 mod gradient
 {
-    use mathru::algebra::linear::{Matrix, Vector};
-    use mathru::optimization::{Gradient, Optim};
+    use mathru::{
+        algebra::linear::{Matrix, Vector},
+        optimization::{Gradient, Optim},
+    };
 
     pub struct Rosenbrock {}
 

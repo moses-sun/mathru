@@ -1,6 +1,8 @@
-use crate::algebra::abstr::Real;
-use crate::special;
-use crate::statistics::distrib::{Continuous, Distribution};
+use crate::{
+    algebra::abstr::Real,
+    special,
+    statistics::distrib::{Continuous, Distribution},
+};
 use rand;
 
 /// Normal distribution
@@ -201,8 +203,10 @@ impl<T> Continuous<T> for Normal<T> where T: Real
     /// # Example
     ///
     /// ```
-    /// use mathru;
-    /// use mathru::statistics::distrib::{Continuous, Normal};
+    /// use mathru::{
+    ///     self,
+    ///     statistics::distrib::{Continuous, Normal},
+    /// };
     ///
     /// let distrib: Normal<f64> = Normal::new(0.0, 0.2);
     /// let mean: f64 = distrib.mean();
@@ -217,8 +221,10 @@ impl<T> Continuous<T> for Normal<T> where T: Real
     /// # Example
     ///
     /// ```
-    /// use mathru;
-    /// use mathru::statistics::distrib::{Continuous, Normal};
+    /// use mathru::{
+    ///     self,
+    ///     statistics::distrib::{Continuous, Normal},
+    /// };
     ///
     /// let distrib: Normal<f64> = Normal::new(0.0, 0.2);
     /// let var: f64 = distrib.variance();
@@ -233,8 +239,10 @@ impl<T> Continuous<T> for Normal<T> where T: Real
     /// # Example
     ///
     /// ```
-    /// use mathru;
-    /// use mathru::statistics::distrib::{Continuous, Normal};
+    /// use mathru::{
+    ///     self,
+    ///     statistics::distrib::{Continuous, Normal},
+    /// };
     ///
     /// let mean: f64 = 0.0;
     ///
@@ -252,8 +260,10 @@ impl<T> Continuous<T> for Normal<T> where T: Real
     /// # Example
     ///
     /// ```
-    /// use mathru;
-    /// use mathru::statistics::distrib::{Continuous, Normal};
+    /// use mathru::{
+    ///     self,
+    ///     statistics::distrib::{Continuous, Normal},
+    /// };
     /// let mean: f64 = 1.0;
     /// let variance: f64 = 0.5;
     /// let distrib: Normal<f64> = Normal::new(mean, variance);
@@ -269,10 +279,11 @@ impl<T> Continuous<T> for Normal<T> where T: Real
     /// # Example
     ///
     /// ```
-    /// use mathru;
-    /// use mathru::statistics::distrib::{Continuous, Normal};
-    /// use std::f64::consts::E;
-    /// use std::f64::consts::PI;
+    /// use mathru::{
+    ///     self,
+    ///     statistics::distrib::{Continuous, Normal},
+    /// };
+    /// use std::f64::consts::{E, PI};
     ///
     /// let mean: f64 = 1.0;
     /// let variance: f64 = 0.5;

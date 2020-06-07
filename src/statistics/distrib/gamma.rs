@@ -1,6 +1,4 @@
-use crate::algebra::abstr::Real;
-use crate::special::gamma;
-use crate::statistics::distrib::Continuous;
+use crate::{algebra::abstr::Real, special::gamma, statistics::distrib::Continuous};
 
 /// Gamma distribution
 ///

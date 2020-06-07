@@ -1,7 +1,8 @@
-use crate::algebra::abstr::Real;
-use crate::special;
-use crate::statistics::combins;
-use crate::statistics::distrib::Discrete;
+use crate::{
+    algebra::abstr::Real,
+    special,
+    statistics::{combins, distrib::Discrete},
+};
 
 /// Poisson distribution
 ///

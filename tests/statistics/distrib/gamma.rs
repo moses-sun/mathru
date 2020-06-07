@@ -1,8 +1,7 @@
 #[cfg(test)]
 mod gammadistrib
 {
-    use mathru::statistics::distrib::Continuous;
-    use mathru::statistics::distrib::Gamma;
+    use mathru::statistics::distrib::{Continuous, Gamma};
     use std::f64;
 
     #[test]

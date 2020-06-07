@@ -1,5 +1,7 @@
-use crate::algebra::abstr::cast::{AsPrimitive, ToPrimitive};
-use crate::elementary::{Exponential, Hyperbolic, Power, Trigonometry};
+use crate::{
+    algebra::abstr::cast::{AsPrimitive, ToPrimitive},
+    elementary::{Exponential, Hyperbolic, Power, Trigonometry},
+};
 use std::{f32, f64, i128, i16, i32, i64, i8, u128, u16, u32, u64, u8};
 
 #[cfg(feature = "blaslapack")]
@@ -606,8 +608,10 @@ macro_rules! hyperbolic_impl {
             /// # Example
             ///
             /// ```
-            /// use mathru::algebra::abstr::Field;
-            /// use mathru::elementary::{Exponential, Hyperbolic};
+            /// use mathru::{
+            ///     algebra::abstr::Field,
+            ///     elementary::{Exponential, Hyperbolic},
+            /// };
             ///
             /// let x: f64 = 2.0_f64;
             /// let f: f64 = x.arcoth();
@@ -671,8 +675,10 @@ macro_rules! hyperbolic_impl {
             /// # Example
             ///
             /// ```
-            /// use mathru::algebra::abstr::Field;
-            /// use mathru::elementary::{Exponential, Hyperbolic};
+            /// use mathru::{
+            ///     algebra::abstr::Field,
+            ///     elementary::{Exponential, Hyperbolic},
+            /// };
             ///
             /// let x: f64 = 2.0_f64;
             /// let f: f64 = x.arcsch();

@@ -2,10 +2,11 @@
 stages:
     - build
     - test
+    - deploy
 
 cargo-build:
     stage: build
-    image: rust:latest
+    image: "rustlang/rust:nightly"
     script:
       - cargo build --verbose
 
@@ -16,3 +17,12 @@ cargo-test:
     image: rust:latest
     script:
       - cargo test --verbose
+
+
+fmt:
+    stage: test
+    needs: ["cargo-test"]
+    image: "rustlang/rust:nightly"
+    script:
+        - rustup component add rustfmt
+        - cargo +nightly fmt -- --check

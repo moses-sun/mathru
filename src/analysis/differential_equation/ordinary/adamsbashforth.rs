@@ -1,7 +1,8 @@
 //! Solves an ODE using Adam-Bashforth method.
-use crate::algebra::abstr::Real;
-use crate::algebra::linear::vector::vector::Vector;
-use crate::analysis::differential_equation::ordinary::explicit_ode::ExplicitODE;
+use crate::{
+    algebra::{abstr::Real, linear::vector::vector::Vector},
+    analysis::differential_equation::ordinary::explicit_ode::ExplicitODE,
+};
 
 /// Adams-Bashforth method
 /// # Example
@@ -28,8 +29,10 @@ use crate::analysis::differential_equation::ordinary::explicit_ode::ExplicitODE;
 /// # extern crate mathru;
 /// # fn main()
 /// # {
-/// use mathru::algebra::linear::Vector;
-/// use mathru::analysis::differential_equation::ordinary::{AdamsBashforth, ExplicitODE};
+/// use mathru::{
+///     algebra::linear::Vector,
+///     analysis::differential_equation::ordinary::{AdamsBashforth, ExplicitODE},
+/// };
 ///
 /// pub struct ExplicitODE1
 /// {

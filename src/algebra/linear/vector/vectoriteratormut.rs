@@ -1,5 +1,7 @@
-use crate::algebra::abstr::{Field, Scalar};
-use crate::algebra::linear::matrix::MatrixIteratorMut;
+use crate::algebra::{
+    abstr::{Field, Scalar},
+    linear::matrix::MatrixIteratorMut,
+};
 
 pub struct VectorIteratorMut<'a, T>
 {

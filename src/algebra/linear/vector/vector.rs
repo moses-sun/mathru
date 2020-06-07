@@ -1,16 +1,20 @@
 //! Vector
 
-use super::VectorIntoIterator;
-use super::VectorIterator;
-use super::VectorIteratorMut;
-use crate::algebra::abstr::{Field, Scalar, Sign};
-use crate::algebra::linear::Matrix;
-use crate::elementary::{Exponential, Power};
+use super::{VectorIntoIterator, VectorIterator, VectorIteratorMut};
+use crate::{
+    algebra::{
+        abstr::{Field, Scalar, Sign},
+        linear::Matrix,
+    },
+    elementary::{Exponential, Power},
+};
 use serde::{Deserialize, Serialize};
-use std::fmt;
-use std::fmt::Display;
-use std::iter::IntoIterator;
-use std::ops::{Add, Div, Mul, Neg, Sub};
+use std::{
+    fmt,
+    fmt::Display,
+    iter::IntoIterator,
+    ops::{Add, Div, Mul, Neg, Sub},
+};
 
 /// Macro to construct vectors
 ///

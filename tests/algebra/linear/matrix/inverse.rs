@@ -1,8 +1,7 @@
 #[cfg(test)]
 mod inverse
 {
-    use mathru::algebra::linear::matrix::Inverse;
-    use mathru::algebra::linear::Matrix;
+    use mathru::algebra::linear::{matrix::Inverse, Matrix};
 
     #[test]
     fn inv_0()

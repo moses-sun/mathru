@@ -1,9 +1,9 @@
 //! Solves an ODE using the 3th order Runge-Kutta algorithm.
-use super::explicit_method::ExplicitFixedStepSizeMethod;
-use super::ExplicitODE;
-use crate::algebra::abstr::Real;
-use crate::algebra::linear::Vector;
-use crate::analysis::differential_equation::ordinary::fixed_stepper::ExplicitFixedStepper;
+use super::{explicit_method::ExplicitFixedStepSizeMethod, ExplicitODE};
+use crate::{
+    algebra::{abstr::Real, linear::Vector},
+    analysis::differential_equation::ordinary::fixed_stepper::ExplicitFixedStepper,
+};
 
 /// Solves an ODE using the 3th order Runge-Kutta algorithm.
 ///
@@ -32,8 +32,10 @@ use crate::analysis::differential_equation::ordinary::fixed_stepper::ExplicitFix
 /// # extern crate mathru;
 /// # fn main()
 /// # {
-/// use mathru::algebra::linear::Vector;
-/// use mathru::analysis::differential_equation::ordinary::{ExplicitODE, Kutta3};
+/// use mathru::{
+///     algebra::linear::Vector,
+///     analysis::differential_equation::ordinary::{ExplicitODE, Kutta3},
+/// };
 ///
 /// pub struct ExplicitODE1
 /// {

@@ -1,6 +1,5 @@
 use crate::algebra::abstr::{Field, Scalar};
-use std::iter::Iterator;
-use std::vec::IntoIter;
+use std::{iter::Iterator, vec::IntoIter};
 
 pub struct MatrixIntoIterator<T>
 {

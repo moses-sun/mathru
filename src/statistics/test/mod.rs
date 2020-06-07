@@ -9,7 +9,4 @@ mod g;
 mod t;
 mod test;
 
-pub use self::chisquared::ChiSquared;
-pub use self::g::G;
-pub use self::t::T;
-pub use self::test::Test;
+pub use self::{chisquared::ChiSquared, g::G, t::T, test::Test};

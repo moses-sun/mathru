@@ -1,6 +1,5 @@
 //! AbelianGroup
-use super::{Addition, Multiplication, Operator};
-use super::{Group, GroupAdd, GroupMul};
+use super::{Addition, Group, GroupAdd, GroupMul, Multiplication, Operator};
 
 /// An Abelian group is a commutative group.
 ///

@@ -1,7 +1,10 @@
-use crate::algebra::abstr::Real;
-use crate::statistics::distrib::ChiSquared as ChiSquaredDistrib;
-use crate::statistics::distrib::Continuous;
-use crate::statistics::test::Test;
+use crate::{
+    algebra::abstr::Real,
+    statistics::{
+        distrib::{ChiSquared as ChiSquaredDistrib, Continuous},
+        test::Test,
+    },
+};
 
 /// Chi-Squared Test
 ///

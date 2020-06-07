@@ -1,8 +1,7 @@
 #[cfg(test)]
 mod qr
 {
-    use mathru::algebra::linear::Matrix;
-    use mathru::elementary::Power;
+    use mathru::{algebra::linear::Matrix, elementary::Power};
 
     #[cfg(feature = "native")]
     #[test]

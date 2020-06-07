@@ -1,5 +1,4 @@
-use super::abeliangroup::AbelianGroupAdd;
-use super::monoid::MonoidMul;
+use super::{abeliangroup::AbelianGroupAdd, monoid::MonoidMul};
 
 /// Ring
 ///

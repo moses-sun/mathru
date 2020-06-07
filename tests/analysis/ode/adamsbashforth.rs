@@ -1,8 +1,10 @@
 #[cfg(test)]
 mod adamsbashforth
 {
-    use mathru::algebra::linear::Vector;
-    use mathru::analysis::differential_equation::ordinary::{AdamsBashforth, ExplicitODE};
+    use mathru::{
+        algebra::linear::Vector,
+        analysis::differential_equation::ordinary::{AdamsBashforth, ExplicitODE},
+    };
 
     use super::super::problem::{ExplicitODE1, ExplicitODE2};
 

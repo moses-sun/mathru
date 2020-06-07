@@ -1,7 +1,10 @@
-use crate::algebra::abstr::Real;
-use crate::statistics::distrib::T as TD;
-use crate::statistics::distrib::{Continuous, Normal};
-use crate::statistics::test::Test;
+use crate::{
+    algebra::abstr::Real,
+    statistics::{
+        distrib::{Continuous, Normal, T as TD},
+        test::Test,
+    },
+};
 
 /// T-Test
 ///
@@ -10,9 +13,13 @@ use crate::statistics::test::Test;
 ///
 /// # Example
 /// ```
-/// use mathru;
-/// use mathru::statistics::distrib::{Distribution, Normal};
-/// use mathru::statistics::test::{Test, T};
+/// use mathru::{
+///     self,
+///     statistics::{
+///         distrib::{Distribution, Normal},
+///         test::{Test, T},
+///     },
+/// };
 ///
 /// let rv1 = Normal::new(1.0, 0.5).random_sequence(100);
 /// let rv2 = Normal::new(1.0, 0.5).random_sequence(100);

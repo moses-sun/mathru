@@ -1,8 +1,10 @@
 #[cfg(test)]
 mod gaussnewton
 {
-    use mathru::algebra::linear::{Matrix, Vector};
-    use mathru::optimization::{GaussNewton, Optim};
+    use mathru::{
+        algebra::linear::{Matrix, Vector},
+        optimization::{GaussNewton, Optim},
+    };
 
     pub struct Rosenbrock {}
 

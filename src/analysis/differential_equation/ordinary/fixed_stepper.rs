@@ -1,9 +1,9 @@
 //! Fixed step size Stepper
-use super::explicit_method::ExplicitFixedStepSizeMethod;
-use super::implicit_method::ImplicitFixedStepSizeMethod;
-use super::{ExplicitODE, ImplicitODE};
-use crate::algebra::abstr::Real;
-use crate::algebra::linear::Vector;
+use super::{
+    explicit_method::ExplicitFixedStepSizeMethod, implicit_method::ImplicitFixedStepSizeMethod,
+    ExplicitODE, ImplicitODE,
+};
+use crate::algebra::{abstr::Real, linear::Vector};
 
 /// Fixed step size Stepper
 pub struct ExplicitFixedStepper<T>

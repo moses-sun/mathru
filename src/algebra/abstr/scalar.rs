@@ -1,7 +1,8 @@
-use crate::algebra::abstr::cast::{FromPrimitive, NumCast, ToPrimitive};
-use crate::algebra::abstr::Sign;
-use std::fmt::Debug;
-use std::fmt::Display;
+use crate::algebra::abstr::{
+    cast::{FromPrimitive, NumCast, ToPrimitive},
+    Sign,
+};
+use std::fmt::{Debug, Display};
 
 #[cfg(feature = "blaslapack")]
 use crate::algebra::abstr::Zero;

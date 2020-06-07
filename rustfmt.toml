@@ -1,5 +1,5 @@
 
-
+unstable_features = true
 edition = "2018"
 brace_style = "AlwaysNextLine"
 control_brace_style = "AlwaysNextLine"
@@ -14,3 +14,5 @@ use_field_init_shorthand = true
 use_try_shorthand = true
 version = "Two"
 wrap_comments = true
+where_single_line = true
+merge_imports = true

@@ -1,5 +1,7 @@
-use crate::algebra::abstr::{Field, Scalar};
-use crate::algebra::linear::Matrix;
+use crate::algebra::{
+    abstr::{Field, Scalar},
+    linear::Matrix,
+};
 use std::ops::Sub;
 
 impl<T> Sub for Matrix<T> where T: Field + Scalar

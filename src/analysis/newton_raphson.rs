@@ -1,8 +1,11 @@
 //! Newton-Raphson's root finding algorithm
-use crate::algebra::abstr::Real;
-use crate::algebra::linear::matrix::Solve;
-use crate::algebra::linear::{Matrix, Vector};
-use crate::analysis::{Function, Jacobian};
+use crate::{
+    algebra::{
+        abstr::Real,
+        linear::{matrix::Solve, Matrix, Vector},
+    },
+    analysis::{Function, Jacobian},
+};
 use std::default::Default;
 
 /// Newton Raphson
@@ -30,7 +33,7 @@ impl<T> Default for NewtonRaphson<T> where T: Real
 {
     fn default() -> NewtonRaphson<T>
     {
-        return NewtonRaphson::new(100, T::from_f64(10e-3));
+        return NewtonRaphson::new(1000, T::from_f64(10e-7));
     }
 }
 
@@ -53,10 +56,8 @@ impl<T> NewtonRaphson<T> where T: Real
 
             if (&x - &x_current).p_norm(&T::from_f64(2.0)) < self.tolerance_abs
             {
-                //println!("{}", x);
                 return Ok(x);
             }
-            //println!("{}", x);
             x = x_current;
         }
 

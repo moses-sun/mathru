@@ -2,17 +2,18 @@ use super::{
     MatrixColumnIterator, MatrixColumnIteratorMut, MatrixIntoIterator, MatrixIterator,
     MatrixIteratorMut, MatrixRowIterator, MatrixRowIteratorMut,
 };
-use crate::algebra::abstr::{Addition, Field, Identity, Multiplication, Scalar};
-use crate::algebra::linear::matrix::Substitute;
-use crate::algebra::linear::Vector;
-use crate::elementary::Power;
-use rand;
-use rand::Rng;
+use crate::{
+    algebra::{
+        abstr::{Addition, Field, Identity, Multiplication, Scalar},
+        linear::{matrix::Substitute, Vector},
+    },
+    elementary::Power,
+};
+use rand::{self, Rng};
 use serde::{Deserialize, Serialize};
 /// Matrix
 use std::clone::Clone;
-use std::fmt;
-use std::fmt::Display;
+use std::{fmt, fmt::Display};
 
 use std::convert::From;
 
@@ -502,7 +503,7 @@ impl<T> Matrix<T> where T: Field + Scalar + Power
 
         let (_l, u, p) = match self.dec_lu()
         {
-            Err(e) => return T::zero(),
+            Err(_e) => return T::zero(),
             Ok(dec) => dec.lup(),
         };
 

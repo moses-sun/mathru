@@ -1,5 +1,7 @@
-use crate::algebra::abstr::Real;
-use crate::algebra::linear::{Matrix, Vector};
+use crate::algebra::{
+    abstr::Real,
+    linear::{Matrix, Vector},
+};
 
 pub trait Hessian<T>
     where T: Real

@@ -1,8 +1,7 @@
 #[cfg(test)]
 mod beta
 {
-    use mathru::statistics::distrib::Beta;
-    use mathru::statistics::distrib::Continuous;
+    use mathru::statistics::distrib::{Beta, Continuous};
     use std::f64;
 
     #[test]

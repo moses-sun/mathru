@@ -1,8 +1,10 @@
 #[cfg(test)]
 mod midpoint
 {
-    use mathru::algebra::linear::Vector;
-    use mathru::analysis::differential_equation::ordinary::{ExplicitODE, Midpoint};
+    use mathru::{
+        algebra::linear::Vector,
+        analysis::differential_equation::ordinary::{ExplicitODE, Midpoint},
+    };
 
     use super::super::problem::{ExplicitODE1, ExplicitODE2};
 

@@ -1,9 +1,8 @@
 //! Solves an ODE using the Bogacki Shampine algorithm.
-use super::adaptive_stepper::AdaptiveStepper;
-use super::explicit_method::ExplicitAdaptiveMethod;
-use super::ExplicitODE;
-use crate::algebra::abstr::Real;
-use crate::algebra::linear::Vector;
+use super::{
+    adaptive_stepper::AdaptiveStepper, explicit_method::ExplicitAdaptiveMethod, ExplicitODE,
+};
+use crate::algebra::{abstr::Real, linear::Vector};
 
 /// Solves an ODE using the Bogacki Shampine algorithm.
 ///
@@ -32,9 +31,11 @@ impl<T> BogackiShampine32<T> where T: Real
     /// # Example
     ///
     /// ```
-    /// use mathru::algebra::linear::{Matrix, Vector};
-    /// use mathru::analysis::differential_equation::ordinary::{BogackiShampine32, ExplicitODE};
-    /// use mathru::*;
+    /// use mathru::{
+    ///     algebra::linear::{Matrix, Vector},
+    ///     analysis::differential_equation::ordinary::{BogackiShampine32, ExplicitODE},
+    ///     *,
+    /// };
     ///
     /// // Define ODE
     /// // $`y^{'} = ay = f(x, y) `$

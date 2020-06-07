@@ -1,8 +1,10 @@
 #[cfg(test)]
 mod kutta3
 {
-    use mathru::algebra::linear::Vector;
-    use mathru::analysis::differential_equation::ordinary::{ExplicitODE, Kutta3};
+    use mathru::{
+        algebra::linear::Vector,
+        analysis::differential_equation::ordinary::{ExplicitODE, Kutta3},
+    };
 
     use super::super::problem::{ExplicitODE1, ExplicitODE2};
 

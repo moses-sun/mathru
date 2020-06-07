@@ -1,9 +1,13 @@
 #[cfg(test)]
 mod vector
 {
-    use mathru::algebra::abstr::Sign;
-    use mathru::algebra::linear::{Matrix, Vector};
-    use mathru::elementary::Power;
+    use mathru::{
+        algebra::{
+            abstr::Sign,
+            linear::{Matrix, Vector},
+        },
+        elementary::Power,
+    };
 
     #[test]
     fn macro_vector_column()

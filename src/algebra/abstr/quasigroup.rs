@@ -1,7 +1,6 @@
 //! quasigroop
 
-use super::Magma;
-use super::{Addition, Identity, Multiplication, Operator};
+use super::{Addition, Identity, Magma, Multiplication, Operator};
 
 /// A quasigroup is a magma which has the divisibility property (or Latin square
 /// property). Divisibility is a weak form of right and left invertibility.

@@ -1,5 +1,4 @@
-use crate::algebra::abstr::Real;
-use crate::statistics::distrib::Continuous;
+use crate::{algebra::abstr::Real, statistics::distrib::Continuous};
 use rand;
 
 /// Exponential distribution

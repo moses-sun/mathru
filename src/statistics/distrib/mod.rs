@@ -21,16 +21,17 @@ mod t;
 mod raisedcosine;
 mod uniform;
 
-pub use self::bernoulli::Bernoulli;
-pub use self::beta::Beta;
-pub use self::binomial::Binomial;
-pub use self::chisquared::ChiSquared;
-pub use self::distrib::{Continuous, Discrete, Distribution};
-pub use self::exponential::Exponential;
-pub use self::gamma::Gamma;
-pub use self::normal::Normal;
-pub use self::poisson::Poisson;
-pub use self::t::T;
+pub use self::{
+    bernoulli::Bernoulli,
+    beta::Beta,
+    binomial::Binomial,
+    chisquared::ChiSquared,
+    distrib::{Continuous, Discrete, Distribution},
+    exponential::Exponential,
+    gamma::Gamma,
+    normal::Normal,
+    poisson::Poisson,
+    t::T,
+};
 //pub use self::multinomial::Multinomial;
-pub use self::raisedcosine::RaisedCosine;
-pub use self::uniform::Uniform;
+pub use self::{raisedcosine::RaisedCosine, uniform::Uniform};

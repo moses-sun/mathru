@@ -1,8 +1,10 @@
 #[cfg(test)]
 mod lu
 {
-    use mathru::algebra::linear::matrix::{Inverse, LUDec, Solve, Substitute};
-    use mathru::algebra::linear::{Matrix, Vector};
+    use mathru::algebra::linear::{
+        matrix::{Inverse, LUDec, Solve, Substitute},
+        Matrix, Vector,
+    };
 
     #[test]
     fn decompose_lu_0()

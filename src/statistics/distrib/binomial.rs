@@ -1,6 +1,7 @@
-use crate::algebra::abstr::Real;
-use crate::statistics::combins;
-use crate::statistics::distrib::Discrete;
+use crate::{
+    algebra::abstr::Real,
+    statistics::{combins, distrib::Discrete},
+};
 
 /// Binomial distribution
 ///

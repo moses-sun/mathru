@@ -2,8 +2,10 @@
 mod euler
 {
     use super::super::problem::{ExplicitODE1, ExplicitODE2};
-    use mathru::algebra::linear::Vector;
-    use mathru::analysis::differential_equation::ordinary::{Euler, ExplicitODE};
+    use mathru::{
+        algebra::linear::Vector,
+        analysis::differential_equation::ordinary::{ExplicitEuler, ExplicitODE},
+    };
 
     fn compare_epsilon(a: f64, b: f64, epsilon: f64) -> bool
     {
@@ -20,7 +22,7 @@ mod euler
     fn fn1()
     {
         let problem: ExplicitODE1 = ExplicitODE1::default();
-        let solver: Euler<f64> = Euler::new(0.00001);
+        let solver: ExplicitEuler<f64> = ExplicitEuler::new(0.00001);
 
         let (t, y): (Vec<f64>, Vec<Vector<f64>>) = solver.solve(&problem).unwrap();
 
@@ -39,7 +41,7 @@ mod euler
     fn fn2()
     {
         let problem: ExplicitODE2 = ExplicitODE2::default();
-        let solver: Euler<f64> = Euler::new(0.00001);
+        let solver: ExplicitEuler<f64> = ExplicitEuler::new(0.00001);
 
         let (t, y): (Vec<f64>, Vec<Vector<f64>>) = solver.solve(&problem).unwrap();
 

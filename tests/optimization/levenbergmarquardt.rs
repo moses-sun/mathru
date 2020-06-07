@@ -1,9 +1,13 @@
 #[cfg(test)]
 mod levenbergmarquardt
 {
-    use mathru::algebra::abstr::Real;
-    use mathru::algebra::linear::{Matrix, Vector};
-    use mathru::optimization::{LevenbergMarquardt, Optim};
+    use mathru::{
+        algebra::{
+            abstr::Real,
+            linear::{Matrix, Vector},
+        },
+        optimization::{LevenbergMarquardt, Optim},
+    };
 
     struct QuadraticFunction {}
 

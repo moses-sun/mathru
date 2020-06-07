@@ -1,9 +1,9 @@
 //! Solves an ODE using Heun's method.
-use super::explicit_method::ExplicitFixedStepSizeMethod;
-use super::ExplicitODE;
-use crate::algebra::abstr::Real;
-use crate::algebra::linear::Vector;
-use crate::analysis::differential_equation::ordinary::fixed_stepper::ExplicitFixedStepper;
+use super::{explicit_method::ExplicitFixedStepSizeMethod, ExplicitODE};
+use crate::{
+    algebra::{abstr::Real, linear::Vector},
+    analysis::differential_equation::ordinary::fixed_stepper::ExplicitFixedStepper,
+};
 
 /// Solves an ODE using Heun's method.
 ///
@@ -33,8 +33,10 @@ use crate::analysis::differential_equation::ordinary::fixed_stepper::ExplicitFix
 /// # extern crate mathru;
 /// # fn main()
 /// # {
-/// use mathru::algebra::linear::Vector;
-/// use mathru::analysis::differential_equation::ordinary::{ExplicitODE, Heun};
+/// use mathru::{
+///     algebra::linear::Vector,
+///     analysis::differential_equation::ordinary::{ExplicitODE, Heun},
+/// };
 ///
 /// pub struct ExplicitODE1
 /// {

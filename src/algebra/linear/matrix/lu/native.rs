@@ -1,6 +1,7 @@
-use crate::algebra::abstr::{Field, Scalar};
-use crate::algebra::linear::matrix::LUDec;
-use crate::algebra::linear::Matrix;
+use crate::algebra::{
+    abstr::{Field, Scalar},
+    linear::{matrix::LUDec, Matrix},
+};
 
 #[cfg(feature = "blaslapack")]
 use crate::algebra::abstr::Zero;

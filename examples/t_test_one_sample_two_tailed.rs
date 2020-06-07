@@ -1,7 +1,7 @@
-use mathru::statistics::distrib::T;
-use mathru::statistics::distrib::{Continuous, Normal};
-use mathru::statistics::test::Test;
-use mathru::statistics::test::T as T_Test;
+use mathru::statistics::{
+    distrib::{Continuous, Normal, T},
+    test::{Test, T as T_Test},
+};
 
 /// One sample, two tailed
 fn main()

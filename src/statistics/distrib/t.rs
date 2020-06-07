@@ -1,6 +1,8 @@
-use crate::algebra::abstr::Real;
-use crate::special::{beta, gamma, hypergeometrical};
-use crate::statistics::distrib::Continuous;
+use crate::{
+    algebra::abstr::Real,
+    special::{beta, gamma, hypergeometrical},
+    statistics::distrib::Continuous,
+};
 
 /// T distribution
 ///

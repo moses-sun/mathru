@@ -1,9 +1,7 @@
 //! Adaptive step size stepper
 
-use super::explicit_method::ExplicitAdaptiveMethod;
-use super::ExplicitODE;
-use crate::algebra::abstr::Real;
-use crate::algebra::linear::Vector;
+use super::{explicit_method::ExplicitAdaptiveMethod, ExplicitODE};
+use crate::algebra::{abstr::Real, linear::Vector};
 use std::default::Default;
 
 /// Adaptive step size stepper

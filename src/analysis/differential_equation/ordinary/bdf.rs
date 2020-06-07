@@ -1,7 +1,8 @@
 //! Solves an ODE using backward differntiation formula
-use crate::algebra::abstr::Real;
-use crate::algebra::linear::vector::vector::Vector;
-use crate::analysis::differential_equation::ordinary::explicit_ode::ExplicitODE;
+use crate::{
+    algebra::{abstr::Real, linear::vector::vector::Vector},
+    analysis::differential_equation::ordinary::ImplicitODE,
+};
 
 /// Backward differentitation formula
 ///
@@ -29,8 +30,10 @@ use crate::analysis::differential_equation::ordinary::explicit_ode::ExplicitODE;
 /// # extern crate mathru;
 /// # fn main()
 /// # {
-/// use mathru::algebra::linear::Vector;
-/// use mathru::analysis::differential_equation::ordinary::{AdamsBashforth, ExplicitODE};
+/// use mathru::{
+///     algebra::linear::Vector,
+///     analysis::differential_equation::ordinary::{AdamsBashforth, ExplicitODE},
+/// };
 ///
 /// pub struct ExplicitODE1
 /// {
@@ -119,7 +122,7 @@ impl<T> BDF<T> where T: Real
     ///
     /// if t_span.0 > t_span.1
     pub fn solve<F>(self: &Self, prob: &F) -> Result<(Vec<T>, Vec<Vector<T>>), ()>
-        where F: ExplicitODE<T>
+        where F: ImplicitODE<T>
     {
         let t_span: (T, T) = prob.time_span();
         let t_start: T = t_span.0;
@@ -222,38 +225,38 @@ impl<T> BDF<T> where T: Real
 impl<T> BDF<T> where T: Real
 {
     fn step_s1<F>(prob: &F, t: &Vec<T>, x: &Vec<Vector<T>>, h: T) -> Vector<T>
-        where F: ExplicitODE<T>
+        where F: ImplicitODE<T>
     {
         let n: usize = x.len() - 1;
         let x_n: &Vector<T> = &x[n];
-        let t_n: &T = &t[n];
+        let t_n: T = t[n];
         return x_n + &(&prob.func(t_n, x_n) * &h);
     }
 
     fn step_s2<F>(prob: &F, t: &Vec<T>, x: &Vec<Vector<T>>, h: T) -> Vector<T>
-        where F: ExplicitODE<T>
+        where F: ImplicitODE<T>
     {
         let n: usize = x.len() - 1;
         let x_n: &Vector<T> = &x[n];
-        let t_n: &T = &t[n];
+        let t_n: T = t[n];
         let x_n1: &Vector<T> = &x[n - 1];
-        let t_n1: &T = &t[n - 1];
+        let t_n1: T = t[n - 1];
         return x_n
                + &((prob.func(t_n, x_n) * T::from_f64(3.0 / 2.0)
-                    + prob.func(&t_n1, x_n1) * T::from_f64(-0.5))
+                    + prob.func(t_n1, x_n1) * T::from_f64(-0.5))
                    * h);
     }
 
     fn step_s3<F>(prob: &F, t: &Vec<T>, x: &Vec<Vector<T>>, h: T) -> Vector<T>
-        where F: ExplicitODE<T>
+        where F: ImplicitODE<T>
     {
         let n: usize = x.len() - 1;
         let x_n: &Vector<T> = &x[n];
-        let t_n: &T = &t[n];
+        let t_n: T = t[n];
         let x_n1: &Vector<T> = &x[n - 1];
-        let t_n1: &T = &t[n - 1];
+        let t_n1: T = t[n - 1];
         let x_n2: &Vector<T> = &x[n - 2];
-        let t_n2: &T = &t[n - 2];
+        let t_n2: T = t[n - 2];
         return x_n
                + &((prob.func(t_n, x_n) * T::from_f64(23.0 / 12.0)
                     + prob.func(t_n1, x_n1) * T::from_f64(-16.0 / 12.0)
@@ -262,17 +265,17 @@ impl<T> BDF<T> where T: Real
     }
 
     fn step_s4<F>(prob: &F, t: &Vec<T>, x: &Vec<Vector<T>>, h: T) -> Vector<T>
-        where F: ExplicitODE<T>
+        where F: ImplicitODE<T>
     {
         let n: usize = x.len() - 1;
         let x_n: &Vector<T> = &x[n];
-        let t_n: &T = &t[n];
+        let t_n: T = t[n];
         let x_n1: &Vector<T> = &x[n - 1];
-        let t_n1: &T = &t[n - 1];
+        let t_n1: T = t[n - 1];
         let x_n2: &Vector<T> = &x[n - 2];
-        let t_n2: &T = &t[n - 2];
+        let t_n2: T = t[n - 2];
         let x_n3: &Vector<T> = &x[n - 3];
-        let t_n3: &T = &t[n - 3];
+        let t_n3: T = t[n - 3];
         return x_n
                + &((prob.func(t_n, x_n) * T::from_f64(55.0 / 24.0)
                     + prob.func(t_n1, x_n1) * T::from_f64(-59.0 / 24.0)
@@ -282,19 +285,19 @@ impl<T> BDF<T> where T: Real
     }
 
     fn step_s5<F>(prob: &F, t: &Vec<T>, x: &Vec<Vector<T>>, h: T) -> Vector<T>
-        where F: ExplicitODE<T>
+        where F: ImplicitODE<T>
     {
         let n: usize = x.len() - 1;
         let x_n: &Vector<T> = &x[n];
-        let t_n: &T = &t[n];
+        let t_n: T = t[n];
         let x_n1: &Vector<T> = &x[n - 1];
-        let t_n1: &T = &t[n - 1];
+        let t_n1: T = t[n - 1];
         let x_n2: &Vector<T> = &x[n - 2];
-        let t_n2: &T = &t[n - 2];
+        let t_n2: T = t[n - 2];
         let x_n3: &Vector<T> = &x[n - 3];
-        let t_n3: &T = &t[n - 3];
+        let t_n3: T = t[n - 3];
         let x_n4: &Vector<T> = &x[n - 4];
-        let t_n4: &T = &t[n - 4];
+        let t_n4: T = t[n - 4];
         return x_n
                + &((prob.func(t_n, x_n) * T::from_f64(1901.0 / 720.0)
                     + prob.func(t_n1, x_n1) * T::from_f64(-2774.0 / 720.0)
@@ -305,19 +308,19 @@ impl<T> BDF<T> where T: Real
     }
 
     fn step_s6<F>(prob: &F, t: &Vec<T>, x: &Vec<Vector<T>>, h: T) -> Vector<T>
-        where F: ExplicitODE<T>
+        where F: ImplicitODE<T>
     {
         let n: usize = x.len() - 1;
         let x_n: &Vector<T> = &x[n];
-        let t_n: &T = &t[n];
+        let t_n: T = t[n];
         let x_n1: &Vector<T> = &x[n - 1];
-        let t_n1: &T = &t[n - 1];
+        let t_n1: T = t[n - 1];
         let x_n2: &Vector<T> = &x[n - 2];
-        let t_n2: &T = &t[n - 2];
+        let t_n2: T = t[n - 2];
         let x_n3: &Vector<T> = &x[n - 3];
-        let t_n3: &T = &t[n - 3];
+        let t_n3: T = t[n - 3];
         let x_n4: &Vector<T> = &x[n - 4];
-        let t_n4: &T = &t[n - 4];
+        let t_n4: T = t[n - 4];
         return x_n
                + &((prob.func(t_n, x_n) * T::from_f64(1901.0 / 720.0)
                     + prob.func(t_n1, x_n1) * T::from_f64(-2774.0 / 720.0)

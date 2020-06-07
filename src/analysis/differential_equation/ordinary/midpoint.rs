@@ -1,9 +1,9 @@
 //! Solves an ODE using midpoint method.
-use super::explicit_method::ExplicitFixedStepSizeMethod;
-use super::ExplicitODE;
-use crate::algebra::abstr::Real;
-use crate::algebra::linear::Vector;
-use crate::analysis::differential_equation::ordinary::fixed_stepper::ExplicitFixedStepper;
+use super::{explicit_method::ExplicitFixedStepSizeMethod, ExplicitODE};
+use crate::{
+    algebra::{abstr::Real, linear::Vector},
+    analysis::differential_equation::ordinary::fixed_stepper::ExplicitFixedStepper,
+};
 
 /// Solves an ODE using midpoint method.
 ///

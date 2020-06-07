@@ -1,7 +1,9 @@
 //! Monoid
-use super::identity::Identity;
-use super::operator::{Addition, Multiplication, Operator};
-use super::semigroup::{Semigroup, SemigroupAdd, SemigroupMul};
+use super::{
+    identity::Identity,
+    operator::{Addition, Multiplication, Operator},
+    semigroup::{Semigroup, SemigroupAdd, SemigroupMul},
+};
 
 /// A Monoid is a triple $`(\mathbb{M}, \circ, e)`$, composed by a set
 /// $`\mathbb{M}`$ and a binary inner operation $`\circ`$ and the element $`e

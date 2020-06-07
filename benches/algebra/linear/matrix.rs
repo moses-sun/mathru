@@ -1,5 +1,4 @@
-use criterion::black_box;
-use criterion::Criterion;
+use criterion::{black_box, Criterion};
 
 extern crate mathru;
 extern crate nalgebra as na;

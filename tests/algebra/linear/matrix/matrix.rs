@@ -2,8 +2,7 @@
 mod matrix
 {
     use crate::mathru::algebra::linear::matrix::Substitute;
-    use mathru::algebra::linear::matrix::Solve;
-    use mathru::algebra::linear::{Matrix, Vector};
+    use mathru::algebra::linear::{matrix::Solve, Matrix, Vector};
 
     #[test]
     fn gcd_0()

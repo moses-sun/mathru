@@ -1,6 +1,10 @@
-use mathru::algebra::linear::matrix::{LUDec, Solve};
-use mathru::algebra::linear::{Matrix, Vector};
-use mathru::{matrix, vector};
+use mathru::{
+    algebra::linear::{
+        matrix::{LUDec, Solve},
+        Matrix, Vector,
+    },
+    matrix, vector,
+};
 
 /// Solves a system of linear equations
 fn main()

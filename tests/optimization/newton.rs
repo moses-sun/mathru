@@ -1,8 +1,10 @@
 #[cfg(test)]
 mod newton
 {
-    use mathru::algebra::linear::{Matrix, Vector};
-    use mathru::optimization::{Newton, Optim};
+    use mathru::{
+        algebra::linear::{Matrix, Vector},
+        optimization::{Newton, Optim},
+    };
 
     pub struct Rosenbrock {}
 

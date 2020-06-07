@@ -1,5 +1,7 @@
-use crate::algebra::abstr::Real;
-use crate::statistics::distrib::{ChiSquared, Continuous};
+use crate::{
+    algebra::abstr::Real,
+    statistics::distrib::{ChiSquared, Continuous},
+};
 
 /// G-Test
 ///

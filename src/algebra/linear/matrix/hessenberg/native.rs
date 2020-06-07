@@ -1,8 +1,10 @@
-use crate::algebra::abstr::{Field, Scalar};
-use crate::algebra::linear::matrix::HessenbergDec;
-use crate::algebra::linear::Matrix;
-use crate::algebra::linear::Vector;
-use crate::elementary::Power;
+use crate::{
+    algebra::{
+        abstr::{Field, Scalar},
+        linear::{matrix::HessenbergDec, Matrix, Vector},
+    },
+    elementary::Power,
+};
 
 impl<T> Matrix<T> where T: Field + Scalar + Power
 {

@@ -45,6 +45,7 @@ The following features are impelmented in this create:
     * Automatic step size control with starting step size
     * Implizit methods
         * Implizit Euler
+        * Backward differentiation formula (BDF)
 
 * [Optimization](https://matthiaseiholzer.gitlab.io/mathru/documentation/optimization)
     * Gauss-Newton algorithm

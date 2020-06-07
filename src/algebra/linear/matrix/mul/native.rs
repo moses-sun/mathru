@@ -1,5 +1,7 @@
-use crate::algebra::abstr::{Field, Scalar};
-use crate::algebra::linear::{Matrix, Vector};
+use crate::algebra::{
+    abstr::{Field, Scalar},
+    linear::{Matrix, Vector},
+};
 use std::ops::Mul;
 
 /// Multiplies matrix by vector.

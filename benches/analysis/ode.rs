@@ -4,7 +4,7 @@ extern crate mathru;
 
 use super::ode_problems::ExplicitODE1;
 use mathru::analysis::differential_equation::ordinary::{
-    DormandPrince54, Euler, Heun, Kutta3, RungeKutta4, RungeKuttaFehlberg54,
+    DormandPrince54, ExplicitEuler, Heun, Kutta3, RungeKutta4, RungeKuttaFehlberg54,
 };
 
 criterion_group!(ode,
@@ -18,7 +18,7 @@ criterion_group!(ode,
 fn forward_euler(bench: &mut Criterion)
 {
     let problem: ExplicitODE1 = ExplicitODE1::default();
-    let solver: Euler<f64> = Euler::new(0.001);
+    let solver: ExplicitEuler<f64> = ExplicitEuler::new(0.001);
 
     bench.bench_function("Forward Euler", move |bh| {
              bh.iter(|| solver.solve(&problem).unwrap())

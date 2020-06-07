@@ -2,8 +2,7 @@
 mod normal
 {
     use mathru::statistics::distrib::{Continuous, Normal};
-    use std::f64::consts::E;
-    use std::f64::consts::PI;
+    use std::f64::consts::{E, PI};
 
     #[test]
     fn pdf0()

@@ -1,7 +1,10 @@
-use crate::algebra::abstr::Real;
-use crate::algebra::linear::matrix::Solve;
-use crate::algebra::linear::{Matrix, Vector};
-use crate::optimization::{Optim, OptimResult};
+use crate::{
+    algebra::{
+        abstr::Real,
+        linear::{matrix::Solve, Matrix, Vector},
+    },
+    optimization::{Optim, OptimResult},
+};
 
 /// Newton's method
 ///
@@ -24,15 +27,14 @@ use crate::optimization::{Optim, OptimResult};
 /// 1. Initialization: Choose $` \sigma \in (0, 1) `$
 ///
 ///     $` \rho > 0, k := 0 `$
-/// 2. Solve de equation system $` \nabla^{2} f(x_{k})d_{k} = -\nabla f(x_{k}) `$
-/// 3. If the euqation is not solvable, or the condition
-/// $` \nabla f(x_{k})^{T}d_{k} \leq -\rho \lvert \lvert \nabla f(x_k) \rvert \rvert_{2}^{2} `$  is not fullfilled
-/// Than $` d_{k} := \nabla f(x_{k}) `$
+/// 2. Solve de equation system $` \nabla^{2} f(x_{k})d_{k} = -\nabla f(x_{k})
+/// `$ 3. If the euqation is not solvable, or the condition
+/// $` \nabla f(x_{k})^{T}d_{k} \leq -\rho \lvert \lvert \nabla f(x_k) \rvert
+/// \rvert_{2}^{2} `$  is not fullfilled Than $` d_{k} := \nabla f(x_{k}) `$
 /// 4. $` \alpha_{k} := 1 `$
-/// 5. while  $` f(x_{k} + \alpha_{k}d_{k}) > f(x_{k}) + \sigma \alpha_{k} \nabla f(x_{k})^{T}d_{k} `$ set $` \alpha_{k} `$
-/// 6. $` x_{k + 1} := x_{k} + d_{k} `$
-/// 7. $` k := k + 1 `$  go to 2.
-///
+/// 5. while  $` f(x_{k} + \alpha_{k}d_{k}) > f(x_{k}) + \sigma \alpha_{k}
+/// \nabla f(x_{k})^{T}d_{k} `$ set $` \alpha_{k} `$ 6. $` x_{k + 1} := x_{k} +
+/// d_{k} `$ 7. $` k := k + 1 `$  go to 2.
 pub struct Newton<T>
 {
     iters: u64,

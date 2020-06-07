@@ -1,5 +1,4 @@
-use crate::algebra::abstr::Real;
-use crate::statistics::distrib::Discrete;
+use crate::{algebra::abstr::Real, statistics::distrib::Discrete};
 
 /// Bernoulli distribution
 ///

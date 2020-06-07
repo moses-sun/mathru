@@ -1,6 +1,7 @@
-use crate::algebra::abstr::{Field, Scalar};
-use crate::algebra::linear::matrix::Substitute;
-use crate::algebra::linear::{Matrix, Vector};
+use crate::algebra::{
+    abstr::{Field, Scalar},
+    linear::{matrix::Substitute, Matrix, Vector},
+};
 
 pub trait Solve<T>
 {

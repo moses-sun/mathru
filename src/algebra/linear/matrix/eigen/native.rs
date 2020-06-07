@@ -1,6 +1,10 @@
-use crate::algebra::abstr::Real;
-use crate::algebra::linear::matrix::{EigenDec, Solve};
-use crate::algebra::linear::{Matrix, Vector};
+use crate::algebra::{
+    abstr::Real,
+    linear::{
+        matrix::{EigenDec, Solve},
+        Matrix, Vector,
+    },
+};
 
 impl<T> Matrix<T> where T: Real
 {
@@ -15,8 +19,7 @@ impl<T> Matrix<T> where T: Real
     /// # Example
     ///
     /// ```
-    /// use mathru::algebra::linear::matrix::EigenDec;
-    /// use mathru::algebra::linear::{Matrix, Vector};
+    /// use mathru::algebra::linear::{matrix::EigenDec, Matrix, Vector};
     ///
     /// let a: Matrix<f64> = Matrix::new(3, 3, vec![1.0, -3.0, 3.0, 3.0, -5.0, 3.0, 6.0, -6.0, 4.0]);
     /// let eigen: EigenDec<f64> = a.dec_eigen();

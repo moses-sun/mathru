@@ -1,21 +1,20 @@
-use crate::algebra::abstr::cast;
-use crate::algebra::abstr::cast::{FromPrimitive, NumCast, ToPrimitive};
-use crate::algebra::abstr::Complex as ComplexT;
-use crate::algebra::abstr::Real;
-use crate::algebra::abstr::{AbelianGroup, AbelianGroupAdd, AbelianGroupMul};
-use crate::algebra::abstr::{
-    Addition, CommutativeRing, Field, Identity, Loop, Multiplication, One, Quasigroup, Ring,
-    Scalar, Sign, Zero,
+use crate::{
+    algebra::abstr::{
+        cast,
+        cast::{FromPrimitive, NumCast, ToPrimitive},
+        AbelianGroup, AbelianGroupAdd, AbelianGroupMul, Addition, CommutativeRing,
+        Complex as ComplexT, Field, Group, GroupAdd, GroupMul, Identity, Loop, Magma, MagmaAdd,
+        MagmaMul, Monoid, MonoidAdd, MonoidMul, Multiplication, One, Quasigroup, Real, Ring,
+        Scalar, Semigroup, SemigroupAdd, SemigroupMul, Sign, Zero,
+    },
+    elementary::{Exponential, Hyperbolic, Power, Trigonometry},
 };
-use crate::algebra::abstr::{Group, GroupAdd, GroupMul};
-use crate::algebra::abstr::{Magma, MagmaAdd, MagmaMul};
-use crate::algebra::abstr::{Monoid, MonoidAdd, MonoidMul};
-use crate::algebra::abstr::{Semigroup, SemigroupAdd, SemigroupMul};
-use crate::elementary::{Exponential, Hyperbolic, Power, Trigonometry};
-use std::cmp::Ordering;
-use std::fmt;
-use std::fmt::Display;
-use std::ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Neg, Sub, SubAssign};
+use std::{
+    cmp::Ordering,
+    fmt,
+    fmt::Display,
+    ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Neg, Sub, SubAssign},
+};
 
 #[cfg(feature = "blaslapack")]
 use crate::algebra::abstr::{Blas, Lapack};
@@ -364,9 +363,10 @@ impl<T> Sign for Complex<T> where T: Real
     /// # Example
     ///
     /// ```
-    /// use mathru::algebra::abstr::cast::ToPrimitive;
-    /// use mathru::algebra::abstr::Sign;
-    /// use mathru::num::Complex;
+    /// use mathru::{
+    ///     algebra::abstr::{cast::ToPrimitive, Sign},
+    ///     num::Complex,
+    /// };
     ///
     /// let a: Complex<f64> = Complex::new(1.0, 2.0);
     /// let refer: f64 = (5.0_f64).sqrt();
@@ -648,8 +648,7 @@ impl<T> Exponential for Complex<T> where T: Real
     /// # Example
     ///
     /// ```
-    /// use mathru::elementary::Exponential;
-    /// use mathru::num::Complex;
+    /// use mathru::{elementary::Exponential, num::Complex};
     ///
     /// let z: Complex<f64> = Complex::new(1.0, 2.0);
     /// let a: Complex<f64> = z.exp();
@@ -666,8 +665,7 @@ impl<T> Exponential for Complex<T> where T: Real
     /// # Example
     ///
     /// ```
-    /// use mathru::elementary::Exponential;
-    /// use mathru::num::Complex;
+    /// use mathru::{elementary::Exponential, num::Complex};
     ///
     /// let a: Complex<f64> = Complex::new(1.0_f64, 2.0_f64);
     /// let refer: Complex<f64> = Complex::new(5.0_f64.powf(0.5_f64).ln(), 2.0_f64.atan());
@@ -695,8 +693,7 @@ impl<T> Trigonometry for Complex<T> where T: Real
     /// # Example
     ///
     /// ```
-    /// use mathru::elementary::Trigonometry;
-    /// use mathru::num::Complex;
+    /// use mathru::{elementary::Trigonometry, num::Complex};
     ///
     /// let a: f64 = 1.0;
     /// let b: f64 = 2.0;
@@ -723,8 +720,7 @@ impl<T> Trigonometry for Complex<T> where T: Real
     /// # Example
     ///
     /// ```
-    /// use mathru::elementary::Trigonometry;
-    /// use mathru::num::Complex;
+    /// use mathru::{elementary::Trigonometry, num::Complex};
     ///
     /// let a: f64 = 1.0;
     /// let b: f64 = 2.0;
@@ -760,8 +756,7 @@ impl<T> Trigonometry for Complex<T> where T: Real
     /// # Example
     ///
     /// ```
-    /// use mathru::elementary::Trigonometry;
-    /// use mathru::num::Complex;
+    /// use mathru::{elementary::Trigonometry, num::Complex};
     ///
     /// let a: f64 = 1.0;
     /// let b: f64 = 2.0;
@@ -785,8 +780,7 @@ impl<T> Trigonometry for Complex<T> where T: Real
     /// # Example
     ///
     /// ```
-    /// use mathru::elementary::Trigonometry;
-    /// use mathru::num::Complex;
+    /// use mathru::{elementary::Trigonometry, num::Complex};
     ///
     /// let a: Complex<f64> = Complex::new(1.0_f64, 2.0_f64);
     /// let refer: Complex<f64> = Complex::new(1.0_f64, 0.0_f64) / a.tan();
@@ -806,8 +800,7 @@ impl<T> Trigonometry for Complex<T> where T: Real
     /// # Example
     ///
     /// ```
-    /// use mathru::elementary::Trigonometry;
-    /// use mathru::num::Complex;
+    /// use mathru::{elementary::Trigonometry, num::Complex};
     ///
     /// let a: Complex<f64> = Complex::new(1.0_f64, 2.0_f64);
     /// let refer: Complex<f64> = Complex::new(1.0_f64, 0.0_f64) / a.cos();
@@ -827,8 +820,7 @@ impl<T> Trigonometry for Complex<T> where T: Real
     /// # Example
     ///
     /// ```
-    /// use mathru::elementary::Trigonometry;
-    /// use mathru::num::Complex;
+    /// use mathru::{elementary::Trigonometry, num::Complex};
     ///
     /// let a: Complex<f64> = Complex::new(1.0_f64, 2.0_f64);
     /// let refer: Complex<f64> = Complex::new(1.0_f64, 0.0_f64) / a.sin();
@@ -850,8 +842,7 @@ impl<T> Trigonometry for Complex<T> where T: Real
     /// # Example
     ///
     /// ```
-    /// use mathru::elementary::Trigonometry;
-    /// use mathru::num::Complex;
+    /// use mathru::{elementary::Trigonometry, num::Complex};
     ///
     /// let a: Complex<f64> = Complex::new(1.0_f64, 2.0_f64);
     /// let refer: Complex<f64> = Complex::new(0.4270785863924768, 1.5285709194809995);
@@ -876,8 +867,7 @@ impl<T> Trigonometry for Complex<T> where T: Real
     /// # Example
     ///
     /// ```
-    /// use mathru::elementary::Trigonometry;
-    /// use mathru::num::Complex;
+    /// use mathru::{elementary::Trigonometry, num::Complex};
     ///
     /// let a: Complex<f64> = Complex::new(1.0_f64, 2.0_f64);
     /// let refer: Complex<f64> = Complex::new(std::f64::consts::PI / 2.0_f64, 0.0_f64) - a.arcsin();
@@ -902,8 +892,7 @@ impl<T> Trigonometry for Complex<T> where T: Real
     /// # Example
     ///
     /// ```
-    /// use mathru::elementary::Trigonometry;
-    /// use mathru::num::Complex;
+    /// use mathru::{elementary::Trigonometry, num::Complex};
     ///
     /// let a: Complex<f64> = Complex::new(0.0_f64, 2.0_f64);
     /// let refer: Complex<f64> = Complex::new(std::f64::consts::PI / 2.0,
@@ -982,9 +971,7 @@ impl<T> Trigonometry for Complex<T> where T: Real
     /// # Example
     ///
     /// ```
-    /// use mathru::algebra::abstr::One;
-    /// use mathru::elementary::Trigonometry;
-    /// use mathru::num::Complex;
+    /// use mathru::{algebra::abstr::One, elementary::Trigonometry, num::Complex};
     ///
     /// let a: Complex<f64> = Complex::new(1.0_f64, 2.0_f64);
     /// let refer: Complex<f64> = (Complex::one() / a).arctan();
@@ -1016,9 +1003,7 @@ impl<T> Trigonometry for Complex<T> where T: Real
     /// # Example
     ///
     /// ```
-    /// use mathru::algebra::abstr::One;
-    /// use mathru::elementary::Trigonometry;
-    /// use mathru::num::Complex;
+    /// use mathru::{algebra::abstr::One, elementary::Trigonometry, num::Complex};
     ///
     /// let a: Complex<f64> = Complex::new(1.0_f64, 2.0_f64);
     /// let refer: Complex<f64> = (Complex::one() / a).arccos();
@@ -1049,9 +1034,7 @@ impl<T> Trigonometry for Complex<T> where T: Real
     /// # Example
     ///
     /// ```
-    /// use mathru::algebra::abstr::One;
-    /// use mathru::elementary::Trigonometry;
-    /// use mathru::num::Complex;
+    /// use mathru::{algebra::abstr::One, elementary::Trigonometry, num::Complex};
     ///
     /// let a: Complex<f64> = Complex::new(1.0_f64, 2.0_f64);
     /// let refer: Complex<f64> = (Complex::one() / a).arcsin();
@@ -1071,8 +1054,7 @@ impl<T> Power for Complex<T> where T: Real
     /// # Example
     ///
     /// ```
-    /// use mathru::elementary::Power;
-    /// use mathru::num::Complex;
+    /// use mathru::{elementary::Power, num::Complex};
     ///
     /// let a: Complex<f64> = Complex::new(1.0_f64, 2.0_f64);
     /// let b: Complex<f64> = Complex::new(-2.0_f64, -1.0_f64);

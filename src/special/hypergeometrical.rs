@@ -1,7 +1,6 @@
 //! Hypergeometrical functions
 
-use crate::algebra::abstr::Real;
-use crate::special::gamma;
+use crate::{algebra::abstr::Real, special::gamma};
 
 /// Hypergeometrical function
 ///

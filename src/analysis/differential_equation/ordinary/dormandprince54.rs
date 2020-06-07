@@ -1,9 +1,9 @@
 //! Solves an ODE using the 5th order Runge-Kutta-Dormand-Prince algorithm.
-use super::explicit_method::ExplicitAdaptiveMethod;
-use super::ExplicitODE;
-use crate::algebra::abstr::Real;
-use crate::algebra::abstr::Sign;
-use crate::algebra::linear::Vector;
+use super::{explicit_method::ExplicitAdaptiveMethod, ExplicitODE};
+use crate::algebra::{
+    abstr::{Real, Sign},
+    linear::Vector,
+};
 
 /// Solves an ODE using the 5th order Runge-Kutta-Dormand-Prince algorithm.
 ///
@@ -33,8 +33,10 @@ use crate::algebra::linear::Vector;
 /// # extern crate mathru;
 /// # fn main()
 /// # {
-/// use mathru::algebra::linear::Vector;
-/// use mathru::analysis::differential_equation::ordinary::{DormandPrince54, ExplicitODE};
+/// use mathru::{
+///     algebra::linear::Vector,
+///     analysis::differential_equation::ordinary::{DormandPrince54, ExplicitODE},
+/// };
 ///
 /// pub struct ExplicitODE1
 /// {
@@ -190,7 +192,12 @@ impl<T> DormandPrince54<T> where T: Real
 
 impl<T> ExplicitAdaptiveMethod<T> for DormandPrince54<T> where T: Real
 {
-    fn do_step<F>(self: &Self, prob: &F, t_n: &T, x_n: &Vector<T>, h: &T) -> (Vector<T>, Vector<T>)
+    fn do_step<F>(self: &Self,
+                  prob: &F,
+                  t_n: &T,
+                  x_n: &Vector<T>,
+                  h: &T)
+                  -> (Vector<T>, Vector<T>)
         where F: ExplicitODE<T>
     {
         // k_1 = hf(t_n, x_n)

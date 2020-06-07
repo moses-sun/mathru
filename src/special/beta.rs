@@ -1,6 +1,5 @@
 //! Beta functions
-use crate::algebra::abstr::Real;
-use crate::special::gamma::gamma;
+use crate::{algebra::abstr::Real, special::gamma::gamma};
 
 /// Beta function
 ///

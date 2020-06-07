@@ -1,8 +1,10 @@
 #[cfg(test)]
 mod heun
 {
-    use mathru::algebra::linear::Vector;
-    use mathru::analysis::differential_equation::ordinary::{ExplicitODE, Heun};
+    use mathru::{
+        algebra::linear::Vector,
+        analysis::differential_equation::ordinary::{ExplicitODE, Heun},
+    };
 
     use super::super::problem::{ExplicitODE1, ExplicitODE2};
 

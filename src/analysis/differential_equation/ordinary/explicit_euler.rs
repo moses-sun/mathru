@@ -1,9 +1,9 @@
 //! Solves an ODE using Euler's method.
-use super::explicit_method::ExplicitFixedStepSizeMethod;
-use super::ExplicitODE;
-use crate::algebra::abstr::Real;
-use crate::algebra::linear::Vector;
-use crate::analysis::differential_equation::ordinary::fixed_stepper::ExplicitFixedStepper;
+use super::{explicit_method::ExplicitFixedStepSizeMethod, ExplicitODE};
+use crate::{
+    algebra::{abstr::Real, linear::Vector},
+    analysis::differential_equation::ordinary::fixed_stepper::ExplicitFixedStepper,
+};
 
 /// Solves an ODE using Euler's method.
 ///
@@ -33,8 +33,10 @@ use crate::analysis::differential_equation::ordinary::fixed_stepper::ExplicitFix
 /// # extern crate mathru;
 /// # fn main()
 /// # {
-/// use mathru::algebra::linear::Vector;
-/// use mathru::analysis::differential_equation::ordinary::{Euler, ExplicitODE};
+/// use mathru::{
+///     algebra::linear::Vector,
+///     analysis::differential_equation::ordinary::{ExplicitEuler, ExplicitODE},
+/// };
 ///
 /// pub struct ExplicitODE1
 /// {
@@ -71,7 +73,7 @@ use crate::analysis::differential_equation::ordinary::fixed_stepper::ExplicitFix
 ///
 /// // We instanciate Eulers algorithm with a stepsize of 0.001
 /// let step_size: f64 = 0.001;
-/// let solver: Euler<f64> = Euler::new(step_size);
+/// let solver: ExplicitEuler<f64> = ExplicitEuler::new(step_size);
 ///
 /// let problem: ExplicitODE1 = ExplicitODE1::default();
 ///
@@ -79,17 +81,17 @@ use crate::analysis::differential_equation::ordinary::fixed_stepper::ExplicitFix
 /// let (t, y): (Vec<f64>, Vec<Vector<f64>>) = solver.solve(&problem).unwrap();
 /// # }
 /// ```
-pub struct Euler<T>
+pub struct ExplicitEuler<T>
 {
     stepper: ExplicitFixedStepper<T>,
 }
 
-impl<T> Euler<T> where T: Real
+impl<T> ExplicitEuler<T> where T: Real
 {
     /// Creates a Euler instance
-    pub fn new(step_size: T) -> Euler<T>
+    pub fn new(step_size: T) -> ExplicitEuler<T>
     {
-        return Euler { stepper: ExplicitFixedStepper::new(step_size) };
+        return ExplicitEuler { stepper: ExplicitFixedStepper::new(step_size) };
     }
 
     pub fn solve<F>(self: &Self, prob: &F) -> Result<(Vec<T>, Vec<Vector<T>>), ()>
@@ -109,7 +111,7 @@ impl<T> Euler<T> where T: Real
     }
 }
 
-impl<T> ExplicitFixedStepSizeMethod<T> for Euler<T> where T: Real
+impl<T> ExplicitFixedStepSizeMethod<T> for ExplicitEuler<T> where T: Real
 {
     fn do_step<F>(self: &Self, prob: &F, t_n: &T, x_n: &Vector<T>, h: &T) -> Vector<T>
         where F: ExplicitODE<T>

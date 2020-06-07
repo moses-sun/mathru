@@ -1,7 +1,10 @@
-use crate::algebra::abstr::{Field, Scalar};
-use crate::algebra::linear::matrix::EigenDec;
-use crate::algebra::linear::{Matrix, Vector};
-use crate::elementary::Power;
+use crate::{
+    algebra::{
+        abstr::{Field, Scalar},
+        linear::{matrix::EigenDec, Matrix, Vector},
+    },
+    elementary::Power,
+};
 
 impl<T> Matrix<T> where T: Field + Scalar + Power
 {
@@ -16,8 +19,7 @@ impl<T> Matrix<T> where T: Field + Scalar + Power
     /// # Example
     ///
     /// ```
-    /// use mathru::algebra::linear::matrix::EigenDec;
-    /// use mathru::algebra::linear::{Matrix, Vector};
+    /// use mathru::algebra::linear::{matrix::EigenDec, Matrix, Vector};
     ///
     /// let a: Matrix<f64> = Matrix::new(3, 3, vec![1.0, -3.0, 3.0, 3.0, -5.0, 3.0, 6.0, -6.0, 4.0]);
     /// let eigen: EigenDec<f64> = a.dec_eigen();

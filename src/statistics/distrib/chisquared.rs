@@ -1,8 +1,5 @@
 use super::Normal;
-use crate::algebra::abstr::Real;
-use crate::special;
-use crate::special::gamma;
-use crate::statistics::distrib::Continuous;
+use crate::{algebra::abstr::Real, special, special::gamma, statistics::distrib::Continuous};
 
 /// Chi-Squared distribution
 ///

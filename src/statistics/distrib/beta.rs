@@ -1,7 +1,4 @@
-use crate::algebra::abstr::Real;
-use crate::special;
-use crate::special::beta;
-use crate::statistics::distrib::Continuous;
+use crate::{algebra::abstr::Real, special, special::beta, statistics::distrib::Continuous};
 
 /// Beta distribution
 ///

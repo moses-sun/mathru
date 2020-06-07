@@ -1,10 +1,13 @@
 #[cfg(test)]
 mod conjugategradient
 {
-    use mathru::algebra::abstr::Real;
-    use mathru::algebra::linear::{Matrix, Vector};
-    use mathru::optimization::ConjugateGradient;
-    use mathru::optimization::Optim;
+    use mathru::{
+        algebra::{
+            abstr::Real,
+            linear::{Matrix, Vector},
+        },
+        optimization::{ConjugateGradient, Optim},
+    };
 
     struct LinearEquation
     {

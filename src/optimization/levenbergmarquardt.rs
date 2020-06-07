@@ -1,7 +1,10 @@
-use crate::algebra::abstr::Real;
-use crate::algebra::linear::matrix::Solve;
-use crate::algebra::linear::{Matrix, Vector};
-use crate::optimization::{Optim, OptimResult};
+use crate::{
+    algebra::{
+        abstr::Real,
+        linear::{matrix::Solve, Matrix, Vector},
+    },
+    optimization::{Optim, OptimResult},
+};
 
 /// Levenberg-Marquardt method
 ///

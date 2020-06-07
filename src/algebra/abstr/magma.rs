@@ -1,8 +1,9 @@
 //! Magma
-use super::operator::Operator;
-use super::operator::{Addition, Multiplication};
-use std::cmp::PartialEq;
-use std::ops::{Add, AddAssign, Mul, MulAssign};
+use super::operator::{Addition, Multiplication, Operator};
+use std::{
+    cmp::PartialEq,
+    ops::{Add, AddAssign, Mul, MulAssign},
+};
 
 /// A Magma is a pair $`(\mathbb{M}, \circ)`$, composed by a set $`\mathbb{M}`$
 /// and a binary inner operation $`\circ`$: # Definition

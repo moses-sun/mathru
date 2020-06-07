@@ -1,8 +1,7 @@
 #[cfg(test)]
 mod ttest
 {
-    use mathru::statistics::test::Test;
-    use mathru::statistics::test::T;
+    use mathru::statistics::test::{Test, T};
 
     //    #[test]
     //    fn test_independence_identical_means()

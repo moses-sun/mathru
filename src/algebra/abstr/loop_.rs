@@ -1,8 +1,10 @@
 //! Loop
 
-use super::identity::Identity;
-use super::operator::{Addition, Multiplication, Operator};
-use super::quasigroup::Quasigroup;
+use super::{
+    identity::Identity,
+    operator::{Addition, Multiplication, Operator},
+    quasigroup::Quasigroup,
+};
 
 /// A quasigroup with an unique identity element.
 ///

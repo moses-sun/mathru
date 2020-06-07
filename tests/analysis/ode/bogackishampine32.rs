@@ -1,8 +1,10 @@
 #[cfg(test)]
 mod bogackishampine
 {
-    use mathru::algebra::linear::Vector;
-    use mathru::analysis::differential_equation::ordinary::{BogackiShampine32, ExplicitODE};
+    use mathru::{
+        algebra::linear::Vector,
+        analysis::differential_equation::ordinary::{BogackiShampine32, ExplicitODE},
+    };
 
     use super::super::problem::{ExplicitODE1, ExplicitODE2};
 

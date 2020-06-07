@@ -10,12 +10,13 @@
 //! \frac{dy}{dt}=f(t, y)
 //! ```
 
-mod euler;
-//mod implicit_euler;
+mod bdf;
 mod bogackishampine32;
 mod cashkarp54;
 mod dormandprince54;
+mod explicit_euler;
 mod heun;
+mod implicit_euler;
 mod kutta3;
 mod midpoint;
 mod ralston;
@@ -24,16 +25,14 @@ mod rungekuttafehlberg54;
 //mod tsitouras54;
 mod adamsbashforth;
 mod adaptive_stepper;
-mod bdf;
 mod explicit_method;
 mod explicit_ode;
 mod fixed_stepper;
 mod implicit_method;
 mod implicit_ode;
-
 pub mod problem;
 
-pub use euler::Euler;
+pub use explicit_euler::ExplicitEuler;
 
 pub use bogackishampine32::BogackiShampine32;
 pub use cashkarp54::CashKarp54;
@@ -45,8 +44,8 @@ pub use ralston::Ralston;
 pub use rungekutta4::RungeKutta4;
 pub use rungekuttafehlberg54::RungeKuttaFehlberg54;
 
-//pub use implicit_euler::ImplicitEuler;
 pub use bdf::BDF;
+pub use implicit_euler::ImplicitEuler;
 
 pub use adamsbashforth::AdamsBashforth;
 //pub use tsitouras54::Tsitouras54;

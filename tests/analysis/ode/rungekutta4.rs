@@ -1,8 +1,10 @@
 #[cfg(test)]
 mod rungekutta4
 {
-    use mathru::algebra::linear::Vector;
-    use mathru::analysis::differential_equation::ordinary::{ExplicitODE, RungeKutta4};
+    use mathru::{
+        algebra::linear::Vector,
+        analysis::differential_equation::ordinary::{ExplicitODE, RungeKutta4},
+    };
 
     use super::super::problem::{ExplicitODE1, ExplicitODE2};
 

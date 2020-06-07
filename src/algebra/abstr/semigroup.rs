@@ -1,6 +1,8 @@
 //! Semigroup
-use super::magma::{Magma, MagmaAdd, MagmaMul};
-use super::operator::{Addition, Multiplication, Operator};
+use super::{
+    magma::{Magma, MagmaAdd, MagmaMul},
+    operator::{Addition, Multiplication, Operator},
+};
 
 /// A Semigroup is a pair $`(\mathbb{S}, \circ)`$, composed by a set
 /// $`\mathbb{S}`$ and a binary inner operation $`\circ`$: # Definition

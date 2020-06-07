@@ -1,7 +1,9 @@
 //! Group
-use super::monoid::{Monoid, MonoidAdd, MonoidMul};
-use super::operator::{Addition, Multiplication, Operator};
-use super::Loop;
+use super::{
+    monoid::{Monoid, MonoidAdd, MonoidMul},
+    operator::{Addition, Multiplication, Operator},
+    Loop,
+};
 use std::ops::{Div, DivAssign, Neg, Sub, SubAssign};
 
 /// A Group is a triple $`(\mathbb{M}, \circ, e)`$, composed by a set
