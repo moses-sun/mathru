@@ -18,6 +18,10 @@ build-native:
       - pwd
       - ls -a
       - ls -a /
+      - ls -a /home
+      - ls -a /builds/
+      - ls -a /builds/matthiaseiholzer/
+
 
 test-native:
     stage: test
