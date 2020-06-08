@@ -7,7 +7,6 @@ stages:
 cache:
   key: ${CI_COMMIT_REF_SLUG}
   paths:
-    - /.cargo
     - target
 
 build-native:
@@ -15,13 +14,6 @@ build-native:
     image: rust:latest
     script:
       - cargo build --features native
-      - pwd
-      - ls -a
-      - ls -a /
-      - ls -a /home
-      - ls -a /builds/
-      - ls -a /builds/matthiaseiholzer/
-
 
 test-native:
     stage: test
@@ -29,7 +21,6 @@ test-native:
     image: rust:latest
     script:
       - cargo test --features native
-
 
 fmt:
   stage: test
