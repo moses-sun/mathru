@@ -43,11 +43,3 @@ build-blaslapack:
 #    script:
 #      - cargo test --features blaslapack
 
-
-ls-task:
-  stage: test
-  needs: ["build-native"]
-  image: rust:latest
-  script:
-    - pwd
-    - ls -a
