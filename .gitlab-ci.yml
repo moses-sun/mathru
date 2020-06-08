@@ -4,18 +4,25 @@ stages:
     - test
     - deploy
 
+cache:
+  key: ${CI_COMMIT_REF_SLUG}
+  paths:
+    - ./builds/
+    - .cargo
+
+
 build-native:
     stage: build
     image: rust:latest
     script:
-      - cargo build --features native --verbose
+      - cargo build --features native
 
 test-native:
     stage: test
     needs: ["build-native"]
     image: rust:latest
     script:
-      - cargo test --features native --verbose
+      - cargo test --features native
 
 fmt:
   stage: test
@@ -23,17 +30,25 @@ fmt:
   image: rust:latest
   script:
       - rustup component add rustfmt
-      - cargo fmt --features native  -- --check
+      - cargo fmt -- --check
 
 build-blaslapack:
     stage: build
     image: rust:latest
     script:
-      - cargo build --features blaslapack --verbose
+      - cargo build --features blaslapack
 
 test-blaslapack:
     stage: test
     needs: ["build-blaslapack"]
     image: rust:latest
     script:
-      - cargo test --features blaslapack --verbose
+      - cargo test --features blaslapack
+
+
+ls-task:
+  stage: test
+  needs: ["build-native"]
+  image: rust:latest
+  script:
+    - ls
