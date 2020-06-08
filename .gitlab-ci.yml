@@ -9,7 +9,7 @@ cache:
   paths:
     - ./builds/
     - .cargo
-
+    - target
 
 build-native:
     stage: build
@@ -38,12 +38,12 @@ build-blaslapack:
     script:
       - cargo build --features blaslapack
 
-test-blaslapack:
-    stage: test
-    needs: ["build-blaslapack"]
-    image: rust:latest
-    script:
-      - cargo test --features blaslapack
+#test-blaslapack:
+#    stage: test
+#    needs: ["build-blaslapack"]
+#    image: rust:latest
+#    script:
+#      - cargo test --features blaslapack
 
 
 ls-task:
@@ -51,4 +51,5 @@ ls-task:
   needs: ["build-native"]
   image: rust:latest
   script:
-    - ls
+    - pwd
+    - ls -a
