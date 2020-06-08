@@ -23,7 +23,7 @@ fmt:
   image: rust:latest
   script:
       - rustup component add rustfmt
-      - cargo fmt -- --check
+      - cargo fmt --features native  -- --check
 
 build-blaslapack:
     stage: build
