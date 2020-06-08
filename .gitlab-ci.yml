@@ -23,6 +23,8 @@ test-native:
     image: rust:latest
     script:
       - cargo test --features native
+      - pwd
+      - ls -a
 
 fmt:
   stage: test
