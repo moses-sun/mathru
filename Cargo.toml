@@ -26,9 +26,10 @@ name = "mathru"
 path = "src/lib.rs"
 
 [features]
-
-blaslapack = ["lapack", "blas", "lapack-src", "blas-src"]
+default = ["native"]
 native = []
+blaslapack = ["lapack", "blas", "lapack-src", "blas-src"]
+
 
 [profile.dev]
 opt-level = 0
