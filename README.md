@@ -20,12 +20,12 @@ The following features are impelmented in this create:
         * [QR decomposition](https://matthiaseiholzer.gitlab.io/mathru/documentation/algebra/matrix/#qr)
         * [Hessenberg decomposition](https://matthiaseiholzer.gitlab.io/mathru/documentation/algebra/matrix/#hessenberg)
         * [Cholesky decomposition](https://matthiaseiholzer.gitlab.io/mathru/documentation/algebra/matrix/#cholesky)
+        * Eigen decomposition
         * Singular value decomposition
         * Inverse
         * Pseudo inverse
         * Determinant
         * Trace
-        * Eigenvalue, Eigenvectors
         * [Solve linear system](https://matthiaseiholzer.gitlab.io/mathru/documentation/algebra/matrix/#linear-system-resolution)
 
 * [Ordinary differential equation (ODE)](https://matthiaseiholzer.gitlab.io/mathru/documentation/analysis/differentialeq/)
@@ -43,8 +43,8 @@ The following features are impelmented in this create:
         * Bogacki-Shampine 2(3)
         * Adams-Bashforth
     * Automatic step size control with starting step size
-    * Implizit methods
-        * Implizit Euler
+    * [Implicit methods](https://matthiaseiholzer.gitlab.io/mathru/documentation/analysis/differentialeq/implicit)
+        * Implicit Euler
         * Backward differentiation formula (BDF)
 
 * [Optimization](https://matthiaseiholzer.gitlab.io/mathru/documentation/optimization)
