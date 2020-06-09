@@ -23,62 +23,6 @@ use crate::{
 /// ```math
 /// C = \frac{y(t_{0})}{ae^{at_{0}}}
 /// ```
-///
-/// In this example, we set $`a=2`$
-/// ```
-/// # #[macro_use]
-/// # extern crate mathru;
-/// # fn main()
-/// # {
-/// use mathru::{
-///     algebra::linear::Vector,
-///     analysis::differential_equation::ordinary::{AdamsBashforth, ExplicitODE},
-/// };
-///
-/// pub struct ExplicitODE1
-/// {
-///     time_span: (f64, f64),
-///     init_cond: Vector<f64>,
-/// }
-///
-/// impl Default for ExplicitODE1
-/// {
-///     fn default() -> ExplicitODE1
-///     {
-///         ExplicitODE1 { time_span: (0.0, 2.0),
-///                        init_cond: vector![0.5] }
-///     }
-/// }
-///
-/// impl ExplicitODE<f64> for ExplicitODE1
-/// {
-///     fn func(self: &Self, _t: &f64, x: &Vector<f64>) -> Vector<f64>
-///     {
-///         return x * &2.0f64;
-///     }
-///
-///     fn time_span(self: &Self) -> (f64, f64)
-///     {
-///         return self.time_span;
-///     }
-///
-///     fn init_cond(self: &Self) -> Vector<f64>
-///     {
-///         return self.init_cond.clone();
-///     }
-/// }
-///
-/// // We instanciate Heuns algorithm with a stepsize of 0.001
-/// let step_size: f64 = 0.001;
-/// let solver: AdamsBashforth<f64> = AdamsBashforth::new(1, step_size);
-///
-/// let problem: ExplicitODE1 = ExplicitODE1::default();
-///
-/// // Solve the ODE
-/// let (t, y): (Vec<f64>, Vec<Vector<f64>>) = solver.solve(&problem).unwrap();
-///
-/// # }
-/// ```
 pub struct BDF<T>
 {
     k: u8,

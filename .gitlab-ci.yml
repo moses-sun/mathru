@@ -22,14 +22,6 @@ test-native:
     script:
       - cargo test --features native
 
-fmt:
-  stage: test
-  needs: ["build-native"]
-  image: rust:latest
-  script:
-      - rustup component add rustfmt
-      - cargo fmt -- --check
-
 build-blaslapack:
     stage: build
     image: rust:latest

@@ -277,7 +277,7 @@ mod matrix
 
         let uut_t: Matrix<f32> = uut.transpose();
 
-        let uut_t_ref: Matrix<f32> = Matrix::new(1, 4, vec![1.0, 3.0, 1.0, 0.5,]);
+        let uut_t_ref: Matrix<f32> = Matrix::new(1, 4, vec![1.0, 3.0, 1.0, 0.5]);
 
         assert_eq!(uut_t_ref, uut_t);
     }

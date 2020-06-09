@@ -44,12 +44,26 @@ pub trait Real: Field + Lattice + Scalar + Exponential + Trigonometry + Power + 
 
     fn min(self: Self, a: Self) -> Self
     {
-        if self <= a { return self } else { return a }
+        if self <= a
+        {
+            return self;
+        }
+        else
+        {
+            return a;
+        }
     }
 
     fn max(self: Self, a: Self) -> Self
     {
-        if self >= a { return self } else { return a }
+        if self >= a
+        {
+            return self;
+        }
+        else
+        {
+            return a;
+        }
     }
 
     fn epsilon() -> Self;

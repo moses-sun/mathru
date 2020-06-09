@@ -99,5 +99,4 @@ impl<T> Matrix<T> where T: Field + Scalar
 
         return Ok(LUDec::new(l, u, p));
     }
-
 }

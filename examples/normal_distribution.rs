@@ -23,10 +23,13 @@ fn main()
     root_area.fill(&WHITE).unwrap();
 
     let mut ctx = ChartBuilder::on(&root_area)
-		.margin(20)
+        .margin(20)
         .set_label_area_size(LabelAreaPosition::Left, 40)
         .set_label_area_size(LabelAreaPosition::Bottom, 40)
-        .caption("Probability distribution function of Normal distribution", ("Arial", 40))
+        .caption(
+            "Probability distribution function of Normal distribution",
+            ("Arial", 40),
+        )
         .build_ranged(x_start..x_end, 0.0f64..0.45f64)
         .unwrap();
 

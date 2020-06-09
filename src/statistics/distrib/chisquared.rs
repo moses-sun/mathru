@@ -123,8 +123,9 @@ impl<T> Continuous<T> for ChiSquared<T> where T: Real
     fn quantile(self: &Self, p: T) -> T
     {
         let std_distrib: Normal<T> = Normal::new(T::zero(), T::one());
-        let q: T = T::from_f64(0.5) * (std_distrib.quantile(p) + (T::from_f64(2.0) * self.k - T::one()).sqrt()).pow
-        (&T::from_f64(2.0));
+        let q: T = T::from_f64(0.5)
+            * (std_distrib.quantile(p) + (T::from_f64(2.0) * self.k - T::one()).sqrt())
+                .pow(&T::from_f64(2.0));
         return q;
     }
 
