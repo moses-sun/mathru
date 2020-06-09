@@ -1,4 +1,4 @@
-//! Solves an ODE using backward differntiation formula
+//! Solves an ODE using backward differentiation formula
 use crate::{
     algebra::{abstr::Real, linear::vector::vector::Vector},
     analysis::differential_equation::ordinary::ImplicitODE,
@@ -8,20 +8,75 @@ use crate::{
 ///
 /// # Example
 ///
-/// For this example, we want to solve the following ordinary differiential
-/// equation:
+/// For this example, we want to solve the following stiff ordinary
+/// differiential equation:
 /// ```math
-/// \frac{dy}{dt} = ay = f(t, y)
+/// 0 = -4(y(t) -2) - y(t)^{'} = f(t, y, y^{'})
 /// ```
-/// The initial condition is $`y(0) = 0.5`$ and we solve it in the interval
-/// $`\lbrack 0, 2\rbrack`$ The following equation is the closed solution for
+/// The inial condition is $`y(0) = 1.0`$ and we solve it in the interval
+/// $`\lbrack 0, 2\rbrack`$.\ The following equation is the closed solution for
 /// this ODE:
 /// ```math
-/// y(t) = C a e^{at}
+/// y(t) = 2 - e^{-t}
 /// ```
-/// $`C`$ is a parameter and depends on the initial condition $`y(t_{0})`$
-/// ```math
-/// C = \frac{y(t_{0})}{ae^{at_{0}}}
+///
+/// ```
+/// # #[macro_use]
+/// # extern crate mathru;
+/// # fn main()
+/// # {
+/// use mathru::{
+///     algebra::linear::{Matrix, Vector},
+///     analysis::differential_equation::ordinary::{BDF, ImplicitODE},
+/// };
+///
+/// pub struct ODEProblem
+/// {
+///     time_span: (f64, f64),
+///     init_cond: Vector<f64>,
+/// }
+///
+/// impl Default for ODEProblem
+/// {
+///     fn default() -> ODEProblem
+///     {
+///         return ODEProblem { time_span: (0.0, 2.0), init_cond: vector![1.0] };
+///     }
+/// }
+///
+/// impl ImplicitODE<f64> for ODEProblem
+/// {
+///     fn func(self: &Self, _t: f64, x: &Vector<f64>) -> Vector<f64>
+///     {
+///         let result = (x * &-4.0) + 8.0;
+///         return result;
+///     }
+///
+///     fn time_span(self: &Self) -> (f64, f64)
+///     {
+///         return self.time_span;
+///     }
+///
+///     fn init_cond(self: &Self) -> Vector<f64>
+///     {
+///         return self.init_cond.clone();
+///     }
+///
+///     fn jacobian(self: &Self, _t: f64, _input: &Vector<f64>) -> Matrix<f64>
+///     {
+///         let jacobian = matrix![-4.0];
+///         return jacobian;
+///     }
+/// }
+///
+/// let step_size: f64 = 0.0001;
+/// let solver: BDF<f64> = BDF::new(2, step_size);
+///
+/// let problem: ODEProblem = ODEProblem::default();
+///
+/// // Solve the ODE
+/// let (t, x): (Vec<f64>, Vec<Vector<f64>>) = solver.solve(&problem).unwrap();
+/// # }
 /// ```
 pub struct BDF<T>
 {

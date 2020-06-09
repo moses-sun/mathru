@@ -87,7 +87,6 @@ use crate::{
 /// // Solve the ODE
 /// let (t, x): (Vec<f64>, Vec<Vector<f64>>) = solver.solve(&problem).unwrap();
 ///
-/// //assert_eq!(2.0_f64 - -2.0_f64.exp(), *x.last().unwrap().get(0));
 ///
 /// # }
 /// ```
