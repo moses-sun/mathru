@@ -29,7 +29,6 @@ document.addEventListener(\"DOMContentLoaded\", function () {
 </script>
 <link rel=\"stylesheet\" href=\"https://cdn.jsdelivr.net/npm/katex@0.10.1/dist/katex.min.css\" integrity=\"sha384-dbVIfZGuN1Yq7/1Ocstc1lUEm+AT+/rCkibIcC/OmWo5f0EA48Vf8CytHzGrSwbQ\" crossorigin=\"anonymous")]
 
-
 //! # mathru
 //!
 //! A crate that provides  mathematics functions implemented entirely in Rust.
@@ -37,7 +36,8 @@ document.addEventListener(\"DOMContentLoaded\", function () {
 //!
 //! ## Usage
 //!
-//! The library usage is described well in the API documentation - including example code.
+//! The library usage is described well in the API documentation - including
+//! example code.
 //!
 //!
 //! Add this to your `Cargo.toml`:
@@ -61,7 +61,7 @@ document.addEventListener(\"DOMContentLoaded\", function () {
 //! let a: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 2.0, -3.0, -7.0]);
 //! let b: Vector<f64> = vector![1.0; 3.0];
 //!
-//! let (l, u, p): (Matrix<f64>, Matrix<f64>, Matrix<f64>) = a.dec_lu().lup();
+//! let (l, u, p): (Matrix<f64>, Matrix<f64>, Matrix<f64>) = a.dec_lu().unwrap().lup();
 //!
 //! let b_hat = &p * &b;
 //!
@@ -71,7 +71,7 @@ document.addEventListener(\"DOMContentLoaded\", function () {
 //!
 //! println!("{}", x);
 //! # }
-//!```
+//! ```
 //!
 //!```
 //! use mathru::*;
@@ -83,113 +83,113 @@ document.addEventListener(\"DOMContentLoaded\", function () {
 //! //y = a + b * exp(c * t) = f(t)
 //! pub struct Example
 //! {
-//!		x: Vector<f64>,
-//!		y: Vector<f64>
+//! 		x: Vector<f64>,
+//! 		y: Vector<f64>
 //! }
 //!
 //! impl Example
 //! {
-//!		pub fn new(x: Vector<f64>, y: Vector<f64>) -> Example
-//!		{
-//!			Example
-//!			{
-//!				x: x,
-//!				y: y
-//!			}
-//!		}
+//! 		pub fn new(x: Vector<f64>, y: Vector<f64>) -> Example
+//! 		{
+//! 			Example
+//! 			{
+//! 				x: x,
+//! 				y: y
+//! 			}
+//! 		}
 //!
-//!		pub fn function(x: f64, beta: &Vector<f64>) -> f64
-//!		{
-//!			let beta_0: f64 = *beta.get(0);
-//!			let beta_1: f64 = *beta.get(1);
-//!			let beta_2: f64 = *beta.get(2);
-//!			let f_x: f64 = beta_0 + beta_1 * (beta_2 * x).exp();
+//! 		pub fn function(x: f64, beta: &Vector<f64>) -> f64
+//! 		{
+//! 			let beta_0: f64 = *beta.get(0);
+//! 			let beta_1: f64 = *beta.get(1);
+//! 			let beta_2: f64 = *beta.get(2);
+//! 			let f_x: f64 = beta_0 + beta_1 * (beta_2 * x).exp();
 //!
-//!			return f_x;
-//!		}
+//! 			return f_x;
+//! 		}
 //! }
 //!
 //! impl Optim<f64> for Example
 //! {
-//!		// y(x_i) - f(x_i)
-//!		fn eval(self: &Self, beta: &Vector<f64>) -> Vector<f64>
-//!		{
-//!			let f_x = self.x.clone().apply(&|x: &f64| Example::function(*x, beta));
-//!			let r: Vector<f64> = &self.y - &f_x;
-//!			return vector![r.dotp(&r)]
-//!		}
+//! 		// y(x_i) - f(x_i)
+//! 		fn eval(self: &Self, beta: &Vector<f64>) -> Vector<f64>
+//! 		{
+//! 			let f_x = self.x.clone().apply(&|x: &f64| Example::function(*x, beta));
+//! 			let r: Vector<f64> = &self.y - &f_x;
+//! 			return vector![r.dotp(&r)]
+//! 		}
 //!
-//!		fn jacobian(self: &Self, beta: &Vector<f64>) -> Matrix<f64>
-//!		{
-//!			let (x_m, _x_n) = self.x.dim();
-//!			let (beta_m, _beta_n) = beta.dim();
+//! 		fn jacobian(self: &Self, beta: &Vector<f64>) -> Matrix<f64>
+//! 		{
+//! 			let (x_m, _x_n) = self.x.dim();
+//! 			let (beta_m, _beta_n) = beta.dim();
 //!
-//!			let mut jacobian_f: Matrix<f64> = Matrix::zero(x_m, beta_m);
+//! 			let mut jacobian_f: Matrix<f64> = Matrix::zero(x_m, beta_m);
 //!
-//!			let f_x = self.x.clone().apply(&|x: &f64| Example::function(*x, beta));
-//!			let residual: Vector<f64> = &self.y - &f_x;
+//! 			let f_x = self.x.clone().apply(&|x: &f64| Example::function(*x, beta));
+//! 			let residual: Vector<f64> = &self.y - &f_x;
 //!
-//!			for i in 0..x_m
-//!			{
-//!				//let beta_0: f64 = *beta.get(0);
-//!				let beta_1: f64 = *beta.get(1);
-//!				let beta_2: f64 = *beta.get(2);
+//! 			for i in 0..x_m
+//! 			{
+//! 				//let beta_0: f64 = *beta.get(0);
+//! 				let beta_1: f64 = *beta.get(1);
+//! 				let beta_2: f64 = *beta.get(2);
 //!
-//!				let x_i: f64 = *self.x.get(i);
+//! 				let x_i: f64 = *self.x.get(i);
 //!
-//!				*jacobian_f.get_mut(i, 0) = 1.0;
-//!				*jacobian_f.get_mut(i, 1) = (beta_2 * x_i).exp();
-//!				*jacobian_f.get_mut(i, 2) = beta_1 * x_i * (beta_2 * x_i).exp();
+//! 				*jacobian_f.get_mut(i, 0) = 1.0;
+//! 				*jacobian_f.get_mut(i, 1) = (beta_2 * x_i).exp();
+//! 				*jacobian_f.get_mut(i, 2) = beta_1 * x_i * (beta_2 * x_i).exp();
 //!
-//!			}
+//! 			}
 //!
-//!			let jacobian: Matrix<f64> = (residual.transpose() * jacobian_f * -2.0).into();
-//!			return jacobian;
-//!		}
+//! 			let jacobian: Matrix<f64> = (residual.transpose() * jacobian_f * -2.0).into();
+//! 			return jacobian;
+//! 		}
 //! }
 //!
 //!
 //! fn main()
 //! {
-//!		let num_samples: usize = 100;
+//! 		let num_samples: usize = 100;
 //!
-//!		let noise: Normal<f64> = Normal::new(0.0, 0.05);
+//! 		let noise: Normal<f64> = Normal::new(0.0, 0.05);
 //!
-//!		let mut t_vec: Vec<f64> = Vec::with_capacity(num_samples);
+//! 		let mut t_vec: Vec<f64> = Vec::with_capacity(num_samples);
 //!
-//!		// Start time
-//!		let t_0 = 0.0f64;
-//!		// End time
-//!		let t_1 = 5.0f64;
+//! 		// Start time
+//! 		let t_0 = 0.0f64;
+//! 		// End time
+//! 		let t_1 = 5.0f64;
 //!
-//!		let mut y_vec: Vec<f64> = Vec::with_capacity(num_samples);
+//! 		let mut y_vec: Vec<f64> = Vec::with_capacity(num_samples);
 //!
-//!		// True function parameters
-//!		let beta: Vector<f64> = vector![0.5; 5.0; -1.0];
+//! 		// True function parameters
+//! 		let beta: Vector<f64> = vector![0.5; 5.0; -1.0];
 //!
-//!		for i in 0..num_samples
-//!		{
-//!			let t_i: f64 = (t_1 - t_0) / (num_samples as f64) * (i as f64);
+//! 		for i in 0..num_samples
+//! 		{
+//! 			let t_i: f64 = (t_1 - t_0) / (num_samples as f64) * (i as f64);
 //!
-//!			//Add some noise
-//!			y_vec.push(Example::function(t_i, &beta) + noise.random());
+//! 			//Add some noise
+//! 			y_vec.push(Example::function(t_i, &beta) + noise.random());
 //!
-//!			t_vec.push(t_i);
-//!		}
+//! 			t_vec.push(t_i);
+//! 		}
 //!
-//!		let t: Vector<f64> = Vector::new_column(num_samples, t_vec.clone());
-//!		let y: Vector<f64> = Vector::new_column(num_samples, y_vec.clone());
+//! 		let t: Vector<f64> = Vector::new_column(num_samples, t_vec.clone());
+//! 		let y: Vector<f64> = Vector::new_column(num_samples, y_vec.clone());
 //!
-//!		let example_function = Example::new(t, y);
+//! 		let example_function = Example::new(t, y);
 //!
-//!		let optim: LevenbergMarquardt<f64> = LevenbergMarquardt::new(100, 0.3, 0.95);
+//! 		let optim: LevenbergMarquardt<f64> = LevenbergMarquardt::new(100, 0.3, 0.95);
 //!
-//!		let beta_0: Vector<f64> = vector![-1.5; 1.0; -2.0];
-//!		let beta_opt: Vector<f64> = optim.minimize(&example_function, &beta_0).arg();
+//! 		let beta_0: Vector<f64> = vector![-1.5; 1.0; -2.0];
+//! 		let beta_opt: Vector<f64> = optim.minimize(&example_function, &beta_0).arg();
 //!
 //! 	println!("{}", beta_opt);
-//!	}
-//!```
+//! 	}
+//! ```
 
 #[cfg(feature = "blaslapack")]
 extern crate blas;
@@ -198,15 +198,11 @@ extern crate blas_src;
 #[cfg(feature = "blaslapack")]
 extern crate lapack;
 
-
 #[macro_use]
 pub mod algebra;
+pub mod analysis;
 pub mod elementary;
 pub mod num;
+pub mod optimization;
 pub mod special;
 pub mod statistics;
-pub mod analysis;
-pub mod optimization;
-
-
-

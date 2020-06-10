@@ -1,6 +1,5 @@
 use super::ImplicitODE;
-use crate::algebra::linear::{Vector};
-use crate::algebra::abstr::Real;
+use crate::algebra::{abstr::Real, linear::Vector};
 
 ///
 pub trait ImplicitFixedStepSizeMethod<T>
@@ -11,4 +10,3 @@ pub trait ImplicitFixedStepSizeMethod<T>
 
     fn order(self: &Self) -> u8;
 }
-

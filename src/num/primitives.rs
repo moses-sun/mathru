@@ -1,108 +1,91 @@
-use crate::algebra::abstr::cast::{ToPrimitive, AsPrimitive};
-use crate::elementary::{Exponential, Trigonometry, Power, Hyperbolic};
-use std::{u8, u16, u32, u64, u128, i8, i16, i32, i64, i128, f32, f64};
-
+use crate::{
+    algebra::abstr::cast::{AsPrimitive, ToPrimitive},
+    elementary::{Exponential, Hyperbolic, Power, Trigonometry},
+};
+use std::{f32, f64, i128, i16, i32, i64, i8, u128, u16, u32, u64, u8};
 
 #[cfg(feature = "blaslapack")]
-use crate::algebra::abstr::{Zero, Blas, Lapack};
-#[cfg(feature = "blaslapack")]
-use lapack;
+use crate::algebra::abstr::{Blas, Lapack, Zero};
 #[cfg(feature = "blaslapack")]
 use blas;
+#[cfg(feature = "blaslapack")]
+use lapack;
 
-macro_rules! impl_to_primitive_int_to_int
-{
-    ($SrcT:ty, $DstT:ty, $slf:expr) => (
-        {
-        	$slf as $DstT
-        }
-    )
+macro_rules! impl_to_primitive_int_to_int {
+    ($SrcT:ty, $DstT:ty, $slf:expr) => {{ $slf as $DstT }};
 }
 
-macro_rules! impl_to_primitive_int_to_uint
-{
-    ($SrcT:ty, $DstT:ty, $slf:expr) => (
-        {
-        	return $slf as $DstT;
-        }
-    )
+macro_rules! impl_to_primitive_int_to_uint {
+    ($SrcT:ty, $DstT:ty, $slf:expr) => {{
+        return $slf as $DstT;
+    }};
 }
 
-macro_rules! impl_to_primitive_int
-{
-    ($T:ty) => (
+macro_rules! impl_to_primitive_int {
+    ($T:ty) => {
         impl ToPrimitive for $T
         {
-
             fn to_i8(&self) -> i8
             {
-            	impl_to_primitive_int_to_int!($T, i8, *self)
+                impl_to_primitive_int_to_int!($T, i8, *self)
             }
-
 
             fn to_i16(&self) -> i16
             {
-            	impl_to_primitive_int_to_int!($T, i16, *self)
+                impl_to_primitive_int_to_int!($T, i16, *self)
             }
-
 
             fn to_i32(&self) -> i32
             {
-            	impl_to_primitive_int_to_int!($T, i32, *self)
+                impl_to_primitive_int_to_int!($T, i32, *self)
             }
-
 
             fn to_i64(&self) -> i64
             {
-            	impl_to_primitive_int_to_int!($T, i64, *self)
+                impl_to_primitive_int_to_int!($T, i64, *self)
             }
 
-           	fn to_i128(&self) -> i128
+            fn to_i128(&self) -> i128
             {
-            	impl_to_primitive_int_to_int!($T, i128, *self)
+                impl_to_primitive_int_to_int!($T, i128, *self)
             }
 
             fn to_u8(&self) -> u8
             {
-            	impl_to_primitive_int_to_uint!($T, u8, *self)
+                impl_to_primitive_int_to_uint!($T, u8, *self)
             }
-
 
             fn to_u16(&self) -> u16
             {
-            	impl_to_primitive_int_to_uint!($T, u16, *self)
+                impl_to_primitive_int_to_uint!($T, u16, *self)
             }
-
 
             fn to_u32(&self) -> u32
             {
-            	impl_to_primitive_int_to_uint!($T, u32, *self)
+                impl_to_primitive_int_to_uint!($T, u32, *self)
             }
-
 
             fn to_u64(&self) -> u64
             {
-            	impl_to_primitive_int_to_uint!($T, u64, *self)
+                impl_to_primitive_int_to_uint!($T, u64, *self)
             }
 
             fn to_u128(&self) -> u128
             {
-            	impl_to_primitive_int_to_uint!($T, u128, *self)
+                impl_to_primitive_int_to_uint!($T, u128, *self)
             }
-
 
             fn to_f32(&self) -> f32
             {
-            	return *self as f32;
+                return *self as f32;
             }
-
 
             fn to_f64(&self) -> f64
             {
-            	return *self as f64;
+                return *self as f64;
             }
         }
-    )
+    };
 }
 
 impl_to_primitive_int!(i8);
@@ -112,92 +95,82 @@ impl_to_primitive_int!(i64);
 impl_to_primitive_int!(i128);
 
 macro_rules! impl_to_primitive_uint_to_int {
-    ($DstT:ty, $slf:expr) => (
-        {
-        	return $slf as $DstT;
-        }
-    )
+    ($DstT:ty, $slf:expr) => {{
+        return $slf as $DstT;
+    }};
 }
 
 macro_rules! impl_to_primitive_uint_to_uint {
-    ($SrcT:ty, $DstT:ty, $slf:expr) => (
-        {
-        	return $slf as $DstT;
-        }
-    )
+    ($SrcT:ty, $DstT:ty, $slf:expr) => {{
+        return $slf as $DstT;
+    }};
 }
 
-macro_rules! impl_to_primitive_uint
-{
-    ($T:ty) =>
-    (
+macro_rules! impl_to_primitive_uint {
+    ($T:ty) => {
         impl ToPrimitive for $T
         {
-
             fn to_i8(&self) -> i8
             {
-            	impl_to_primitive_uint_to_int!(i8, *self)
+                impl_to_primitive_uint_to_int!(i8, *self)
             }
-
 
             fn to_i16(&self) -> i16
             {
-            	impl_to_primitive_uint_to_int!(i16, *self)
+                impl_to_primitive_uint_to_int!(i16, *self)
             }
-
 
             fn to_i32(&self) -> i32
             {
-            	impl_to_primitive_uint_to_int!(i32, *self)
+                impl_to_primitive_uint_to_int!(i32, *self)
             }
-
 
             fn to_i64(&self) -> i64
             {
-            	impl_to_primitive_uint_to_int!(i64, *self)
+                impl_to_primitive_uint_to_int!(i64, *self)
             }
 
-			fn to_i128(&self) -> i128
+            fn to_i128(&self) -> i128
             {
-            	impl_to_primitive_uint_to_int!(i128, *self)
+                impl_to_primitive_uint_to_int!(i128, *self)
             }
 
             fn to_u8(&self) -> u8
             {
-            	impl_to_primitive_uint_to_uint!($T, u8, *self)
+                impl_to_primitive_uint_to_uint!($T, u8, *self)
             }
 
             fn to_u16(&self) -> u16
             {
-            	impl_to_primitive_uint_to_uint!($T, u16, *self)
+                impl_to_primitive_uint_to_uint!($T, u16, *self)
             }
 
             fn to_u32(&self) -> u32
             {
-            	impl_to_primitive_uint_to_uint!($T, u32, *self)
+                impl_to_primitive_uint_to_uint!($T, u32, *self)
             }
 
             fn to_u64(&self) -> u64
             {
-            	impl_to_primitive_uint_to_uint!($T, u64, *self)
+                impl_to_primitive_uint_to_uint!($T, u64, *self)
             }
 
             fn to_u128(&self) -> u128
             {
-            	impl_to_primitive_uint_to_uint!($T, u128, *self)
+                impl_to_primitive_uint_to_uint!($T, u128, *self)
             }
 
             fn to_f32(&self) -> f32
             {
-            	return *self as f32;
+                return *self as f32;
             }
 
             fn to_f64(&self) -> f64
             {
-            	return *self as f64;
+                return *self as f64;
             }
         }
-    )
+    };
 }
 
 impl_to_primitive_uint!(u8);
@@ -208,539 +181,518 @@ impl_to_primitive_uint!(u128);
 //impl_to_primitive_uint!(f32);
 //impl_to_primitive_uint!(f64);
 
-macro_rules! impl_to_primitive_float_to_float
-{
-    ($SrcT:ident, $DstT:ident, $slf:expr) => (
-    	return $slf as $DstT;
-    )
+macro_rules! impl_to_primitive_float_to_float {
+    ($SrcT:ident, $DstT:ident, $slf:expr) => {
+        return $slf as $DstT;
+    };
 }
 
-
-macro_rules! impl_to_primitive_float
-{
-    ($T:ident) =>
-    (
+macro_rules! impl_to_primitive_float {
+    ($T:ident) => {
         impl ToPrimitive for $T
         {
-
             fn to_i8(&self) -> i8
             {
-            	return *self as i8;
+                return *self as i8;
             }
-
 
             fn to_i16(&self) -> i16
             {
-            	return *self as i16;
+                return *self as i16;
             }
-
 
             fn to_i32(&self) -> i32
             {
-            	return *self as i32;
+                return *self as i32;
             }
-
 
             fn to_i64(&self) -> i64
             {
-            	return *self as i64;
+                return *self as i64;
             }
 
-			fn to_i128(&self) -> i128
+            fn to_i128(&self) -> i128
             {
-            	return *self as i128;
+                return *self as i128;
             }
 
             fn to_u8(&self) -> u8
             {
-            	return *self as u8;
+                return *self as u8;
             }
-
 
             fn to_u16(&self) -> u16
             {
-            	return *self as u16;
+                return *self as u16;
             }
 
             fn to_u32(&self) -> u32
             {
-            	return *self as u32;
+                return *self as u32;
             }
 
             fn to_u64(&self) -> u64
             {
-            	return *self as u64;
+                return *self as u64;
             }
 
-			fn to_u128(&self) -> u128
+            fn to_u128(&self) -> u128
             {
-            	return *self as u128;
+                return *self as u128;
             }
 
             fn to_f32(&self) -> f32
             {
-            	impl_to_primitive_float_to_float!($T, f32, *self)
+                impl_to_primitive_float_to_float!($T, f32, *self)
             }
 
             fn to_f64(&self) -> f64
             {
-            	impl_to_primitive_float_to_float!($T, f64, *self)
+                impl_to_primitive_float_to_float!($T, f64, *self)
             }
         }
-    )
+    };
 }
 
 impl_to_primitive_float!(f32);
 impl_to_primitive_float!(f64);
 
+macro_rules! trigonometry_impl {
+    ($t:ty, $pi: expr) => {
+        impl Trigonometry for $t
+        {
+            /// Returns the mathematic constant PI
+            fn pi() -> Self
+            {
+                $pi
+            }
 
-macro_rules! trigonometry_impl
-{
-    ($t:ty, $pi: expr) =>
-    {
-    	impl Trigonometry for $t
-		{
-			/// Returns the mathematic constant PI
-			fn pi() -> Self
-			{
-				$pi
-			}
+            /// Sinus
+            fn sin(self: &Self) -> Self
+            {
+                (*self).sin()
+            }
 
-			/// Sinus
-			fn sin(self: &Self) -> Self
-			{
-				(*self).sin()
-			}
+            /// Cosinus
+            fn cos(self: &Self) -> Self
+            {
+                (*self).cos()
+            }
 
-			/// Cosinus
-			fn cos(self: &Self) -> Self
-			{
-				(*self).cos()
-			}
+            ///Tangens
+            fn tan(self: &Self) -> Self
+            {
+                (*self).tan()
+            }
 
-			///Tangens
-			fn tan(self: &Self) -> Self
-			{
-				(*self).tan()
-			}
+            //
+            fn cot(self: &Self) -> Self
+            {
+                1.0 / self.tan()
+            }
 
+            /// Secant
+            ///
+            /// # Panics
+            ///
+            /// self = n pi + pi/2 n \in Z
+            fn sec(self: &Self) -> Self
+            {
+                1.0 / self.cos()
+            }
 
-			//
-			fn cot(self: &Self) -> Self
-			{
-				1.0 / self.tan()
-			}
+            fn csc(self: &Self) -> Self
+            {
+                1.0 / self.sin()
+            }
 
-			/// Secant
-			///
-			/// # Panics
-			///
-			/// self = n pi + pi/2 n \in Z
-			///
-			///
-			fn sec(self: &Self) -> Self
-			{
-				1.0 / self.cos()
-			}
+            /// Inverse sine function
+            ///
+            /// # Arguemnts
+            ///
+            /// -1.0 <= x <= 1.0
+            ///
+            /// # Panics
+            ///
+            /// |x| > 1.0
+            fn arcsin(self: &Self) -> Self
+            {
+                if self.abs() > 1.0
+                {
+                    panic!();
+                }
 
-			fn csc(self: &Self) -> Self
-			{
-				1.0 / self.sin()
-			}
+                self.asin()
+            }
 
-			/// Inverse sine function
-			///
-			/// # Arguemnts
-			///
-			/// -1.0 <= x <= 1.0
-			///
-			/// # Panics
-			///
-			/// |x| > 1.0
-			///
-			fn arcsin(self: &Self) -> Self
-			{
-				if self.abs() > 1.0
-				{
-					panic!();
-				}
+            /// Inverse cosine function
+            ///
+            /// # Arguemnts
+            ///
+            /// -1.0 <= x <= 1.0
+            ///
+            /// # Panics
+            ///
+            /// |x| > 1.0
+            fn arccos(self: &Self) -> Self
+            {
+                if self.abs() > 1.0
+                {
+                    panic!();
+                }
 
-				self.asin()
-			}
+                self.acos()
+            }
 
-			/// Inverse cosine function
-			///
-			/// # Arguemnts
-			///
-			/// -1.0 <= x <= 1.0
-			///
-			/// # Panics
-			///
-			/// |x| > 1.0
-			///
-			fn arccos(self: &Self) -> Self
-			{
-				if self.abs() > 1.0
-				{
-					panic!();
-				}
+            /// Computes the arctangent of a number
+            fn arctan(self: &Self) -> Self
+            {
+                self.atan()
+            }
 
-				self.acos()
-			}
+            /// Computes the arctangent
+            fn arctan2(self: &Self, other: &Self) -> Self
+            {
+                self.atan2(*other)
+            }
 
-			/// Computes the arctangent of a number
-    		///
-			fn arctan(self: &Self) -> Self
-			{
-				self.atan()
-			}
+            fn arccot(self: &Self) -> Self
+            {
+                if *self == 0.0
+                {
+                    return 0.0;
+                }
 
-			/// Computes the arctangent
-			fn arctan2(self: &Self, other: &Self) -> Self
-			{
-				self.atan2(*other)
-			}
+                if *self > 0.0
+                {
+                    return (1.0 / self).atan();
+                }
+                else
+                {
+                    return (1.0 / self).atan();
+                }
+            }
 
+            fn arcsec(self: &Self) -> Self
+            {
+                (1.0 / self).acos()
+            }
 
-			fn arccot(self: &Self) -> Self
-			{
-				if *self == 0.0
-				{
-					return 0.0
-				}
-
-				if *self > 0.0
-				{
-					return (1.0 / self).atan()
-				}
-				else
-				{
-					return (1.0 / self).atan()
-				}
-			}
-
-			fn arcsec(self: &Self) -> Self
-			{
-				(1.0 / self).acos()
-			}
-
-			fn arccsc(self: &Self) -> Self
-			{
-				(1.0 / self).asin()
-			}
-		}
-	}
+            fn arccsc(self: &Self) -> Self
+            {
+                (1.0 / self).asin()
+            }
+        }
+    };
 }
-
 
 trigonometry_impl!(f32, std::f32::consts::PI);
 trigonometry_impl!(f64, std::f64::consts::PI);
 
-macro_rules! exponential_impl
-{
-    ($t:ty, $e: expr) =>
-    {
-    	impl Exponential for $t
-		{
-			///
-			fn e() -> Self
-			{
-				$e
-			}
-			///Exponential function
-			fn exp(self: &Self) -> Self
-			{
-				(*self).exp()
-			}
+macro_rules! exponential_impl {
+    ($t:ty, $e: expr) => {
+        impl Exponential for $t
+        {
+            ///
+            fn e() -> Self
+            {
+                $e
+            }
 
-			///Logiarithm function
-			fn ln(self: &Self) -> Self
-			{
-				(*self).ln()
-			}
-		}
-	}
+            ///Exponential function
+            fn exp(self: &Self) -> Self
+            {
+                (*self).exp()
+            }
+
+            ///Logiarithm function
+            fn ln(self: &Self) -> Self
+            {
+                (*self).ln()
+            }
+        }
+    };
 }
 
 exponential_impl!(f32, f32::consts::E);
 exponential_impl!(f64, f64::consts::E);
 
-macro_rules! power_impl
-{
-    ($t:ty) =>
-    {
-    	impl Power for $t
-		{
-			fn pow(self: &Self, exp: &Self) -> Self
-			{
-				return self.powf(*exp);
-			}
+macro_rules! power_impl {
+    ($t:ty) => {
+        impl Power for $t
+        {
+            fn pow(self: &Self, exp: &Self) -> Self
+            {
+                return self.powf(*exp);
+            }
 
-			fn root(self: &Self, root: &Self) -> Self
-			{
-				return self.powf(1.0 / *root);
-			}
+            fn root(self: &Self, root: &Self) -> Self
+            {
+                return self.powf(1.0 / *root);
+            }
 
-			fn sqrt(self: &Self) -> Self
-			{
-				return self.powf(0.5);
-			}
-		}
-	}
+            fn sqrt(self: &Self) -> Self
+            {
+                return self.powf(0.5);
+            }
+        }
+    };
 }
 
 power_impl!(f32);
 power_impl!(f64);
 
-macro_rules! hyperbolic_impl
-{
-    ($t:ty) =>
-    {
-    	impl Hyperbolic for $t
-		{
-			/// Hyperbolic sine
-			fn sinh(self: &Self) -> Self
-			{
-				(*self).sinh()
-			}
+macro_rules! hyperbolic_impl {
+    ($t:ty) => {
+        impl Hyperbolic for $t
+        {
+            /// Hyperbolic sine
+            fn sinh(self: &Self) -> Self
+            {
+                (*self).sinh()
+            }
 
-			/// Hyperbolic cosine
-			fn cosh(self: &Self) -> Self
-			{
-				(*self).cosh()
-			}
+            /// Hyperbolic cosine
+            fn cosh(self: &Self) -> Self
+            {
+                (*self).cosh()
+            }
 
-			/// Hyperbolic tangens
-			///
-    		/// # Arguments
-    		///
-   			/// * `self` :
-    		///
-    		/// # Example
-    		///
-    		/// ```
-   			/// use mathru::elementary::Hyperbolic;
-    		///
-    		/// let x: f64 = 0.0_f64;
-			///
-			/// let f: f64 = x.tanh();
-			/// let g: f64 = 0.0;
-			/// let abs_difference: f64 = (f - g).abs();
-			///
-			/// assert!(abs_difference < 1.0e-10);
-    		/// ```
-			fn tanh(self: &Self) -> Self
-			{
-				(*self).tanh()
-			}
+            /// Hyperbolic tangens
+            ///
+            /// # Arguments
+            ///
+            /// * `self` :
+            ///
+            /// # Example
+            ///
+            /// ```
+            /// use mathru::elementary::Hyperbolic;
+            ///
+            /// let x: f64 = 0.0_f64;
+            ///
+            /// let f: f64 = x.tanh();
+            /// let g: f64 = 0.0;
+            /// let abs_difference: f64 = (f - g).abs();
+            ///
+            /// assert!(abs_difference < 1.0e-10);
+            /// ```
+            fn tanh(self: &Self) -> Self
+            {
+                (*self).tanh()
+            }
 
-			/// Hyperbolic cotangens
-			///
-    		/// # Arguments
-    		///
-   			/// * `self` : != 0.0
-    		///
-    		/// # Panic
-    		///
-    		/// iff self == 0.0
-    		///
-    		/// # Example
-    		///
-    		/// ```
-   			/// use mathru::elementary::Hyperbolic;
-    		///
-    		/// let x: f64 = 1.0_f64;
-			///
-			/// let f: f64 = x.coth();
-			/// let g: f64 = x.cosh() / x.sinh();
-			/// let abs_difference: f64 = (f - g).abs();
-			///
-			/// assert!(abs_difference < 1.0e-10);
-    		/// ```
-			fn coth(self: &Self) -> Self
-			{
-				if *self == 0.0
-				{
-					panic!();
-				}
+            /// Hyperbolic cotangens
+            ///
+            /// # Arguments
+            ///
+            /// * `self` : != 0.0
+            ///
+            /// # Panic
+            ///
+            /// iff self == 0.0
+            ///
+            /// # Example
+            ///
+            /// ```
+            /// use mathru::elementary::Hyperbolic;
+            ///
+            /// let x: f64 = 1.0_f64;
+            ///
+            /// let f: f64 = x.coth();
+            /// let g: f64 = x.cosh() / x.sinh();
+            /// let abs_difference: f64 = (f - g).abs();
+            ///
+            /// assert!(abs_difference < 1.0e-10);
+            /// ```
+            fn coth(self: &Self) -> Self
+            {
+                if *self == 0.0
+                {
+                    panic!();
+                }
 
-				self.cosh() / self.sinh()
-			}
+                self.cosh() / self.sinh()
+            }
 
-			/// Hyperbolic secant
-			///
-    		/// # Arguments
-    		///
-   			/// * `self` :
-    		///
-    		/// # Example
-    		///
-    		/// ```
-   			/// use mathru::elementary::Hyperbolic;
-    		///
-    		/// let x: f64 = 0.0_f64;
-			///
-			/// let f: f64 = x.sech();
-			/// let g: f64 = 1.0;
-			/// let abs_difference: f64 = (f - g).abs();
-			///
-			/// assert!(abs_difference < 1.0e-10);
-    		/// ```
-			fn sech(self: &Self) -> Self
-			{
-				1.0 / self.cosh()
-			}
+            /// Hyperbolic secant
+            ///
+            /// # Arguments
+            ///
+            /// * `self` :
+            ///
+            /// # Example
+            ///
+            /// ```
+            /// use mathru::elementary::Hyperbolic;
+            ///
+            /// let x: f64 = 0.0_f64;
+            ///
+            /// let f: f64 = x.sech();
+            /// let g: f64 = 1.0;
+            /// let abs_difference: f64 = (f - g).abs();
+            ///
+            /// assert!(abs_difference < 1.0e-10);
+            /// ```
+            fn sech(self: &Self) -> Self
+            {
+                1.0 / self.cosh()
+            }
 
-			/// Hyperbolic cosecant
-			///
-    		/// # Arguments
-    		///
-   			/// * `self` : != 0.0
-    		///
-    		/// # Panics
-    		///
-    		/// if  self == 0
-    		///
-    		/// # Example
-    		///
-    		///
-    		/// ```
-   			/// use mathru::elementary::Hyperbolic;
-    		///
-    		/// let x: f64 = 1.0_f64;
-			///
-			/// let f: f64 = x.csch();
-			/// let g: f64 = 1.0 / x.sinh();
-			/// let abs_difference: f64 = (f - g).abs();
-			///
-			/// assert!(abs_difference < 1.0e-10);
-    		/// ```
-			fn csch(self: &Self) -> Self
-			{
-				if *self == 0.0
-				{
-					panic!();
-				}
-				1.0 / self.sinh()
-			}
+            /// Hyperbolic cosecant
+            ///
+            /// # Arguments
+            ///
+            /// * `self` : != 0.0
+            ///
+            /// # Panics
+            ///
+            /// if  self == 0
+            ///
+            /// # Example
+            ///
+            ///
+            /// ```
+            /// use mathru::elementary::Hyperbolic;
+            ///
+            /// let x: f64 = 1.0_f64;
+            ///
+            /// let f: f64 = x.csch();
+            /// let g: f64 = 1.0 / x.sinh();
+            /// let abs_difference: f64 = (f - g).abs();
+            ///
+            /// assert!(abs_difference < 1.0e-10);
+            /// ```
+            fn csch(self: &Self) -> Self
+            {
+                if *self == 0.0
+                {
+                    panic!();
+                }
+                1.0 / self.sinh()
+            }
 
-			/// Hyperbolic inverse sine
-			fn arsinh(self: &Self) -> Self
-			{
-				(*self).asinh()
-			}
+            /// Hyperbolic inverse sine
+            fn arsinh(self: &Self) -> Self
+            {
+                (*self).asinh()
+            }
 
-			/// Hyperbolic inverse cosine
-			fn arcosh(self: &Self) -> Self
-			{
-				(*self).acosh()
-			}
+            /// Hyperbolic inverse cosine
+            fn arcosh(self: &Self) -> Self
+            {
+                (*self).acosh()
+            }
 
-			/// Hyperbolic inverse tangens
-			fn artanh(self: &Self) -> Self
-			{
-				if -1.0 >= *self || *self >= 1.0
-				{
-					panic!();
-				}
+            /// Hyperbolic inverse tangens
+            fn artanh(self: &Self) -> Self
+            {
+                if -1.0 >= *self || *self >= 1.0
+                {
+                    panic!();
+                }
 
-				self.atanh()
-			}
+                self.atanh()
+            }
 
-			/// Hyperbolic inverse cotan
-			///
-    		/// # Arguments
-    		///
-   			/// * `self`  -1.0 > self, self > 1.0
-    		///
-    		/// # Panics
-    		///
-    		/// if  -1.0 <= self && self <= 1.0
-    		///
-   			/// # Example
-    		///
-    		/// ```
-   			/// use mathru::algebra::abstr::{Field};
-    		/// use mathru::elementary::{Exponential, Hyperbolic};
-    		///
-    		/// let x: f64 = 2.0_f64;
-			/// let f: f64 = x.arcoth();
-			/// let g: f64 = ((x + 1.0) / ( x - 1.0)).ln() / 2.0;
-			/// let abs_difference: f64 = (f - g).abs();
-			///
-			/// assert!(abs_difference < 1.0e-10);
-    		/// ```
-			fn arcoth(self: &Self) -> Self
-			{
-				if -1.0 <= *self && *self <= 1.0
-				{
-					panic!();
-				}
+            /// Hyperbolic inverse cotan
+            ///
+            /// # Arguments
+            ///
+            /// * `self`  -1.0 > self, self > 1.0
+            ///
+            /// # Panics
+            ///
+            /// if  -1.0 <= self && self <= 1.0
+            ///
+            /// # Example
+            ///
+            /// ```
+            /// use mathru::{
+            ///     algebra::abstr::Field,
+            ///     elementary::{Exponential, Hyperbolic},
+            /// };
+            ///
+            /// let x: f64 = 2.0_f64;
+            /// let f: f64 = x.arcoth();
+            /// let g: f64 = ((x + 1.0) / (x - 1.0)).ln() / 2.0;
+            /// let abs_difference: f64 = (f - g).abs();
+            ///
+            /// assert!(abs_difference < 1.0e-10);
+            /// ```
+            fn arcoth(self: &Self) -> Self
+            {
+                if -1.0 <= *self && *self <= 1.0
+                {
+                    panic!();
+                }
 
-				((*self + 1.0) / (*self  - 1.0)).ln() / 2.0
-			}
+                ((*self + 1.0) / (*self - 1.0)).ln() / 2.0
+            }
 
-			/// Hyperbolic inverse secant
-			///
-    		/// # Arguments
-    		///
-   			/// * `self`  0.0 < self <= 1.0
-    		///
-    		/// # Panics
-    		///
-    		/// if  0.0 >= self || self > 1.0
-    		///
-    		/// # Example
-    		///
-    		/// ```
-    		/// use mathru::elementary::{Exponential, Hyperbolic};
-    		///
-    		/// let x: f64 = 0.5_f64;
-			/// let f: f64 = x.arsech();
-			/// let g: f64 = (1.0 / x).arcosh();
-			/// let abs_difference: f64 = (f - g).abs();
-			///
-			/// assert!(abs_difference < 1.0e-10);
-   			/// ```
-			fn arsech(self: &Self) -> Self
-			{
-				if 0.0 >= *self || *self > 1.0
-				{
-					panic!();
-				}
+            /// Hyperbolic inverse secant
+            ///
+            /// # Arguments
+            ///
+            /// * `self`  0.0 < self <= 1.0
+            ///
+            /// # Panics
+            ///
+            /// if  0.0 >= self || self > 1.0
+            ///
+            /// # Example
+            ///
+            /// ```
+            /// use mathru::elementary::{Exponential, Hyperbolic};
+            ///
+            /// let x: f64 = 0.5_f64;
+            /// let f: f64 = x.arsech();
+            /// let g: f64 = (1.0 / x).arcosh();
+            /// let abs_difference: f64 = (f - g).abs();
+            ///
+            /// assert!(abs_difference < 1.0e-10);
+            /// ```
+            fn arsech(self: &Self) -> Self
+            {
+                if 0.0 >= *self || *self > 1.0
+                {
+                    panic!();
+                }
 
-				(1.0 / self).arcosh()
-			}
+                (1.0 / self).arcosh()
+            }
 
-			/// Hyperbolic inverse cosecant
-			///
-    		/// # Arguments
-    		///
-   			/// * `self`  <> 0.0
-    		///
-    		/// # Panics
-    		///
-    		/// iff self = 0.0
-    		///
-    		/// # Example
-    		///
-    		/// ```
-   			/// use mathru::algebra::abstr::{Field};
-    		/// use mathru::elementary::{Exponential, Hyperbolic};
-    		///
-    		/// let x: f64 = 2.0_f64;
-			/// let f: f64 = x.arcsch();
-			/// let g: f64 = (1.0 / x).arsinh();
-			/// let abs_difference: f64 = (f - g).abs();
-			///
-			/// assert!(abs_difference < 1.0e-10);
-    		/// ```
-			fn arcsch(self: &Self) -> Self
-			{
-				(1.0 / self).arsinh()
-			}
-		}
-	}
+            /// Hyperbolic inverse cosecant
+            ///
+            /// # Arguments
+            ///
+            /// * `self`  <> 0.0
+            ///
+            /// # Panics
+            ///
+            /// iff self = 0.0
+            ///
+            /// # Example
+            ///
+            /// ```
+            /// use mathru::{
+            ///     algebra::abstr::Field,
+            ///     elementary::{Exponential, Hyperbolic},
+            /// };
+            ///
+            /// let x: f64 = 2.0_f64;
+            /// let f: f64 = x.arcsch();
+            /// let g: f64 = (1.0 / x).arsinh();
+            /// let abs_difference: f64 = (f - g).abs();
+            ///
+            /// assert!(abs_difference < 1.0e-10);
+            /// ```
+            fn arcsch(self: &Self) -> Self
+            {
+                (1.0 / self).arsinh()
+            }
+        }
+    };
 }
 
 hyperbolic_impl!(f32);
@@ -795,7 +747,6 @@ impl_as_primitive!(f32 => { f32, f64 });
 impl_as_primitive!(f64 => { f32, f64 });
 impl_as_primitive!(char => { char });
 impl_as_primitive!(bool => {});
-
 
 #[cfg(feature = "blaslapack")]
 macro_rules! lapack_impl(
@@ -966,11 +917,27 @@ macro_rules! blas_impl(
 );
 
 #[cfg(feature = "blaslapack")]
-lapack_impl!(f32, lapack::sgehrd, lapack::sorghr, lapack::sgeev, lapack::sgetrf, lapack::sgeqrf, lapack::sorgqr,
-lapack::sgetri, lapack::spotrf, lapack::sgetrs);
+lapack_impl!(f32,
+             lapack::sgehrd,
+             lapack::sorghr,
+             lapack::sgeev,
+             lapack::sgetrf,
+             lapack::sgeqrf,
+             lapack::sorgqr,
+             lapack::sgetri,
+             lapack::spotrf,
+             lapack::sgetrs);
 #[cfg(feature = "blaslapack")]
-lapack_impl!(f64, lapack::dgehrd, lapack::dorghr, lapack::dgeev, lapack::dgetrf, lapack::dgeqrf, lapack::dorgqr,
-lapack::dgetri, lapack::dpotrf, lapack::dgetrs);
+lapack_impl!(f64,
+             lapack::dgehrd,
+             lapack::dorghr,
+             lapack::dgeev,
+             lapack::dgetrf,
+             lapack::dgeqrf,
+             lapack::dorgqr,
+             lapack::dgetri,
+             lapack::dpotrf,
+             lapack::dgetrs);
 
 #[cfg(feature = "blaslapack")]
 blas_impl!(f32, blas::sgemm, blas::strsm);

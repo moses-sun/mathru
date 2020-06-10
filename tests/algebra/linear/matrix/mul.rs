@@ -1,7 +1,7 @@
 #[cfg(test)]
 mod mul
 {
-    use mathru::algebra::linear::{Vector, Matrix};
+    use mathru::algebra::linear::{Matrix, Vector};
 
     #[test]
     fn mul_1()
@@ -19,7 +19,7 @@ mod mul
     #[test]
     fn mul_2()
     {
-        let size: usize= 23;
+        let size: usize = 23;
 
         let i1: Matrix<f32> = Matrix::one(size);
         let i2: Matrix<f32> = Matrix::one(size);
@@ -38,7 +38,6 @@ mod mul
         let b: Matrix<f64> = matrix![   5.0, 8.0;
                                         6.0, 9.0;
                                         7.0, 10.0];
-
 
         let reference: Matrix<f64> = matrix![   52.0, 76.0;
                                                 81.0, 120.0];
@@ -97,8 +96,6 @@ mod mul
 
         assert_eq!(reference, res);
     }
-
-
 
     #[test]
     fn scalar_mul()

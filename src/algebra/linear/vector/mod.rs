@@ -4,7 +4,7 @@ pub mod vectorintoiterator;
 pub mod vectoriterator;
 pub mod vectoriteratormut;
 
-pub use self::vector::Vector;
-pub use self::vectorintoiterator::VectorIntoIterator;
-pub use self::vectoriterator::VectorIterator;
-pub use self::vectoriteratormut::VectorIteratorMut;
+pub use self::{
+    vector::Vector, vectorintoiterator::VectorIntoIterator, vectoriterator::VectorIterator,
+    vectoriteratormut::VectorIteratorMut,
+};

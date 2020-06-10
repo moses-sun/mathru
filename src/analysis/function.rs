@@ -1,4 +1,3 @@
-
 pub trait Function<Domain>
 {
     type Codomain;

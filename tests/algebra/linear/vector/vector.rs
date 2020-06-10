@@ -1,11 +1,13 @@
-
 #[cfg(test)]
 mod vector
 {
-    use mathru::algebra::linear::{Vector, Matrix};
-    use mathru::elementary::Power;
-    use mathru::algebra::abstr::Sign;
-
+    use mathru::{
+        algebra::{
+            abstr::Sign,
+            linear::{Matrix, Vector},
+        },
+        elementary::Power,
+    };
 
     #[test]
     fn macro_vector_column()
@@ -30,7 +32,7 @@ mod vector
     #[test]
     fn serde_0()
     {
-        let mat:Vector<f64> = vector![1.0; 2.0; 3.0];
+        let mat: Vector<f64> = vector![1.0; 2.0; 3.0];
         let serialized = serde_json::to_string(&mat).unwrap();
 
         let mat_s: Vector<f64> = serde_json::from_str(&serialized).unwrap();
@@ -43,7 +45,7 @@ mod vector
     {
         let rows: usize = 5;
 
-        let m_zero : Vector<f32> = Vector::zero(rows);
+        let m_zero: Vector<f32> = Vector::zero(rows);
         let (m, n) = m_zero.dim();
         assert_eq!(m, rows);
         assert_eq!(n, 1);
@@ -62,7 +64,7 @@ mod vector
         assert_eq!(lhs, rhs);
     }
 
-     #[test]
+    #[test]
     fn partial_eq1()
     {
         let lhs: Vector<f32> = Vector::new_column(2, vec![1.0, 2.0]);
@@ -74,11 +76,11 @@ mod vector
     fn add_owner()
     {
         let dim: usize = 5;
-        let a : Vector<f32>  = Vector::new_column(dim, vec![1.0, 2.0, 3.0, 4.0, 5.0]);
-        let b : Vector<f32> = Vector::new_column(dim, vec![1.0, 4.0, -1.0, 0.0, -7.0]);
-        let res_ref : Vector<f32>  = Vector::new_column(dim, vec![2.0, 6.0, 2.0, 4.0, -2.0]);
+        let a: Vector<f32> = Vector::new_column(dim, vec![1.0, 2.0, 3.0, 4.0, 5.0]);
+        let b: Vector<f32> = Vector::new_column(dim, vec![1.0, 4.0, -1.0, 0.0, -7.0]);
+        let res_ref: Vector<f32> = Vector::new_column(dim, vec![2.0, 6.0, 2.0, 4.0, -2.0]);
 
-        let res : Vector<f32> = a + b;
+        let res: Vector<f32> = a + b;
 
         for i in 0..dim
         {
@@ -90,11 +92,11 @@ mod vector
     fn add_borrow()
     {
         let dim: usize = 5;
-        let a : Vector<f32>  = Vector::new_column(dim, vec![1.0, 2.0, 3.0, 4.0, 5.0]);
-        let b : Vector<f32> = Vector::new_column(dim, vec![1.0, 4.0, -1.0, 0.0, -7.0]);
-        let res_ref : Vector<f32>  = Vector::new_column(dim, vec![2.0, 6.0, 2.0, 4.0, -2.0]);
+        let a: Vector<f32> = Vector::new_column(dim, vec![1.0, 2.0, 3.0, 4.0, 5.0]);
+        let b: Vector<f32> = Vector::new_column(dim, vec![1.0, 4.0, -1.0, 0.0, -7.0]);
+        let res_ref: Vector<f32> = Vector::new_column(dim, vec![2.0, 6.0, 2.0, 4.0, -2.0]);
 
-        let res : Vector<f32> = &a + &b;
+        let res: Vector<f32> = &a + &b;
 
         for i in 0..dim
         {
@@ -106,10 +108,10 @@ mod vector
     fn scalar_add_owner()
     {
         let dim: usize = 5;
-        let a : Vector<f32>  = Vector::new_column(dim, vec![1.0, 2.0, 3.0, 4.0, 5.0]);
-        let res_ref : Vector<f32>  = Vector::new_column(dim, vec![6.0, 7.0, 8.0, 9.0, 10.0]);
+        let a: Vector<f32> = Vector::new_column(dim, vec![1.0, 2.0, 3.0, 4.0, 5.0]);
+        let res_ref: Vector<f32> = Vector::new_column(dim, vec![6.0, 7.0, 8.0, 9.0, 10.0]);
 
-        let res : Vector<f32> = a + 5.0;
+        let res: Vector<f32> = a + 5.0;
 
         for i in 0..dim
         {
@@ -121,10 +123,10 @@ mod vector
     fn scalar_add_borrow()
     {
         let dim: usize = 5;
-        let a : Vector<f32>  = Vector::new_column(dim, vec![1.0, 2.0, 3.0, 4.0, 5.0]);
-        let res_ref : Vector<f32>  = Vector::new_column(dim, vec![6.0, 7.0, 8.0, 9.0, 10.0]);
+        let a: Vector<f32> = Vector::new_column(dim, vec![1.0, 2.0, 3.0, 4.0, 5.0]);
+        let res_ref: Vector<f32> = Vector::new_column(dim, vec![6.0, 7.0, 8.0, 9.0, 10.0]);
 
-        let res : Vector<f32> = &a + &5.0;
+        let res: Vector<f32> = &a + &5.0;
 
         for i in 0..dim
         {
@@ -132,14 +134,14 @@ mod vector
         }
     }
 
-     #[test]
+    #[test]
     fn scalar_sub_owner()
     {
         let dim: usize = 5;
-        let a : Vector<f32>  = Vector::new_column(dim, vec![1.0, 2.0, 3.0, 4.0, 5.0]);
-        let res_ref : Vector<f32>  = Vector::new_column(dim, vec![-4.0, -3.0, -2.0, -1.0, 0.0]);
+        let a: Vector<f32> = Vector::new_column(dim, vec![1.0, 2.0, 3.0, 4.0, 5.0]);
+        let res_ref: Vector<f32> = Vector::new_column(dim, vec![-4.0, -3.0, -2.0, -1.0, 0.0]);
 
-        let res : Vector<f32> = a - 5.0;
+        let res: Vector<f32> = a - 5.0;
 
         for i in 0..dim
         {
@@ -151,10 +153,10 @@ mod vector
     fn scalar_sub_borrow()
     {
         let dim: usize = 5;
-        let a : Vector<f32>  = Vector::new_column(dim, vec![1.0, 2.0, 3.0, 4.0, 5.0]);
-        let res_ref : Vector<f32>  = Vector::new_column(dim, vec![-4.0, -3.0, -2.0, -1.0, 0.0]);
+        let a: Vector<f32> = Vector::new_column(dim, vec![1.0, 2.0, 3.0, 4.0, 5.0]);
+        let res_ref: Vector<f32> = Vector::new_column(dim, vec![-4.0, -3.0, -2.0, -1.0, 0.0]);
 
-        let res : Vector<f32> = &a - &5.0;
+        let res: Vector<f32> = &a - &5.0;
 
         for i in 0..dim
         {
@@ -166,10 +168,10 @@ mod vector
     fn scalar_mul_owner()
     {
         let dim: usize = 5;
-        let a : Vector<f32>  = Vector::new_column(dim, vec![1.0, 2.0, 3.0, 4.0, 5.0]);
-        let res_ref : Vector<f32>  = Vector::new_column(dim, vec![5.0, 10.0, 15.0, 20.0, 25.0]);
+        let a: Vector<f32> = Vector::new_column(dim, vec![1.0, 2.0, 3.0, 4.0, 5.0]);
+        let res_ref: Vector<f32> = Vector::new_column(dim, vec![5.0, 10.0, 15.0, 20.0, 25.0]);
 
-        let res : Vector<f32> = a * 5.0;
+        let res: Vector<f32> = a * 5.0;
 
         assert_eq!(res, res_ref);
     }
@@ -178,23 +180,22 @@ mod vector
     fn scalar_mul_borrow()
     {
         let dim: usize = 5;
-        let a : Vector<f32>  = Vector::new_column(dim, vec![1.0, 2.0, 3.0, 4.0, -5.0]);
-        let res_ref : Vector<f32>  = Vector::new_column(dim, vec![-5.0, -10.0, -15.0, -20.0, 25.0]);
+        let a: Vector<f32> = Vector::new_column(dim, vec![1.0, 2.0, 3.0, 4.0, -5.0]);
+        let res_ref: Vector<f32> = Vector::new_column(dim, vec![-5.0, -10.0, -15.0, -20.0, 25.0]);
 
-        let res : Vector<f32> = &a * &-5.0;
+        let res: Vector<f32> = &a * &-5.0;
 
         assert_eq!(res, res_ref);
-
     }
 
     #[test]
     fn scalar_div_owner()
     {
         let dim: usize = 5;
-        let a : Vector<f32>  = Vector::new_column(dim, vec![20.0, -10.0, 12.0, -4.0, -1.0]);
-        let res_ref : Vector<f32>  = Vector::new_column(dim, vec![-10.0, 5.0, -6.0, 2.0, 0.5]);
+        let a: Vector<f32> = Vector::new_column(dim, vec![20.0, -10.0, 12.0, -4.0, -1.0]);
+        let res_ref: Vector<f32> = Vector::new_column(dim, vec![-10.0, 5.0, -6.0, 2.0, 0.5]);
 
-        let res : Vector<f32> = a / -2.0;
+        let res: Vector<f32> = a / -2.0;
 
         assert_eq!(res, res_ref);
     }
@@ -202,25 +203,23 @@ mod vector
     #[test]
     fn scalar_div_borrow()
     {
-        let a : Vector<f32>  = Vector::new_column(5, vec![20.0, -10.0, 12.0, -4.0, -1.0]);
-        let res_ref : Vector<f32>  = Vector::new_column(5, vec![-10.0, 5.0, -6.0, 2.0, 0.5]);
+        let a: Vector<f32> = Vector::new_column(5, vec![20.0, -10.0, 12.0, -4.0, -1.0]);
+        let res_ref: Vector<f32> = Vector::new_column(5, vec![-10.0, 5.0, -6.0, 2.0, 0.5]);
 
-        let res : Vector<f32> = &a / &-2.0;
+        let res: Vector<f32> = &a / &-2.0;
 
         assert_eq!(res, res_ref);
     }
-
-
 
     #[test]
     fn sub()
     {
         let dim: usize = 5;
-        let a : Vector<f32>  = Vector::new_column(dim, vec![1.0, 2.0, 3.0, 4.0, 5.0]);
-        let b : Vector<f32> = Vector::new_column(dim, vec![1.0, 4.0, -1.0, 0.0, -7.0]);
-        let res_ref : Vector<f32>  = Vector::new_column(dim, vec![0.0, -2.0, 4.0, 4.0, 12.0]);
+        let a: Vector<f32> = Vector::new_column(dim, vec![1.0, 2.0, 3.0, 4.0, 5.0]);
+        let b: Vector<f32> = Vector::new_column(dim, vec![1.0, 4.0, -1.0, 0.0, -7.0]);
+        let res_ref: Vector<f32> = Vector::new_column(dim, vec![0.0, -2.0, 4.0, 4.0, 12.0]);
 
-        let res : Vector<f32> = a - b;
+        let res: Vector<f32> = a - b;
 
         for i in 0..dim
         {
@@ -232,9 +231,9 @@ mod vector
     fn sub_ref()
     {
         let dim: usize = 5;
-        let a : Vector<f32>  = Vector::new_column(dim, vec![1.0, 2.0, 3.0, 4.0, 5.0]);
-        let b : Vector<f32> = Vector::new_column(dim, vec![1.0, 4.0, -1.0, 0.0, -7.0]);
-        let res_ref : Vector<f32>  = Vector::new_column(dim, vec![0.0, -2.0, 4.0, 4.0, 12.0]);
+        let a: Vector<f32> = Vector::new_column(dim, vec![1.0, 2.0, 3.0, 4.0, 5.0]);
+        let b: Vector<f32> = Vector::new_column(dim, vec![1.0, 4.0, -1.0, 0.0, -7.0]);
+        let res_ref: Vector<f32> = Vector::new_column(dim, vec![0.0, -2.0, 4.0, 4.0, 12.0]);
 
         let res: Vector<f32> = &a - &b;
 
@@ -248,8 +247,8 @@ mod vector
     fn get_0()
     {
         let dim: usize = 5;
-        let res : Vector<f32>  = Vector::new_column(dim, vec![1.0, 2.0, 3.0, 4.0, 5.0]);
-        let res_ref : Vector<f32>  = Vector::new_column(dim, vec![1.0, 2.0, 3.0, 4.0, 5.0]);
+        let res: Vector<f32> = Vector::new_column(dim, vec![1.0, 2.0, 3.0, 4.0, 5.0]);
+        let res_ref: Vector<f32> = Vector::new_column(dim, vec![1.0, 2.0, 3.0, 4.0, 5.0]);
         for i in 0..dim
         {
             assert_eq!(*(res_ref.get(i)), *(res.get(i)));
@@ -260,8 +259,8 @@ mod vector
     fn get_1()
     {
         let dim: usize = 5;
-        let res : Vector<f32>  = Vector::new_row(dim, vec![1.0, 2.0, 3.0, 4.0, 5.0]);
-        let res_ref : Vector<f32>  = Vector::new_column(dim, vec![1.0, 2.0, 3.0, 4.0, 5.0]);
+        let res: Vector<f32> = Vector::new_row(dim, vec![1.0, 2.0, 3.0, 4.0, 5.0]);
+        let res_ref: Vector<f32> = Vector::new_column(dim, vec![1.0, 2.0, 3.0, 4.0, 5.0]);
         for i in 0..dim
         {
             assert_eq!(*(res_ref.get(i)), *(res.get(i)));
@@ -272,8 +271,8 @@ mod vector
     fn get_slice_0()
     {
         let dim: usize = 5;
-        let res: Vector<f32>  = Vector::new_column(dim, vec![1.0, 2.0, 3.0, 4.0, 5.0]);
-        let res_ref: Vector<f32>  = Vector::new_column(3, vec![3.0, 4.0, 5.0]);
+        let res: Vector<f32> = Vector::new_column(dim, vec![1.0, 2.0, 3.0, 4.0, 5.0]);
+        let res_ref: Vector<f32> = Vector::new_column(3, vec![3.0, 4.0, 5.0]);
 
         let slice: Vector<f32> = res.get_slice(2, 4);
 
@@ -283,10 +282,10 @@ mod vector
     #[test]
     fn set_slice_0()
     {
-        let mut a: Vector<f32>  = Vector::new_column(5, vec![1.0, 2.0, 3.0, 4.0, 5.0]);
+        let mut a: Vector<f32> = Vector::new_column(5, vec![1.0, 2.0, 3.0, 4.0, 5.0]);
 
-        let b: Vector<f32>  = Vector::new_column(3, vec![ -3.0, -4.0, -5.0]);
-        let res_ref: Vector<f32>  = Vector::new_column(5, vec![1.0, 2.0, -3.0, -4.0, -5.0]);
+        let b: Vector<f32> = Vector::new_column(3, vec![-3.0, -4.0, -5.0]);
+        let res_ref: Vector<f32> = Vector::new_column(5, vec![1.0, 2.0, -3.0, -4.0, -5.0]);
 
         a.set_slice(&b, 2);
 
@@ -296,23 +295,22 @@ mod vector
     #[test]
     fn transpose()
     {
-        let (m_ref, n_ref) : (usize, usize) = (4, 1);
-        let  vec : Vector<f32> = Vector::new_column(m_ref, vec![2.0, 6.0, -2.5, 0.0]);
-        let vec_trans : Vector<f32>= vec.transpose();
+        let (m_ref, n_ref): (usize, usize) = (4, 1);
+        let vec: Vector<f32> = Vector::new_column(m_ref, vec![2.0, 6.0, -2.5, 0.0]);
+        let vec_trans: Vector<f32> = vec.transpose();
 
-        let (m, n) : (usize, usize) =  vec_trans.dim();
+        let (m, n): (usize, usize) = vec_trans.dim();
 
-        assert_eq!((n_ref, m_ref), (m,n));
+        assert_eq!((n_ref, m_ref), (m, n));
     }
-
 
     #[test]
     fn dotp_0()
     {
         let a: Vector<f32> = Vector::new_column(4, vec![-1.0, -3.0, 6.0, -1.0]);
         let b: Vector<f32> = Vector::new_column(4, vec![-2.0, -5.0, -3.0, 2.0]);
-        let dotp_ref : f32 = -3.0;
-        let dotp : f32 = a.dotp(&b);
+        let dotp_ref: f32 = -3.0;
+        let dotp: f32 = a.dotp(&b);
         assert_eq!(dotp_ref, dotp);
     }
 
@@ -325,15 +323,15 @@ mod vector
         assert_eq!(dotp_ref, dotp);
     }
 
-//    #[test]
-//    fn crossp()
-//    {
-//        let a: Vector<f32> = Vector::new_column(3, vec![-1.0, -3.0, 6.0]);
-//        let b: Vector<f32> = Vector::new_column(3, vec![-2.0, -5.0,-3.0]);
-//        let crossp_ref : f32 = -3.0;
-//        let cross : Vector<f32> = a.crossp(&b);
-//        assert_eq!(crossp_ref, crossp);
-//    }
+    //    #[test]
+    //    fn crossp()
+    //    {
+    //        let a: Vector<f32> = Vector::new_column(3, vec![-1.0, -3.0, 6.0]);
+    //        let b: Vector<f32> = Vector::new_column(3, vec![-2.0, -5.0,-3.0]);
+    //        let crossp_ref : f32 = -3.0;
+    //        let cross : Vector<f32> = a.crossp(&b);
+    //        assert_eq!(crossp_ref, crossp);
+    //    }
 
     #[test]
     fn dyadp()
@@ -344,11 +342,11 @@ mod vector
 
         let y: Vector<f32> = Vector::new_column(4, vec![2.0, 1.0, 0.0, 3.0]);
 
-        let dyadp_ref : Matrix<f32> = matrix![  2.0, 1.0, 0.0, 3.0;
+        let dyadp_ref: Matrix<f32> = matrix![  2.0, 1.0, 0.0, 3.0;
                                                 6.0, 3.0, 0.0, 9.0;
                                                 4.0, 2.0, 0.0, 6.0];
 
-        let p: Matrix<f32> =  x.dyadp(&y);
+        let p: Matrix<f32> = x.dyadp(&y);
 
         assert_eq!(dyadp_ref, p);
     }
@@ -359,10 +357,9 @@ mod vector
         let p: f32 = 2.0;
         let v: Vector<f32> = Vector::new_column(4, vec![-2.0, -5.0, -3.0, 2.0]);
         let p_norm_ref: f32 = 42.0.pow(&0.5);
-        let p_norm: f32 =  v.p_norm(&p);
+        let p_norm: f32 = v.p_norm(&p);
         assert_eq!(p_norm_ref, p_norm);
     }
-
 
     #[test]
     fn matrix_mul_owner()

@@ -423,8 +423,8 @@ mod complex
     fn artanh()
     {
         let a: Complex<f64> = Complex!(0.5_f64, -0.4_f64);
-	    let f: Complex<f64> = Complex!(0.5_f64, 0.0_f64);
-		let refer: Complex<f64> = ((Complex::one() + a) / (Complex::one() - a)).ln() * f;
+        let f: Complex<f64> = Complex!(0.5_f64, 0.0_f64);
+        let refer: Complex<f64> = ((Complex::one() + a) / (Complex::one() - a)).ln() * f;
 
         assert_eq!(refer, a.artanh());
     }
@@ -436,7 +436,7 @@ mod complex
     {
         let a: Complex<f64> = Complex!(1.0_f64, 2.0_f64);
         let f: Complex<f64> = Complex!(0.5_f64, 0.0_f64);
-		let refer: Complex<f64> = ((a + Complex::one()) / (a - Complex::one())).ln() * f;
+        let refer: Complex<f64> = ((a + Complex::one()) / (a - Complex::one())).ln() * f;
 
         assert_eq!(refer, a.arcoth());
     }

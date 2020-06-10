@@ -1,17 +1,36 @@
 stages:
     - build
     - test
+    - deploy
 
-cargo-build:
+cache:
+  key: ${CI_COMMIT_REF_SLUG}
+  paths:
+    - target
+
+build-native:
     stage: build
     image: rust:latest
     script:
-      - cargo build --verbose
+      - cargo build --features native
 
-
-cargo-test:
+test-native:
     stage: test
-    needs: ["cargo-build"]
+    needs: ["build-native"]
     image: rust:latest
     script:
-      - cargo test --verbose
+      - cargo test --features native
+
+build-blaslapack:
+    stage: build
+    image: rust:latest
+    script:
+      - cargo build --features blaslapack
+
+#test-blaslapack:
+#    stage: test
+#    needs: ["build-blaslapack"]
+#    image: rust:latest
+#    script:
+#      - cargo test --features blaslapack
+

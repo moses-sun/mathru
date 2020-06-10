@@ -5,7 +5,6 @@
 ///<a href="https://en.wikipedia.org/wiki/Natural_number">https://en.wikipedia.org/wiki/Natural_number</a>
 pub trait Natural
 {
-
 }
 
 macro_rules! impl_natural

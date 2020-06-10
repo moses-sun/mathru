@@ -1,5 +1,7 @@
-use crate::algebra::linear::{Vector, Matrix};
-use crate::algebra::abstr::Real;
+use crate::algebra::{
+    abstr::Real,
+    linear::{Matrix, Vector},
+};
 
 pub trait Jacobian<T>
     where T: Real

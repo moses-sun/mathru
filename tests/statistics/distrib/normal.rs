@@ -2,17 +2,16 @@
 mod normal
 {
     use mathru::statistics::distrib::{Continuous, Normal};
-    use std::f64::consts::PI as PI;
-    use std::f64::consts::E as E;
+    use std::f64::consts::{E, PI};
 
     #[test]
     fn pdf0()
     {
-        let mean : f64 = 0.0;
+        let mean: f64 = 0.0;
         let variance: f64 = 1.0;
-        let distrib : Normal<f64> = Normal::new(mean, variance);
-        let x : f64 = 0.0;
-        let prob : f64 = distrib.pdf(x);
+        let distrib: Normal<f64> = Normal::new(mean, variance);
+        let x: f64 = 0.0;
+        let prob: f64 = distrib.pdf(x);
 
         assert_eq!(0.3989422804014327, prob);
     }
@@ -109,17 +108,18 @@ mod normal
         assert_eq!(2.0 * PI * E * variance, distrib.entropy());
     }
 
-//    #[test]
-//    fn from_data()
-//    {
-//        let mean: f64 = 5.0;
-//        let variance: f64 = 10.0;
-//        let num_samples: usize = 100;
-//        let data: Vector<f64> = Normal::new(mean, variance).random_vector(num_samples);
-//
-//        let distrib: Normal = Normal::from_data(&data);
-//
-//        assert!((mean - distrib.mean()).abs() < 0.5);
-//        assert!((variance - distrib.variance()) < 1.0);
-//    }
+    //    #[test]
+    //    fn from_data()
+    //    {
+    //        let mean: f64 = 5.0;
+    //        let variance: f64 = 10.0;
+    //        let num_samples: usize = 100;
+    //        let data: Vector<f64> = Normal::new(mean,
+    // variance).random_vector(num_samples);
+    //
+    //        let distrib: Normal = Normal::from_data(&data);
+    //
+    //        assert!((mean - distrib.mean()).abs() < 0.5);
+    //        assert!((variance - distrib.variance()) < 1.0);
+    //    }
 }

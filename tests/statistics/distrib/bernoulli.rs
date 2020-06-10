@@ -1,7 +1,7 @@
 #[cfg(test)]
 mod bernoullidistrib
 {
-    use mathru::statistics::distrib::{Discrete, Bernoulli};
+    use mathru::statistics::distrib::{Bernoulli, Discrete};
 
     #[test]
     fn pmf0()
@@ -40,11 +40,11 @@ mod bernoullidistrib
     fn cdf1()
     {
         let p: f64 = 0.1;
-        let distrib : Bernoulli<f64> = Bernoulli::new(p);
+        let distrib: Bernoulli<f64> = Bernoulli::new(p);
         let x: f64 = 1.0;
         let prob: f64 = distrib.cdf(x);
 
-        assert_eq!(1.0 , prob);
+        assert_eq!(1.0, prob);
     }
 
     #[test]
@@ -58,7 +58,7 @@ mod bernoullidistrib
         assert_eq!(1.0 - p, prob);
     }
 
-     #[test]
+    #[test]
     fn mean()
     {
         let p: f64 = 0.1;
@@ -68,7 +68,7 @@ mod bernoullidistrib
         assert_eq!(p, mean);
     }
 
-     #[test]
+    #[test]
     fn variance()
     {
         let p: f64 = 0.1;

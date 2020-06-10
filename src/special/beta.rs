@@ -1,6 +1,5 @@
 //! Beta functions
-use crate::special::gamma::gamma;
-use crate::algebra::abstr::Real;
+use crate::{algebra::abstr::Real, special::gamma::gamma};
 
 /// Beta function
 ///
@@ -31,15 +30,13 @@ use crate::algebra::abstr::Real;
 pub fn beta<T>(x: T, y: T) -> T
     where T: Real
 {
-	gamma(x) * gamma(y) / gamma(x + y)
+    gamma(x) * gamma(y) / gamma(x + y)
 }
-
-
-
 
 /// Incomplete regularized beta function
 ///
-/// B(x; a,b) = &int;<sub>0</sub> <sup>x</sup> t<sup>a-1</sup>(1-t)<sup>b-1</sup> dt
+/// B(x; a,b) = &int;<sub>0</sub> <sup>x</sup>
+/// t<sup>a-1</sup>(1-t)<sup>b-1</sup> dt
 ///
 /// Fore more information:
 /// <a href="https://en.wikipedia.org/wiki/Beta_function#Incomplete_beta_function">Wikipedia Beta function</a>
@@ -89,7 +86,7 @@ pub fn beta_inc_reg<T>(x: T, a: T, b: T) -> T
     */
     if x == T::zero() || x == T::one()
     {
-        return x
+        return x;
     }
 
     /*
@@ -122,7 +119,7 @@ pub fn beta_inc_reg<T>(x: T, a: T, b: T) -> T
     let mut ai: T = T::one();
     let mut value: T = T::one();
 
-    let mut ns: i32 = ( qq + cx * psq ).to_i32();
+    let mut ns: i32 = (qq + cx * psq).to_i32();
 
     /*
       Use the Soper reduction formula.
@@ -136,13 +133,14 @@ pub fn beta_inc_reg<T>(x: T, a: T, b: T) -> T
 
     loop
     {
-        term = term * temp * rx / ( pp + ai );
+        term = term * temp * rx / (pp + ai);
         value = value + term;
         temp = term.abs();
 
         if temp <= acu && temp <= acu * value
         {
-            value = value * (pp * xx.ln() + ( qq - T::one()) * cx.ln() - (beta(a, b)).ln() ).exp() / pp;
+            value =
+                value * (pp * xx.ln() + (qq - T::one()) * cx.ln() - (beta(a, b)).ln()).exp() / pp;
 
             if indx == 0
             {
@@ -171,10 +169,10 @@ pub fn beta_inc_reg<T>(x: T, a: T, b: T) -> T
 
     if indx == 1
     {
-        return T::one() - value
+        return T::one() - value;
     }
     else
     {
-        return value
+        return value;
     }
 }

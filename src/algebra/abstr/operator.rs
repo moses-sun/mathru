@@ -1,10 +1,9 @@
 //! Operator Trait
 
 ///
-///
 pub trait Operator: Copy
 {
-	fn operator() -> Self;
+    fn operator() -> Self;
 }
 
 /// The addition operator, commonly symbolized by $`+`$.
@@ -15,7 +14,7 @@ impl Operator for Addition
 {
     fn operator() -> Self
     {
-       	Addition
+        Addition
     }
 }
 
@@ -25,8 +24,8 @@ pub struct Multiplication;
 
 impl Operator for Multiplication
 {
-	fn operator() -> Self
-	{
-		Multiplication
-	}
+    fn operator() -> Self
+    {
+        Multiplication
+    }
 }

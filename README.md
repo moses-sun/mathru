@@ -11,25 +11,25 @@ Mathru is a numeric library containing algorithms for linear algebra, analysis a
 ## Features
 The following features are impelmented in this create:
 
-* [Linear algebra](https://matthiaseiholzer.gitlab.io/mathru/documentation/algebra/linear/)
-    * [Vector](https://matthiaseiholzer.gitlab.io/mathru/documentation/algebra/linear/vector/)
-    * [Matrix](https://matthiaseiholzer.gitlab.io/mathru/documentation/algebra/linear/matrix/)
+* [Linear algebra](https://matthiaseiholzer.gitlab.io/mathru/documentation/algebra/)
+    * [Vector](https://matthiaseiholzer.gitlab.io/mathru/documentation/algebra/vector/)
+    * [Matrix](https://matthiaseiholzer.gitlab.io/mathru/documentation/algebra/matrix/)
         * Basic matrix operations(+,-,*)
         * Transposition
-        * [LU decomposition](https://matthiaseiholzer.gitlab.io/mathru/documentation/algebra/linear/matrix/#lu-with-partial-pivoting)
-        * [QR decomposition](https://matthiaseiholzer.gitlab.io/mathru/documentation/algebra/linear/matrix/#qr)
-        * [Hessenberg decomposition](https://matthiaseiholzer.gitlab.io/mathru/documentation/algebra/linear/matrix/#hessenberg)
-        * [Cholesky decomposition](https://matthiaseiholzer.gitlab.io/mathru/documentation/algebra/linear/matrix/#cholesky)
+        * [LU decomposition](https://matthiaseiholzer.gitlab.io/mathru/documentation/algebra/matrix/#lu-with-partial-pivoting)
+        * [QR decomposition](https://matthiaseiholzer.gitlab.io/mathru/documentation/algebra/matrix/#qr)
+        * [Hessenberg decomposition](https://matthiaseiholzer.gitlab.io/mathru/documentation/algebra/matrix/#hessenberg)
+        * [Cholesky decomposition](https://matthiaseiholzer.gitlab.io/mathru/documentation/algebra/matrix/#cholesky)
+        * Eigen decomposition
         * Singular value decomposition
         * Inverse
         * Pseudo inverse
         * Determinant
         * Trace
-        * Eigenvalue
-        * [Solve linear system](https://matthiaseiholzer.gitlab.io/mathru/documentation/algebra/linear/matrix/#linear-system-resolution)
+        * [Solve linear system](https://matthiaseiholzer.gitlab.io/mathru/documentation/algebra/matrix/#linear-system-resolution)
 
-* [Ordinary differential equation (ODE)](https://matthiaseiholzer.gitlab.io/mathru/documentation/analysis/differentialeq/ordinary/)
-    * [Explicit methods](https://matthiaseiholzer.gitlab.io/mathru/documentation/analysis/differentialeq/ordinary/)
+* [Ordinary differential equation (ODE)](https://matthiaseiholzer.gitlab.io/mathru/documentation/analysis/differentialeq/)
+    * [Explicit methods](https://matthiaseiholzer.gitlab.io/mathru/documentation/analysis/differentialeq/explicit)
         * Heun's method
         * Euler method
         * Midpoint method
@@ -37,14 +37,15 @@ The following features are impelmented in this create:
         * Kutta 3rd order
         * Runge-Kutta 4th order
         * Runge-Kutta-Felhberg 4(5)
-        * [Dormand-Prince 4(5)](https://matthiaseiholzer.gitlab.io/mathru/documentation/analysis/differentialeq/ordinary/explicit/#dormand-prince)
+        * Dormand-Prince 4(5)
         * Cash-Karp 4(5)
         * Tsitouras 4(5)
         * Bogacki-Shampine 2(3)
         * Adams-Bashforth
     * Automatic step size control with starting step size
-    * Implizit methods
-        * Implizit Euler
+    * [Implicit methods](https://matthiaseiholzer.gitlab.io/mathru/documentation/analysis/differentialeq/implicit)
+        * Implicit Euler
+        * Backward differentiation formula (BDF)
 
 * [Optimization](https://matthiaseiholzer.gitlab.io/mathru/documentation/optimization)
     * Gauss-Newton algorithm
@@ -95,7 +96,7 @@ Add the following lines to 'Cargo.toml' if the blas/lapack backend should be use
 [dependencies.mathru]
 version = "^0.6"
 default-features = false
-features = ["blaslapack"]
+features = "blaslapack"
 ```
 
 Then import the modules and it is ready to be used.

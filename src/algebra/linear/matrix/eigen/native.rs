@@ -1,9 +1,12 @@
-use crate::algebra::linear::{Vector, Matrix};
-use crate::algebra::abstr::{Field, Scalar};
-use crate::elementary::Power;
+use crate::algebra::{
+    abstr::Real,
+    linear::{
+        matrix::{EigenDec, Solve},
+        Matrix, Vector,
+    },
+};
 
-impl<T> Matrix<T>
-     where T: Field + Scalar + Power
+impl<T> Matrix<T> where T: Real
 {
     /// Computes the eigenvalues of a real matrix
     ///
@@ -12,25 +15,26 @@ impl<T> Matrix<T>
     ///
     ///
     ///
-    /// # Return
-    ///
-    /// Vector with unsorted eigenvalues
     ///
     /// # Example
     ///
     /// ```
-    /// use mathru::algebra::linear::{Vector, Matrix};
+    /// use mathru::algebra::linear::{matrix::EigenDec, Matrix, Vector};
     ///
     /// let a: Matrix<f64> = Matrix::new(3, 3, vec![1.0, -3.0, 3.0, 3.0, -5.0, 3.0, 6.0, -6.0, 4.0]);
-    /// let eig: Vector<f64> = a.eigenvalue();
-    ///
+    /// let eigen: EigenDec<f64> = a.dec_eigen();
     /// ```
-    pub fn eigenvalue(self: &Self) -> Vector<T>
+    pub fn dec_eigen(self: Self) -> EigenDec<T>
     {
-        let (m, n) : (usize, usize) = self.dim();
-        assert!(m == n, "Unable to compute the eigen value of a non-square matrix");
-        assert!(m != 0, "Unable to compute the eigen vlaue of an empty matrix.");
-        self.eigenvalue_r()
+        let (m, n): (usize, usize) = self.dim();
+        assert!(m == n,
+                "Unable to compute the eigen value of a non-square matrix");
+        assert!(m != 0,
+                "Unable to compute the eigen vlaue of an empty matrix.");
+
+        let value: Vector<T> = self.eigenvalue_r();
+        let vector: Matrix<T> = self.eigenvector_r(&value);
+        return EigenDec::new(value, vector);
     }
 
     #[cfg(feature = "native")]
@@ -40,13 +44,13 @@ impl<T> Matrix<T>
 
         let h: Matrix<T> = self.dec_hessenberg().h();
 
-        let (_u, t): (Matrix<T>, Matrix<T>) = h.clone().francis();
+        let (_u, t): (Matrix<T>, Matrix<T>) = h.francis();
 
         let mut eig: Vector<T> = Vector::zero(m);
 
         for i in 0..m
         {
-            *eig.get_mut(i) = t.get(i, i).clone();
+            *eig.get_mut(i) = *t.get(i, i);
         }
 
         return eig;
@@ -69,15 +73,17 @@ impl<T> Matrix<T>
             q = p - 1;
 
             // Bulge generating
-            let s: T = *self.get(q - 1,q - 1) + *self.get(p - 1,p -1);
-            let t: T = *self.get(q - 1,q - 1) * *self.get(p - 1,p - 1) - *self.get(q - 1,p - 1) * *self
-            .get(p - 1,q - 1);
+            let s: T = *self.get(q - 1, q - 1) + *self.get(p - 1, p - 1);
+            let t: T = *self.get(q - 1, q - 1) * *self.get(p - 1, p - 1)
+                       - *self.get(q - 1, p - 1) * *self.get(p - 1, q - 1);
 
             // compute first 3 elements of first column of M
-            let mut x: T = self.get(0,0).pow(&T::from_f64(2.0)) + *self.get(0,1) * *self.get(1,0) - s *
-            *self.get(0,0) + t;
-            let mut y: T = *self.get(1,0) * (*self.get(0,0) + *self.get(1, 1) - s);
-            let mut z: T = *self.get(1,0) * *self.get(2,1);
+            let mut x: T = self.get(0, 0).pow(&T::from_f64(2.0))
+                           + *self.get(0, 1) * *self.get(1, 0)
+                           - s * *self.get(0, 0)
+                           + t;
+            let mut y: T = *self.get(1, 0) * (*self.get(0, 0) + *self.get(1, 1) - s);
+            let mut z: T = *self.get(1, 0) * *self.get(2, 1);
 
             for k in 0..(p - 2)
             {
@@ -88,9 +94,8 @@ impl<T> Matrix<T>
                 {
                     let r: usize = k.max(1);
 
-                    let temp = &h * &self.get_slice(k, k + 2,r - 1, n - 1);
+                    let temp = &h * &self.get_slice(k, k + 2, r - 1, n - 1);
                     self = self.set_slice(&temp, k, r - 1);
-
                 }
 
                 {
@@ -99,12 +104,12 @@ impl<T> Matrix<T>
                     let temp: Matrix<T> = &self.get_slice(0, r - 1, k, k + 2) * &h_trans;
                     self = self.set_slice(&temp, 0, k);
 
-                    let temp1: Matrix<T> = &u.get_slice(0, n-1, k, k + 2) * &h_trans;
+                    let temp1: Matrix<T> = &u.get_slice(0, n - 1, k, k + 2) * &h_trans;
 
                     u = u.set_slice(&temp1, 0, k);
                 }
 
-                x  = *self.get(k + 1, k);
+                x = *self.get(k + 1, k);
                 y = *self.get(k + 2, k);
                 if k < (p - 3)
                 {
@@ -126,31 +131,48 @@ impl<T> Matrix<T>
                 let temp: Matrix<T> = &self.get_slice(0, p - 1, p - 2, p - 1) * &g_trans;
                 self = self.set_slice(&temp, 0, p - 2);
 
-                let u_slice = &self.get_slice(0, n - 1, p - 2, p - 1) * & g_trans;
+                let u_slice = &self.get_slice(0, n - 1, p - 2, p - 1) * &g_trans;
                 u = u.set_slice(&u_slice, 0, p - 2);
             }
 
             // check for convergence
-            let m: T = self.get(q - 1,q - 1).abs();
-            let n: T = self.get(p - 1,p - 1).abs();
-            if self.get(p - 1 ,q - 1).abs() < epsilon.clone() * (m + n)
+            let m: T = self.get(q - 1, q - 1).abs();
+            let n: T = self.get(p - 1, p - 1).abs();
+            if self.get(p - 1, q - 1).abs() < epsilon * (m + n)
             {
                 *self.get_mut(p - 1, q - 1) = T::zero();
                 p = p - 1;
             }
             else
             {
-                let k: T = self.get(q - 2,q - 2).abs();
-                let l: T = self.get(q - 1,q - 1).abs();
-                if self.get(p - 2, q - 2).abs() < epsilon.clone() * (k + l)
+                let k: T = self.get(q - 2, q - 2).abs();
+                let l: T = self.get(q - 1, q - 1).abs();
+                if self.get(p - 2, q - 2).abs() < epsilon * (k + l)
                 {
                     *self.get_mut(p - 2, q - 2) = T::zero();
                     p = p - 2;
                 }
             }
-            p = p -1;
+            p = p - 1;
         }
 
         return (u, self);
+    }
+
+    #[cfg(feature = "native")]
+    pub fn eigenvector_r(self: &Self, value: &Vector<T>) -> Matrix<T>
+    {
+        let eye: Matrix<T> = Matrix::one(self.m);
+        let zero_vector: Vector<T> = Vector::zero(self.m);
+        let mut vectors: Matrix<T> = Matrix::zero(self.m, self.m);
+
+        for (c, val) in value.iter().enumerate()
+        {
+            let diff: Matrix<T> = self - &(&eye * val);
+            let vec: Vector<T> = diff.solve(&zero_vector).unwrap();
+            vectors = vectors.set_column(&vec, c);
+        }
+
+        return vectors;
     }
 }

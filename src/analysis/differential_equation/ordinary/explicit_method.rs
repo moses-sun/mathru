@@ -1,5 +1,5 @@
 use super::ExplicitODE;
-use crate::algebra::linear::{Vector};
+use crate::algebra::linear::Vector;
 
 ///
 pub trait ExplicitFixedStepSizeMethod<T>

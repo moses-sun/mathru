@@ -1,21 +1,21 @@
-use crate::statistics::distrib::Discrete;
-use crate::statistics::combins;
-use crate::algebra::abstr::Real;
+use crate::{
+    algebra::abstr::Real,
+    statistics::{combins, distrib::Discrete},
+};
 
 /// Binomial distribution
 ///
 /// Fore more information:
 /// <a href="https://en.wikipedia.org/wiki/Binomial_distribution">https://en.wikipedia.org/wiki/Binomial_distribution</a>
-///
 pub struct Binomial<T>
 {
     p: T,
-    n: u32
+    n: u32,
 }
 
 impl<T> Binomial<T>
 {
-     /// Create a probability distribution with
+    /// Create a probability distribution with
     ///
     /// # Arguments
     ///
@@ -35,16 +35,11 @@ impl<T> Binomial<T>
     /// ```
     pub fn new(n: u32, p: T) -> Binomial<T>
     {
-        Binomial
-        {
-            p: p,
-            n: n
-        }
+        Binomial { p, n }
     }
 }
 
-impl<T> Discrete<T, u32, T> for Binomial<T>
-    where T: Real
+impl<T> Discrete<T, u32, T> for Binomial<T> where T: Real
 {
     /// Probability mass function
     ///
@@ -55,7 +50,7 @@ impl<T> Discrete<T, u32, T> for Binomial<T>
     /// # Example
     ///
     /// ```
-    /// use mathru::statistics::distrib::{Discrete, Binomial};
+    /// use mathru::statistics::distrib::{Binomial, Discrete};
     ///
     /// let distrib: Binomial<f64> = Binomial::new(5, 0.3);
     /// let x: u32 = 0;
@@ -69,7 +64,8 @@ impl<T> Discrete<T, u32, T> for Binomial<T>
         }
         let f: T = T::from_u32(combins::binom(self.n, x));
         let diff: i32 = (self.n as i32) - (x as i32);
-        let pdf: T = f * (self.p.pow(&T::from_u32(x))) * ((T::one() - self.p).pow(&T::from_i32(diff)));
+        let pdf: T =
+            f * (self.p.pow(&T::from_u32(x))) * ((T::one() - self.p).pow(&T::from_i32(diff)));
         pdf
     }
 
@@ -82,7 +78,7 @@ impl<T> Discrete<T, u32, T> for Binomial<T>
     /// # Example
     ///
     /// ```
-    /// use mathru::statistics::distrib::{Discrete, Binomial};
+    /// use mathru::statistics::distrib::{Binomial, Discrete};
     ///
     /// let distrib: Binomial<f64> = Binomial::new(5, 0.3);
     /// let x: f64 = 0.4;
@@ -105,14 +101,14 @@ impl<T> Discrete<T, u32, T> for Binomial<T>
     /// # Example
     ///
     /// ```
-    /// use mathru::statistics::distrib::{Discrete, Binomial};
+    /// use mathru::statistics::distrib::{Binomial, Discrete};
     ///
     /// let distrib: Binomial<f64> = Binomial::new(5, 0.3);
     /// let mean: f64 = distrib.mean();
     /// ```
-	fn mean<'a>(self: &'a Self) -> T
+    fn mean<'a>(self: &'a Self) -> T
     {
-        return T::from_u32(self.n) * self.p
+        return T::from_u32(self.n) * self.p;
     }
 
     /// Variance
@@ -120,13 +116,13 @@ impl<T> Discrete<T, u32, T> for Binomial<T>
     /// # Example
     ///
     /// ```
-    /// use mathru::statistics::distrib::{Discrete, Binomial};
+    /// use mathru::statistics::distrib::{Binomial, Discrete};
     ///
     /// let distrib: Binomial<f64> = Binomial::new(5, 0.3);
     /// let var: f64 = distrib.variance();
     /// ```
-	fn variance<'a>(self: &'a Self) -> T
+    fn variance<'a>(self: &'a Self) -> T
     {
-        return self.mean() * (T::one() - self.p)
+        return self.mean() * (T::one() - self.p);
     }
 }

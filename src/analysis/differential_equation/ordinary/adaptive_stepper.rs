@@ -1,40 +1,41 @@
 //! Adaptive step size stepper
 
+use super::{explicit_method::ExplicitAdaptiveMethod, ExplicitODE};
+use crate::algebra::{abstr::Real, linear::Vector};
 use std::default::Default;
-use crate::algebra::linear::{Vector};
-use crate::algebra::abstr::Real;
-use super::ExplicitODE;
-use super::explicit_method::ExplicitAdaptiveMethod;
 
 /// Adaptive step size stepper
 pub struct AdaptiveStepper<T>
 {
-     /// Step size
+    /// Step size
     n_max: u32,
     h_0: T,
     fac: T,
     fac_min: T,
     fac_max: T,
-    /// abs_tol: Absolute tolerance. This is the tolerance on local error estimates, not necessarily the global error.
-    /// Defaults to 1e-6.
+    /// abs_tol: Absolute tolerance. This is the tolerance on local error
+    /// estimates, not necessarily the global error. Defaults to 1e-6.
     abs_tol: T,
-    ///reltol: Relative tolerance. This is the tolerance on local error estimates, not necessarily the global error.
-    /// Defaults to 1e-3.
+    ///reltol: Relative tolerance. This is the tolerance on local error
+    /// estimates, not necessarily the global error. Defaults to 1e-3.
     rel_tol: T,
 }
 
-impl<T> Default for AdaptiveStepper<T>
-    where T: Real
+impl<T> Default for AdaptiveStepper<T> where T: Real
 {
     fn default() -> AdaptiveStepper<T>
     {
-        return AdaptiveStepper::new(1000, T::from_f64(0.02), T::from_f64(0.8), T::from_f64(0.001), T::from_f64
-        (3.0), T::from_f64(10e-6), T::from_f64(10e-3));
+        return AdaptiveStepper::new(1000,
+                                    T::from_f64(0.02),
+                                    T::from_f64(0.8),
+                                    T::from_f64(0.001),
+                                    T::from_f64(3.0),
+                                    T::from_f64(10e-6),
+                                    T::from_f64(10e-3));
     }
 }
 
-impl<T> AdaptiveStepper<T>
-    where T: Real
+impl<T> AdaptiveStepper<T> where T: Real
 {
     /// Creates an instance with the given step siz
     ///a
@@ -43,18 +44,22 @@ impl<T> AdaptiveStepper<T>
     ///
     /// * 'fac_min':
     /// *'fac_max': 1.5 <= fac_max <= 5.0
-    pub fn new(n_max: u32, h_0: T, fac: T, fac_min: T, fac_max: T, abs_tol: T, rel_tol: T) -> AdaptiveStepper<T>
+    pub fn new(n_max: u32,
+               h_0: T,
+               fac: T,
+               fac_min: T,
+               fac_max: T,
+               abs_tol: T,
+               rel_tol: T)
+               -> AdaptiveStepper<T>
     {
-        return AdaptiveStepper
-        {
-            n_max: n_max,
-            h_0: h_0,
-            fac: fac,
-            fac_min: fac_min,
-            fac_max: fac_max,
-            abs_tol: abs_tol,
-            rel_tol: rel_tol,
-        }
+        return AdaptiveStepper { n_max,
+                                 h_0,
+                                 fac,
+                                 fac_min,
+                                 fac_max,
+                                 abs_tol,
+                                 rel_tol };
     }
 
     /// Returns the aboslute tolerance
@@ -103,7 +108,6 @@ impl<T> AdaptiveStepper<T>
         self.rel_tol = rel_tol;
     }
 
-
     /// Solves `func` using the 4th order Runge-Kutta-Fehlberg algorithm.
     ///
     /// # Arguments
@@ -114,15 +118,18 @@ impl<T> AdaptiveStepper<T>
     ///
     /// # Return
     ///
-    /// The solver returns a vector and a matrix, containing the times used in each step of the
-    /// algorithm and the respectful values for that time.
+    /// The solver returns a vector and a matrix, containing the times used in
+    /// each step of the algorithm and the respectful values for that time.
     ///
     /// # Panic
     ///
     /// if t_span.0 > t_span.1
-    pub fn solve<F, M>(self: &Self, prob: &F, method: &M) -> Result<(Vec<T>, Vec<Vector<T>>), &'static str>
+    pub fn solve<F, M>(self: &Self,
+                       prob: &F,
+                       method: &M)
+                       -> Result<(Vec<T>, Vec<Vector<T>>), &'static str>
         where F: ExplicitODE<T>,
-               M: ExplicitAdaptiveMethod<T>
+              M: ExplicitAdaptiveMethod<T>
     {
         let t_span: (T, T) = prob.time_span();
         let t_start: T = t_span.0;
@@ -154,14 +161,13 @@ impl<T> AdaptiveStepper<T>
             let (x_n_new, x_ne): (Vector<T>, Vector<T>) = method.do_step(prob, &t_n, &x_n, &h);
             let err: T = self.calc_error(&x_n_new, &x_ne);
 
-
             if err <= T::one()
             {
                 t_n = t_n + h;
                 x_n = x_n_new;
                 t_vec.push(t_n);
                 res_vec.push(x_n.clone());
-				n = n + 1;
+                n = n + 1;
             }
 
             if err != T::zero()
@@ -180,7 +186,6 @@ impl<T> AdaptiveStepper<T>
 
                 h = s * h;
             }
-
         }
         if t_n < t_stop
         {
@@ -203,12 +208,9 @@ impl<T> AdaptiveStepper<T>
 
             let k: T = (y_i - y_hat_i) / sc;
             sum += k * k;
-
         }
 
         let p = (sum / T::from_f64(n as f64)).pow(&T::from_f64(0.5));
         return p;
     }
-
-
 }

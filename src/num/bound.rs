@@ -1,25 +1,29 @@
-use std::{u8, u16, u32, u64, u128, i8, i16, i32, i64, i128, f32, f64};
+use std::{f32, f64, i128, i16, i32, i64, i8, u128, u16, u32, u64, u8};
 
 /// Numbers which have upper and lower bounds
 pub trait Bound
 {
-	/// returns the smallest finite number this type can represent
-	fn lower_bound() -> Self;
-	/// returns the largest finite number this type can represent
-	fn upper_bound() -> Self;
+    /// returns the smallest finite number this type can represent
+    fn lower_bound() -> Self;
+    /// returns the largest finite number this type can represent
+    fn upper_bound() -> Self;
 }
 
-macro_rules! impl_bound
-{
-    ($t:ty, $min:expr, $max:expr) =>
-    {
+macro_rules! impl_bound {
+    ($t:ty, $min:expr, $max:expr) => {
         impl Bound for $t
         {
-            fn lower_bound() -> $t { $min }
+            fn lower_bound() -> $t
+            {
+                $min
+            }
 
-            fn upper_bound() -> $t { $max }
+            fn upper_bound() -> $t
+            {
+                $max
+            }
         }
-    }
+    };
 }
 
 impl_bound!(u8, u8::MIN, u8::MAX);

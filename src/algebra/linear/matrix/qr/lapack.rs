@@ -1,56 +1,12 @@
-use crate::algebra::linear::{Matrix};
-use crate::algebra::abstr::{Field, Scalar};
-use std::clone::Clone;
-use serde::{Deserialize, Serialize};
-use crate::elementary::Power;
-use crate::algebra::abstr::{Zero};
+use crate::{
+    algebra::{
+        abstr::{Field, Scalar, Zero},
+        linear::{matrix::QRDec, Matrix},
+    },
+    elementary::Power,
+};
 
-/// QR decomposition
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct QRDec<T>
-{
-    q: Matrix<T>,
-    r: Matrix<T>
-}
-
-impl<T> QRDec<T>
-{
-    pub(self) fn new(q: Matrix<T>, r: Matrix<T>) -> QRDec<T>
-    {
-        QRDec
-        {
-            q: q,
-            r: r
-        }
-    }
-
-    /// Return the q matrix of the QR decomposition
-    ///
-    /// # Arguments
-    ///
-    /// * `self`
-    ///
-    pub fn q(self: Self) -> Matrix<T>
-    {
-        return self.q;
-    }
-
-    /// Return the r matrix of the qr decomposition
-    ///
-    /// # Re
-    pub fn r(self: Self) -> Matrix<T>
-    {
-        return self.r;
-    }
-
-    pub fn qr(self: Self) -> (Matrix<T>, Matrix<T>)
-    {
-        return (self.q, self.r);
-    }
-}
-
-impl<T> Matrix<T>
-    where T: Field + Scalar + Power
+impl<T> Matrix<T> where T: Field + Scalar + Power
 {
     /// QR Decomposition with Givens rotations
     ///
@@ -65,19 +21,18 @@ impl<T> Matrix<T>
     /// # Example
     ///
     /// ```
-    /// use mathru::algebra::linear::{Matrix};
+    /// use mathru::algebra::linear::Matrix;
     ///
     /// let a: Matrix<f64> = Matrix::new(2, 2, vec![1.0, -2.0, 3.0, -7.0]);
     ///
     /// let (q, r): (Matrix<f64>, Matrix<f64>) = a.dec_qr().qr();
-    ///
     /// ```
     pub fn dec_qr<'a>(self: &'a Self) -> QRDec<T>
     {
         let (m, n) = self.dim();
         assert!(m >= n);
 
-        let (m, n) : (usize, usize) = self.dim();
+        let (m, n): (usize, usize) = self.dim();
 
         //lapack(fortran) uses column major order
         let mut self_data = self.clone().data;
@@ -90,52 +45,51 @@ impl<T> Matrix<T>
 
         let mut info: i32 = 0;
 
-        let lwork: i32 = T::xgeqrf_work_size(m_i32, n_i32, & mut self_data[..], m_i32, &mut tau[..], &mut info);
+        let lwork: i32 = T::xgeqrf_work_size(m_i32,
+                                             n_i32,
+                                             &mut self_data[..],
+                                             m_i32,
+                                             &mut tau[..],
+                                             &mut info);
 
         assert_eq!(0, info);
 
-       	let mut work: Vec<T> = vec![T::zero(); lwork as usize];
+        let mut work: Vec<T> = vec![T::zero(); lwork as usize];
 
-        T::xgeqrf(
-            m_i32,
-            n_i32,
-            &mut self_data[..],
-            m_i32,
-            tau.as_mut(),
-            &mut work,
-            lwork,
-            &mut info,
-        );
+        T::xgeqrf(m_i32,
+                  n_i32,
+                  &mut self_data[..],
+                  m_i32,
+                  tau.as_mut(),
+                  &mut work,
+                  lwork,
+                  &mut info);
 
         assert_eq!(0, info);
         let a: Matrix<T> = Matrix::new(m, n, self_data.clone());
         let r: Matrix<T> = a.r();
 
-        let lwork = T::xorgqr_work_size(
-            m_i32,
-            m_n_min as i32,
-            tau.len() as i32,
-            &mut self_data[..],
-            m_i32,
-            &mut tau[..],
-            &mut info,
-        );
+        let lwork = T::xorgqr_work_size(m_i32,
+                                        m_n_min as i32,
+                                        tau.len() as i32,
+                                        &mut self_data[..],
+                                        m_i32,
+                                        &mut tau[..],
+                                        &mut info);
 
         assert_eq!(0, info);
 
         let mut work = vec![T::zero(); lwork as usize];
 
-        T::xorgqr(
-            m_i32,
-            m_n_min as i32,
-            tau.len() as i32,
-            &mut self_data[..],
-            m_i32,
-            &mut tau[..],
-            &mut work,
-            lwork,
-            &mut info,
-        );
+        T::xorgqr(m_i32,
+                  m_n_min as i32,
+                  tau.len() as i32,
+                  &mut self_data[..],
+                  m_i32,
+                  &mut tau[..],
+                  &mut work,
+                  lwork,
+                  &mut info);
         assert_eq!(0, info);
 
         let q: Matrix<T> = Matrix::new(m, n, self_data);

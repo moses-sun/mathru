@@ -1,21 +1,16 @@
-use crate::statistics::distrib::Continuous;
-use crate::algebra::abstr::Real;
+use crate::{algebra::abstr::Real, statistics::distrib::Continuous};
 
 /// Raised Cosine distribution
 ///
 /// Fore more information:
 /// <a href="https://en.wikipedia.org/wiki/Raised_cosine_distribution">https://en.wikipedia.org/wiki/Raised_cosine_distribution</a>
-///
 pub struct RaisedCosine<T>
 {
     mu: T,
-    s: T
+    s: T,
 }
 
-
-
-impl<T> RaisedCosine<T>
-    where T: Real
+impl<T> RaisedCosine<T> where T: Real
 {
     /// Creates a probability distribution
     ///
@@ -44,18 +39,12 @@ impl<T> RaisedCosine<T>
         {
             panic!();
         }
-        RaisedCosine
-        {
-            mu: mu,
-            s: s
-        }
+        RaisedCosine { mu, s }
     }
 }
 
-impl<T> Continuous<T> for RaisedCosine<T>
-    where T: Real
+impl<T> Continuous<T> for RaisedCosine<T> where T: Real
 {
-
     /// Probability density function
     ///
     /// # Arguments
@@ -79,7 +68,8 @@ impl<T> Continuous<T> for RaisedCosine<T>
     {
         if (self.mu - self.s) <= x && x < (self.mu + self.s)
         {
-            return (T::one() + (T::pi() * (x - self.mu)/self.s).cos()) / (T::from_f64(2.0) * self.s)
+            return (T::one() + (T::pi() * (x - self.mu) / self.s).cos())
+                   / (T::from_f64(2.0) * self.s);
         }
 
         return T::zero();
@@ -97,7 +87,7 @@ impl<T> Continuous<T> for RaisedCosine<T>
     /// use std::f64::consts::PI;
     ///
     /// let distrib: RaisedCosine<f64> = RaisedCosine::new(1.0, PI);
-    /// let x: f64 = PI/2.0;
+    /// let x: f64 = PI / 2.0;
     /// let p: f64 = distrib.cdf(x);
     /// ```
     fn cdf(self: &Self, x: T) -> T
@@ -120,9 +110,7 @@ impl<T> Continuous<T> for RaisedCosine<T>
         }
     }
 
-
     /// Quantile function of inverse cdf
-    ///
     fn quantile<'a, 'b>(self: &'a Self, _p: T) -> T
     {
         unimplemented!();
@@ -138,9 +126,9 @@ impl<T> Continuous<T> for RaisedCosine<T>
     /// let distrib: RaisedCosine<f64> = RaisedCosine::new(-2.0, 0.5);
     /// let mean: f64 = distrib.mean();
     /// ```
-	fn mean<'a>(self: &'a Self) -> T
+    fn mean<'a>(self: &'a Self) -> T
     {
-        return self.mu
+        return self.mu;
     }
 
     /// Variance
@@ -154,25 +142,26 @@ impl<T> Continuous<T> for RaisedCosine<T>
     /// let distrib: RaisedCosine<f64> = RaisedCosine::new(2.0, PI);
     /// let var: f64 = distrib.variance();
     /// ```
-	fn variance(self: & Self) -> T
+    fn variance(self: &Self) -> T
     {
         return self.s * self.s * (T::from_f64(1.0 / 3.0) - T::from_f64(2.0) / (T::pi() * T::pi()));
     }
 
     ///
-	fn skewness(self: &Self) -> T
+    fn skewness(self: &Self) -> T
     {
         return T::zero();
     }
 
-	/// Median is the value separating the higher half from the lower half of a probability distribution.
-	fn median(self: &Self) -> T
+    /// Median is the value separating the higher half from the lower half of a
+    /// probability distribution.
+    fn median(self: &Self) -> T
     {
         return self.mu;
     }
 
-	///
-	fn entropy(self: &Self) -> T
+    ///
+    fn entropy(self: &Self) -> T
     {
         unimplemented!();
     }

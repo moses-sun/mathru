@@ -1,22 +1,23 @@
 //! Monoid
-use super::operator::{Operator, Addition, Multiplication};
-use super::semigroup::{Semigroup, SemigroupAdd, SemigroupMul};
-use super::identity::Identity;
+use super::{
+    identity::Identity,
+    operator::{Addition, Multiplication, Operator},
+    semigroup::{Semigroup, SemigroupAdd, SemigroupMul},
+};
 
-/// A Monoid is a triple $`(\mathbb{M}, \circ, e)`$, composed by a set $`\mathbb{M}`$ and a binary inner operation $`\circ`$
-/// and the element $`e \in \mathbb{M}`$
-/// # Definition
+/// A Monoid is a triple $`(\mathbb{M}, \circ, e)`$, composed by a set
+/// $`\mathbb{M}`$ and a binary inner operation $`\circ`$ and the element $`e
+/// \in \mathbb{M}`$ # Definition
 ///
 /// ```math
 /// \circ: \mathbb{M} \times \mathbb{M} \rightarrow \mathbb{M} , (x, y) \mapsto x \circ y
 /// ```
 /// 1. associativity <br>
-/// $`\forall x, y, z \in \mathbb{M}`$: $`x \circ (y \circ z) = (x \circ y) \circ z`$
-/// 2. $`e`$ neutral element <br>
+/// $`\forall x, y, z \in \mathbb{M}`$: $`x \circ (y \circ z) = (x \circ y)
+/// \circ z`$ 2. $`e`$ neutral element <br>
 /// $`\forall x \in \mathbb{M}`$: $`x \circ e = e \circ x = x`$
 pub trait Monoid<O: Operator>: Semigroup<O> + Identity<O>
 {
-
 }
 
 macro_rules! impl_monoid
@@ -36,7 +37,6 @@ impl_monoid!(Multiplication; mul; u8, u16, u32, u64, u128, i8, i16, i32, i64, i1
 
 pub trait MonoidAdd: Monoid<Addition> + SemigroupAdd + Zero
 {
-
 }
 
 macro_rules! impl_monoidadd
@@ -56,7 +56,6 @@ impl_monoidadd!(u8, u16, u32, u64, u128, i8, i16, i32, i64, i128, f32, f64);
 
 pub trait MonoidMul: Monoid<Multiplication> + SemigroupMul + One
 {
-
 }
 
 macro_rules! impl_monoidmul
@@ -73,7 +72,6 @@ macro_rules! impl_monoidmul
 );
 
 impl_monoidmul!(u8, u16, u32, u64, u128, i8, i16, i32, i64, i128, f32, f64);
-
 
 pub trait One
 {
@@ -122,4 +120,3 @@ macro_rules! impl_zero
 
 impl_zero!(0; u8, u16, u32, u64, u128, i8, i16, i32, i64, i128);
 impl_zero!(0.0; f32, f64);
-

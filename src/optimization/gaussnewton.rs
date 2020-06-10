@@ -1,33 +1,29 @@
-use crate::algebra::linear::{Vector, Matrix};
-use crate::optimization::{Optim, OptimResult};
+use crate::{
+    algebra::{
+        abstr::Real,
+        linear::{Matrix, Vector},
+    },
+    optimization::{Optim, OptimResult},
+};
 use std::marker::PhantomData;
-use crate::algebra::abstr::Real;
-
 
 /// Gauss-Newton method
-///
-///
 pub struct GaussNewton<T>
 {
     iters: u64,
-	__phantom: PhantomData<T>
+    __phantom: PhantomData<T>,
 }
 
 impl<T> GaussNewton<T>
 {
     pub fn new(iters: u64) -> GaussNewton<T>
     {
-        GaussNewton
-        {
-            iters: iters,
-            __phantom: PhantomData
-        }
+        GaussNewton { iters,
+                      __phantom: PhantomData }
     }
-
 }
 
-impl<T> GaussNewton<T>
-    where T: Real
+impl<T> GaussNewton<T> where T: Real
 {
     /// Minimize function func
     ///
@@ -50,7 +46,6 @@ impl<T> GaussNewton<T>
             let f_x_n: Vector<T> = func.eval(&x_n);
             let delta_x_n: Vector<T> = jacobian_x_n.pinv() * f_x_n;
             x_n = x_n - delta_x_n;
-
         }
 
         return OptimResult::new(x_n);

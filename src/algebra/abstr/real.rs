@@ -1,7 +1,5 @@
 use super::{Field, Lattice, Scalar};
-use crate::elementary::{Exponential, Trigonometry, Power, Hyperbolic};
-
-
+use crate::elementary::{Exponential, Hyperbolic, Power, Trigonometry};
 
 macro_rules! impl_real
 {
@@ -33,42 +31,40 @@ macro_rules! impl_real
 
 impl_real!(f32, f32; f64, f64);
 
-
 /// Real number
 ///
 ///<a href="https://en.wikipedia.org/wiki/Real_number">https://en.wikipedia.org/wiki/Real_number</a>
 pub trait Real: Field + Lattice + Scalar + Exponential + Trigonometry + Power + Hyperbolic
 {
-	/// Returns the smallest integer greater than or equal to a number.
-	fn ceil(self: &Self) -> Self;
+    /// Returns the smallest integer greater than or equal to a number.
+    fn ceil(self: &Self) -> Self;
 
-	/// Returns the largest integer less than or equal to a number.
-	fn floor(self: &Self) -> Self;
+    /// Returns the largest integer less than or equal to a number.
+    fn floor(self: &Self) -> Self;
 
-	fn min(self: Self, a: Self) -> Self
+    fn min(self: Self, a: Self) -> Self
     {
-    	if self <= a
-		{
-			return self
-		}
-		else
-		{
-			return a
-		}
+        if self <= a
+        {
+            return self;
+        }
+        else
+        {
+            return a;
+        }
     }
 
     fn max(self: Self, a: Self) -> Self
     {
-    	if self >= a
-		{
-			return self
-		}
-		else
-		{
-			return a
-		}
+        if self >= a
+        {
+            return self;
+        }
+        else
+        {
+            return a;
+        }
     }
 
     fn epsilon() -> Self;
 }
-

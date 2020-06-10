@@ -1,43 +1,15 @@
-use crate::algebra::linear::{Matrix};
-use crate::elementary::Power;
-use crate::algebra::abstr::{Field, Scalar};
-use std::clone::Clone;
-use serde::{Deserialize, Serialize};
+use crate::{
+    algebra::{
+        abstr::{Field, Scalar},
+        linear::{matrix::CholeskyDec, Matrix},
+    },
+    elementary::Power,
+};
 
-/// Result of a cholesky decomposition
-///
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct CholeskyDec<T>
+impl<T> Matrix<T> where T: Field + Scalar + Power
 {
-    l: Matrix<T>
-}
-
-impl<T> CholeskyDec<T>
-    where T: Field + Scalar
-{
-    pub fn new(m: Matrix<T>) -> CholeskyDec<T>
-    {
-        CholeskyDec
-        {
-            l: m
-        }
-    }
-}
-
-impl<T> CholeskyDec<T>
-{
-    /// Return the l matrix
-    pub fn l(self: Self) -> Matrix<T>
-    {
-        return self.l
-    }
-}
-
-impl<T> Matrix<T>
-    where T: Field + Scalar + Power
-{
-    /// Decomposes the symetric, positive definite quadractic matrix A into a lower triangular matrix L
-    /// A = L L^T
+    /// Decomposes the symetric, positive definite quadractic matrix A into a
+    /// lower triangular matrix L A = L L^T
     ///
     /// # Arguments
     ///
@@ -63,7 +35,7 @@ impl<T> Matrix<T>
     /// let l: (Matrix<f64>) = a.dec_cholesky().unwrap().l();
     /// # }
     /// ```
-    pub fn dec_cholesky<'a>(self: &'a Self) -> Option<CholeskyDec<T>>
+    pub fn dec_cholesky<'a>(self: &'a Self) -> Result<CholeskyDec<T>, ()>
     {
         let (m, n): (usize, usize) = self.dim();
         assert_eq!(m, n);
@@ -71,7 +43,7 @@ impl<T> Matrix<T>
     }
 
     #[cfg(feature = "blaslapack")]
-    fn dec_cholesky_r<'a>(self: &'a Self) -> Option<CholeskyDec<T>>
+    fn dec_cholesky_r<'a>(self: &'a Self) -> Result<CholeskyDec<T>, ()>
     {
         let (_m, n) = self.dim();
         let n_i32: i32 = n as i32;
@@ -80,21 +52,15 @@ impl<T> Matrix<T>
 
         let mut l_data: Vec<T> = self.clone().data;
 
-        T::xpotrf(
-            'L',
-            n_i32,
-            l_data.as_mut_slice(),
-            n_i32,
-            &mut info,
-        );
+        T::xpotrf('L', n_i32, l_data.as_mut_slice(), n_i32, &mut info);
 
         if info < 0
         {
-            return None
+            return Err(());
         }
         //assert!(info >= 0);
 
-        let mut l: Matrix<T> =  Matrix::new(n, n, l_data);
+        let mut l: Matrix<T> = Matrix::new(n, n, l_data);
 
         //fill above diagonal with zeros
         for i in 0..n
@@ -105,6 +71,6 @@ impl<T> Matrix<T>
             }
         }
 
-        return Some(CholeskyDec::new(l));
+        return Ok(CholeskyDec::new(l));
     }
 }

@@ -1,4 +1,3 @@
-
 pub trait Substitute<T>
 {
     fn substitute_forward(self: &Self, b: T) -> T;

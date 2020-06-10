@@ -1,9 +1,11 @@
 //! Semigroup
-use super::magma::{Magma, MagmaAdd, MagmaMul};
-use super::operator::{Operator, Addition, Multiplication};
+use super::{
+    magma::{Magma, MagmaAdd, MagmaMul},
+    operator::{Addition, Multiplication, Operator},
+};
 
-/// A Semigroup is a pair $`(\mathbb{S}, \circ)`$, composed by a set $`\mathbb{S}`$ and a binary inner operation $`\circ`$:
-/// # Definition
+/// A Semigroup is a pair $`(\mathbb{S}, \circ)`$, composed by a set
+/// $`\mathbb{S}`$ and a binary inner operation $`\circ`$: # Definition
 ///
 /// ```math
 /// \circ: \mathbb{S} \times \mathbb{S} \rightarrow \mathbb{S} , (x, y) \mapsto x \circ y
@@ -18,7 +20,6 @@ pub trait Semigroup<O: Operator + Copy>: Magma<O>
         return self.clone().operate(y.clone()).operate(z.clone()) == self.operate(y.operate(z));
     }
 }
-
 
 macro_rules! impl_semigroup
 (
@@ -37,7 +38,6 @@ impl_semigroup!(Multiplication; mul; u8, u16, u32, u64, u128, i8, i16, i32, i64,
 
 pub trait SemigroupAdd: Semigroup<Addition> + MagmaAdd
 {
-
 }
 
 macro_rules! impl_semigroupadd
@@ -57,7 +57,6 @@ impl_semigroupadd!(u8, u16, u32, u64, u128, i8, i16, i32, i64, i128, f32, f64);
 
 pub trait SemigroupMul: Semigroup<Multiplication> + MagmaMul
 {
-
 }
 
 macro_rules! impl_semigroupmul

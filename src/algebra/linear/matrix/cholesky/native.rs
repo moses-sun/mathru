@@ -1,43 +1,15 @@
-use crate::algebra::linear::{Matrix};
-use crate::elementary::Power;
-use crate::algebra::abstr::{Field, Scalar};
-use std::clone::Clone;
-use serde::{Deserialize, Serialize};
+use crate::{
+    algebra::{
+        abstr::{Field, Scalar},
+        linear::{matrix::CholeskyDec, Matrix},
+    },
+    elementary::Power,
+};
 
-/// Result of a cholesky decomposition
-///
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct CholeskyDec<T>
+impl<T> Matrix<T> where T: Field + Scalar + Power
 {
-    l: Matrix<T>
-}
-
-impl<T> CholeskyDec<T>
-    where T: Field + Scalar
-{
-    pub fn new(m: Matrix<T>) -> CholeskyDec<T>
-    {
-        CholeskyDec
-        {
-            l: m
-        }
-    }
-}
-
-impl<T> CholeskyDec<T>
-{
-    /// Return the l matrix
-    pub fn l(self: Self) -> Matrix<T>
-    {
-        return self.l
-    }
-}
-
-impl<T> Matrix<T>
-    where T: Field + Scalar + Power
-{
-    /// Decomposes the symetric, positive definite quadractic matrix A into a lower triangular matrix L
-    /// A = L L^T
+    /// Decomposes the symetric, positive definite quadractic matrix A into a
+    /// lower triangular matrix L A = L L^T
     ///
     /// # Arguments
     ///
@@ -63,14 +35,14 @@ impl<T> Matrix<T>
     /// let l: (Matrix<f64>) = a.dec_cholesky().unwrap().l();
     /// # }
     /// ```
-    pub fn dec_cholesky<'a>(self: &'a Self) -> Option<CholeskyDec<T>>
+    pub fn dec_cholesky<'a>(self: &'a Self) -> Result<CholeskyDec<T>, ()>
     {
         let (m, n): (usize, usize) = self.dim();
         assert_eq!(m, n);
         self.dec_cholesky_r()
     }
 
-    fn dec_cholesky_r<'a>(self: &'a Self) -> Option<CholeskyDec<T>>
+    fn dec_cholesky_r<'a>(self: &'a Self) -> Result<CholeskyDec<T>, ()>
     {
         let (m, n) = self.dim();
         let exponent_sqrt: T = T::from_f64(0.5);
@@ -78,7 +50,7 @@ impl<T> Matrix<T>
 
         for i in 0..n
         {
-            for j in 0..i+1
+            for j in 0..i + 1
             {
                 let mut sum = T::zero();
                 for k in 0..j
@@ -96,7 +68,6 @@ impl<T> Matrix<T>
                 }
             }
         }
-        return Some(CholeskyDec::new(l));
+        return Ok(CholeskyDec::new(l));
     }
-
 }

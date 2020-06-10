@@ -1,22 +1,21 @@
-use crate::statistics::distrib::Continuous;
-use crate::special::{beta, gamma, hypergeometrical};
-use crate::algebra::abstr::Real;
+use crate::{
+    algebra::abstr::Real,
+    special::{beta, gamma, hypergeometrical},
+    statistics::distrib::Continuous,
+};
 
 /// T distribution
 ///
 /// Fore more information:
 /// <a href="https://en.wikipedia.org/wiki/T_distribution">https://en.wikipedia.org/wiki/T_distribution</a>
-///
 pub struct T<K>
 {
     // degrees of freedom
     n: K,
 }
 
-impl<K> T<K>
-    where K: Real
+impl<K> T<K> where K: Real
 {
-
     /// Create a probability distribution
     ///
     /// # Arguments
@@ -41,15 +40,11 @@ impl<K> T<K>
             panic!()
         }
 
-        T
-        {
-            n: n,
-        }
+        T { n }
     }
 }
 
-impl<K> Continuous<K> for T<K>
-    where K: Real
+impl<K> Continuous<K> for T<K> where K: Real
 {
     /// Probability density function
     ///
@@ -69,8 +64,10 @@ impl<K> Continuous<K> for T<K>
     /// ```
     fn pdf(self: &Self, x: K) -> K
     {
-        gamma::gamma((self.n + K::one()) / K::from_f64(2.0)) * (K::one() + x.pow(&K::from_f64(2.0)) / self.n).pow(&(-
-        (self.n + K::one()) / K::from_f64(2.0))) / ((self.n * K::pi()).sqrt() * gamma::gamma(self.n / K::from_f64(2.0)))
+        gamma::gamma((self.n + K::one()) / K::from_f64(2.0))
+        * (K::one() + x.pow(&K::from_f64(2.0)) / self.n).pow(&(-(self.n + K::one())
+                                                               / K::from_f64(2.0)))
+        / ((self.n * K::pi()).sqrt() * gamma::gamma(self.n / K::from_f64(2.0)))
     }
 
     /// Cumulative distribution function
@@ -91,15 +88,16 @@ impl<K> Continuous<K> for T<K>
     fn cdf(self: &Self, x: K) -> K
     {
         let k: K = (self.n + K::one()) / K::from_f64(2.0);
-        let f21: K = hypergeometrical::f21(K::from_f64(0.5), k, K::from_f64(1.5), -(x.pow(&K::from_f64(2.0))) /
-        self.n);
-        return K::from_f64(0.5) + x * gamma::gamma(k) * f21 / ((self.n * K::pi()).sqrt() * gamma::gamma(self.n /
-        K::from_f64(2.0)))
+        let f21: K = hypergeometrical::f21(K::from_f64(0.5),
+                                           k,
+                                           K::from_f64(1.5),
+                                           -(x.pow(&K::from_f64(2.0))) / self.n);
+        return K::from_f64(0.5)
+               + x * gamma::gamma(k) * f21
+                 / ((self.n * K::pi()).sqrt() * gamma::gamma(self.n / K::from_f64(2.0)));
     }
 
-
     /// Quantile function of inverse cdf
-    ///
     fn quantile(self: &Self, _p: K) -> K
     {
         unimplemented!();
@@ -119,7 +117,7 @@ impl<K> Continuous<K> for T<K>
     /// let distrib: T<f64> = T::new(1.2);
     /// let mean: f64 = distrib.mean();
     /// ```
-	fn mean(self: &Self) -> K
+    fn mean(self: &Self) -> K
     {
         if self.n > K::one()
         {
@@ -138,11 +136,11 @@ impl<K> Continuous<K> for T<K>
     /// let distrib: T<f64> = T::new(2.2);
     /// let var: f64 = distrib.variance();
     /// ```
-	fn variance(self: &Self) -> K
+    fn variance(self: &Self) -> K
     {
         if self.n > K::from_f64(2.0)
         {
-            return self.n / (self.n - K::from_f64(2.0))
+            return self.n / (self.n - K::from_f64(2.0));
         }
         if self.n > K::one()
         {
@@ -158,8 +156,7 @@ impl<K> Continuous<K> for T<K>
     /// # Panics
     ///
     /// if self.n <= 3
-    ///
-	fn skewness(self: &Self) -> K
+    fn skewness(self: &Self) -> K
     {
         if self.n <= K::from_f64(3.0)
         {
@@ -168,18 +165,20 @@ impl<K> Continuous<K> for T<K>
         return K::zero();
     }
 
-	/// Median is the value separating the higher half from the lower half of a probability distribution.
-	fn median(self: &Self) -> K
+    /// Median is the value separating the higher half from the lower half of a
+    /// probability distribution.
+    fn median(self: &Self) -> K
     {
         return K::zero();
     }
 
-	///
-	fn entropy(self: &Self) -> K
+    ///
+    fn entropy(self: &Self) -> K
     {
         let a: K = (self.n + K::one()) / K::from_f64(2.0);
         let b: K = self.n / K::from_f64(2.0);
 
-        return (a * (gamma::gamma(a) - gamma::gamma(b))) + (self.n.sqrt() * beta::beta(a, K::from_f64(0.5))).ln();
+        return (a * (gamma::gamma(a) - gamma::gamma(b)))
+               + (self.n.sqrt() * beta::beta(a, K::from_f64(0.5))).ln();
     }
 }

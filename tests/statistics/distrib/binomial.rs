@@ -1,8 +1,7 @@
-
 #[cfg(test)]
 mod binomialdistrib
 {
-    use mathru::statistics::distrib::{Discrete, Binomial};
+    use mathru::statistics::distrib::{Binomial, Discrete};
 
     #[test]
     fn pmf0()

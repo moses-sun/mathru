@@ -1,18 +1,19 @@
-/// Matrix
-
-use std::clone::Clone;
-use crate::algebra::abstr::{Scalar, Identity, Addition, Multiplication, Field};
-use crate::algebra::linear::Vector;
-use std::fmt::Display;
-use std::fmt;
-use rand;
-use rand::Rng;
+use super::{
+    MatrixColumnIterator, MatrixColumnIteratorMut, MatrixIntoIterator, MatrixIterator,
+    MatrixIteratorMut, MatrixRowIterator, MatrixRowIteratorMut,
+};
+use crate::{
+    algebra::{
+        abstr::{Addition, Field, Identity, Multiplication, Scalar},
+        linear::{matrix::Substitute, Vector},
+    },
+    elementary::Power,
+};
+use rand::{self, Rng};
 use serde::{Deserialize, Serialize};
-use super::{MatrixIntoIterator, MatrixIterator, MatrixIteratorMut, MatrixRowIterator, MatrixRowIteratorMut, MatrixColumnIterator,
-MatrixColumnIteratorMut};
-//use std::cmp::min;
-use crate::algebra::linear::matrix::{Substitute};
-use crate::elementary::Power;
+/// Matrix
+use std::clone::Clone;
+use std::{fmt, fmt::Display};
 
 use std::convert::From;
 
@@ -55,7 +56,6 @@ macro_rules! matrix
     }
 }
 
-
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Matrix<T>
 {
@@ -64,97 +64,66 @@ pub struct Matrix<T>
     /// Num of columns which the matrix ha
     pub(crate) n: usize,
     /// Matrix entries
-    pub(crate) data:  Vec<T>
+    pub(crate) data: Vec<T>,
 }
 
-impl<T> From<Vector<T>> for Matrix<T>
-    where T: Field + Scalar
+impl<T> From<Vector<T>> for Matrix<T> where T: Field + Scalar
 {
     fn from(v: Vector<T>) -> Self
     {
-        let (v_m, v_n) : (usize, usize) = v.dim();
+        let (v_m, v_n): (usize, usize) = v.dim();
 
         return Matrix::new(v_m, v_n, v.convert_to_vec());
     }
-
 }
 
-
-
-impl<T> IntoIterator for Matrix<T>
-    where T: Field + Scalar
+impl<T> IntoIterator for Matrix<T> where T: Field + Scalar
 {
-    type Item = T;
     type IntoIter = MatrixIntoIterator<T>;
+    type Item = T;
 
     fn into_iter(self) -> Self::IntoIter
     {
-        MatrixIntoIterator
-        {
-            iter: self.data.into_iter(),
-            //_phantom: PhantomData::default()
-        }
+        MatrixIntoIterator { iter: self.data.into_iter() }
     }
 }
-
 
 impl<T> Matrix<T>
 {
     pub fn iter(self: &Self) -> MatrixIterator<T>
     {
-        MatrixIterator
-        {
-            iter: self.data.iter()
-        }
+        MatrixIterator { iter: self.data.iter() }
     }
 
     pub fn iter_mut(self: &mut Self) -> MatrixIteratorMut<T>
     {
-        MatrixIteratorMut
-        {
-            iter: self.data.iter_mut()
-        }
+        MatrixIteratorMut { iter: self.data.iter_mut() }
     }
 
     pub fn row_iter(self: &Self) -> MatrixRowIterator<T>
     {
-        MatrixRowIterator
-        {
-            iter: self.data.iter()
-        }
+        MatrixRowIterator { iter: self.data.iter() }
     }
 
     pub fn row_iter_mut(self: &mut Self) -> MatrixRowIteratorMut<T>
     {
-        MatrixRowIteratorMut
-        {
-            iter: self.data.iter_mut()
-        }
+        MatrixRowIteratorMut { iter: self.data.iter_mut() }
     }
 
     pub fn column_iter(self: &Self) -> MatrixColumnIterator<T>
     {
-        MatrixColumnIterator
-        {
-            iter: self.data.iter()
-        }
+        MatrixColumnIterator { iter: self.data.iter() }
     }
 
     pub fn column_iter_mut(self: &mut Self) -> MatrixColumnIteratorMut<T>
     {
-        MatrixColumnIteratorMut
-        {
-            iter: self.data.iter_mut()
-        }
+        MatrixColumnIteratorMut { iter: self.data.iter_mut() }
     }
 }
 
-
-impl<T> Matrix<T>
-    where T: Clone
+impl<T> Matrix<T> where T: Clone
 {
     /// Applies the function f on every element in the matrix
-    ///
     pub fn apply_mut(mut self: Matrix<T>, f: &dyn Fn(&T) -> T) -> Matrix<T>
     {
         self.data = self.data.iter().map(f).collect::<Vec<T>>();
@@ -167,24 +136,23 @@ impl<T> Matrix<T>
     }
 }
 
-
 //impl<T> Matrix<T>
- //   where T: Field + Scalar
+//   where T: Field + Scalar
 //{
-    /// Returns the transposed matrix
-    ///
-    /// # Example
-    ///
-    /// ```
-    /// use mathru::algebra::linear::{Matrix};
-    ///
-    /// let mut a: Matrix<f64> = Matrix::new(2, 2, vec![1.0, -2.0, 3.0, -7.0]);
-    /// a = a.transpose();
-    ///
-    /// let a_trans: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 3.0, -2.0, -7.0]);
-    ///
-    /// assert_eq!(a_trans, a);
-    /// ```
+/// Returns the transposed matrix
+///
+/// # Example
+///
+/// ```
+/// use mathru::algebra::linear::Matrix;
+///
+/// let mut a: Matrix<f64> = Matrix::new(2, 2, vec![1.0, -2.0, 3.0, -7.0]);
+/// a = a.transpose();
+///
+/// let a_trans: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 3.0, -2.0, -7.0]);
+///
+/// assert_eq!(a_trans, a);
+/// ```
 //    pub fn transpose(self: &Self) -> Self
 //    {
 //        let mut trans : Matrix<T> = Matrix::zero(self.n, self.m);
@@ -201,10 +169,8 @@ impl<T> Matrix<T>
 //    }
 //}
 
-impl<T> Matrix<T>
-    where T: Field + Scalar
+impl<T> Matrix<T> where T: Field + Scalar
 {
-
     pub fn gcd(mut m: usize, mut n: usize) -> usize
     {
         while m != 0
@@ -216,16 +182,17 @@ impl<T> Matrix<T>
         n
     }
 
-    /// Function to transpose a matrix without allocating memory for the transposed matrix
+    /// Function to transpose a matrix without allocating memory for the
+    /// transposed matrix
     ///
     /// catanzaro.name/papers/PPoPP-2014.pdf
     /// TODO
     /// # Example
-	///
-	/// ```
-	/// use mathru::algebra::linear::{Matrix};
-	///
-	/// let mut uut: Matrix<f64> = Matrix::new(4, 2, vec![1.0, 0.0, 3.0, 0.0, 1.0, -7.0, 0.5, 0.25]);
+    ///
+    /// ```
+    /// use mathru::algebra::linear::Matrix;
+    ///
+    /// let mut uut: Matrix<f64> = Matrix::new(4, 2, vec![1.0, 0.0, 3.0, 0.0, 1.0, -7.0, 0.5, 0.25]);
     /// uut = uut.transpose();
     ///
     /// let refer: Matrix<f64> = Matrix::new(2, 4, vec![1.0, 1.0, 0.0, -7.0, 3.0, 0.5, 0.0, 0.25]);
@@ -240,102 +207,99 @@ impl<T> Matrix<T>
         {
             for j in 0..n
             {
-                *matrix_t.get_mut(j, i)  = *self.get(i, j);
+                *matrix_t.get_mut(j, i) = *self.get(i, j);
             }
         }
 
         return matrix_t;
     }
-//    pub fn transpose_r(mut self: Self) -> Matrix<T>
-//    {
-//        let gcdiv: usize = Matrix::<T>::gcd(self.m, self.n);
-//
-//        let a: usize = self.m / gcdiv;
-//        let b: usize = self.n / gcdiv;
-//
-//        let bigger: usize = self.m.max(self.n);
-//
-//        let mut temp : Vec<T> = Vec::with_capacity(bigger);
-//        //Bad
-//        unsafe {temp.set_len(bigger)};
-//
-//        if gcdiv > 1
-//        {
-//            for j in 0..self.n
-//            {
-//                for i in 0..self.m
-//                {
-//                    temp[i]  = *self.get(self.gather(i, j, b), j)
-//                    //temp[i] = self.data[self.gather(i, j, b) * self.n + j];
-//                }
-//
-//                for i in 0..self.m
-//                {
-//                    *self.get_mut(i, j) = temp[i];
-//                    //self.data[i * self.n + j] = temp[i];
-//                }
-//            }
-//        }
-//
-//        for i in 0..self.m
-//        {
-//            for j in 0..self.n
-//            {
-//                temp[self.scatter_da(i, j, b)] = *self.get(i, j);
-//                //temp[self.scatter_da(i, j, b)] = self.data[i * self.n + j];
-//            }
-//
-//            for j in 0..self.n
-//            {
-//                *self.get_mut(i, j) = temp[j];
-//                //self.data[i * self.n + j] = temp[j];
-//            }
-//        }
-//
-//        for j in 0..self.n
-//        {
-//            for i in 0..self.m
-//            {
-//                temp[i] = *self.get(self.gather_sa(i, j, a), j);
-//                //temp[i] =  self.data[self.gather_sa(i, j, a) * self.n + j];
-//            }
-//
-//            for i in 0..self.m
-//            {
-//                *self.get_mut(i, j) = temp[i];
-//                //self.data[i * self.n + j] = temp[i];
-//            }
-//        }
-//
-//        let temp_m : usize = self.m;
-//        self.m = self.n;
-//        self.n = temp_m;
-//
-//        return self;
-//    }
-//
-//    fn gather<'a>(self: &'a Self, i: usize, j: usize, b: usize) -> usize
-//    {
-//        return (i + (j / b)) % self.m;
-//    }
-//
-//    fn gather_sa<'a>(self: &'a Self, i: usize, j: usize, a: usize) -> usize
-//    {
-//        return (j + i * self.n - i / a) % self.m;
-//    }
-//
-//    fn scatter_da<'a>(self: &'a Self, i: usize, j: usize, b: usize) -> usize
-//    {
-//        return (((i + j / b) % self.m) + j * self.m) % self.n;
-//    }
-
+    //    pub fn transpose_r(mut self: Self) -> Matrix<T>
+    //    {
+    //        let gcdiv: usize = Matrix::<T>::gcd(self.m, self.n);
+    //
+    //        let a: usize = self.m / gcdiv;
+    //        let b: usize = self.n / gcdiv;
+    //
+    //        let bigger: usize = self.m.max(self.n);
+    //
+    //        let mut temp : Vec<T> = Vec::with_capacity(bigger);
+    //        //Bad
+    //        unsafe {temp.set_len(bigger)};
+    //
+    //        if gcdiv > 1
+    //        {
+    //            for j in 0..self.n
+    //            {
+    //                for i in 0..self.m
+    //                {
+    //                    temp[i]  = *self.get(self.gather(i, j, b), j)
+    //                    //temp[i] = self.data[self.gather(i, j, b) * self.n + j];
+    //                }
+    //
+    //                for i in 0..self.m
+    //                {
+    //                    *self.get_mut(i, j) = temp[i];
+    //                    //self.data[i * self.n + j] = temp[i];
+    //                }
+    //            }
+    //        }
+    //
+    //        for i in 0..self.m
+    //        {
+    //            for j in 0..self.n
+    //            {
+    //                temp[self.scatter_da(i, j, b)] = *self.get(i, j);
+    //                //temp[self.scatter_da(i, j, b)] = self.data[i * self.n + j];
+    //            }
+    //
+    //            for j in 0..self.n
+    //            {
+    //                *self.get_mut(i, j) = temp[j];
+    //                //self.data[i * self.n + j] = temp[j];
+    //            }
+    //        }
+    //
+    //        for j in 0..self.n
+    //        {
+    //            for i in 0..self.m
+    //            {
+    //                temp[i] = *self.get(self.gather_sa(i, j, a), j);
+    //                //temp[i] =  self.data[self.gather_sa(i, j, a) * self.n + j];
+    //            }
+    //
+    //            for i in 0..self.m
+    //            {
+    //                *self.get_mut(i, j) = temp[i];
+    //                //self.data[i * self.n + j] = temp[i];
+    //            }
+    //        }
+    //
+    //        let temp_m : usize = self.m;
+    //        self.m = self.n;
+    //        self.n = temp_m;
+    //
+    //        return self;
+    //    }
+    //
+    //    fn gather<'a>(self: &'a Self, i: usize, j: usize, b: usize) -> usize
+    //    {
+    //        return (i + (j / b)) % self.m;
+    //    }
+    //
+    //    fn gather_sa<'a>(self: &'a Self, i: usize, j: usize, a: usize) -> usize
+    //    {
+    //        return (j + i * self.n - i / a) % self.m;
+    //    }
+    //
+    //    fn scatter_da<'a>(self: &'a Self, i: usize, j: usize, b: usize) -> usize
+    //    {
+    //        return (((i + j / b) % self.m) + j * self.m) % self.n;
+    //    }
 }
 
 // # TODO conditinal comppilation
-impl<T> Substitute<Vector<T>> for Matrix<T>
-    where T: Field + Scalar
+impl<T> Substitute<Vector<T>> for Matrix<T> where T: Field + Scalar
 {
-
     fn substitute_forward(self: &Self, b: Vector<T>) -> Vector<T>
     {
         return self.substitute_forward_vector_r(b);
@@ -347,10 +311,8 @@ impl<T> Substitute<Vector<T>> for Matrix<T>
     }
 }
 
-impl<T> Substitute<Matrix<T>> for Matrix<T>
-    where T: Field + Scalar 
+impl<T> Substitute<Matrix<T>> for Matrix<T> where T: Field + Scalar
 {
-
     fn substitute_forward(self: &Self, b: Matrix<T>) -> Matrix<T>
     {
         return self.substitute_forward_matrix_r(b);
@@ -362,10 +324,8 @@ impl<T> Substitute<Matrix<T>> for Matrix<T>
     }
 }
 
-impl<T> Matrix<T>
-    where T: Field + Scalar 
+impl<T> Matrix<T> where T: Field + Scalar
 {
-
     #[cfg(feature = "native")]
     pub fn substitute_forward_vector_r(self: &Self, mut b: Vector<T>) -> Vector<T>
     {
@@ -380,7 +340,6 @@ impl<T> Matrix<T>
 
         return b;
     }
-
 
     #[cfg(feature = "native")]
     pub fn substitute_forward_matrix_r(self: &Self, mut b: Matrix<T>) -> Matrix<T>
@@ -403,11 +362,18 @@ impl<T> Matrix<T>
     {
         for k in (0..self.n).rev()
         {
-            for l in (k+1..self.n).rev()
+            for l in (k + 1..self.n).rev()
             {
                 *b.get_mut(k) = *b.get(k) - *self.get(k, l) * *b.get(l);
             }
-            *b.get_mut(k) = *b.get(k) / *self.get(k, k);
+            if *self.get(k, k) != T::zero()
+            {
+                *b.get_mut(k) = *b.get(k) / *self.get(k, k);
+            }
+            else
+            {
+                *b.get_mut(k) = T::one();
+            }
         }
 
         return b;
@@ -416,27 +382,34 @@ impl<T> Matrix<T>
     #[cfg(feature = "native")]
     pub fn substitute_backward_matrix_r(self: &Self, mut b: Matrix<T>) -> Matrix<T>
     {
-
         let min = std::cmp::min(self.m, self.n);
 
         for k in (0..min).rev()
         {
-            for l in (k+1..min).rev()
+            for l in (k + 1..min).rev()
             {
                 b.set_row(&(b.get_row(k) - (b.get_row(l) * *self.get(k, l))), k);
             }
-            b.set_row( &(b.get_row(k) / *self.get(k, k)), k);
+            b.set_row(&(b.get_row(k) / *self.get(k, k)), k);
         }
 
         return b;
     }
 
-
     #[cfg(feature = "blaslapack")]
     pub fn substitute_forward_matrix_r(self: &Self, mut b: Matrix<T>) -> Matrix<T>
     {
-        T::xtrsm('L', 'L', 'N', 'N', b.m as i32, b.n as i32, T::one(), self.data.as_slice(), self.m as i32, b.data.as_mut_slice(), b
-        .m as i32);
+        T::xtrsm('L',
+                 'L',
+                 'N',
+                 'N',
+                 b.m as i32,
+                 b.n as i32,
+                 T::one(),
+                 self.data.as_slice(),
+                 self.m as i32,
+                 b.data.as_mut_slice(),
+                 b.m as i32);
         return b;
     }
 
@@ -445,16 +418,34 @@ impl<T> Matrix<T>
     {
         let (b_m, b_n): (usize, usize) = b.dim();
         let mut b_data = b.convert_to_vec();
-        T::xtrsm('L', 'L', 'N', 'N', b_m as i32, b_n as i32, T::one(), self.data.as_slice(), self.m as i32, b_data
-        .as_mut_slice(), b_m as i32);
+        T::xtrsm('L',
+                 'L',
+                 'N',
+                 'N',
+                 b_m as i32,
+                 b_n as i32,
+                 T::one(),
+                 self.data.as_slice(),
+                 self.m as i32,
+                 b_data.as_mut_slice(),
+                 b_m as i32);
         return Vector::new_column(b_m, b_data);
     }
 
     #[cfg(feature = "blaslapack")]
     pub fn substitute_backward_matrix_r(self: &Self, mut b: Matrix<T>) -> Matrix<T>
     {
-        T::xtrsm('L', 'U', 'N', 'N', b.m as i32, b.n as i32, T::one(), self.data.as_slice(), self.m as i32, b.data.as_mut_slice(), b
-        .m as i32);
+        T::xtrsm('L',
+                 'U',
+                 'N',
+                 'N',
+                 b.m as i32,
+                 b.n as i32,
+                 T::one(),
+                 self.data.as_slice(),
+                 self.m as i32,
+                 b.data.as_mut_slice(),
+                 b.m as i32);
         return b;
     }
 
@@ -463,23 +454,29 @@ impl<T> Matrix<T>
     {
         let (b_m, b_n): (usize, usize) = b.dim();
         let mut b_data = b.convert_to_vec();
-        T::xtrsm('L', 'U', 'N', 'N', b_m as i32, b_n as i32, T::one(), self.data.as_slice(), self.m as i32, b_data
-        .as_mut_slice(), b_m as i32);
+        T::xtrsm('L',
+                 'U',
+                 'N',
+                 'N',
+                 b_m as i32,
+                 b_n as i32,
+                 T::one(),
+                 self.data.as_slice(),
+                 self.m as i32,
+                 b_data.as_mut_slice(),
+                 b_m as i32);
         return Vector::new_column(b_m, b_data);
     }
 }
 
-
-impl<T> Matrix<T>
-    where T: Field + Scalar + Power
+impl<T> Matrix<T> where T: Field + Scalar + Power
 {
-
     /// Calculates the determinant
     ///
     /// # Example
     ///
     /// ```
-    /// use mathru::algebra::linear::{Matrix};
+    /// use mathru::algebra::linear::Matrix;
     ///
     /// let a: Matrix<f64> = Matrix::new(2, 2, vec![1.0, -2.0, 3.0, -7.0]);
     /// let determinant_a: f64 = a.det();
@@ -492,24 +489,29 @@ impl<T> Matrix<T>
 
         if self.m == 1
         {
-            return self.get(0, 0).clone();
+            return *self.get(0, 0);
         }
 
         if self.m == 2
         {
-            let a_11: T = self.get(0, 0).clone();
-            let a_12: T = self.get(0, 1).clone();
-            let a_21: T = self.get(1, 0).clone();
-            let a_22: T = self.get(1, 1).clone();
+            let a_11: T = *self.get(0, 0);
+            let a_12: T = *self.get(0, 1);
+            let a_21: T = *self.get(1, 0);
+            let a_22: T = *self.get(1, 1);
             return a_11 * a_22 - a_12 * a_21;
         }
 
-        let (_l, u, p): (Matrix<T>, Matrix<T>, Matrix<T>) = self.dec_lu().lup();
+        let (_l, u, p) = match self.dec_lu()
+        {
+            Err(_e) => return T::zero(),
+            Ok(dec) => dec.lup(),
+        };
+
         let mut det: T = T::one();
 
         for i in 0..self.m
         {
-			det *= u.get(i, i).clone();
+            det *= *u.get(i, i);
         }
 
         let mut counter: usize = 0;
@@ -524,12 +526,11 @@ impl<T> Matrix<T>
         let mut perm: T = T::one();
         if counter != 0
         {
-            perm = (-T::one()).pow( &T::from_u128(counter as u128 - 1));
+            perm = (-T::one()).pow(&T::from_u128(counter as u128 - 1));
         }
 
-        perm * det
+        return perm * det;
     }
-
 
     /// Calculates the trace of a matrix
     ///
@@ -543,7 +544,7 @@ impl<T> Matrix<T>
     /// # Example
     ///
     /// ```
-    /// use mathru::algebra::linear::{Matrix};
+    /// use mathru::algebra::linear::Matrix;
     ///
     /// let a: Matrix<f64> = Matrix::new(2, 2, vec![1.0, -2.0, 3.0, -7.0]);
     /// let tr: f64 = a.trace();
@@ -562,36 +563,28 @@ impl<T> Matrix<T>
         let mut sum: T = T::zero();
         for i in 0..m
         {
-            sum += self.get(i, i).clone();
+            sum += *self.get(i, i);
         }
 
         return sum;
     }
 }
 
-
-
-
 #[cfg(feature = "native")]
-impl<T> Matrix<T>
-    where T: Clone
+impl<T> Matrix<T> where T: Scalar
 {
     pub(super) fn swap_rows<'a>(self: &'a mut Self, i: usize, j: usize)
     {
         for k in 0..self.n
         {
-            let temp: T = self.get(i, k).clone();
-            *(self.get_mut(i, k)) = self.get(j, k).clone();
+            let temp: T = *self.get(i, k);
+            *(self.get_mut(i, k)) = *self.get(j, k);
             *(self.get_mut(j, k)) = temp;
         }
     }
 }
 
-
-
-
-impl<T> Matrix<T>
-    where T: Field + Scalar
+impl<T> Matrix<T> where T: Field + Scalar
 {
     //
     // returns column vector
@@ -624,7 +617,6 @@ impl<T> Matrix<T>
         v
     }
 
-
     /// set column
     pub fn set_column(mut self: Self, column: &Vector<T>, i: usize) -> Matrix<T>
     {
@@ -648,8 +640,6 @@ impl<T> Matrix<T>
     /// * 'i'
     ///
     /// # Panics
-    ///
-    ///
     pub fn set_row(self: &mut Self, row: &Vector<T>, i: usize)
     {
         let (_m, n): (usize, usize) = row.dim();
@@ -663,15 +653,10 @@ impl<T> Matrix<T>
             *(self.get_mut(i, k)) = *row.get(k);
         }
     }
-
-
 }
 
-impl<T> Matrix<T>
-    where T: Field + Scalar + Power
+impl<T> Matrix<T> where T: Field + Scalar + Power
 {
-
-    ///
     ///
     pub fn givens<'d, 'e>(m: usize, i: usize, j: usize, c: T, s: T) -> Self
     {
@@ -681,10 +666,10 @@ impl<T> Matrix<T>
         }
 
         let mut givens: Matrix<T> = Matrix::one(m);
-        *(givens.get_mut(i,i)) = c.clone();
-        *(givens.get_mut(j,j)) = c;
-        *(givens.get_mut(i,j)) = s.clone();
-        *(givens.get_mut(j,i)) = -s;
+        *(givens.get_mut(i, i)) = c;
+        *(givens.get_mut(j, j)) = c;
+        *(givens.get_mut(i, j)) = s;
+        *(givens.get_mut(j, i)) = -s;
         givens
     }
 
@@ -693,7 +678,7 @@ impl<T> Matrix<T>
     /// Givens rotation computation
     /// Determines cosine-sine pair (c,s) so that [c s;-s c]'*[a;b] = [r;0]
     /// GVL4: Algorithm 5.1.3
-    pub fn givens_cosine_sine_pair(a: T,b: T) -> (T, T)
+    pub fn givens_cosine_sine_pair(a: T, b: T) -> (T, T)
     {
         let exponent: T = T::from_f64(2.0);
         let exponent_sqrt: T = T::from_f64(0.5);
@@ -717,7 +702,7 @@ impl<T> Matrix<T>
             else
             {
                 let tau: T = -b / a;
-			    c = T::one() / (T::one() + tau.pow(&exponent)).pow(&exponent_sqrt);
+                c = T::one() / (T::one() + tau.pow(&exponent)).pow(&exponent_sqrt);
                 s = c * tau;
             }
         }
@@ -726,10 +711,7 @@ impl<T> Matrix<T>
     }
 }
 
-
-
-impl<T> Matrix<T>
-    where T: Field + Scalar + Power
+impl<T> Matrix<T> where T: Field + Scalar + Power
 {
     /// Returns the householder matrix
     ///
@@ -741,7 +723,7 @@ impl<T> Matrix<T>
     /// # Panics
     ///
     /// if index out of bounds
-    pub fn householder(v: & Vector<T>, k: usize) -> Self
+    pub fn householder(v: &Vector<T>, k: usize) -> Self
     {
         let (v_m, v_n): (usize, usize) = v.dim();
         if k >= v_m
@@ -759,7 +741,7 @@ impl<T> Matrix<T>
             return Matrix::one(v_m);
         }
 
-        let d: Vector<T> = v.get_slice(k, v_m -1);
+        let d: Vector<T> = v.get_slice(k, v_m - 1);
 
         let norm: T = T::from_f64(2.0);
 
@@ -767,7 +749,7 @@ impl<T> Matrix<T>
 
         let d_0: T = *d.get(0);
 
-        if  d_0 >= T::zero()
+        if d_0 >= T::zero()
         {
             alpha = -d.p_norm(&norm);
         }
@@ -786,13 +768,13 @@ impl<T> Matrix<T>
 
         let mut v: Vector<T> = Vector::zero(d_m);
 
-        * v.get_mut(0) = (T::from_f64(0.5) * (T::one() - d_0 / alpha)).pow(&T::from_f64(0.5));
+        *v.get_mut(0) = (T::from_f64(0.5) * (T::one() - d_0 / alpha)).pow(&T::from_f64(0.5));
         let p: T = -alpha * *v.get(0);
-
 
         if d_m - 1 >= 1
         {
-            let temp: Vector<T> = d.get_slice(1, d_m - 1).apply(&|e: &T| -> T {*e / (T::from_f64(2.0) * p)});
+            let temp: Vector<T> = d.get_slice(1, d_m - 1)
+                                   .apply(&|e: &T| -> T { *e / (T::from_f64(2.0) * p) });
             v.set_slice(&temp, 1);
         }
 
@@ -800,18 +782,17 @@ impl<T> Matrix<T>
 
         w.set_slice(&v, k);
 
-        let ident : Matrix<T> = Matrix::one(v_m);
+        let ident: Matrix<T> = Matrix::one(v_m);
 
         let two: T = T::from_f64(2.0);
         let w_dyadp: Matrix<T> = w.dyadp(&w);
-        let h : Matrix<T> = &ident - &(&w_dyadp * &two);
+        let h: Matrix<T> = &ident - &(&w_dyadp * &two);
 
         h
     }
 }
 
-impl<T> Matrix<T>
-    where T: Field + Scalar + Power
+impl<T> Matrix<T> where T: Field + Scalar + Power
 {
     /// Computes the singular value decomposition
     ///
@@ -824,10 +805,12 @@ impl<T> Matrix<T>
     /// # Example
     ///
     /// ```
-    /// use mathru::algebra::linear::{Matrix};
+    /// use mathru::algebra::linear::Matrix;
     ///
-    /// let a: Matrix<f64> = Matrix::new(4, 4, vec![4.0, 1.0, -2.0, 2.0, 1.0, 2.0, 0.0, -2.0, 0.0, 3.0, -2.0, 2.0,
-    /// 2.0, 1.0, -2.0, -1.0]);
+    /// let a: Matrix<f64> = Matrix::new(4,
+    ///                                  4,
+    ///                                  vec![4.0, 1.0, -2.0, 2.0, 1.0, 2.0, 0.0, -2.0, 0.0, 3.0,
+    ///                                       -2.0, 2.0, 2.0, 1.0, -2.0, -1.0]);
     ///
     /// let (u, s, v): (Matrix<f64>, Matrix<f64>, Matrix<f64>) = a.dec_sv();
     /// ```
@@ -838,10 +821,9 @@ impl<T> Matrix<T>
         let (_m, n): (usize, usize) = b.dim();
         let max_iterations: usize = 500 * n * n;
 
-
         let mut u_k: Matrix<T> = Matrix::one(n);
 
-        for _k in 0.. max_iterations
+        for _k in 0..max_iterations
         {
             let (u_ks, b_k, v_k): (Matrix<T>, Matrix<T>, Matrix<T>) = Matrix::msweep(u_k, b, v);
             u_k = u_ks;
@@ -858,7 +840,7 @@ impl<T> Matrix<T>
         {
             if b.get(l, l) < &T::zero()
             {
-                *b.get_mut(l, l) = - *b.get(l, l);
+                *b.get_mut(l, l) = -*b.get(l, l);
                 let mut column_l: Vector<T> = u.get_column(l);
                 column_l = &column_l * &-T::one();
                 u = u.set_column(&column_l, l);
@@ -878,16 +860,19 @@ impl<T> Matrix<T>
         }
 
         // sort singular values in descending order
-        return (u, b, v)
+        return (u, b, v);
     }
 
-    fn msweep(mut u: Matrix<T>, mut b: Matrix<T>, mut v: Matrix<T>) -> (Matrix<T>, Matrix<T>, Matrix<T>)
+    fn msweep(mut u: Matrix<T>,
+              mut b: Matrix<T>,
+              mut v: Matrix<T>)
+              -> (Matrix<T>, Matrix<T>, Matrix<T>)
     {
         let (_m, n): (usize, usize) = b.dim();
 
-        for k in 0..n-1
+        for k in 0..n - 1
         {
-            let mut q : Matrix<T> = Matrix::one(n);
+            let mut q: Matrix<T> = Matrix::one(n);
 
             // Construct matrix Q and multiply on the right by Q'.
             // Q annihilates both B(k-1,k+1) and B(k,k+1)
@@ -895,11 +880,11 @@ impl<T> Matrix<T>
             let (c_r, s_r, _r_r): (T, T, T) = Matrix::rot(*b.get(k, k), *b.get(k, k + 1));
 
             *q.get_mut(k, k) = c_r;
-            *q.get_mut(k, k +1) = s_r;
+            *q.get_mut(k, k + 1) = s_r;
             *q.get_mut(k + 1, k) = -s_r;
             *q.get_mut(k + 1, k + 1) = c_r;
 
-            let q_t: Matrix<T>= q.clone().transpose();
+            let q_t: Matrix<T> = q.clone().transpose();
             b = &b * &q_t;
             v = &v * &q_t;
 
@@ -916,13 +901,12 @@ impl<T> Matrix<T>
             *q.get_mut(k + 1, k + 1) = c_l;
 
             b = &q * &b;
-		    u = &q * &u;
+            u = &q * &u;
             //B(find(abs(B)<1.e-13))=0;
         }
 
         return (u, b, v);
     }
-
 
     pub fn rot(f: T, g: T) -> (T, T, T)
     {
@@ -937,21 +921,19 @@ impl<T> Matrix<T>
             if f.abs() > g.abs()
             {
                 let t: T = g / f;
-                let t1: T = (T::one() + t.pow(& expo)).pow(& sqrt);
+                let t1: T = (T::one() + t.pow(&expo)).pow(&sqrt);
 
                 return (T::one() / t1, t / t1, f * t1);
             }
             else
             {
                 let t: T = f / g;
-                let t1: T = (T::one() + t.pow(& expo)).pow(& sqrt);
+                let t1: T = (T::one() + t.pow(&expo)).pow(&sqrt);
 
                 return (t / t1, T::one() / t1, g * t1);
             }
         }
     }
-
-
 
     ///
     /// self is an m times n matrix with m >= n
@@ -959,10 +941,9 @@ impl<T> Matrix<T>
     /// U \in T^{m \times n}
     /// B \in T^{n \times n}
     /// V \in T^{n \times n}
-    ///
     pub fn householder_bidiag<'a>(self: &'a Self) -> (Self, Self, Self)
     {
-        let (m, n) : (usize, usize) = self.dim();
+        let (m, n): (usize, usize) = self.dim();
         if m < n
         {
             panic!("Read the API");
@@ -971,10 +952,9 @@ impl<T> Matrix<T>
         let mut u: Matrix<T> = Matrix::one(m);
         let mut v: Matrix<T> = Matrix::one(n);
         //let mut b_i : Matrix<T> = Matrix::zero(&n, &n);
-        let mut a_i : Matrix<T> = self.clone();
+        let mut a_i: Matrix<T> = self.clone();
 
-
-        for i in 0..n-1
+        for i in 0..n - 1
         {
             // eliminate non-zeros below the diagonal
             // Keep the product U*B unchanged
@@ -988,7 +968,6 @@ impl<T> Matrix<T>
             let mut u_mi: Matrix<T> = Matrix::one(m);
             u_mi = u_mi.set_slice(&u_i, i, i);
 
-
             u = &u * &u_mi;
 
             //eliminate non-zeros to the right of the
@@ -999,19 +978,18 @@ impl<T> Matrix<T>
             {
                 let v_x: Vector<T> = a_i.get_row(i);
                 let v_x_trans: Vector<T> = v_x.transpose();
-                let v_x_trans_slice: Vector<T> = v_x_trans.get_slice(i+1, n - 1);
+                let v_x_trans_slice: Vector<T> = v_x_trans.get_slice(i + 1, n - 1);
 
                 let v_i: Matrix<T> = Matrix::householder(&v_x_trans_slice, 0);
 
                 let mut v_ni: Matrix<T> = Matrix::one(n);
-                v_ni = v_ni.set_slice(&v_i, i+1, i+1);
+                v_ni = v_ni.set_slice(&v_i, i + 1, i + 1);
                 //let a_i_slice = &a_i.clone().get_slice(i+1, m - 1, i+1, n - 1) * &v_i;
                 //a_i = a_i.set_slice(&a_i_slice, i+1, i+1);
                 a_i = &a_i * &v_ni;
 
                 v = &v * &v_ni;
             }
-
         }
 
         //Null all elements beneath the diagonal, and superdiagonal
@@ -1021,18 +999,15 @@ impl<T> Matrix<T>
             {
                 if k != i && k != (i + 1)
                 {
-                    *a_i.get_mut(i, k)  = T::zero();
+                    *a_i.get_mut(i, k) = T::zero();
                 }
             }
         }
         (u, a_i, v)
-
     }
-
 }
 
-impl<T> Matrix<T>
-    where T: Field + Scalar
+impl<T> Matrix<T> where T: Field + Scalar
 {
     /// Returns a slice of the matrix
     ///
@@ -1065,7 +1040,12 @@ impl<T> Matrix<T>
     /// assert_eq!(a_ref, a);
     /// # }
     /// ```
-    pub fn get_slice(self: &Self, row_s: usize, row_e: usize, column_s: usize, column_e: usize) -> Matrix<T>
+    pub fn get_slice(self: &Self,
+                     row_s: usize,
+                     row_e: usize,
+                     column_s: usize,
+                     column_e: usize)
+                     -> Matrix<T>
     {
         assert!(row_s < self.m);
         assert!(row_e < self.m);
@@ -1078,7 +1058,7 @@ impl<T> Matrix<T>
         {
             for c in column_s..(column_e + 1)
             {
-                  *slice.get_mut(r - row_s, c - column_s) = *self.get(r, c)
+                *slice.get_mut(r - row_s, c - column_s) = *self.get(r, c)
             }
         }
         return slice;
@@ -1130,9 +1110,7 @@ impl<T> Matrix<T>
     }
 }
 
-
-impl<T> Display for Matrix<T>
-    where T: Display
+impl<T> Display for Matrix<T> where T: Display
 {
     fn fmt(self: &Self, f: &mut fmt::Formatter) -> fmt::Result
     {
@@ -1148,7 +1126,6 @@ impl<T> Display for Matrix<T>
         write!(f, "\n")
     }
 }
-
 
 impl<T> Matrix<T>
 {
@@ -1174,9 +1151,8 @@ impl<T> Matrix<T>
     {
         assert!(i < self.m);
         assert!(j < self.n);
-        & mut(self.data[j * self.m + i])
+        &mut (self.data[j * self.m + i])
     }
-
 
     /// Returns the element a_ij from the matrix
     ///
@@ -1198,34 +1174,31 @@ impl<T> Matrix<T>
     /// assert_eq!(a_ref, element);
     /// # }
     /// ```
-    pub fn get(self: &Self, i: usize, j: usize) -> & T
+    pub fn get(self: &Self, i: usize, j: usize) -> &T
     {
         assert!(i < self.m);
         assert!(j < self.n);
 
-        return & self.data[j * self.m + i];
+        return &self.data[j * self.m + i];
     }
 }
 
-
-impl<T> PartialEq for Matrix<T>
-    where T: PartialEq
+impl<T> PartialEq for Matrix<T> where T: PartialEq
 {
     /// Checks if two matrices are equal
     ///
     /// # Example
     ///
     /// ```
-    /// use mathru::algebra::linear::{Matrix};
+    /// use mathru::algebra::linear::Matrix;
     ///
     /// let a: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
     /// let b: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
     ///
-    /// assert_eq!(true, a==b);
+    /// assert_eq!(true, a == b);
     /// ```
     fn eq<'a, 'b>(self: &'a Self, other: &'b Self) -> bool
     {
-
         if self.dim() != other.dim()
         {
             return false;
@@ -1240,8 +1213,7 @@ impl<T> PartialEq for Matrix<T>
     }
 }
 
-impl<T> Matrix<T>
-    where T: Clone + Copy
+impl<T> Matrix<T> where T: Clone + Copy
 {
     /// Creates a new Matrix object
     ///
@@ -1252,45 +1224,39 @@ impl<T> Matrix<T>
     ///   3, 4, 5,
     ///   6, 7, 8
     /// ] => vec![ 0, 3, 6, 1, 4, 7, 2, 5, 8]
-    ///
     pub fn new<'a, 'b>(m: usize, n: usize, data: Vec<T>) -> Self
     {
         assert_eq!(m * n, data.len());
-        Matrix{m: m, n: n, data: data}
+        Matrix { m, n, data }
     }
-
 }
 
 impl<T> Matrix<T>
 {
     pub fn convert_to_vec(self) -> Vec<T>
     {
-        return self.data
+        return self.data;
     }
 }
 
-impl<T> Matrix<T>
-    where T: Scalar + Clone + Copy
+impl<T> Matrix<T> where T: Scalar + Clone + Copy
 {
     pub fn new_random(m: usize, n: usize) -> Matrix<T>
     {
         let mut rng = rand::thread_rng();
-        let data: Vec<T> = vec![T::from_f64(rng.gen()) ; m * n];
+        let data: Vec<T> = vec![T::from_f64(rng.gen()); m * n];
         Matrix::new(m, n, data)
     }
 }
 
-
-
-impl<T> Matrix<T>
-    where T: Field + Scalar
+impl<T> Matrix<T> where T: Field + Scalar
 {
     /// Returns the zero matrix(additive neutral element)
     ///
     /// # Example
     ///
     /// ```
-    /// use mathru::algebra::linear::{Matrix};
+    /// use mathru::algebra::linear::Matrix;
     ///
     /// let a: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
     /// let b: Matrix<f64> = &a + &Matrix::zero(2, 2);
@@ -1299,23 +1265,20 @@ impl<T> Matrix<T>
     /// ```
     pub fn zero(m: usize, n: usize) -> Self
     {
-        return Matrix {
-            m: m,
-            n: n,
-            data: vec![T::zero(); m * n],
-        };
+        return Matrix { m,
+                        n,
+                        data: vec![T::zero(); m * n] };
     }
 }
 
-impl<T> Identity<Addition> for Matrix<T>
-    where T: Identity<Addition>
+impl<T> Identity<Addition> for Matrix<T> where T: Identity<Addition>
 {
     /// Returns the additive neutral element)
     ///
     /// # Example
     ///
     /// ```
-    /// use mathru::algebra::linear::{Matrix};
+    /// use mathru::algebra::linear::Matrix;
     ///
     /// let a: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
     /// let b: Matrix<f64> = &a + &Matrix::zero(2, 2);
@@ -1324,26 +1287,24 @@ impl<T> Identity<Addition> for Matrix<T>
     /// ```
     fn id() -> Self
     {
-//        Matrix {
-//            m: m,
-//            n: n,
-//            data: vec![Identity::<Addition>::id(); m * n],
-//        }
+        //        Matrix {
+        //            m: m,
+        //            n: n,
+        //            data: vec![Identity::<Addition>::id(); m * n],
+        //        }
 
         unimplemented!();
     }
 }
 
-
-impl<T> Matrix<T>
-    where T: Field + Scalar
+impl<T> Matrix<T> where T: Field + Scalar
 {
     /// Returns the eye matrix(multiplicative neutral element)
     ///
     /// # Example
     ///
     /// ```
-    /// use mathru::algebra::linear::{Matrix};
+    /// use mathru::algebra::linear::Matrix;
     ///
     /// let a: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
     /// let b: Matrix<f64> = &a * &Matrix::one(2);
@@ -1359,27 +1320,20 @@ impl<T> Matrix<T>
             data[i * size + i] = Identity::<Multiplication>::id();
         }
 
-        Matrix
-        {
-            m: size,
-            n: size,
-            data: data,
-        }
+        Matrix { m: size,
+                 n: size,
+                 data }
     }
 
     pub fn ones(m: usize, n: usize) -> Self
     {
-        Matrix
-        {
-            m: m,
-            n: n,
-            data: vec![Identity::<Multiplication>::id(); m * n]
-        }
+        Matrix { m,
+                 n,
+                 data: vec![Identity::<Multiplication>::id(); m * n] }
     }
 }
 
-impl<T> Matrix<T>
-    where T: Field + Scalar + Power 
+impl<T> Matrix<T> where T: Field + Scalar + Power
 {
     /// Calculates the pseudo inverse matrix
     ///
@@ -1387,7 +1341,9 @@ impl<T> Matrix<T>
     pub fn pinv(self: &Self) -> Matrix<T>
     {
         let r: Matrix<T> = self.dec_qr().r();
-        let x: Matrix<T> = r.clone().transpose().substitute_forward(self.clone().transpose());
+        let x: Matrix<T> = r.clone()
+                            .transpose()
+                            .substitute_forward(self.clone().transpose());
         let a_pinv: Matrix<T> = r.substitute_backward(x);
         return a_pinv;
     }
@@ -1400,7 +1356,7 @@ impl<T> Matrix<T>
     /// # Example
     ///
     /// ```
-    /// use mathru::algebra::linear::{Matrix};
+    /// use mathru::algebra::linear::Matrix;
     ///
     /// let a: Matrix<f64> = Matrix::new(4, 2, vec![1.0, 0.0, 3.0, 0.0, 1.0, -7.0, 0.5, 0.25]);
     /// let (m, n) = a.dim();
@@ -1410,7 +1366,7 @@ impl<T> Matrix<T>
     /// ```
     pub fn dim(&self) -> (usize, usize)
     {
-        return (self.m, self.n)
+        return (self.m, self.n);
     }
 
     /// Returns the number of rows
@@ -1426,7 +1382,7 @@ impl<T> Matrix<T>
     /// assert_eq!(4, m);
     pub fn nrow(&self) -> usize
     {
-        return self.m
+        return self.m;
     }
 
     /// Returns the number of columns
@@ -1434,7 +1390,7 @@ impl<T> Matrix<T>
     /// # Example
     ///
     /// ```
-    /// use mathru::algebra::linear::{Matrix};
+    /// use mathru::algebra::linear::Matrix;
     ///
     /// let a: Matrix<f64> = Matrix::new(4, 2, vec![1.0, 0.0, 3.0, 0.0, 1.0, -7.0, 0.5, 0.25]);
     /// let n: usize = a.ncol();
@@ -1443,16 +1399,16 @@ impl<T> Matrix<T>
     /// ```
     pub fn ncol(&self) -> usize
     {
-        return self.n
+        return self.n;
     }
 }
 
-impl<T> Matrix<T>
-    where T: Field + Scalar
+impl<T> Matrix<T> where T: Field + Scalar
 {
     /// Compares to matrices
     ///
-    /// Checks if all elememnts in the self matrix are in a epsilon neighbourhood of exp
+    /// Checks if all elememnts in the self matrix are in a epsilon
+    /// neighbourhood of exp
     ///
     /// # Example
     ///
@@ -1460,7 +1416,6 @@ impl<T> Matrix<T>
     /// use mathru::algebra::linear::{Matrix};
     ///
     /// let a: Matrix<f64> = Matrix::new(4, 2, vec![1.0, 0.0, 3.0, 0.0, 1.0, -7.0, 0.5, 0.25]);
-    ///
     pub fn compare_neighbourhood(self: &Self, exp: &Self, epsilon: T) -> bool
     {
         let (exp_m, exp_n): (usize, usize) = exp.dim();

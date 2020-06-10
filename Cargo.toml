@@ -1,6 +1,6 @@
 [package]
 name = "mathru"
-version = "0.6.7"
+version = "0.6.9"
 description = "Mathematics library written in Rust"
 authors = ["Matthias Eiholzer <matthias.eiholzer@gmail.com>"]
 exclude = ["literature/*", "tests/*", "backup/*", ".gitignore"]
@@ -27,9 +27,9 @@ path = "src/lib.rs"
 
 [features]
 default = ["native"]
-#default = ["blaslapack"]
-blaslapack = ["lapack", "blas", "lapack-src", "blas-src"]
 native = []
+blaslapack = ["lapack", "blas", "lapack-src", "blas-src"]
+
 
 [profile.dev]
 opt-level = 0
@@ -47,14 +47,13 @@ debug = true
 opt-level = 3
 debug = false
 
-
 [dependencies]
 
 [dependencies.rand]
 version = "0.7.3"
 
 [dependencies.serde]
-version =  "1.0"
+version =  "^1.0"
 features = ["derive"]
 
 [dependencies.lapack]
@@ -66,12 +65,12 @@ version = "0.20"
 optional = true
 
 [dependencies.blas-src]
-version = "0.5.0"
+version = "0.6.1"
 features = ["openblas"]
 optional = true
 
 [dependencies.lapack-src]
-version = "0.5.0"
+version = "0.6.0"
 features = ["openblas"]
 optional = true
 
@@ -79,11 +78,12 @@ optional = true
 version = "1.0"
 
 [dev-dependencies]
-criterion = "0.3"
-nalgebra = "0.19.0"
+criterion = "^0.3"
+nalgebra = "0.21.0"
 
 [dev-dependencies.plotters]
 version = "0.2.12"
+
 
 [[bench]]
 name = "benchmark"

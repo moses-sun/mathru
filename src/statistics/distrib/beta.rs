@@ -1,23 +1,17 @@
-use crate::statistics::distrib::Continuous;
-use crate::special;
-use crate::special::beta;
-use crate::algebra::abstr::Real;
+use crate::{algebra::abstr::Real, special, special::beta, statistics::distrib::Continuous};
 
 /// Beta distribution
 ///
 /// Fore more information:
 /// <a href="https://en.wikipedia.org/wiki/Beta_distribution">https://en.wikipedia.org/wiki/Beta_distribution</a>
-///
 pub struct Beta<T>
 {
     p: T,
     q: T,
 }
 
-impl<T> Beta<T>
-    where T: Real
+impl<T> Beta<T> where T: Real
 {
-
     /// Create a probability distribution
     ///
     /// # Arguments
@@ -31,7 +25,7 @@ impl<T> Beta<T>
     /// # Example
     ///
     /// ```
-    /// use mathru::statistics::distrib::{Continuous, Beta};
+    /// use mathru::statistics::distrib::{Beta, Continuous};
     ///
     /// let distrib: Beta<f64> = Beta::new(0.2, 0.3);
     /// ```
@@ -41,16 +35,11 @@ impl<T> Beta<T>
         {
             panic!()
         }
-        Beta
-        {
-            p: p,
-            q: q
-        }
+        Beta { p, q }
     }
 }
 
-impl<T> Continuous<T> for Beta<T>
-    where T: Real
+impl<T> Continuous<T> for Beta<T> where T: Real
 {
     /// Probability density function
     ///
@@ -61,7 +50,7 @@ impl<T> Continuous<T> for Beta<T>
     /// # Example
     ///
     /// ```
-    /// use mathru::statistics::distrib::{Continuous, Beta};
+    /// use mathru::statistics::distrib::{Beta, Continuous};
     ///
     /// let distrib: Beta<f64> = Beta::new(0.2, 0.3);
     /// let x: f64 = 0.5;
@@ -75,9 +64,10 @@ impl<T> Continuous<T> for Beta<T>
         }
         if x > T::one()
         {
-            return T::one()
+            return T::one();
         }
-        return x.pow(&(self.p - T::one())) * (T::one() - x).pow(&(self.q - T::one())) / special::beta::beta(self.p, self.q);
+        return x.pow(&(self.p - T::one())) * (T::one() - x).pow(&(self.q - T::one()))
+               / special::beta::beta(self.p, self.q);
     }
 
     /// Cumulative distribution function
@@ -89,7 +79,7 @@ impl<T> Continuous<T> for Beta<T>
     /// # Example
     ///
     /// ```
-    /// use mathru::statistics::distrib::{Continuous, Beta};
+    /// use mathru::statistics::distrib::{Beta, Continuous};
     ///
     /// let distrib: Beta<f64> = Beta::new(0.3, 0.2);
     /// let x: f64 = 0.4;
@@ -101,7 +91,6 @@ impl<T> Continuous<T> for Beta<T>
     }
 
     /// Quantile function of inverse cdf
-    ///
     fn quantile(self: &Self, _p: T) -> T
     {
         unimplemented!();
@@ -112,14 +101,14 @@ impl<T> Continuous<T> for Beta<T>
     /// # Example
     ///
     /// ```
-    /// use mathru::statistics::distrib::{Continuous, Beta};
+    /// use mathru::statistics::distrib::{Beta, Continuous};
     ///
     /// let distrib: Beta<f64> = Beta::new(0.2, 0.3);
     /// let mean: f64 = distrib.mean();
     /// ```
-	fn mean(self: &Self) -> T
+    fn mean(self: &Self) -> T
     {
-        self.p  / (self.p + self.q)
+        self.p / (self.p + self.q)
     }
 
     /// Variance
@@ -127,12 +116,12 @@ impl<T> Continuous<T> for Beta<T>
     /// # Example
     ///
     /// ```
-    /// use mathru::statistics::distrib::{Continuous, Beta};
+    /// use mathru::statistics::distrib::{Beta, Continuous};
     ///
     /// let distrib: Beta<f64> = Beta::new(0.2, 0.3);
     /// let var: f64 = distrib.variance();
     /// ```
-	fn variance(self: &Self) -> T
+    fn variance(self: &Self) -> T
     {
         self.p * self.q / ((self.p + self.q + T::one()) * (self.p + self.q).pow(&T::from_f64(2.0)))
     }
@@ -141,19 +130,19 @@ impl<T> Continuous<T> for Beta<T>
     ///
     /// # Example
     ///
-        /// ```
-    /// use mathru::statistics::distrib::{Continuous, Beta};
+    /// ```
+    /// use mathru::statistics::distrib::{Beta, Continuous};
     ///
     /// let distrib: Beta<f64> = Beta::new(0.2, 0.3);
     /// let skewness: f64 = distrib.skewness();
     /// ```
     fn skewness(self: &Self) -> T
-	{
-        return T::from_f64(2.0) * (self.q - self.p) * (self.p + self.q + T::one()).sqrt() / ((self.p + self.q + T::from_f64(2.0)) *
-            (self.q * self.p).sqrt())
-	}
+    {
+        return T::from_f64(2.0) * (self.q - self.p) * (self.p + self.q + T::one()).sqrt()
+               / ((self.p + self.q + T::from_f64(2.0)) * (self.q * self.p).sqrt());
+    }
 
-	fn median (self: &Self) -> T
+    fn median(self: &Self) -> T
     {
         unimplemented!();
     }

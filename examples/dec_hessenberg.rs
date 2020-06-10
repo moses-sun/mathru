@@ -1,5 +1,4 @@
-use mathru::matrix;
-use mathru::algebra::linear::{Matrix};
+use mathru::{algebra::linear::Matrix, matrix};
 
 fn main()
 {

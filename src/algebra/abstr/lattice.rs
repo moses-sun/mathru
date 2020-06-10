@@ -1,9 +1,5 @@
-
-
-
-pub trait Lattice : PartialOrd
+pub trait Lattice: PartialOrd
 {
-
 }
 
 macro_rules! impl_lattice

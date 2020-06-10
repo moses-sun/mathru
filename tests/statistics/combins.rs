@@ -36,7 +36,7 @@ mod combins
     #[test]
     fn factorial()
     {
-        let n : u32 = 5;
+        let n: u32 = 5;
         assert_eq!(120, combins::factorial(n));
     }
 }

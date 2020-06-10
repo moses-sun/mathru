@@ -1,9 +1,10 @@
-use crate::algebra::linear::{Matrix};
-use crate::algebra::abstr::{Scalar, Field};
-use std::ops::{Sub};
+use crate::algebra::{
+    abstr::{Field, Scalar},
+    linear::Matrix,
+};
+use std::ops::Sub;
 
-impl <T> Sub for Matrix<T>
-    where T: Field + Scalar
+impl<T> Sub for Matrix<T> where T: Field + Scalar
 {
     type Output = Matrix<T>;
 
@@ -20,7 +21,7 @@ impl <T> Sub for Matrix<T>
     /// # Example
     ///
     /// ```
-    /// use mathru::algebra::linear::{Matrix};
+    /// use mathru::algebra::linear::Matrix;
     ///
     /// let a: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
     /// let b: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
@@ -33,9 +34,7 @@ impl <T> Sub for Matrix<T>
     }
 }
 
-
-impl<'a, 'b, T> Sub<&'b Matrix<T>> for &'a Matrix<T>
-    where T: Field + Scalar
+impl<'a, 'b, T> Sub<&'b Matrix<T>> for &'a Matrix<T> where T: Field + Scalar
 {
     type Output = Matrix<T>;
 
@@ -43,20 +42,19 @@ impl<'a, 'b, T> Sub<&'b Matrix<T>> for &'a Matrix<T>
     {
         assert_eq!(self.dim(), rhs.dim());
         let (m, n) = rhs.dim();
-        Matrix
-        {
-            m: m,
-            n: n,
-            data: self.data.iter().zip(rhs.data.iter()).map(|(x, y)| *x - *y).collect::<Vec<T>>()
-        }
+        Matrix { m,
+                 n,
+                 data: self.data
+                           .iter()
+                           .zip(rhs.data.iter())
+                           .map(|(x, y)| *x - *y)
+                           .collect::<Vec<T>>() }
     }
 }
 
 ///
 /// Subtracts scalar from all matrix elements
-///
-impl<'a, 'b, T> Sub<&'b T> for &'a Matrix<T>
-    where T: Field + Scalar
+impl<'a, 'b, T> Sub<&'b T> for &'a Matrix<T> where T: Field + Scalar
 {
     type Output = Matrix<T>;
 
@@ -65,7 +63,7 @@ impl<'a, 'b, T> Sub<&'b T> for &'a Matrix<T>
     /// # Example
     ///
     /// ```
-    /// use mathru::algebra::linear::{Matrix};
+    /// use mathru::algebra::linear::Matrix;
     ///
     /// let a: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
     /// let b: Matrix<f64> = Matrix::new(2, 2, vec![5.0, 4.0, 7.0, -3.0]);
@@ -74,12 +72,11 @@ impl<'a, 'b, T> Sub<&'b T> for &'a Matrix<T>
     /// ```
     fn sub(self: Self, rhs: &T) -> Self::Output
     {
-        return self.apply(&|x: &T| -> T {*x - *rhs});
+        return self.apply(&|x: &T| -> T { *x - *rhs });
     }
 }
 
-impl<T> Sub<T> for Matrix<T>
-    where T: Field + Scalar
+impl<T> Sub<T> for Matrix<T> where T: Field + Scalar
 {
     type Output = Matrix<T>;
 
@@ -88,7 +85,7 @@ impl<T> Sub<T> for Matrix<T>
     /// # Example
     ///
     /// ```
-    /// use mathru::algebra::linear::{Matrix};
+    /// use mathru::algebra::linear::Matrix;
     ///
     /// let a: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
     /// let b: Matrix<f64> = Matrix::new(2, 2, vec![5.0, 4.0, 7.0, -3.0]);

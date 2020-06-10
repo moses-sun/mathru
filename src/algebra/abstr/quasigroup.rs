@@ -1,12 +1,12 @@
 //! quasigroop
 
-use super::{Operator, Addition, Multiplication, Identity};
-use super::Magma;
+use super::{Addition, Identity, Magma, Multiplication, Operator};
 
-/// A quasigroup is a magma which has the divisibility property (or Latin square property).
-/// Divisibility is a weak form of right and left invertibility.
+/// A quasigroup is a magma which has the divisibility property (or Latin square
+/// property). Divisibility is a weak form of right and left invertibility.
 ///
-/// $`\forall a, b \in \mathbb{Q}, \exists! r, l \in \mathbb{Q}`$ such that $`l ∘ a = b`$  and $`a ∘ r = b`$
+/// $`\forall a, b \in \mathbb{Q}, \exists! r, l \in \mathbb{Q}`$ such that $`l
+/// ∘ a = b`$  and $`a ∘ r = b`$
 ///
 /// The solutions for $`r`$ and $`l`$ are:
 ///
