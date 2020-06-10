@@ -26,12 +26,12 @@ build-blaslapack:
     stage: build
     image: rust:latest
     script:
-      - cargo build --features blaslapack
+      - cargo build --no-default-features --features blaslapack
 
-#test-blaslapack:
-#    stage: test
-#    needs: ["build-blaslapack"]
-#    image: rust:latest
-#    script:
-#      - cargo test --features blaslapack
+test-blaslapack:
+    stage: test
+    needs: ["build-blaslapack"]
+    image: rust:latest
+    script:
+      - cargo test --no-default-features --features blaslapack
 
