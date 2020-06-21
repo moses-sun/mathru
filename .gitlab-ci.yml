@@ -8,24 +8,44 @@ cache:
   paths:
     - target
 
+variables:
+  CARGO_HOME: $CI_PROJECT_DIR/cargo
+  APT_CACHE_DIR: $CI_PROJECT_DIR/apt
+
+before_script:
+  - apt-get update -yq
+  - apt-get install -o dir::cache::archives="$APT_CACHE_DIR" -y cmake gfortran
+
 build-native:
     stage: build
     image: rust:latest
     script:
-      - cargo build --features native
+      - cargo build --no-default-features --features native
 
 test-native:
     stage: test
     needs: ["build-native"]
     image: rust:latest
     script:
-      - cargo test --features native
+      - cargo test --no-default-features --features native
 
-build-blaslapack:
+build-openblas:
     stage: build
     image: rust:latest
     script:
-      - cargo build --no-default-features --features blaslapack
+      - cargo build --no-default-features --features openblas
+
+build-netlib:
+  stage: build
+  image: rust:latest
+  script:
+    - cargo build --no-default-features --features netlib
+
+build-intelmkl:
+  stage: build
+  image: rust:latest
+  script:
+    - cargo build --no-default-features --features intel-mkl
 
 #test-blaslapack:
 #    stage: test
