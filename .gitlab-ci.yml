@@ -16,18 +16,25 @@ before_script:
   - apt-get update -yq
   - apt-get install -o dir::cache::archives="$APT_CACHE_DIR" -y cmake gfortran
 
+build-default:
+  stage: build
+  image: rust:latest
+  script:
+    - cargo build
+
+test-default:
+    stage: test
+    needs: ["build-default"]
+    image: rust:latest
+    script:
+      - cargo test
+
 build-native:
     stage: build
     image: rust:latest
     script:
       - cargo build --no-default-features --features native
 
-test-native:
-    stage: test
-    needs: ["build-native"]
-    image: rust:latest
-    script:
-      - cargo test --no-default-features --features native
 
 build-openblas:
     stage: build
