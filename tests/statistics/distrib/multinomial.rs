@@ -1,30 +1,27 @@
-#[cfg(test)]
-mod multinomialdistrib
+use mathru::statistics::distrib::{Discrete, Multinomial};
+use mathru::algebra::linear::{Vector};
+
+#[test]
+fn pmf0()
 {
-    use mathru::statistics::distrib::{Discrete, Multinomial};
-    use mathru::algebra::linear::{Vector};
+    let p: Vector<f64> = vector![0.3; 0.7];
+    let distrib: Multinomial<f64> = Multinomial::new(p);
+    let x: Vector<u32> = vector![3; 7];
+    let prob: f64 = distrib.pmf(x);
 
-    #[test]
-    fn pmf0()
-    {
-        let p: Vector<f64> = vector![0.3; 0.7];
-        let distrib: Multinomial<f64> = Multinomial::new(p);
-        let x: Vector<u32> = vector![3; 7];
-        let prob: f64 = distrib.pmf(x);
+    assert!((0.2668279319999999 - prob).abs() < 0.0001);
+}
 
-        assert!((0.2668279319999999 - prob).abs() < 0.0001);
-    }
+#[test]
+fn pmf1()
+{
+    let p: Vector<f64> = vector![0.2; 0.3; 0.5];
+    let n: Vector<u32> = vector![1; 2; 3];
+    let distrib : Multinomial<f64> = Multinomial::new(p);
+    let prob: f64 = distrib.pmf(n);
 
-    #[test]
-    fn pmf1()
-    {
-        let p: Vector<f64> = vector![0.2; 0.3; 0.5];
-        let n: Vector<u32> = vector![1; 2; 3];
-        let distrib : Multinomial<f64> = Multinomial::new(p);
-        let prob: f64 = distrib.pmf(n);
-
-        assert!((0.135 - prob).abs() < 0.0001 );
-    }
+    assert!((0.135 - prob).abs() < 0.0001 );
+}
 
 //    #[test]
 //    fn pmf2()
@@ -85,4 +82,3 @@ mod multinomialdistrib
 //
 //        assert_eq!(1.0, prob);
 //    }
-}

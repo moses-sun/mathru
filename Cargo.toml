@@ -1,6 +1,6 @@
 [package]
 name = "mathru"
-version = "0.6.9"
+version = "0.6.10"
 description = "Mathematics library written in Rust"
 authors = ["Matthias Eiholzer <matthias.eiholzer@gmail.com>"]
 exclude = ["literature/*", "tests/*", "backup/*", ".gitignore"]
@@ -28,7 +28,12 @@ path = "src/lib.rs"
 [features]
 default = ["native"]
 native = []
-blaslapack = ["lapack", "blas", "lapack-src", "blas-src"]
+blaslapack = []
+
+openblas = ["lapack", "blas", "lapack-src/openblas", "blas-src/openblas", "blaslapack"]
+netlib = ["lapack", "blas", "lapack-src/netlib", "blas-src/netlib", "blaslapack"]
+accelerate = ["lapack", "blas", "lapack-src/accelerate", "blas-src/accelerate", "blaslapack"]
+intel-mkl = ["lapack", "blas", "lapack-src/intel-mkl", "blas-src/intel-mkl", "blaslapack"]
 
 
 [profile.dev]
@@ -66,12 +71,10 @@ optional = true
 
 [dependencies.blas-src]
 version = "0.6.1"
-features = ["openblas"]
 optional = true
 
 [dependencies.lapack-src]
 version = "0.6.0"
-features = ["openblas"]
 optional = true
 
 [dev-dependencies.serde_json]
