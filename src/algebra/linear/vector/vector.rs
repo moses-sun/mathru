@@ -129,15 +129,14 @@ impl<T> Vector<T> where T: Field + Scalar + Power
     {
         assert!(*p >= T::one());
 
-        let a: Self = (*self).clone();
-        let (m, n): (usize, usize) = a.dim();
+        let (m, n): (usize, usize) = self.dim();
         let mut sum: T = T::zero();
         for i in 0..(m * n)
         {
-            let b: T = (*a.get(i)).clone();
-            sum += b.clone().pow(p);
+            let b: T = *self.get(i);
+            sum += b.pow(p);
         }
-        let norm: T = sum.pow(&(T::one() / p.clone()));
+        let norm: T = sum.pow(&(T::one() / *p));
         norm
     }
 }
@@ -1014,7 +1013,7 @@ impl<'a, 'b, T> Mul<&'b Matrix<T>> for &'a Vector<T> where T: Field + Scalar
 
         if n != rhs_m
         {
-            panic!("Vector and matrix dimension do not match");
+            panic!("Vector and matrix dimensions do not match");
         }
 
         let mut res: Vec<T> = Vec::with_capacity(rhs_n);

@@ -9,7 +9,7 @@
 Mathru is a numeric library containing algorithms for linear algebra, analysis and statistics written in pure Rust with BLAS/LAPACK support.
 
 ## Features
-The following features are impelmented in this create:
+The following features are implemented in this create:
 
 * [Linear algebra](https://matthiaseiholzer.gitlab.io/mathru/documentation/algebra/)
     * [Vector](https://matthiaseiholzer.gitlab.io/mathru/documentation/algebra/vector/)
@@ -90,16 +90,28 @@ Add this to your `Cargo.toml` for the native Rust implementation:
 [dependencies.mathru]
 version = "^0.6"
 ```
-Add the following lines to 'Cargo.toml' if the blas/lapack backend should be used:
+Add the following lines to 'Cargo.toml' if the openblas library should be used:
 
 ```toml
 [dependencies.mathru]
 version = "^0.6"
 default-features = false
-features = "blaslapack"
+features = "openblas"
 ```
 
+One of the following implementations for linear algebra can be activated as a feature:
+- native: Native Rust implementation(activated by default)
+- [openblas](https://www.openblas.net): Optimized BLAS library
+- [netlib](https://www.netlib.org): Collection of mathematical software, papers, and databases
+- [intel-mkl](https://software.intel.com/content/www/us/en/develop/tools/math-kernel-library.html): Intel Math Kernel Library
+- [accelerate](https://developer.apple.com/documentation/accelerate) Make large-scale mathematical computations and image calculations, optimized for high performance and low-energy consumption.(macOS only)
+
+
 Then import the modules and it is ready to be used.
+
+```rust
+use mathru as mr;
+```
 
 ## Documentation
 
