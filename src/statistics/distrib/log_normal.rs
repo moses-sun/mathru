@@ -1,5 +1,5 @@
-use crate::{algebra::abstr::Real, special::gamma, statistics::distrib::Continuous, statistics::distrib::Distribution};
-use crate::special;
+use crate::{algebra::abstr::Real, statistics::distrib::Continuous, statistics::distrib::Distribution};
+use crate::special::error;
 use std::f64::consts::PI;
 
 /// Log-Normal distribution
@@ -104,7 +104,7 @@ impl<T> Continuous<T> for LogNormal<T> where T: Real
             return T::zero();
         }
         let p: T = (x.ln() - self.mu) / (T::from_f64(2.0) * self.sigma_squared).sqrt();
-        return T::from_f64(0.5) + T::from_f64(0.5) * special::erf(p);
+        return T::from_f64(0.5) + T::from_f64(0.5) * error::erf(p);
     }
 
     /// Quantile: function of inverse cdf
