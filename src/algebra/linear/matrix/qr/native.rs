@@ -1,7 +1,7 @@
 use crate::{
     algebra::{
         abstr::{Field, Scalar},
-        linear::{matrix::QRDec, Matrix},
+        linear::{matrix::{Transpose, QRDec}, Matrix},
     },
     elementary::Power,
 };

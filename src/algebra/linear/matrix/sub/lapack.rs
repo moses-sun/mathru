@@ -30,7 +30,15 @@ impl<T> Sub for Matrix<T> where T: Field + Scalar
     /// ```
     fn sub(self: Self, rhs: Self) -> Self::Output
     {
-        (&self).sub(&rhs)
+        assert_eq!(self.dim(), rhs.dim());
+
+        let (m, n): (usize, usize) = rhs.dim();
+
+        let mut c: Matrix<T> = self;
+
+        T::xaxpy((m * n) as i32, -T::one(), &rhs.data[..], 1, &mut c.data[..], 1);
+
+        return c;
     }
 }
 
@@ -41,35 +49,12 @@ impl<'a, 'b, T> Sub<&'b Matrix<T>> for &'a Matrix<T> where T: Field + Scalar
     fn sub(self: Self, rhs: &'b Matrix<T>) -> Self::Output
     {
         assert_eq!(self.dim(), rhs.dim());
-        return self.sub_r(rhs);
-    }
-}
 
-impl<'a, 'b, T> Matrix<T> where T: Field + Scalar
-{
-    fn sub_r(self: &Self, rhs: &'b Matrix<T>) -> Matrix<T>
-    {
-        let mut c: Matrix<T> = rhs.clone();
-        let (b_m, b_n): (usize, usize) = rhs.dim();
+        let (m, n): (usize, usize) = rhs.dim();
 
-        let a: Matrix<T> = Matrix::one(b_m);
-        let m: i32 = b_m as i32;
-        let n: i32 = b_n as i32;
-        let k: i32 = b_m as i32;
+        let mut c: Matrix<T> = self.clone();
 
-        T::xgemm('N' as u8,
-                 'N' as u8,
-                 m,
-                 n,
-                 k,
-                 T::one(),
-                 &a.data[..],
-                 m,
-                 &self.data[..],
-                 k,
-                 -T::one(),
-                 &mut c.data[..],
-                 m);
+        T::xaxpy((m * n) as i32, -T::one(), &rhs.data[..], 1, &mut c.data[..], 1);
 
         return c;
     }
@@ -117,6 +102,6 @@ impl<T> Sub<T> for Matrix<T> where T: Field + Scalar
     /// ```
     fn sub(self: Self, rhs: T) -> Self::Output
     {
-        return (&self).sub(&rhs);
+        return self.apply_mut(&|x: &T| -> T { *x - rhs});
     }
 }

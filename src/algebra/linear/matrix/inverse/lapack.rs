@@ -1,22 +1,8 @@
 use crate::algebra::{
     abstr::{Field, Scalar, Zero},
     linear::Matrix,
+    linear::matrix::{Inverse, Transpose}
 };
-
-pub trait Inverse<T>
-{
-    /// Inverse Matrix
-    ///
-    /// # Example
-    ///
-    /// ```
-    /// use mathru::algebra::linear::{matrix::Inverse, Matrix};
-    ///
-    /// let a: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
-    /// let b_inv: Matrix<f64> = a.inv().unwrap();
-    /// ```
-    fn inv(self: &Self) -> Result<Matrix<T>, ()>;
-}
 
 impl<T> Inverse<T> for Matrix<T> where T: Field + Scalar
 {

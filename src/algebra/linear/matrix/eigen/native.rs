@@ -1,7 +1,7 @@
 use crate::algebra::{
     abstr::Real,
     linear::{
-        matrix::{EigenDec, Solve},
+        matrix::{Transpose, EigenDec, Solve},
         Matrix, Vector,
     },
 };
