@@ -3,11 +3,9 @@ use crate::algebra::{
     linear::{Matrix, Vector},
 };
 
-pub trait Solve<T>
-{
-    /// A * x = b
-    fn solve(self: &Self, rhs: &T) -> Result<T, ()>;
-}
+use super::Solve;
+
+
 
 impl<T> Solve<Vector<T>> for Matrix<T> where T: Field + Scalar
 {

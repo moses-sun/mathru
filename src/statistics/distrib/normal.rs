@@ -110,7 +110,7 @@ impl<T> Continuous<T> for Normal<T> where T: Real
     fn pdf(self: &Self, x: T) -> T
     {
         let z: T = T::from_f64(-0.5) * ((x - self.mean) / self.variance).pow(&T::from_f64(2.0));
-        let f: T = T::one() / (self.variance * (T::from_f64(2.0) * T::pi()).sqrt());
+        let f: T = T::one() / (self.variance * T::from_f64(2.0) * T::pi()).sqrt();
 
         return f * z.exp();
     }

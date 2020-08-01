@@ -22,7 +22,15 @@ impl<T> Add<Self> for Matrix<T> where T: Field + Scalar
     /// ```
     fn add(self: Self, rhs: Self) -> Self::Output
     {
-        (&self).add(&rhs)
+        assert_eq!(self.dim(), rhs.dim());
+
+        let (m, n): (usize, usize) = rhs.dim();
+
+        let mut c: Matrix<T> = rhs;
+
+        T::xaxpy((m * n) as i32, T::one(), &self.data[..], 1, &mut c.data[..], 1);
+
+        return c;
     }
 }
 
@@ -47,35 +55,12 @@ impl<'a, 'b, T> Add<&'b Matrix<T>> for &'a Matrix<T> where T: Field + Scalar
     fn add(self: Self, rhs: &'b Matrix<T>) -> Self::Output
     {
         assert_eq!(self.dim(), rhs.dim());
-        return self.add_r(rhs);
-    }
-}
 
-impl<'a, 'b, T> Matrix<T> where T: Field + Scalar
-{
-    fn add_r(self: &Self, rhs: &'b Matrix<T>) -> Matrix<T>
-    {
+        let (m, n): (usize, usize) = rhs.dim();
+
         let mut c: Matrix<T> = rhs.clone();
-        let (b_m, b_n): (usize, usize) = rhs.dim();
 
-        let a: Matrix<T> = Matrix::one(b_m);
-        let m: i32 = b_m as i32;
-        let n: i32 = b_n as i32;
-        let k: i32 = b_m as i32;
-
-        T::xgemm('N' as u8,
-                 'N' as u8,
-                 m,
-                 n,
-                 k,
-                 T::one(),
-                 &a.data[..],
-                 m,
-                 &self.data[..],
-                 k,
-                 T::one(),
-                 &mut c.data[..],
-                 m);
+        T::xaxpy((m * n) as i32, T::one(), &self.data[..], 1, &mut c.data[..], 1);
 
         return c;
     }
@@ -116,7 +101,7 @@ impl<'a, 'b, T> Add<&'b T> for &'a Matrix<T> where T: Field + Scalar
     /// ```
     fn add(self: Self, rhs: &T) -> Self::Output
     {
-        return self.apply(&|x: &T| -> T { x.clone() + rhs.clone() });
+        return self.apply(&|x: &T| -> T { *x + *rhs });
     }
 }
 

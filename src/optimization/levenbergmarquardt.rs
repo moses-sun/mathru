@@ -1,7 +1,7 @@
 use crate::{
     algebra::{
         abstr::Real,
-        linear::{matrix::Solve, Matrix, Vector},
+        linear::{matrix::{Transpose, Solve}, Matrix, Vector},
     },
     optimization::{Optim, OptimResult},
 };
@@ -63,19 +63,19 @@ impl<T> LevenbergMarquardt<T> where T: Real
             loop
             {
                 let jacobian_x_n: Matrix<T> = func.jacobian(&x_n);
+                let jacobian_x_n_tran: Matrix<T> = jacobian_x_n.clone().transpose();
                 let f_x_n: Vector<T> = func.eval(&x_n);
 
-                let p_n: Vector<T> = -(jacobian_x_n.clone().transpose() * f_x_n.clone());
+                let p_n: Vector<T> = -(&jacobian_x_n_tran * &f_x_n);
                 let (_j_m, j_n) = jacobian_x_n.dim();
-                let left_n: Matrix<T> = jacobian_x_n.clone().transpose() * jacobian_x_n.clone()
-                                        + Matrix::one(j_n) * mu_n * mu_n;
+                let left_n: Matrix<T> = &jacobian_x_n_tran * &jacobian_x_n + Matrix::one(j_n) * mu_n * mu_n;
                 d_n = left_n.solve(&p_n).unwrap();
 
-                let x_n_1 = x_n.clone() + d_n.clone();
+                let x_n_1 = &x_n + &d_n;
                 let f_x_n_1: Vector<T> = func.eval(&x_n_1);
 
                 let numerator: T = f_x_n.dotp(&f_x_n) - f_x_n_1.dotp(&f_x_n_1);
-                let term: Vector<T> = f_x_n.clone() + jacobian_x_n.clone() * d_n.clone();
+                let term: Vector<T> = &f_x_n + &(&jacobian_x_n * &d_n);
                 let denumerator: T = f_x_n.dotp(&f_x_n) - term.dotp(&term);
 
                 let epsilon: T = numerator / denumerator;

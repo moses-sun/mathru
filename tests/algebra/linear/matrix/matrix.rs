@@ -1,13 +1,5 @@
 use crate::mathru::algebra::linear::matrix::Substitute;
-use mathru::algebra::linear::{matrix::Solve, Matrix, Vector};
-
-#[test]
-fn gcd_0()
-{
-    assert_eq!(1, Matrix::<f64>::gcd(1, 5));
-    assert_eq!(2, Matrix::<f64>::gcd(2, 4));
-    assert_eq!(3, Matrix::<f64>::gcd(6, 9));
-}
+use mathru::algebra::linear::{matrix::{Transpose, Solve}, Matrix, Vector};
 
 #[test]
 fn macro_0()

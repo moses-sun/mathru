@@ -31,11 +31,13 @@ pub use self::cholesky::CholeskyDec;
 
 mod solve;
 mod substitute;
+mod transpose;
 
 pub use self::{
     inverse::Inverse, matrix::Matrix, matrixcolumniterator::MatrixColumnIterator,
     matrixcolumniteratormut::MatrixColumnIteratorMut, matrixintoiterator::MatrixIntoIterator,
     matrixiterator::MatrixIterator, matrixiteratormut::MatrixIteratorMut,
     matrixrowiterator::MatrixRowIterator, matrixrowiteratormut::MatrixRowIteratorMut, solve::Solve,
-    substitute::Substitute,
+    substitute::Substitute, transpose::Transpose
+
 };

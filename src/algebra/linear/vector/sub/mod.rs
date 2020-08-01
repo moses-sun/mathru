@@ -1,5 +1,5 @@
 #[cfg(feature = "blaslapack")]
-pub mod lapack;
+pub mod native;
 #[cfg(feature = "native")]
 pub mod native;
 

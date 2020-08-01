@@ -1,3 +1,8 @@
+#[cfg(feature = "blaslapack")]
+pub mod lapack;
+#[cfg(feature = "native")]
+pub mod native;
+
 pub trait Substitute<T>
 {
     fn substitute_forward(self: &Self, b: T) -> T;

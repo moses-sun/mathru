@@ -9,7 +9,7 @@ impl<'a, 'b, T> Mul<&'b Vector<T>> for &'a Matrix<T> where T: Field + Scalar
 {
     type Output = Vector<T>;
 
-    fn mul(self, v: &'b Vector<T>) -> Vector<T>
+    fn mul(self: Self, v: &'b Vector<T>) -> Vector<T>
     {
         let (_self_m, self_n): (usize, usize) = self.dim();
         let (v_m, _v_n): (usize, usize) = v.dim();
@@ -53,9 +53,9 @@ impl<T> Mul<T> for Matrix<T> where T: Field + Scalar
     ///
     /// assert_eq!(res_ref, a * f);
     /// ```
-    fn mul(self, m: T) -> Matrix<T>
+    fn mul(self, s: T) -> Matrix<T>
     {
-        (&self).mul(&m)
+        self.mul_scalar(&s)
     }
 }
 
@@ -87,9 +87,9 @@ impl<T> Mul<Vector<T>> for Matrix<T> where T: Field + Scalar
 {
     type Output = Vector<T>;
 
-    fn mul(self, m: Vector<T>) -> Vector<T>
+    fn mul(self, v: Vector<T>) -> Vector<T>
     {
-        (&self) * (&m)
+        (&self) * (&v)
     }
 }
 
@@ -133,20 +133,10 @@ impl<'a, 'b, T> Mul<&'b Matrix<T>> for &'a Matrix<T> where T: Field + Scalar
     /// ```
     fn mul(self: Self, rhs: &'b Matrix<T>) -> Self::Output
     {
-        let (_l_rows, l_cols) = self.dim();
-        let (r_rows, _r_cols): (usize, usize) = rhs.dim();
-        assert_eq!(l_cols, r_rows);
-
-        return self.mul_r(rhs);
-    }
-}
-
-impl<'a, 'b, T> Matrix<T> where T: Field + Scalar
-{
-    fn mul_r(self: &'a Self, rhs: &'b Matrix<T>) -> Matrix<T>
-    {
         let (self_rows, self_cols) = self.dim();
-        let (_rhs_rows, rhs_cols) = rhs.dim();
+        let (rhs_rows, rhs_cols) = rhs.dim();
+
+        assert_eq!(self_cols, rhs_rows);
 
         let m = self_rows as i32;
         let n = rhs_cols as i32;
@@ -175,29 +165,12 @@ impl<'a, 'b, T> Matrix<T> where T: Field + Scalar
 {
     fn mul_scalar(mut self: Self, s: &'b T) -> Matrix<T>
     {
-        let (rows, cols) = self.dim();
-
+        let (rows, cols): (usize, usize) = self.dim();
+        //
         let m: i32 = rows as i32;
         let n: i32 = cols as i32;
-        let k: i32 = n;
 
-        let a: Vec<T> = vec![T::zero(); rows * cols];
-        let b: Vec<T> = vec![T::zero(); cols * rows];
-
-        T::xgemm('N' as u8,
-                 'N' as u8,
-                 m,
-                 n,
-                 k,
-                 T::zero(),
-                 &a,
-                 m,
-                 &b,
-                 k,
-                 *s,
-                 &mut self.data[..],
-                 m);
-
+        T::xscal(m * n,  *s,&mut self.data[..], 1);
         return self;
     }
 }

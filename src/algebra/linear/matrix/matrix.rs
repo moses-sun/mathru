@@ -5,7 +5,7 @@ use super::{
 use crate::{
     algebra::{
         abstr::{Addition, Field, Identity, Multiplication, Scalar},
-        linear::{matrix::Substitute, Vector},
+        linear::{matrix::Substitute, Vector, matrix::Transpose},
     },
     elementary::Power,
 };
@@ -133,339 +133,6 @@ impl<T> Matrix<T> where T: Clone
     pub fn apply(self: &Matrix<T>, f: &dyn Fn(&T) -> T) -> Matrix<T>
     {
         return (self.clone()).apply_mut(f);
-    }
-}
-
-//impl<T> Matrix<T>
-//   where T: Field + Scalar
-//{
-/// Returns the transposed matrix
-///
-/// # Example
-///
-/// ```
-/// use mathru::algebra::linear::Matrix;
-///
-/// let mut a: Matrix<f64> = Matrix::new(2, 2, vec![1.0, -2.0, 3.0, -7.0]);
-/// a = a.transpose();
-///
-/// let a_trans: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 3.0, -2.0, -7.0]);
-///
-/// assert_eq!(a_trans, a);
-/// ```
-//    pub fn transpose(self: &Self) -> Self
-//    {
-//        let mut trans : Matrix<T> = Matrix::zero(self.n, self.m);
-//
-//        for j in 0..self.n
-//        {
-//            for i in 0..self.m
-//            {
-//                *trans.get_mut(j, i) = self.get(i, j).clone()
-//            }
-//        }
-//
-//        trans
-//    }
-//}
-
-impl<T> Matrix<T> where T: Field + Scalar
-{
-    pub fn gcd(mut m: usize, mut n: usize) -> usize
-    {
-        while m != 0
-        {
-            let old_m: usize = m;
-            m = n % m;
-            n = old_m;
-        }
-        n
-    }
-
-    /// Function to transpose a matrix without allocating memory for the
-    /// transposed matrix
-    ///
-    /// catanzaro.name/papers/PPoPP-2014.pdf
-    /// TODO
-    /// # Example
-    ///
-    /// ```
-    /// use mathru::algebra::linear::Matrix;
-    ///
-    /// let mut uut: Matrix<f64> = Matrix::new(4, 2, vec![1.0, 0.0, 3.0, 0.0, 1.0, -7.0, 0.5, 0.25]);
-    /// uut = uut.transpose();
-    ///
-    /// let refer: Matrix<f64> = Matrix::new(2, 4, vec![1.0, 1.0, 0.0, -7.0, 3.0, 0.5, 0.0, 0.25]);
-    /// assert_eq!(refer, uut);
-    /// ```
-    pub fn transpose(self: Self) -> Matrix<T>
-    {
-        let (m, n) = self.dim();
-        let mut matrix_t: Matrix<T> = Matrix::zero(n, m);
-
-        for i in 0..m
-        {
-            for j in 0..n
-            {
-                *matrix_t.get_mut(j, i) = *self.get(i, j);
-            }
-        }
-
-        return matrix_t;
-    }
-    //    pub fn transpose_r(mut self: Self) -> Matrix<T>
-    //    {
-    //        let gcdiv: usize = Matrix::<T>::gcd(self.m, self.n);
-    //
-    //        let a: usize = self.m / gcdiv;
-    //        let b: usize = self.n / gcdiv;
-    //
-    //        let bigger: usize = self.m.max(self.n);
-    //
-    //        let mut temp : Vec<T> = Vec::with_capacity(bigger);
-    //        //Bad
-    //        unsafe {temp.set_len(bigger)};
-    //
-    //        if gcdiv > 1
-    //        {
-    //            for j in 0..self.n
-    //            {
-    //                for i in 0..self.m
-    //                {
-    //                    temp[i]  = *self.get(self.gather(i, j, b), j)
-    //                    //temp[i] = self.data[self.gather(i, j, b) * self.n + j];
-    //                }
-    //
-    //                for i in 0..self.m
-    //                {
-    //                    *self.get_mut(i, j) = temp[i];
-    //                    //self.data[i * self.n + j] = temp[i];
-    //                }
-    //            }
-    //        }
-    //
-    //        for i in 0..self.m
-    //        {
-    //            for j in 0..self.n
-    //            {
-    //                temp[self.scatter_da(i, j, b)] = *self.get(i, j);
-    //                //temp[self.scatter_da(i, j, b)] = self.data[i * self.n + j];
-    //            }
-    //
-    //            for j in 0..self.n
-    //            {
-    //                *self.get_mut(i, j) = temp[j];
-    //                //self.data[i * self.n + j] = temp[j];
-    //            }
-    //        }
-    //
-    //        for j in 0..self.n
-    //        {
-    //            for i in 0..self.m
-    //            {
-    //                temp[i] = *self.get(self.gather_sa(i, j, a), j);
-    //                //temp[i] =  self.data[self.gather_sa(i, j, a) * self.n + j];
-    //            }
-    //
-    //            for i in 0..self.m
-    //            {
-    //                *self.get_mut(i, j) = temp[i];
-    //                //self.data[i * self.n + j] = temp[i];
-    //            }
-    //        }
-    //
-    //        let temp_m : usize = self.m;
-    //        self.m = self.n;
-    //        self.n = temp_m;
-    //
-    //        return self;
-    //    }
-    //
-    //    fn gather<'a>(self: &'a Self, i: usize, j: usize, b: usize) -> usize
-    //    {
-    //        return (i + (j / b)) % self.m;
-    //    }
-    //
-    //    fn gather_sa<'a>(self: &'a Self, i: usize, j: usize, a: usize) -> usize
-    //    {
-    //        return (j + i * self.n - i / a) % self.m;
-    //    }
-    //
-    //    fn scatter_da<'a>(self: &'a Self, i: usize, j: usize, b: usize) -> usize
-    //    {
-    //        return (((i + j / b) % self.m) + j * self.m) % self.n;
-    //    }
-}
-
-// # TODO conditinal comppilation
-impl<T> Substitute<Vector<T>> for Matrix<T> where T: Field + Scalar
-{
-    fn substitute_forward(self: &Self, b: Vector<T>) -> Vector<T>
-    {
-        return self.substitute_forward_vector_r(b);
-    }
-
-    fn substitute_backward(self: &Self, b: Vector<T>) -> Vector<T>
-    {
-        return self.substitute_backward_vector_r(b);
-    }
-}
-
-impl<T> Substitute<Matrix<T>> for Matrix<T> where T: Field + Scalar
-{
-    fn substitute_forward(self: &Self, b: Matrix<T>) -> Matrix<T>
-    {
-        return self.substitute_forward_matrix_r(b);
-    }
-
-    fn substitute_backward(self: &Self, b: Matrix<T>) -> Matrix<T>
-    {
-        return self.substitute_backward_matrix_r(b);
-    }
-}
-
-impl<T> Matrix<T> where T: Field + Scalar
-{
-    #[cfg(feature = "native")]
-    pub fn substitute_forward_vector_r(self: &Self, mut b: Vector<T>) -> Vector<T>
-    {
-        for k in 0..self.n
-        {
-            for l in 0..k
-            {
-                *b.get_mut(k) = *b.get(k) - *self.get(k, l) * *b.get(l);
-            }
-            *b.get_mut(k) = *b.get(k) / *self.get(k, k);
-        }
-
-        return b;
-    }
-
-    #[cfg(feature = "native")]
-    pub fn substitute_forward_matrix_r(self: &Self, mut b: Matrix<T>) -> Matrix<T>
-    {
-        let min: usize = std::cmp::min(self.m, self.n);
-        for k in 0..min
-        {
-            for l in 0..k
-            {
-                b.set_row(&(b.get_row(k) - (b.get_row(l) * *self.get(k, l))), k);
-            }
-            b.set_row(&(b.get_row(k) / *self.get(k, k)), k);
-        }
-
-        return b;
-    }
-
-    #[cfg(feature = "native")]
-    pub fn substitute_backward_vector_r(self: &Self, mut b: Vector<T>) -> Vector<T>
-    {
-        for k in (0..self.n).rev()
-        {
-            for l in (k + 1..self.n).rev()
-            {
-                *b.get_mut(k) = *b.get(k) - *self.get(k, l) * *b.get(l);
-            }
-            if *self.get(k, k) != T::zero()
-            {
-                *b.get_mut(k) = *b.get(k) / *self.get(k, k);
-            }
-            else
-            {
-                *b.get_mut(k) = T::one();
-            }
-        }
-
-        return b;
-    }
-
-    #[cfg(feature = "native")]
-    pub fn substitute_backward_matrix_r(self: &Self, mut b: Matrix<T>) -> Matrix<T>
-    {
-        let min = std::cmp::min(self.m, self.n);
-
-        for k in (0..min).rev()
-        {
-            for l in (k + 1..min).rev()
-            {
-                b.set_row(&(b.get_row(k) - (b.get_row(l) * *self.get(k, l))), k);
-            }
-            b.set_row(&(b.get_row(k) / *self.get(k, k)), k);
-        }
-
-        return b;
-    }
-
-    #[cfg(feature = "blaslapack")]
-    pub fn substitute_forward_matrix_r(self: &Self, mut b: Matrix<T>) -> Matrix<T>
-    {
-        T::xtrsm('L',
-                 'L',
-                 'N',
-                 'N',
-                 b.m as i32,
-                 b.n as i32,
-                 T::one(),
-                 self.data.as_slice(),
-                 self.m as i32,
-                 b.data.as_mut_slice(),
-                 b.m as i32);
-        return b;
-    }
-
-    #[cfg(feature = "blaslapack")]
-    pub fn substitute_forward_vector_r(self: &Self, b: Vector<T>) -> Vector<T>
-    {
-        let (b_m, b_n): (usize, usize) = b.dim();
-        let mut b_data = b.convert_to_vec();
-        T::xtrsm('L',
-                 'L',
-                 'N',
-                 'N',
-                 b_m as i32,
-                 b_n as i32,
-                 T::one(),
-                 self.data.as_slice(),
-                 self.m as i32,
-                 b_data.as_mut_slice(),
-                 b_m as i32);
-        return Vector::new_column(b_m, b_data);
-    }
-
-    #[cfg(feature = "blaslapack")]
-    pub fn substitute_backward_matrix_r(self: &Self, mut b: Matrix<T>) -> Matrix<T>
-    {
-        T::xtrsm('L',
-                 'U',
-                 'N',
-                 'N',
-                 b.m as i32,
-                 b.n as i32,
-                 T::one(),
-                 self.data.as_slice(),
-                 self.m as i32,
-                 b.data.as_mut_slice(),
-                 b.m as i32);
-        return b;
-    }
-
-    #[cfg(feature = "blaslapack")]
-    pub fn substitute_backward_vector_r(self: &Self, b: Vector<T>) -> Vector<T>
-    {
-        let (b_m, b_n): (usize, usize) = b.dim();
-        let mut b_data = b.convert_to_vec();
-        T::xtrsm('L',
-                 'U',
-                 'N',
-                 'N',
-                 b_m as i32,
-                 b_n as i32,
-                 T::one(),
-                 self.data.as_slice(),
-                 self.m as i32,
-                 b_data.as_mut_slice(),
-                 b_m as i32);
-        return Vector::new_column(b_m, b_data);
     }
 }
 
@@ -1313,7 +980,7 @@ impl<T> Matrix<T> where T: Field + Scalar
     /// ```
     pub fn one(size: usize) -> Self
     {
-        let mut data = vec![Identity::<Addition>::id(); size * size];
+        let mut data: Vec<T> = vec![Identity::<Addition>::id(); size * size];
 
         for i in 0..size
         {
@@ -1407,7 +1074,7 @@ impl<T> Matrix<T> where T: Field + Scalar
 {
     /// Compares to matrices
     ///
-    /// Checks if all elememnts in the self matrix are in a epsilon
+    /// Checks if all elements in the self matrix are in a epsilon
     /// neighbourhood of exp
     ///
     /// # Example
@@ -1416,21 +1083,21 @@ impl<T> Matrix<T> where T: Field + Scalar
     /// use mathru::algebra::linear::{Matrix};
     ///
     /// let a: Matrix<f64> = Matrix::new(4, 2, vec![1.0, 0.0, 3.0, 0.0, 1.0, -7.0, 0.5, 0.25]);
-    pub fn compare_neighbourhood(self: &Self, exp: &Self, epsilon: T) -> bool
+    pub fn compare_neighbourhood(self: &Self, act: &Self, epsilon: T) -> bool
     {
-        let (exp_m, exp_n): (usize, usize) = exp.dim();
+        let (act_m, act_n): (usize, usize) = act.dim();
         let (self_m, self_n): (usize, usize) = self.dim();
 
-        assert!(exp_m == self_m);
-        assert!(exp_n == self_n);
+        assert!(act_m == self_m);
+        assert!(act_n == self_n);
 
-        for i in 0..exp_m
+        for i in 0..act_m
         {
-            for k in 0..exp_n
+            for k in 0..act_n
             {
-                if (*exp.get(i, k) - *self.get(i, k)).abs() > epsilon
+                if (*act.get(i, k) - *self.get(i, k)).abs() > epsilon
                 {
-                    println!("exp: {}, act: {} exp - act: {}", exp, self, (exp - self));
+                    println!("exp: {}, act: {} exp - act: {}", self, act, (act - self));
                     return false;
                 }
             }

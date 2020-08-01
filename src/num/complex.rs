@@ -337,6 +337,16 @@ impl<T> Blas for Complex<T> where T: Real
     {
         unimplemented!();
     }
+
+    fn xscal(_n: i32, _a: Self, _x: &mut [Self], _inc: i32)
+    {
+       unimplemented!();
+    }
+
+    fn xaxpy(_n: i32, _a: Self, _x: &[Self], _incx: i32, _y: &mut [Self], _incy: i32)
+    {
+        unimplemented!();
+    }
 }
 
 //impl<T> Field for Complex<T>

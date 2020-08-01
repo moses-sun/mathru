@@ -17,7 +17,7 @@ mod gamma;
 mod normal;
 mod poisson;
 mod t;
-//mod multinomial;
+mod log_normal;
 mod raisedcosine;
 mod uniform;
 
@@ -32,6 +32,7 @@ pub use self::{
     normal::Normal,
     poisson::Poisson,
     t::T,
+    log_normal::LogNormal,
+    raisedcosine::RaisedCosine,
+    uniform::Uniform,
 };
-//pub use self::multinomial::Multinomial;
-pub use self::{raisedcosine::RaisedCosine, uniform::Uniform};
