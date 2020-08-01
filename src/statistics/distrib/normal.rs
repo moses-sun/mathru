@@ -1,6 +1,6 @@
 use crate::{
     algebra::abstr::Real,
-    special,
+    special::error,
     statistics::distrib::{Continuous, Distribution},
 };
 use rand;
@@ -133,7 +133,7 @@ impl<T> Continuous<T> for Normal<T> where T: Real
     fn cdf(self: &Self, x: T) -> T
     {
         let k: T = (x - self.mean) / ((T::from_f64(2.0) * self.variance).sqrt());
-        let prob: T = T::from_f64(0.5) * (T::one() + special::erf(k));
+        let prob: T = T::from_f64(0.5) * (T::one() + error::erf(k));
         prob
     }
 

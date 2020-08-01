@@ -1,5 +1,5 @@
 use super::Normal;
-use crate::{algebra::abstr::Real, special, special::gamma, statistics::distrib::Continuous};
+use crate::{algebra::abstr::Real, special::error, special::gamma, statistics::distrib::Continuous};
 
 /// Chi-Squared distribution
 ///
@@ -113,7 +113,7 @@ impl<T> Continuous<T> for ChiSquared<T> where T: Real
                        / gamma::gamma(T::from_f64((i as f64) + 1.5));
             }
 
-            p = special::erf((x / T::from_f64(2.0)).sqrt()) - t1 * sum;
+            p = error::erf((x / T::from_f64(2.0)).sqrt()) - t1 * sum;
         }
 
         p
