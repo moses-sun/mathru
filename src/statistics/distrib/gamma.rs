@@ -1,5 +1,6 @@
 use crate::{algebra::abstr::Real, special::gamma, statistics::distrib::Continuous};
 
+
 /// Gamma distribution
 ///
 /// Fore more information:
@@ -40,7 +41,8 @@ impl<T> Gamma<T> where T: Real
     }
 }
 
-impl<T> Continuous<T> for Gamma<T> where T: Real
+impl<T> Continuous<T> for Gamma<T>
+    where T: Real + gamma::Gamma
 {
     /// Probability density function
     ///
@@ -67,8 +69,8 @@ impl<T> Continuous<T> for Gamma<T> where T: Real
         {
             panic!();
         }
-        self.beta.pow(&self.alpha) / gamma::gamma(self.alpha)
-        * x.pow(&(self.alpha - T::one()))
+        self.beta.pow(self.alpha) / gamma::gamma(self.alpha)
+        * x.pow(self.alpha - T::one())
         * (-self.beta * x).exp()
     }
 
@@ -120,7 +122,7 @@ impl<T> Continuous<T> for Gamma<T> where T: Real
     /// ```
     fn variance(self: &Self) -> T
     {
-        return self.alpha / self.beta.pow(&T::from_f64(2.0));
+        return self.alpha / self.beta.pow(T::from_f64(2.0));
     }
 
     ///

@@ -135,9 +135,9 @@ impl<T> Vector<T> where T: Field + Scalar + Power
         for i in 0..(m * n)
         {
             let b: T = *self.get(i);
-            sum += b.pow(p);
+            sum += b.pow(*p);
         }
-        let norm: T = sum.pow(&(T::one() / *p));
+        let norm: T = sum.pow(T::one() / *p);
         norm
     }
 }

@@ -1,6 +1,8 @@
 use crate::{
     algebra::abstr::Real,
     statistics::distrib::{ChiSquared, Continuous},
+    special::gamma::Gamma,
+    special::error::Error,
 };
 
 /// G-Test
@@ -13,7 +15,7 @@ pub struct G<T>
     g: T,
 }
 
-impl<T> G<T> where T: Real
+impl<T> G<T> where T: Real + Gamma + Error
 {
     ///
     /// \sum_{i}{y_{i}} = n = \sum_i{xs_i}

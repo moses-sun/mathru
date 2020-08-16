@@ -144,7 +144,7 @@ impl<T> Continuous<T> for Exponential<T> where T: Real
     /// ```
     fn variance(self: &Self) -> T
     {
-        return T::one() / self.lambda.pow(&T::from_u8(2));
+        return T::one() / self.lambda.pow(T::from_u8(2));
     }
 
     ///

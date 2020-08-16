@@ -60,7 +60,7 @@ impl<T> Matrix<T> where T: Field + Scalar + Power
 
                 if i == j
                 {
-                    *l.get_mut(i, j) = (*self.get(i, i) - sum).pow(&exponent_sqrt)
+                    *l.get_mut(i, j) = (*self.get(i, i) - sum).pow(exponent_sqrt)
                 }
                 else
                 {

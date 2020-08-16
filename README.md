@@ -79,8 +79,23 @@ The following features are implemented in this create:
 
 * special functions
     * gamma functions
+        * gamma function
+        * log-gamma function
+        * digamma function
+        * upper incomplete gamma function
+        * upper incomplete regularized gamma function
+        * lower incomplete gamma function
+        * lower regularized incomplete gamma function
     * beta functions
-    * hypergeometrical functions
+        * beta function
+        * incomplete beta function
+        * incomplete regularized beta function
+    * error functions
+        * error function
+        * complementary error function
+        * inverse error function
+        * inverse complementary error function
+    * hypergeometric functions
 
 ## Usage
 

@@ -4,6 +4,7 @@ use crate::{
         distrib::{ChiSquared as ChiSquaredDistrib, Continuous},
         test::Test,
     },
+    special::{error::Error, gamma::Gamma},
 };
 
 /// Chi-Squared Test
@@ -71,7 +72,7 @@ impl<T> ChiSquared<T> where T: Real
                 let n_j_: T = x[j] + y[j];
 
                 let n_jks: T = (n_k * n_j_) / (n);
-                chi_squared += (n_jk - n_jks).pow(&T::from_f64(2.0)) / n_jks
+                chi_squared += (n_jk - n_jks).pow(T::from_f64(2.0)) / n_jks
             }
         }
 
@@ -79,7 +80,8 @@ impl<T> ChiSquared<T> where T: Real
     }
 }
 
-impl<T> Test<T> for ChiSquared<T> where T: Real
+impl<T> Test<T> for ChiSquared<T>
+    where T: Real + Gamma + Error
 {
     fn df(self: &Self) -> u32
     {

@@ -1,6 +1,7 @@
 use crate::{
     algebra::abstr::Real,
     special,
+    special::gamma::Gamma,
     statistics::{combins, distrib::Discrete},
 };
 
@@ -43,7 +44,8 @@ impl<T> Poisson<T> where T: Real
     }
 }
 
-impl<T> Discrete<T, u32, u32> for Poisson<T> where T: Real
+impl<T> Discrete<T, u32, u32> for Poisson<T>
+    where T: Real + Gamma
 {
     /// Probability mass function
     ///
@@ -63,7 +65,7 @@ impl<T> Discrete<T, u32, u32> for Poisson<T> where T: Real
     fn pmf<'a>(self: &'a Self, x: u32) -> T
     {
         let k_fact: T = T::from_u64(combins::factorial(x));
-        self.gamma.pow(&T::from_u32(x)) * (-self.gamma).exp() / k_fact
+        self.gamma.pow(T::from_u32(x)) * (-self.gamma).exp() / k_fact
     }
 
     /// Cumulative distribution function of the Bernoulli distribution

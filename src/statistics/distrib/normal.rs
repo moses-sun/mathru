@@ -2,6 +2,8 @@ use crate::{
     algebra::abstr::Real,
     special::error,
     statistics::distrib::{Continuous, Distribution},
+    special::gamma::Gamma,
+    special::error::Error,
 };
 use rand;
 
@@ -83,14 +85,15 @@ impl<T> Normal<T> where T: Real
 
         for x in data.iter()
         {
-            sum += (*x - mean).pow(&T::from_f64(2.0));
+            sum += (*x - mean).pow(T::from_f64(2.0));
         }
 
         return sum / T::from_u64((n - 1) as u64);
     }
 }
 
-impl<T> Continuous<T> for Normal<T> where T: Real
+impl<T> Continuous<T> for Normal<T>
+    where T: Real + Gamma + Error
 {
     /// Probability density function
     ///
@@ -109,7 +112,7 @@ impl<T> Continuous<T> for Normal<T> where T: Real
     /// ```
     fn pdf(self: &Self, x: T) -> T
     {
-        let z: T = T::from_f64(-0.5) * ((x - self.mean) / self.variance).pow(&T::from_f64(2.0));
+        let z: T = T::from_f64(-0.5) * ((x - self.mean) / self.variance).pow(T::from_f64(2.0));
         let f: T = T::one() / (self.variance * T::from_f64(2.0) * T::pi()).sqrt();
 
         return f * z.exp();
@@ -234,6 +237,25 @@ impl<T> Continuous<T> for Normal<T> where T: Real
         return self.variance;
     }
 
+    /// Skewness
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// use mathru::{
+    ///     self,
+    ///     statistics::distrib::{Continuous, Normal},
+    /// };
+    /// let mean: f64 = 1.0;
+    /// let variance: f64 = 0.5;
+    /// let distrib: Normal<f64> = Normal::new(mean, variance);
+    /// assert_eq!(0.0, distrib.skewness());
+    /// ```
+    fn skewness(self: &Self) -> T
+    {
+        return T::zero();
+    }
+
     /// Median
     ///
     /// # Example
@@ -253,25 +275,6 @@ impl<T> Continuous<T> for Normal<T> where T: Real
     fn median(self: &Self) -> T
     {
         return self.mean;
-    }
-
-    /// Skewness
-    ///
-    /// # Example
-    ///
-    /// ```
-    /// use mathru::{
-    ///     self,
-    ///     statistics::distrib::{Continuous, Normal},
-    /// };
-    /// let mean: f64 = 1.0;
-    /// let variance: f64 = 0.5;
-    /// let distrib: Normal<f64> = Normal::new(mean, variance);
-    /// assert_eq!(0.0, distrib.skewness());
-    /// ```
-    fn skewness(self: &Self) -> T
-    {
-        return T::zero();
     }
 
     /// Entropy

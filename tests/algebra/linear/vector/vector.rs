@@ -353,7 +353,7 @@ fn p_norm()
 {
     let p: f32 = 2.0;
     let v: Vector<f32> = Vector::new_column(4, vec![-2.0, -5.0, -3.0, 2.0]);
-    let p_norm_ref: f32 = 42.0.pow(&0.5);
+    let p_norm_ref: f32 = 42.0.pow(0.5);
     let p_norm: f32 = v.p_norm(&p);
     assert_eq!(p_norm_ref, p_norm);
 }

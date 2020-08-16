@@ -1,5 +1,5 @@
 use mathru::statistics::distrib::{Continuous, LogNormal};
-use std::f64::consts::{E, PI};
+use std::f64::consts::{PI};
 
 #[test]
 fn pdf_negative()

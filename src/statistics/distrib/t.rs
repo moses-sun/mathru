@@ -1,8 +1,11 @@
 use crate::{
     algebra::abstr::Real,
-    special::{beta, gamma, hypergeometrical},
+    special::{beta, gamma, hypergeometric},
     statistics::distrib::Continuous,
+    special::beta::Beta,
+    special::gamma::Gamma,
 };
+use crate::special::hypergeometric::Hypergeometric;
 
 /// T distribution
 ///
@@ -44,7 +47,7 @@ impl<K> T<K> where K: Real
     }
 }
 
-impl<K> Continuous<K> for T<K> where K: Real
+impl<K> Continuous<K> for T<K> where K: Real + Beta + Hypergeometric + Gamma
 {
     /// Probability density function
     ///
@@ -65,8 +68,7 @@ impl<K> Continuous<K> for T<K> where K: Real
     fn pdf(self: &Self, x: K) -> K
     {
         gamma::gamma((self.n + K::one()) / K::from_f64(2.0))
-        * (K::one() + x.pow(&K::from_f64(2.0)) / self.n).pow(&(-(self.n + K::one())
-                                                               / K::from_f64(2.0)))
+        * (K::one() + x * x / self.n).pow(-((self.n + K::one()) / K::from_f64(2.0)))
         / ((self.n * K::pi()).sqrt() * gamma::gamma(self.n / K::from_f64(2.0)))
     }
 
@@ -88,10 +90,10 @@ impl<K> Continuous<K> for T<K> where K: Real
     fn cdf(self: &Self, x: K) -> K
     {
         let k: K = (self.n + K::one()) / K::from_f64(2.0);
-        let f21: K = hypergeometrical::f21(K::from_f64(0.5),
-                                           k,
-                                           K::from_f64(1.5),
-                                           -(x.pow(&K::from_f64(2.0))) / self.n);
+        let f21: K = hypergeometric::f21(K::from_f64(0.5),
+                                         k,
+                                         K::from_f64(1.5),
+                                         -(x.pow(K::from_f64(2.0))) / self.n);
         return K::from_f64(0.5)
                + x * gamma::gamma(k) * f21
                  / ((self.n * K::pi()).sqrt() * gamma::gamma(self.n / K::from_f64(2.0)));

@@ -23,6 +23,17 @@ fn pdf1()
 }
 
 #[test]
+fn pdf2()
+{
+    let n: f64 = 7.753;
+    let x: f64 = -0.7559;
+
+    let t: T<f64> = T::new(n);
+
+    assert!((t.pdf(x) - 0.283).abs() < 0.001);
+}
+
+#[test]
 fn cdf0()
 {
     let n: f64 = 2.0;
@@ -44,16 +55,7 @@ fn cdf1()
     assert_eq!(0.33333333333333315, t.cdf(x));
 }
 
-#[test]
-fn cdf2()
-{
-    let n: f64 = 7.753;
-    let x: f64 = -0.7559;
 
-    let t: T<f64> = T::new(n);
-
-    assert!((t.pdf(x) - 0.283).abs() < 0.001);
-}
 
 #[test]
 #[should_panic(expected = "Skewness is not defined if degrees of freedom is smaller or equal 3")]

@@ -1,5 +1,7 @@
 use super::Normal;
-use crate::{algebra::abstr::Real, special::error, special::gamma, statistics::distrib::Continuous};
+use crate::{algebra::abstr::Real, special::error::Error, special::gamma::Gamma, statistics::distrib::Continuous};
+use crate::special::gamma;
+use crate::special::error;
 
 /// Chi-Squared distribution
 ///
@@ -39,7 +41,8 @@ impl<T> ChiSquared<T> where T: Real
     }
 }
 
-impl<T> Continuous<T> for ChiSquared<T> where T: Real
+impl<T> Continuous<T> for ChiSquared<T>
+    where T: Real + Gamma + Error
 {
     /// Probability density function
     ///
@@ -63,9 +66,9 @@ impl<T> Continuous<T> for ChiSquared<T> where T: Real
             return T::zero();
         }
         let t1: T = T::one()
-                    / (T::from_f64(2.0).pow(&(self.k / T::from_f64(2.0)))
+                    / (T::from_f64(2.0).pow(self.k / T::from_f64(2.0))
                        * gamma::gamma(self.k / T::from_f64(2.0)));
-        let t2: T = x.pow(&(self.k / T::from_f64(2.0) - T::one())) * (-x / T::from_f64(2.0)).exp();
+        let t2: T = x.pow(self.k / T::from_f64(2.0) - T::one()) * (-x / T::from_f64(2.0)).exp();
         let chisquared: T = t1 * t2;
 
         return chisquared;
@@ -99,7 +102,7 @@ impl<T> Continuous<T> for ChiSquared<T> where T: Real
             for i in 0..(self.k / T::from_f64(2.0)).to_u32()
             {
                 sum +=
-                    (x / T::from_f64(2.0)).pow(&T::from_u32(i)) / gamma::gamma(T::from_u32(i + 1))
+                    (x / T::from_f64(2.0)).pow(T::from_u32(i)) / gamma::gamma(T::from_u32(i + 1))
             }
 
             p = T::one() - t1 * sum;
@@ -109,7 +112,7 @@ impl<T> Continuous<T> for ChiSquared<T> where T: Real
             let mut sum: T = T::zero();
             for i in 0..(self.k / T::from_f64(2.0)).to_u32()
             {
-                sum += (x / T::from_f64(2.0)).pow(&T::from_f64((i as f64) + 0.5))
+                sum += (x / T::from_f64(2.0)).pow(T::from_f64((i as f64) + 0.5))
                        / gamma::gamma(T::from_f64((i as f64) + 1.5));
             }
 
@@ -125,7 +128,7 @@ impl<T> Continuous<T> for ChiSquared<T> where T: Real
         let std_distrib: Normal<T> = Normal::new(T::zero(), T::one());
         let q: T = T::from_f64(0.5)
             * (std_distrib.quantile(p) + (T::from_f64(2.0) * self.k - T::one()).sqrt())
-                .pow(&T::from_f64(2.0));
+                .pow(T::from_f64(2.0));
         return q;
     }
 
