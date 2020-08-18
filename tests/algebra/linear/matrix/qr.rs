@@ -82,7 +82,7 @@ fn decompose_qr1()
     let r: Matrix<f64> = a.dec_qr().r();
 
     let r_ref: Matrix<f64> = matrix![  -5.0, -7.0;
-                                        0.0, -5.0.pow(&0.5);
+                                        0.0, -5.0.pow(0.5);
                                         0.0, 0.0;
                                         0.0, 0.0];
 
