@@ -2,7 +2,7 @@
 
 [![crate](https://img.shields.io/crates/v/mathru.svg)](https://crates.io/crates/mathru)
 [![documentation](https://docs.rs/mathru/badge.svg)](https://docs.rs/mathru)
-![minimum rustc 1.44.0](https://img.shields.io/badge/rustc-1.44.0-green.svg)
+![minimum rustc 1.44.0](https://img.shields.io/badge/rustc-1.45.0-green.svg)
 ![maintenance](https://img.shields.io/badge/maintenance-actively--developed-brightgreen.svg)
 [![pipeline status](https://gitlab.com/matthiaseiholzer/mathru/badges/master/pipeline.svg)](https://gitlab.com/matthiaseiholzer/mathru/-/commits/master)
 ------------
@@ -63,6 +63,7 @@ The following features are implemented in this create:
         * Gamma
         * Chi-squared
         * Normal
+        * Log-Normal
         * Poisson
         * Raised cosine
         * Student-t
@@ -77,7 +78,7 @@ The following features are implemented in this create:
     * hyperbolic functions
     * exponential functions
 
-* special functions
+* [special functions](https://matthiaseiholzer.gitlab.io/mathru/documentation/special)
     * gamma functions
         * gamma function
         * log-gamma function
