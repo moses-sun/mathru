@@ -57,7 +57,7 @@ fn cdf3()
 
     let distrib: ChiSquared<f64> = ChiSquared::new(df);
 
-    assert_eq!(0.0811279995005158, distrib.cdf(0.5))
+    assert_relative_eq!(0.08110858834532447, distrib.cdf(0.5), epsilon=3.0 * f64::EPSILON);
 }
 
 //Very inaccurate
@@ -68,7 +68,7 @@ fn cdf4()
 
     let distrib: ChiSquared<f64> = ChiSquared::new(df);
 
-    assert_eq!(0.9541107096801389, distrib.cdf(8.0))
+    assert_relative_eq!(0.9539882943107686, distrib.cdf(8.0), epsilon=3.0 * f64::EPSILON);
 }
 
 #[test]

@@ -1,11 +1,12 @@
 # Change Log
 All notable changes starting with the version 0.6.9 are documented here.
 
-## [0.6.11]
+## [0.7.0]
+- Using SemVer for release versioning
 - log-normal distribution
--
+- Different changes on beta, gamma and error functions
 
-## [0.6.10]
+## [0.6
 - Native Rust code, Openblas, Netlib, Intel-Mkl and Accelerate are now usable as linear algebra libraries
 
 ## [0.6.9]

@@ -4,38 +4,38 @@
 pub trait Hyperbolic
 {
     /// Hyperbolic sine
-    fn sinh(self: &Self) -> Self;
+    fn sinh(self: Self) -> Self;
 
     /// Hyperbolic cosine
-    fn cosh(self: &Self) -> Self;
+    fn cosh(self: Self) -> Self;
 
     /// Hyperbolic tangens
-    fn tanh(self: &Self) -> Self;
+    fn tanh(self: Self) -> Self;
 
     /// Hyperbolic cotangens
-    fn coth(self: &Self) -> Self;
+    fn coth(self: Self) -> Self;
 
     /// Hyperbolic secant
-    fn sech(self: &Self) -> Self;
+    fn sech(self: Self) -> Self;
 
     /// Hyperbolic cosecant
-    fn csch(self: &Self) -> Self;
+    fn csch(self: Self) -> Self;
 
     /// Inverse hyperbolic  sine
-    fn arsinh(self: &Self) -> Self;
+    fn arsinh(self: Self) -> Self;
 
     /// Inverse hyperbolic cosine
-    fn arcosh(self: &Self) -> Self;
+    fn arcosh(self: Self) -> Self;
 
     /// Inverse hyperbolic tangens
-    fn artanh(self: &Self) -> Self;
+    fn artanh(self: Self) -> Self;
 
     /// Inverse hyperbolic cosecant
-    fn arcoth(self: &Self) -> Self;
+    fn arcoth(self: Self) -> Self;
 
     /// Inverse hyperbolic secant
-    fn arsech(self: &Self) -> Self;
+    fn arsech(self: Self) -> Self;
 
     /// Inverse hyperbolic cosecant
-    fn arcsch(self: &Self) -> Self;
+    fn arcsch(self: Self) -> Self;
 }

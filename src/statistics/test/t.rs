@@ -4,7 +4,11 @@ use crate::{
         distrib::{Continuous, Normal, T as TD},
         test::Test,
     },
+    special::gamma::Gamma,
+    special::beta::Beta,
+    special::error::Error,
 };
+use crate::special::hypergeometric::Hypergeometric;
 
 /// T-Test
 ///
@@ -79,7 +83,7 @@ impl<K> Test<K> for T<K> where K: Real
     }
 }
 
-impl<K> T<K> where K: Real
+impl<K> T<K> where K: Real + Gamma + Beta + Error + Hypergeometric
 {
     /// This is a one-sided test for the null hypothesis that the expected value
     /// (mean) of a sample of independent observations a is equal

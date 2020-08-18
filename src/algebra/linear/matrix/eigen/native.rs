@@ -78,7 +78,7 @@ impl<T> Matrix<T> where T: Real
                        - *self.get(q - 1, p - 1) * *self.get(p - 1, q - 1);
 
             // compute first 3 elements of first column of M
-            let mut x: T = self.get(0, 0).pow(&T::from_f64(2.0))
+            let mut x: T = self.get(0, 0).pow(T::from_f64(2.0))
                            + *self.get(0, 1) * *self.get(1, 0)
                            - s * *self.get(0, 0)
                            + t;

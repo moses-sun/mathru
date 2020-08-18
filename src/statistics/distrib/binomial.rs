@@ -65,7 +65,7 @@ impl<T> Discrete<T, u32, T> for Binomial<T> where T: Real
         let f: T = T::from_u32(combins::binom(self.n, x));
         let diff: i32 = (self.n as i32) - (x as i32);
         let pdf: T =
-            f * (self.p.pow(&T::from_u32(x))) * ((T::one() - self.p).pow(&T::from_i32(diff)));
+            f * (self.p.pow(T::from_u32(x))) * ((T::one() - self.p).pow(T::from_i32(diff)));
         pdf
     }
 

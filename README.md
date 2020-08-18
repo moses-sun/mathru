@@ -2,7 +2,7 @@
 
 [![crate](https://img.shields.io/crates/v/mathru.svg)](https://crates.io/crates/mathru)
 [![documentation](https://docs.rs/mathru/badge.svg)](https://docs.rs/mathru)
-![minimum rustc 1.44.0](https://img.shields.io/badge/rustc-1.44.0-green.svg)
+![minimum rustc 1.44.0](https://img.shields.io/badge/rustc-1.45.0-green.svg)
 ![maintenance](https://img.shields.io/badge/maintenance-actively--developed-brightgreen.svg)
 [![pipeline status](https://gitlab.com/matthiaseiholzer/mathru/badges/master/pipeline.svg)](https://gitlab.com/matthiaseiholzer/mathru/-/commits/master)
 ------------
@@ -63,6 +63,7 @@ The following features are implemented in this create:
         * Gamma
         * Chi-squared
         * Normal
+        * Log-Normal
         * Poisson
         * Raised cosine
         * Student-t
@@ -77,10 +78,25 @@ The following features are implemented in this create:
     * hyperbolic functions
     * exponential functions
 
-* special functions
+* [special functions](https://matthiaseiholzer.gitlab.io/mathru/documentation/special)
     * gamma functions
+        * gamma function
+        * log-gamma function
+        * digamma function
+        * upper incomplete gamma function
+        * upper incomplete regularized gamma function
+        * lower incomplete gamma function
+        * lower regularized incomplete gamma function
     * beta functions
-    * hypergeometrical functions
+        * beta function
+        * incomplete beta function
+        * incomplete regularized beta function
+    * error functions
+        * error function
+        * complementary error function
+        * inverse error function
+        * inverse complementary error function
+    * hypergeometric functions
 
 ## Usage
 
@@ -88,13 +104,13 @@ Add this to your `Cargo.toml` for the native Rust implementation:
 
 ```toml
 [dependencies.mathru]
-version = "^0.6"
+version = "^0.7"
 ```
 Add the following lines to 'Cargo.toml' if the openblas library should be used:
 
 ```toml
 [dependencies.mathru]
-version = "^0.6"
+version = "^0.7"
 default-features = false
 features = "openblas"
 ```

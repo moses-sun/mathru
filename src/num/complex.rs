@@ -102,7 +102,7 @@ impl<T> ComplexT for Complex<T> where T: Real
     /// Returns the argument of the complex number
     fn arg(self: Self) -> Self
     {
-        Complex { re: self.im.arctan2(&self.re),
+        Complex { re: self.im.arctan2(self.re),
                   im: T::zero() }
     }
 }
@@ -386,7 +386,7 @@ impl<T> Sign for Complex<T> where T: Real
     fn abs(self: &Self) -> Self
     {
         let root: T = T::from_f64(2.0);
-        Complex { re: (self.re * self.re + self.im * self.im).root(&root),
+        Complex { re: (self.re * self.re + self.im * self.im).root(root),
                   im: T::zero() }
     }
 
@@ -659,7 +659,7 @@ impl<T> Exponential for Complex<T> where T: Real
     /// let z: Complex<f64> = Complex::new(1.0, 2.0);
     /// let a: Complex<f64> = z.exp();
     /// ```
-    fn exp(self: &Self) -> Self
+    fn exp(self: Self) -> Self
     {
         let k: T = self.re.exp();
         Complex { re: k * self.im.cos(),
@@ -678,7 +678,7 @@ impl<T> Exponential for Complex<T> where T: Real
     ///
     /// assert_eq!(refer, a.ln());
     /// ```
-    fn ln(self: &Self) -> Self
+    fn ln(self: Self) -> Self
     {
         Complex { re: self.abs().re.ln(),
                   im: self.arg().re }
@@ -712,7 +712,7 @@ impl<T> Trigonometry for Complex<T> where T: Real
     ///
     /// assert_eq!(refer, uut);
     /// ```
-    fn sin(self: &Self) -> Self
+    fn sin(self: Self) -> Self
     {
         let a: Complex<T> = Complex!(-self.im, self.re);
         let b: Complex<T> = Complex!(self.im, -self.re);
@@ -739,7 +739,7 @@ impl<T> Trigonometry for Complex<T> where T: Real
     ///
     /// assert_eq!(refer, uut);
     /// ```
-    fn cos(self: &Self) -> Self
+    fn cos(self: Self) -> Self
     {
         let a: Complex<T> = Complex!(-self.im, self.re);
         let b: Complex<T> = Complex!(self.im, -self.re);
@@ -773,7 +773,7 @@ impl<T> Trigonometry for Complex<T> where T: Real
     ///
     /// assert_eq!(refer, uut);
     /// ```
-    fn tan(self: &Self) -> Self
+    fn tan(self: Self) -> Self
     {
         return self.sin() / self.cos();
     }
@@ -793,7 +793,7 @@ impl<T> Trigonometry for Complex<T> where T: Real
     ///
     /// assert_eq!(refer, a.cot());
     /// ```
-    fn cot(self: &Self) -> Self
+    fn cot(self: Self) -> Self
     {
         Complex::one() / self.tan()
     }
@@ -813,7 +813,7 @@ impl<T> Trigonometry for Complex<T> where T: Real
     ///
     /// assert_eq!(refer, a.sec());
     /// ```
-    fn sec(self: &Self) -> Self
+    fn sec(self: Self) -> Self
     {
         Complex::one() / self.cos()
     }
@@ -833,7 +833,7 @@ impl<T> Trigonometry for Complex<T> where T: Real
     ///
     /// assert_eq!(refer, a.csc());
     /// ```
-    fn csc(self: &Self) -> Self
+    fn csc(self: Self) -> Self
     {
         Complex::one() / self.sin()
     }
@@ -855,13 +855,13 @@ impl<T> Trigonometry for Complex<T> where T: Real
     ///
     /// assert_eq!(refer, a.arcsin());
     /// ```
-    fn arcsin(self: &Self) -> Self
+    fn arcsin(self: Self) -> Self
     {
         let mi: Complex<T> = Complex!(T::zero(), -T::one());
         let iz: Complex<T> = Complex!(-self.im, self.re);
         let exp: Complex<T> = Complex!(T::one() / (T::one() + T::one()), T::zero());
 
-        mi * (iz + (Complex::one() - self * self).pow(&exp)).ln()
+        mi * (iz + (Complex::one() - self * self).pow(exp)).ln()
     }
 
     /// Inverse cosinus function
@@ -880,7 +880,7 @@ impl<T> Trigonometry for Complex<T> where T: Real
     ///
     /// assert_eq!(refer, a.arccos());
     /// ```
-    fn arccos(self: &Self) -> Self
+    fn arccos(self: Self) -> Self
     {
         Complex!(T::pi() / (T::one() + T::one()), T::zero()) - self.arcsin()
     }
@@ -906,7 +906,7 @@ impl<T> Trigonometry for Complex<T> where T: Real
     ///
     /// assert_eq!(refer, a.arctan());
     /// ```
-    fn arctan(self: &Self) -> Self
+    fn arctan(self: Self) -> Self
     {
         //		let iz: Complex<T> = Complex!(-self.im, self.re);
         //		let f: Complex<T> = Complex!(T::zero(), T::one() / (T::one() + T::one()));
@@ -959,7 +959,7 @@ impl<T> Trigonometry for Complex<T> where T: Real
         Complex!(re, im)
     }
 
-    fn arctan2(self: &Self, _other: &Self) -> Self
+    fn arctan2(self: Self, _other: Self) -> Self
     {
         unimplemented!()
     }
@@ -984,7 +984,7 @@ impl<T> Trigonometry for Complex<T> where T: Real
     ///
     /// assert_eq!(refer, a.arccot());
     /// ```
-    fn arccot(self: &Self) -> Self
+    fn arccot(self: Self) -> Self
     {
         if self.re == T::zero()
         {
@@ -993,7 +993,7 @@ impl<T> Trigonometry for Complex<T> where T: Real
                 panic!()
             }
         }
-        (Complex::one() / *self).arctan()
+        (Complex::one() / self).arctan()
     }
 
     /// Inverse secant function
@@ -1016,7 +1016,7 @@ impl<T> Trigonometry for Complex<T> where T: Real
     ///
     /// assert_eq!(refer, a.arcsec());
     /// ```
-    fn arcsec(self: &Self) -> Self
+    fn arcsec(self: Self) -> Self
     {
         if self.im == T::zero()
         {
@@ -1026,7 +1026,7 @@ impl<T> Trigonometry for Complex<T> where T: Real
             }
         }
 
-        (Complex::one() / *self).arccos()
+        (Complex::one() / self).arccos()
     }
 
     /// Inverse cosecant function
@@ -1047,9 +1047,9 @@ impl<T> Trigonometry for Complex<T> where T: Real
     ///
     /// assert_eq!(refer, a.arccsc());
     /// ```
-    fn arccsc(self: &Self) -> Self
+    fn arccsc(self: Self) -> Self
     {
-        (Complex::one() / *self).arcsin()
+        (Complex::one() / self).arcsin()
     }
 }
 
@@ -1066,25 +1066,25 @@ impl<T> Power for Complex<T> where T: Real
     /// let b: Complex<f64> = Complex::new(-2.0_f64, -1.0_f64);
     /// let refer: Complex<f64> = Complex::new(-0.6006033457684014, -0.07399065302898929);
     ///
-    /// assert_eq!(refer, a.pow(&b));
+    /// assert_eq!(refer, a.pow(b));
     /// ```
-    fn pow(self: &Self, exp: &Self) -> Self
+    fn pow(self: Self, exp: Self) -> Self
     {
         let r: T = self.abs().re;
         let phi: T = self.arg().re;
-        let k: T = r.pow(&exp.re) * (-exp.im * phi).exp();
+        let k: T = r.pow(exp.re) * (-exp.im * phi).exp();
         let theta: T = r.ln() * exp.im + exp.re * phi;
         let re: T = k * theta.cos();
         let im: T = k * theta.sin();
         Complex!(re, im)
     }
 
-    fn root(self: &Self, _root: &Self) -> Self
+    fn root(self: Self, _root: Self) -> Self
     {
         unimplemented!();
     }
 
-    fn sqrt(self: &Self) -> Self
+    fn sqrt(self: Self) -> Self
     {
         unimplemented!();
     }
@@ -1093,37 +1093,37 @@ impl<T> Power for Complex<T> where T: Real
 impl<T> Hyperbolic for Complex<T> where T: Real
 {
     /// Hyperbolic sine
-    fn sinh(self: &Self) -> Self
+    fn sinh(self: Self) -> Self
     {
         Complex!(T::zero(), -T::one()) * Complex!(-self.im, self.re).sin()
     }
 
     /// Hyperbolic cosine
-    fn cosh(self: &Self) -> Self
+    fn cosh(self: Self) -> Self
     {
         Complex!(-self.im, self.re).cos()
     }
 
     /// Hyperbolic tangens
-    fn tanh(self: &Self) -> Self
+    fn tanh(self: Self) -> Self
     {
         self.sinh() / self.cosh()
     }
 
     /// Hyperbolic cotangens
-    fn coth(self: &Self) -> Self
+    fn coth(self: Self) -> Self
     {
         self.cosh() / self.sinh()
     }
 
     /// Hyperbolic secant
-    fn sech(self: &Self) -> Self
+    fn sech(self: Self) -> Self
     {
         Complex!(-self.im, self.re).sec()
     }
 
     /// Hyperbolic cosecant
-    fn csch(self: &Self) -> Self
+    fn csch(self: Self) -> Self
     {
         Complex!(T::zero(), -T::one()) * Complex!(-self.im, self.re).csc()
     }
@@ -1133,10 +1133,10 @@ impl<T> Hyperbolic for Complex<T> where T: Real
     /// # Arguments
     ///
     /// # Panics
-    fn arsinh(self: &Self) -> Self
+    fn arsinh(self: Self) -> Self
     {
         let p: Complex<T> = Complex!(T::one() / (T::one() + T::one()), T::zero());
-        (self + &(self * self + Complex::one()).pow(&p)).ln()
+        (self + (self * self + Complex::one()).pow(p)).ln()
     }
 
     /// Hyperbolic inverse cosine
@@ -1144,10 +1144,10 @@ impl<T> Hyperbolic for Complex<T> where T: Real
     /// # Argument
     ///
     /// # Panics
-    fn arcosh(self: &Self) -> Self
+    fn arcosh(self: Self) -> Self
     {
         let p: Complex<T> = Complex!(T::one() / (T::one() + T::one()), T::zero());
-        (self + &(self * self - Complex::one()).pow(&p)).ln()
+        (self + (self * self - Complex::one()).pow(p)).ln()
     }
 
     /// Inverse hyperbolic tangent
@@ -1155,10 +1155,10 @@ impl<T> Hyperbolic for Complex<T> where T: Real
     /// # Arguments
     ///
     /// # Panics
-    fn artanh(self: &Self) -> Self
+    fn artanh(self: Self) -> Self
     {
         let f: Complex<T> = Complex!(T::one() / (T::one() + T::one()), T::zero());
-        ((Complex::one() + *self) / (Complex::one() - *self)).ln() * f
+        ((Complex::one() + self) / (Complex::one() - self)).ln() * f
     }
 
     /// Inverse hyperbolic cosecant
@@ -1167,22 +1167,22 @@ impl<T> Hyperbolic for Complex<T> where T: Real
     ///
     ///
     /// # Panics
-    fn arcoth(self: &Self) -> Self
+    fn arcoth(self: Self) -> Self
     {
         let f: Complex<T> = Complex!(T::one() / (T::one() + T::one()), T::zero());
-        ((*self + Complex::one()) / (*self - Complex::one())).ln() * f
+        ((self + Complex::one()) / (self - Complex::one())).ln() * f
     }
 
     /// Hyperbolic inverse secant
-    fn arsech(self: &Self) -> Self
+    fn arsech(self: Self) -> Self
     {
-        (Complex::one() / *self).arcosh()
+        (Complex::one() / self).arcosh()
     }
 
     // Hyperbolic inverse cosecant
-    fn arcsch(self: &Self) -> Self
+    fn arcsch(self: Self) -> Self
     {
-        (Complex::one() / *self).arsinh()
+        (Complex::one() / self).arsinh()
     }
 }
 

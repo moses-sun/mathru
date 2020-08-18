@@ -7,8 +7,8 @@ pub trait Exponential
     fn e() -> Self;
 
     ///Exponential function
-    fn exp(self: &Self) -> Self;
+    fn exp(self: Self) -> Self;
 
     /// Natural logiarithm function
-    fn ln(self: &Self) -> Self;
+    fn ln(self: Self) -> Self;
 }

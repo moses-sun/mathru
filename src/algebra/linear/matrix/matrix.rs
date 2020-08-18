@@ -193,7 +193,7 @@ impl<T> Matrix<T> where T: Field + Scalar + Power
         let mut perm: T = T::one();
         if counter != 0
         {
-            perm = (-T::one()).pow(&T::from_u128(counter as u128 - 1));
+            perm = (-T::one()).pow(T::from_u128(counter as u128 - 1));
         }
 
         return perm * det;
@@ -363,13 +363,13 @@ impl<T> Matrix<T> where T: Field + Scalar + Power
             if b.abs() > a.abs()
             {
                 let tau: T = -a / b;
-                s = T::one() / (T::one() + tau.pow(&exponent)).pow(&exponent_sqrt);
+                s = T::one() / (T::one() + tau.pow(exponent)).pow(exponent_sqrt);
                 c = s * tau;
             }
             else
             {
                 let tau: T = -b / a;
-                c = T::one() / (T::one() + tau.pow(&exponent)).pow(&exponent_sqrt);
+                c = T::one() / (T::one() + tau.pow(exponent)).pow(exponent_sqrt);
                 s = c * tau;
             }
         }
@@ -435,7 +435,7 @@ impl<T> Matrix<T> where T: Field + Scalar + Power
 
         let mut v: Vector<T> = Vector::zero(d_m);
 
-        *v.get_mut(0) = (T::from_f64(0.5) * (T::one() - d_0 / alpha)).pow(&T::from_f64(0.5));
+        *v.get_mut(0) = (T::from_f64(0.5) * (T::one() - d_0 / alpha)).pow(T::from_f64(0.5));
         let p: T = -alpha * *v.get(0);
 
         if d_m - 1 >= 1
@@ -588,14 +588,14 @@ impl<T> Matrix<T> where T: Field + Scalar + Power
             if f.abs() > g.abs()
             {
                 let t: T = g / f;
-                let t1: T = (T::one() + t.pow(&expo)).pow(&sqrt);
+                let t1: T = (T::one() + t.pow(expo)).pow(sqrt);
 
                 return (T::one() / t1, t / t1, f * t1);
             }
             else
             {
                 let t: T = f / g;
-                let t1: T = (T::one() + t.pow(&expo)).pow(&sqrt);
+                let t1: T = (T::one() + t.pow(expo)).pow(sqrt);
 
                 return (t / t1, T::one() / t1, g * t1);
             }

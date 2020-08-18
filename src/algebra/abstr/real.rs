@@ -24,6 +24,21 @@ macro_rules! impl_real
 			{
 				return std::$id::EPSILON;
 			}
+
+			fn gamma() -> Self
+			{
+                return 0.5772156649015328606065;
+			}
+
+			fn infinity() -> Self
+			{
+			    return Self::INFINITY
+			}
+
+			fn neg_infinity() -> Self
+			{
+			    return Self::NEG_INFINITY
+			}
         }
         )*
     }
@@ -67,4 +82,10 @@ pub trait Real: Field + Lattice + Scalar + Exponential + Trigonometry + Power + 
     }
 
     fn epsilon() -> Self;
+
+    fn gamma() -> Self;
+
+    fn infinity() -> Self;
+
+    fn neg_infinity() -> Self;
 }

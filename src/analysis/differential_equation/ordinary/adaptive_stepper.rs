@@ -172,7 +172,7 @@ impl<T> AdaptiveStepper<T> where T: Real
 
             if err != T::zero()
             {
-                let mut s: T = self.fac * (T::one() / err).pow(&l);
+                let mut s: T = self.fac * (T::one() / err).pow(l);
 
                 if s < self.fac_min
                 {
@@ -210,7 +210,7 @@ impl<T> AdaptiveStepper<T> where T: Real
             sum += k * k;
         }
 
-        let p = (sum / T::from_f64(n as f64)).pow(&T::from_f64(0.5));
+        let p = (sum / T::from_f64(n as f64)).pow(T::from_f64(0.5));
         return p;
     }
 }

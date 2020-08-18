@@ -39,7 +39,7 @@ impl<T> Beta<T> where T: Real
     }
 }
 
-impl<T> Continuous<T> for Beta<T> where T: Real
+impl<T> Continuous<T> for Beta<T> where T: Real + beta::Beta
 {
     /// Probability density function
     ///
@@ -66,7 +66,7 @@ impl<T> Continuous<T> for Beta<T> where T: Real
         {
             return T::one();
         }
-        return x.pow(&(self.p - T::one())) * (T::one() - x).pow(&(self.q - T::one()))
+        return x.pow(self.p - T::one()) * (T::one() - x).pow(self.q - T::one())
                / special::beta::beta(self.p, self.q);
     }
 
@@ -123,7 +123,7 @@ impl<T> Continuous<T> for Beta<T> where T: Real
     /// ```
     fn variance(self: &Self) -> T
     {
-        self.p * self.q / ((self.p + self.q + T::one()) * (self.p + self.q).pow(&T::from_f64(2.0)))
+        self.p * self.q / ((self.p + self.q + T::one()) * (self.p + self.q).pow(T::from_f64(2.0)))
     }
 
     /// Skewness

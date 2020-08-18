@@ -174,7 +174,7 @@ impl<T> DormandPrince54<T> where T: Real
     {
         return T::from_f64(0.9)
                * h_n
-               * (self.abs_tol / error_n).pow(&(T::one() / T::from_f64(5.0)));
+               * (self.abs_tol / error_n).pow(T::one() / T::from_f64(5.0));
     }
 
     ///

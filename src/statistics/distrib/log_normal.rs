@@ -1,5 +1,5 @@
 use crate::{algebra::abstr::Real, statistics::distrib::Continuous, statistics::distrib::Distribution};
-use crate::special::error;
+use crate::special::error::Error;
 use std::f64::consts::PI;
 
 /// Log-Normal distribution
@@ -46,14 +46,14 @@ impl<T> LogNormal<T> where T: Real
     /// It is assumed that data are normal distributed.
     ///
     /// data.len() >= 2
-    pub fn from_data<'a>(data: &'a Vec<T>) -> Self
+    pub fn from_data<'a>(_data: &'a Vec<T>) -> Self
     {
         unimplemented!()
     }
 
 }
 
-impl<T> Continuous<T> for LogNormal<T> where T: Real
+impl<T> Continuous<T> for LogNormal<T> where T: Real + Error
 {
     /// Probability density function
     ///
@@ -76,7 +76,7 @@ impl<T> Continuous<T> for LogNormal<T> where T: Real
         {
             return T::zero();
         }
-        let z: T = T::from_f64(-0.5) * (x.ln() - self.mu).pow(&T::from_f64(2.0)) / self.sigma_squared;
+        let z: T = T::from_f64(-0.5) * (x.ln() - self.mu).pow(T::from_f64(2.0)) / self.sigma_squared;
         let f: T = T::one() / (x * (self.sigma_squared * T::from_f64(2.0) * T::pi()).sqrt());
 
         return f * z.exp();
@@ -104,7 +104,7 @@ impl<T> Continuous<T> for LogNormal<T> where T: Real
             return T::zero();
         }
         let p: T = (x.ln() - self.mu) / (T::from_f64(2.0) * self.sigma_squared).sqrt();
-        return T::from_f64(0.5) + T::from_f64(0.5) * error::erf(p);
+        return T::from_f64(0.5) + T::from_f64(0.5) * p.erf();
     }
 
     /// Quantile: function of inverse cdf
@@ -112,7 +112,7 @@ impl<T> Continuous<T> for LogNormal<T> where T: Real
     /// # Panics
     ///
     /// if  p <= 0.0 || p >= 1.0
-    fn quantile(self: &Self, p: T) -> T
+    fn quantile(self: &Self, _p: T) -> T
     {
         unimplemented!()
     }
