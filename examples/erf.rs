@@ -15,8 +15,7 @@ fn main()
         graph_1.push((x, error::erf(x)));
     }
 
-    let root_area =
-        BitMapBackend::new("./figure/erf.png", (1200, 800)).into_drawing_area();
+    let root_area = BitMapBackend::new("./figure/erf.png", (600, 400)).into_drawing_area();
     root_area.fill(&WHITE).unwrap();
 
     let mut ctx = ChartBuilder::on(&root_area)
@@ -29,12 +28,9 @@ fn main()
     ctx.configure_mesh()
         .x_desc("x")
         .y_desc("erf(y)")
-        .axis_desc_style(("sans-serif", 25).into_font())
+        .axis_desc_style(("sans-serif", 15).into_font())
         .draw()
         .unwrap();
 
-    //ctx.draw_series(
-      //  graph_1.iter()
-       // .map(|(x, y)| Circle::new((*x, *y), 1, BLUE.filled()))).unwrap();
     ctx.draw_series(LineSeries::new(graph_1, Into::<ShapeStyle>::into(&BLUE).stroke_width(2))).unwrap();
 }
