@@ -15,28 +15,22 @@ fn main()
     }
 
     let root_area =
-        BitMapBackend::new("./figure/gamma.png", (1200, 800)).into_drawing_area();
+        BitMapBackend::new("./figure/gamma.png", (600, 400)).into_drawing_area();
     root_area.fill(&WHITE).unwrap();
 
     let mut ctx = ChartBuilder::on(&root_area)
         .margin(20)
         .set_label_area_size(LabelAreaPosition::Left, 40)
         .set_label_area_size(LabelAreaPosition::Bottom, 40)
-        .caption(
-            "gamma(x)",
-            ("Arial", 40),
-        )
         .build_ranged(x_start..x_end, -10.0f64..25.0f64)
         .unwrap();
 
     ctx.configure_mesh()
         .x_desc("x")
-        .axis_desc_style(("sans-serif", 25).into_font())
+        .y_desc("gamma(x)")
+        .axis_desc_style(("sans-serif", 15).into_font())
         .draw()
         .unwrap();
 
-    //ctx.draw_series(
-      //  graph_1.iter()
-       // .map(|(x, y)| Circle::new((*x, *y), 1, BLUE.filled()))).unwrap();
     ctx.draw_series(LineSeries::new(graph_1, &BLUE)).unwrap();
 }
