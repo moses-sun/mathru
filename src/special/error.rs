@@ -295,6 +295,15 @@ impl Error for f32
 /// ```
 ///
 /// [For more information](https://en.wikipedia.org/wiki/Error_function)
+///
+/// # Example
+///
+/// ```
+/// use mathru::special::error;
+///
+/// let x: f64 = 0.0;
+/// let error: f64 = error::erf(x);
+/// ```
 pub fn erf<T>(x: T) -> T
     where T: Real + Error + Gamma
 {
@@ -309,6 +318,15 @@ pub fn erf<T>(x: T) -> T
 /// # Arguments
 ///
 /// x
+///
+/// # Example
+///
+/// ```
+/// use mathru::special::error;
+///
+/// let x: f64 = 0.0;
+/// let error: f64 = error::erfc(x);
+/// ```
 pub fn erfc<T>(x: T) -> T
     where T: Real + Error + Gamma
 {
@@ -316,6 +334,7 @@ pub fn erfc<T>(x: T) -> T
 }
 
 /// Inverse error function
+///
 /// ```math
 /// \operatorname{erfinv}(x) = \operatorname{erf}^{-1}(x) \quad \text{for} \quad x \in (-1, 1)
 /// ```
@@ -328,6 +347,14 @@ pub fn erfc<T>(x: T) -> T
 ///
 /// if x < -1.0 or x > 1.0
 ///
+/// # Example
+///
+/// ```
+/// use mathru::special::error;
+///
+/// let x: f64 = 0.0;
+/// let error: f64 = error::erfinv(x);
+/// ```
 pub fn erfinv<T>(x: T) -> T
     where T: Real + Error
 {
@@ -374,6 +401,14 @@ fn copysign<T>(a: T, b: T) -> T
 ///
 /// if x < 0.0 or x > 2.0
 ///
+/// # Example
+///
+/// ```
+/// use mathru::special::error;
+///
+/// let x: f64 = 1.0;
+/// let error: f64 = error::erfcinv(x);
+/// ```
 pub fn erfcinv<T>(x: T) -> T
     where T: Real + Error
 {

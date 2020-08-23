@@ -19,7 +19,7 @@ fn main()
     }
 
     let root_area =
-        BitMapBackend::new("./figure/pdf_normal_distribution.png", (1200, 800)).into_drawing_area();
+        BitMapBackend::new("./figures/pdf_normal_distribution.png", (1200, 800)).into_drawing_area();
     root_area.fill(&WHITE).unwrap();
 
     let mut ctx = ChartBuilder::on(&root_area)

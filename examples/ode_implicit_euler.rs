@@ -29,7 +29,7 @@ fn main()
     }
 
     let root_area =
-        BitMapBackend::new("./figure/ode_implicit_euler.png", (1200, 800)).into_drawing_area();
+        BitMapBackend::new("./figures/ode_implicit_euler.png", (1200, 800)).into_drawing_area();
     root_area.fill(&WHITE).unwrap();
 
     let mut ctx =

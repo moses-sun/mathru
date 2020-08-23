@@ -11,15 +11,15 @@ Mathru is a numeric library containing algorithms for linear algebra, analysis a
 ## Features
 The following features are implemented in this create:
 
-* [Linear algebra](https://matthiaseiholzer.gitlab.io/mathru/documentation/algebra/)
-    * [Vector](https://matthiaseiholzer.gitlab.io/mathru/documentation/algebra/vector/)
-    * [Matrix](https://matthiaseiholzer.gitlab.io/mathru/documentation/algebra/matrix/)
+* [Linear algebra](https://matthiaseiholzer.gitlab.io/mathru/documentation/algebra/linear/)
+    * [Vector](https://matthiaseiholzer.gitlab.io/mathru/documentation/algebra/linear/vector/)
+    * [Matrix](https://matthiaseiholzer.gitlab.io/mathru/documentation/algebra/linear/matrix/)
         * Basic matrix operations(+,-,*)
         * Transposition
-        * [LU decomposition](https://matthiaseiholzer.gitlab.io/mathru/documentation/algebra/matrix/#lu-with-partial-pivoting)
-        * [QR decomposition](https://matthiaseiholzer.gitlab.io/mathru/documentation/algebra/matrix/#qr)
-        * [Hessenberg decomposition](https://matthiaseiholzer.gitlab.io/mathru/documentation/algebra/matrix/#hessenberg)
-        * [Cholesky decomposition](https://matthiaseiholzer.gitlab.io/mathru/documentation/algebra/matrix/#cholesky)
+        * [LU decomposition](https://matthiaseiholzer.gitlab.io/mathru/documentation/algebra/linear/matrix/#lu-with-partial-pivoting)
+        * [QR decomposition](https://matthiaseiholzer.gitlab.io/mathru/documentation/algebra/linear/matrix/#qr)
+        * [Hessenberg decomposition](https://matthiaseiholzer.gitlab.io/mathru/documentation/algebra/linear/matrix/#hessenberg)
+        * [Cholesky decomposition](https://matthiaseiholzer.gitlab.io/mathru/documentation/algebra/linear/matrix/#cholesky)
         * Eigen decomposition
         * Singular value decomposition
         * Inverse
@@ -29,7 +29,7 @@ The following features are implemented in this create:
         * [Solve linear system](https://matthiaseiholzer.gitlab.io/mathru/documentation/algebra/matrix/#linear-system-resolution)
 
 * [Ordinary differential equation (ODE)](https://matthiaseiholzer.gitlab.io/mathru/documentation/analysis/differentialeq/)
-    * [Explicit methods](https://matthiaseiholzer.gitlab.io/mathru/documentation/analysis/differentialeq/explicit)
+    * [Explicit methods](https://matthiaseiholzer.gitlab.io/mathru/documentation/analysis/differentialeq/ode/explicit/)
         * Heun's method
         * Euler method
         * Midpoint method
@@ -43,7 +43,7 @@ The following features are implemented in this create:
         * Bogacki-Shampine 2(3)
         * Adams-Bashforth
     * Automatic step size control with starting step size
-    * [Implicit methods](https://matthiaseiholzer.gitlab.io/mathru/documentation/analysis/differentialeq/implicit)
+    * [Implicit methods](https://matthiaseiholzer.gitlab.io/mathru/documentation/analysis/differentialeq/ode/implicit)
         * Implicit Euler
         * Backward differentiation formula (BDF)
 
