@@ -15,7 +15,7 @@ fn main()
     }
 
     let root_area =
-        BitMapBackend::new("./figure/gamma.png", (600, 400)).into_drawing_area();
+        BitMapBackend::new("./figures/gamma.png", (600, 400)).into_drawing_area();
     root_area.fill(&WHITE).unwrap();
 
     let mut ctx = ChartBuilder::on(&root_area)

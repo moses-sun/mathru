@@ -1,6 +1,9 @@
 # Change Log
 All notable changes starting with the version 0.6.9 are documented here.
 
+## [0.7.1]
+- Invalid URLs in README.md fixed
+
 ## [0.7.0]
 - Using SemVer for release versioning
 - log-normal distribution

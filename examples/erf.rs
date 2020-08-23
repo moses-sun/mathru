@@ -15,7 +15,7 @@ fn main()
         graph_1.push((x, error::erf(x)));
     }
 
-    let root_area = BitMapBackend::new("./figure/erf.png", (600, 400)).into_drawing_area();
+    let root_area = BitMapBackend::new("./figures/erf.png", (600, 400)).into_drawing_area();
     root_area.fill(&WHITE).unwrap();
 
     let mut ctx = ChartBuilder::on(&root_area)
