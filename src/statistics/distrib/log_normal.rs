@@ -1,5 +1,5 @@
-use crate::{algebra::abstr::Real, statistics::distrib::Continuous, statistics::distrib::Distribution};
-use crate::special::error::Error;
+use crate::{algebra::abstr::Real, statistics::distrib::{Distribution, Continuous, Normal}};
+use crate::special::{gamma::Gamma, error::Error};
 use std::f64::consts::PI;
 
 /// Log-Normal distribution
@@ -42,7 +42,6 @@ impl<T> LogNormal<T> where T: Real
         LogNormal { mu, sigma_squared }
     }
 
-    ///
     /// It is assumed that data are normal distributed.
     ///
     /// data.len() >= 2
@@ -53,7 +52,7 @@ impl<T> LogNormal<T> where T: Real
 
 }
 
-impl<T> Continuous<T> for LogNormal<T> where T: Real + Error
+impl<T> Continuous<T> for LogNormal<T> where T: Real + Error + Gamma
 {
     /// Probability density function
     ///
@@ -112,9 +111,14 @@ impl<T> Continuous<T> for LogNormal<T> where T: Real + Error
     /// # Panics
     ///
     /// if  p <= 0.0 || p >= 1.0
-    fn quantile(self: &Self, _p: T) -> T
+    fn quantile(self: &Self, p: T) -> T
     {
-        unimplemented!()
+        if p <= T::zero() || p >= T::one()
+        {
+            panic!()
+        }
+        let std_distrib: Normal<T> = Normal::new(T::zero(), T::one());
+        return (self.mu + std_distrib.quantile(p) * self.sigma_squared.sqrt()).exp();
     }
 
     /// Expected value

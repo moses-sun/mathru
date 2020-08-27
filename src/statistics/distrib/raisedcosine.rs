@@ -111,7 +111,7 @@ impl<T> Continuous<T> for RaisedCosine<T> where T: Real
     }
 
     /// Quantile function of inverse cdf
-    fn quantile<'a, 'b>(self: &'a Self, _p: T) -> T
+    fn quantile(self: &Self, _p: T) -> T
     {
         unimplemented!();
     }
@@ -126,7 +126,7 @@ impl<T> Continuous<T> for RaisedCosine<T> where T: Real
     /// let distrib: RaisedCosine<f64> = RaisedCosine::new(-2.0, 0.5);
     /// let mean: f64 = distrib.mean();
     /// ```
-    fn mean<'a>(self: &'a Self) -> T
+    fn mean(self: & Self) -> T
     {
         return self.mu;
     }

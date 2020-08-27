@@ -47,7 +47,6 @@ impl<T> Normal<T> where T: Real
         Normal { mean, variance }
     }
 
-    ///
     /// It is assumed that data are normal distributed.
     ///
     /// data.len() >= 2

@@ -86,27 +86,27 @@ fn cdf1()
     assert_eq!(0.5, distrib.cdf(1.0))
 }
 
-//
-// #[test]
-// fn quantile0()
-// {
-//     let mu: f64 = 0.0;
-//     let variance: f64 = 1.0;
-//     let distrib: Normal<f64> = Normal::new(mu, variance);
-//
-//     assert_eq!(1.2815515655446006, distrib.quantile(0.9));
-// }
-//
-// #[test]
-// fn quantile1()
-// {
-//     let mu: f64 = 1.0;
-//     let variance: f64 = 0.5;
-//     let distrib: Normal<f64> = Normal::new(mu, variance);
-//
-//     assert_eq!(1.0, distrib.quantile(0.5));
-// }
-//
+
+#[test]
+fn quantile0()
+{
+    let mu: f64 = 0.0;
+    let variance: f64 = 1.0;
+    let distrib: LogNormal<f64> = LogNormal::new(mu, variance);
+
+    assert_relative_eq!(1.0, distrib.quantile(0.5));
+}
+
+#[test]
+fn quantile1()
+{
+    let mu: f64 = 0.0;
+    let variance: f64 = 1.0;
+    let distrib: LogNormal<f64> = LogNormal::new(mu, variance);
+
+    assert_relative_eq!(3.6022244792791582, distrib.quantile(0.9));
+}
+
 #[test]
 fn mean()
 {
