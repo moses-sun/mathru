@@ -36,11 +36,25 @@ build-native:
     script:
       - cargo build --no-default-features --features native
 
+test-native:
+    stage: test
+    needs: ["build-native"]
+    image: rust:latest
+    script:
+      - cargo test --no-default-features --features native
+
 build-openblas:
     stage: build
     image: rust:latest
     script:
       - cargo build --no-default-features --features openblas
+
+test-openblas:
+  stage: test
+  needs: ["build-openblas"]
+  image: rust:latest
+  script:
+    - cargo test --no-default-features --features openblas
 
 build-netlib:
   stage: build
