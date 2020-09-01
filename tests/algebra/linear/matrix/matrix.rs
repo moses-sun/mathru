@@ -140,7 +140,7 @@ fn givens2()
 }
 
 #[test]
-fn mul3()
+fn givens_3()
 {
     let m: usize = 4;
     let i: usize = 1;
@@ -153,7 +153,7 @@ fn mul3()
     let res_ref: Matrix<f64> = Matrix::one(m);
     let res: Matrix<f64> = givens_t * givens;
 
-    assert_eq!(res_ref, res);
+    assert_relative_eq!(res_ref, res, epsilon=0.00001, max_relative=1.0e-10);
 }
 
 #[test]

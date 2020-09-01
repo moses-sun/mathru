@@ -42,7 +42,7 @@ fn mul_3()
 
     let res: Matrix<f64> = &a * &b;
 
-    assert_relative_eq!(reference, res, epsilon=0.00001, max_relative=1.0e-10);
+    assert_relative_eq!(reference, res);
 }
 
 #[test]
