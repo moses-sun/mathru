@@ -376,7 +376,7 @@ fn householder_1()
                                         0.0, -0.5547001962252291, -0.8320502943378437;
                                         0.0, -0.8320502943378437, 0.5547001962252291];
 
-    assert_eq!(h_ref, h);
+    assert_relative_eq!(h_ref, h, epsilon=0.00001, max_relative=1.0e-10);
 }
 
 #[test]
@@ -389,7 +389,7 @@ fn householder_2()
                                         0.0, 1.0, 0.0;
                                         0.0, 0.0, -1.0];
 
-    assert_eq!(h_ref, h);
+    assert_relative_eq!(h_ref, h, epsilon=0.00001, max_relative=1.0e-10);
 }
 
 #[test]
