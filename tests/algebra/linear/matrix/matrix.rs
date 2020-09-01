@@ -459,8 +459,8 @@ fn householder_bidiagonal_0()
 
     let (_u, b, v): (Matrix<f32>, Matrix<f32>, Matrix<f32>) = a.householder_bidiag();
 
-    assert_eq!(b_ref, b);
-    assert_eq!(v_ref, v);
+    assert_relative_eq!(b_ref, b, epsilon=0.00001, max_relative=1.0e-10);
+    assert_relative_eq!(v_ref, v, epsilon=0.00001, max_relative=1.0e-10);
 }
 
 #[test]
@@ -480,8 +480,8 @@ fn householder_bidiagonal_1()
 
     let (_u, b, v): (Matrix<f64>, Matrix<f64>, Matrix<f64>) = a.householder_bidiag();
 
-    assert_eq!(b_ref, b);
-    assert_eq!(v_ref, v);
+    assert_relative_eq!(b_ref, b, epsilon=0.00001, max_relative=1.0e-10);
+    assert_relative_eq!(v_ref, v, epsilon=0.00001, max_relative=1.0e-10);
 }
 
 #[test]
@@ -499,7 +499,7 @@ fn householder_bidiagonal_2()
 
     let (_u, b, _v): (Matrix<f32>, Matrix<f32>, Matrix<f32>) = a.householder_bidiag();
 
-    assert_eq!(b_ref, b);
+    assert_relative_eq!(b_ref, b, epsilon=0.00001, max_relative=1.0e-10);
 }
 
 #[test]
@@ -571,9 +571,9 @@ fn svd_0()
                                         0.0, 0.0, 3.0918649662716553, 0.0;
                                         0.0, 0.0, 0.0, 1.1694937978293738];
 
-    assert_eq!(u_ref, u);
-    assert_eq!(s_ref, s);
-    assert_eq!(v_ref, v);
+    assert_relative_eq!(u_ref, u, epsilon=0.0000001, max_relative=1.0e-10);
+    assert_relative_eq!(s_ref, s, epsilon=0.0000001, max_relative=1.0e-10);
+    assert_relative_eq!(v_ref, v, epsilon=0.0000001, max_relative=1.0e-10);
 }
 
 #[test]
@@ -596,8 +596,8 @@ fn svd_1()
                                         -0.5312275172316614, 0.06255922864595094, -0.09543998328421795, -0.8395087119487312;
                                          0.2802306286004916, -0.9184089700459931, -0.1622386307366823, -0.2273200062245417];
 
-    assert_eq!(u_ref, u);
-    assert_eq!(v_ref, v);
+    assert_relative_eq!(u_ref, u, epsilon=0.0000001, max_relative=1.0e-10);
+    assert_relative_eq!(v_ref, v, epsilon=0.0000001, max_relative=1.0e-10);
 }
 
 #[test]
