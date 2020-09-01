@@ -1,9 +1,11 @@
 //! Magma
 use super::operator::{Addition, Multiplication, Operator};
 use std::{
-    cmp::PartialEq,
+    //cmp::PartialEq,
     ops::{Add, AddAssign, Mul, MulAssign},
 };
+
+use super::abs_diff_eq::AbsDiffEq;
 
 /// A Magma is a pair $`(\mathbb{M}, \circ)`$, composed by a set $`\mathbb{M}`$
 /// and a binary inner operation $`\circ`$: # Definition
@@ -11,7 +13,7 @@ use std::{
 /// ```math
 /// \circ: \mathbb{M} \times \mathbb{M} \rightarrow \mathbb{M} , (x, y) \mapsto x \circ y
 /// ```
-pub trait Magma<O: Operator>: Sized + PartialEq + Clone
+pub trait Magma<O: Operator>: Sized + AbsDiffEq + Clone
 {
     /// binary operation
     fn operate(self, rhs: Self) -> Self;

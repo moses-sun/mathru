@@ -6,6 +6,7 @@ use crate::{
     algebra::{
         abstr::{Addition, Field, Identity, Multiplication, Scalar},
         linear::{matrix::Substitute, Vector, matrix::Transpose},
+        abstr::{AbsDiffEq, RelativeEq},
     },
     elementary::Power,
 };
@@ -1106,3 +1107,72 @@ impl<T> Matrix<T> where T: Field + Scalar
         return true;
     }
 }
+
+
+macro_rules! impl_abs_diff_eq
+{
+    ($T:ident, $epsilon: expr) =>
+    {
+        impl AbsDiffEq for Matrix<$T>
+        {
+            type Epsilon = $T;
+
+            fn default_epsilon() -> $T
+            {
+                $T::default_epsilon()
+            }
+
+            fn abs_diff_eq(&self, other: &Matrix<$T>, epsilon: $T) -> bool
+            {
+                for (a, b) in self.iter().zip(other.iter())
+                {
+                    if a.abs_diff_ne(b, epsilon)
+                    {
+                        return false;
+                    }
+
+                    return true;
+                }
+
+                return true;
+            }
+        }
+    };
+}
+
+impl_abs_diff_eq!(f32, f32::EPSILON);
+impl_abs_diff_eq!(f64, f64::EPSILON);
+
+macro_rules! impl_relative_eq
+{
+    ($T:ident, $epsilon: expr) =>
+    {
+        impl RelativeEq for Matrix<$T>
+        {
+
+            fn default_max_relative() -> $T
+            {
+                $T::EPSILON
+            }
+
+            /// A test for equality that uses a relative comparison if the values are far apart.
+            fn relative_eq(&self, other: &Matrix<$T>, epsilon: Self::Epsilon, max_relative: Self::Epsilon) -> bool
+            {
+                for (a, b) in self.iter().zip(other.iter())
+                {
+                    if a.relative_ne(b, epsilon, max_relative)
+                    {
+                        return false;
+                    }
+
+                    return true;
+                }
+
+                return true;
+            }
+        }
+    };
+}
+
+impl_relative_eq!(f32, f32::EPSILON);
+impl_relative_eq!(f64, f64::EPSILON);

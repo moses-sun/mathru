@@ -42,7 +42,7 @@ fn mul_3()
 
     let res: Matrix<f64> = &a * &b;
 
-    assert_eq!(reference, res);
+    assert_relative_eq!(reference, res, epsilon=0.00001, max_relative=1.0e-10);
 }
 
 #[test]
@@ -69,7 +69,8 @@ fn mul_5()
 
     let res: Matrix<f64> = &a * &b;
 
-    assert_eq!(reference, res);
+    assert_relative_eq!(reference, res, epsilon=0.00001, max_relative=1.0e-10);
+
 }
 
 #[test]
@@ -81,7 +82,7 @@ fn mul_6()
 
     let res: Matrix<f64> = &a * &b;
 
-    assert!(res.compare_neighbourhood(&reference, 10e-10));
+    assert_relative_eq!(reference, res, epsilon=0.00001, max_relative=1.0e-10);
 }
 
 #[test]

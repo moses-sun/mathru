@@ -43,6 +43,7 @@ debug = true
 [profile.release]
 opt-level = 3
 debug = false
+lto = true
 
 [profile.test]
 opt-level = 0
@@ -88,9 +89,6 @@ version = "0.21.0"
 
 [dev-dependencies.plotters]
 version = "0.2.15"
-
-[dev-dependencies.approx]
-version = "0.3.2"
 
 [[bench]]
 name = "benchmark"
