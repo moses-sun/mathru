@@ -2,4 +2,4 @@
 
 pub mod ode;
 
-//mod newton_raphson;
+pub mod newton_raphson;

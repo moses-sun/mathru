@@ -1,6 +1,5 @@
 use mathru::{
     algebra::{
-        abstr::Real,
         linear::{Matrix, Vector},
     },
     optimization::{ConjugateGradient, Optim},
@@ -49,28 +48,6 @@ fn test_minimization()
 
     let x_opt: Vector<f64> = vector![14.0; -7.0];
 
-    assert!(compare_vector_epsilon(&x_opt, &x_min, 0.0001));
+    assert_relative_eq!(x_opt, x_min, epsilon=0.0001);
 }
 
-fn compare_vector_epsilon<T: Real>(a: &Vector<T>, b: &Vector<T>, epsilon: T) -> bool
-{
-    let (a_m, a_n): (usize, usize) = a.dim();
-    let (b_m, b_n): (usize, usize) = b.dim();
-
-    if a_m != b_m || a_n != b_n
-    {
-        println!("dimension mismatch");
-        return false;
-    }
-
-    for i in 0..a_m
-    {
-        if (*a.get(i) - *b.get(i)).abs() > epsilon
-        {
-            println!("a: {}, b: {} a-b: {}", a, b, a - b);
-            return false;
-        }
-    }
-
-    return true;
-}

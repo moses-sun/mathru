@@ -11,7 +11,7 @@ fn mul_1()
 
     let res: Matrix<f32> = zero * one;
 
-    assert_eq!(res, Matrix::zero(size, size));
+    assert_relative_eq!(res, Matrix::zero(size, size));
 }
 
 #[test]
@@ -24,7 +24,7 @@ fn mul_2()
 
     let res: Matrix<f32> = i1 * i2;
 
-    assert_eq!(res, Matrix::one(size));
+    assert_relative_eq!(res, Matrix::one(size));
 }
 
 #[test]
@@ -57,7 +57,7 @@ fn mul_4()
 
     let res: Matrix<f64> = &a * &b;
 
-    assert_eq!(reference, res);
+    assert_relative_eq!(reference, res);
 }
 
 #[test]
@@ -93,7 +93,7 @@ fn mul_scalar_0()
 
     let res: Matrix<f64> = &a * &-2.0;
 
-    assert_eq!(reference, res);
+    assert_relative_eq!(reference, res);
 }
 
 #[test]
@@ -104,7 +104,7 @@ fn scalar_mul()
 
     let res = m * -0.5;
 
-    assert_eq!(prod_ref, res);
+    assert_relative_eq!(prod_ref, res);
 }
 
 #[test]
@@ -117,5 +117,5 @@ fn vector_mul()
 
     let res = m * v;
 
-    assert_eq!(prod_ref, res);
+    assert_relative_eq!(prod_ref, res);
 }

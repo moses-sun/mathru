@@ -10,7 +10,7 @@ fn pdf_negative()
     let x: f64 = -1.0;
     let prob: f64 = distrib.pdf(x);
 
-    assert_eq!(0.0, prob);
+    assert_relative_eq!(0.0, prob);
 }
 
 #[test]
@@ -22,7 +22,7 @@ fn pdf0()
     let x: f64 = 1.0;
     let prob: f64 = distrib.pdf(x);
 
-    assert_eq!(prob, 1.5957691216057308);
+    assert_relative_eq!(prob, 1.5957691216057308);
 }
 
 //Does not work all the time, because the used function random is not mocked.
@@ -53,7 +53,7 @@ fn cdf_negative()
     let sigma_squared: f64 = 1.0;
     let distrib: LogNormal<f64> = LogNormal::new(mu, sigma_squared);
 
-    assert_eq!(0.0, distrib.cdf(-1.0))
+    assert_relative_eq!(0.0, distrib.cdf(-1.0))
 }
 
 #[test]
@@ -63,7 +63,7 @@ fn cdf_zero()
     let sigma_squared: f64 = 1.0;
     let distrib: LogNormal<f64> = LogNormal::new(mu, sigma_squared);
 
-    assert_eq!(0.0, distrib.cdf(0.0))
+    assert_relative_eq!(0.0, distrib.cdf(0.0))
 }
 
 #[test]
@@ -73,7 +73,7 @@ fn cdf0()
     let sigma_squared: f64 = 1.0;
     let distrib: LogNormal<f64> = LogNormal::new(mu, sigma_squared);
 
-    assert_eq!(0.5, distrib.cdf(1.0))
+    assert_relative_eq!(0.5, distrib.cdf(1.0))
 }
 
 #[test]
@@ -83,7 +83,7 @@ fn cdf1()
     let sigma_squared: f64 = 100.0;
     let distrib: LogNormal<f64> = LogNormal::new(mu, sigma_squared);
 
-    assert_eq!(0.5, distrib.cdf(1.0))
+    assert_relative_eq!(0.5, distrib.cdf(1.0))
 }
 
 
@@ -114,7 +114,7 @@ fn mean()
     let sigma_squared: f64 = 0.5;
     let distrib: LogNormal<f64> = LogNormal::new(mu, sigma_squared);
 
-    assert_eq!((mu + sigma_squared / 2.0).exp(), distrib.mean());
+    assert_relative_eq!((mu + sigma_squared / 2.0).exp(), distrib.mean());
 }
 
 #[test]
@@ -124,7 +124,7 @@ fn median()
     let sigma_squared: f64 = 0.5;
     let distrib: LogNormal<f64> = LogNormal::new(mu, sigma_squared);
 
-    assert_eq!(mu.exp(), distrib.median());
+    assert_relative_eq!(mu.exp(), distrib.median());
 }
 
 #[test]
@@ -134,7 +134,7 @@ fn variance()
     let sigma_squared: f64 = 0.5;
     let distrib: LogNormal<f64> = LogNormal::new(mu, sigma_squared);
 
-    assert_eq!((sigma_squared.exp() - 1.0) * (2.0 * mu + sigma_squared).exp(), distrib.variance());
+    assert_relative_eq!((sigma_squared.exp() - 1.0) * (2.0 * mu + sigma_squared).exp(), distrib.variance());
 }
 //
 #[test]
@@ -144,7 +144,7 @@ fn skewness()
     let sigma_squared: f64 = 0.5;
     let distrib: LogNormal<f64> = LogNormal::new(mu, sigma_squared);
 
-    assert_eq!((sigma_squared.exp() + 2.0) * (sigma_squared.exp() - 1.0).sqrt() , distrib.skewness());
+    assert_relative_eq!((sigma_squared.exp() + 2.0) * (sigma_squared.exp() - 1.0).sqrt() , distrib.skewness());
 }
 
 
@@ -155,7 +155,7 @@ fn entropy()
     let sigma_squared: f64 = 0.5;
     let distrib: LogNormal<f64> = LogNormal::new(mu, sigma_squared);
 
-    assert_eq!((sigma_squared.sqrt() * (mu + 0.5).exp() * (2.0 * PI).sqrt()).log(2.0), distrib.entropy());
+    assert_relative_eq!((sigma_squared.sqrt() * (mu + 0.5).exp() * (2.0 * PI).sqrt()).log(2.0), distrib.entropy());
 }
 //
 // //    #[test]

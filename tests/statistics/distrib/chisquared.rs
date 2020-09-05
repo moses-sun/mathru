@@ -8,7 +8,7 @@ fn pdf0()
     let x: f64 = 0.0;
     let prob: f64 = distrib.pdf(x);
 
-    assert_eq!(0.0, prob);
+    assert_relative_eq!(0.0, prob);
 }
 
 #[test]
@@ -19,7 +19,7 @@ fn pdf1()
     let x: f64 = 1.0;
     let prob: f64 = distrib.pdf(x);
 
-    assert_eq!(0.1516326649281583, prob);
+    assert_relative_eq!(0.1516326649281583, prob);
 }
 
 #[test]
@@ -28,7 +28,7 @@ fn cdf0()
     let df: u32 = 4;
     let distrib: ChiSquared<f64> = ChiSquared::new(df);
 
-    assert_eq!(0.09020401043104986, distrib.cdf(1.0))
+    assert_relative_eq!(0.09020401043104986, distrib.cdf(1.0))
 }
 
 #[test]
@@ -37,7 +37,7 @@ fn cdf1()
     let df: u32 = 4;
     let distrib: ChiSquared<f64> = ChiSquared::new(df);
 
-    assert_eq!(0.001209104274250028, distrib.cdf(0.1))
+    assert_relative_eq!(0.001209104274250028, distrib.cdf(0.1))
 }
 
 #[test]
@@ -46,7 +46,7 @@ fn cdf2()
     let df: u32 = 4;
     let distrib: ChiSquared<f64> = ChiSquared::new(df);
 
-    assert_eq!(0.7689217620241717, distrib.cdf(5.6))
+    assert_relative_eq!(0.7689217620241717, distrib.cdf(5.6))
 }
 
 //Very inaccurate
@@ -78,5 +78,5 @@ fn quantile()
 
     let distrib: ChiSquared<f64> = ChiSquared::new(df);
 
-    assert_eq!(7.711853942311415, distrib.quantile(0.9))
+    assert_relative_eq!(7.711853942311415, distrib.quantile(0.9))
 }

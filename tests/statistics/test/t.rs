@@ -67,7 +67,7 @@ fn test_independence_equal_variance()
 
     let t_measure: T<f64> = T::test_independence_equal_variance(&rv1, &rv2);
 
-    assert!((t_measure.value().abs() - 0.7559).abs() < 0.0001);
+    assert_relative_eq!(t_measure.value().abs(), 0.7559, epsilon=0.0001);
 }
 
 #[test]
@@ -78,6 +78,6 @@ fn test_independence_unequal_variance()
 
     let measure: T<f64> = T::test_independence_unequal_variance(&rv1, &rv2);
 
-    assert!((measure.value().abs() - 0.756).abs() < 0.001);
-    assert!((measure.p_value() - 0.472).abs() < 0.001);
+    assert_relative_eq!(measure.value().abs(), 0.756, epsilon=0.001);
+    assert_relative_eq!(measure.p_value(), 0.472, epsilon=0.001);
 }

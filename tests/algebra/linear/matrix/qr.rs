@@ -18,8 +18,8 @@ fn decompose_qr0()
                                         0.0, 4.681669871625427, 0.9664479316145234;
                                         0.0, 0.0, -4.184328063894809];
 
-    assert!(q.compare_neighbourhood(&q_ref, 1.0e-10));
-    assert!(r.compare_neighbourhood(&r_ref, 1.0e-10));
+    assert_relative_eq!(q, q_ref, epsilon=1.0e-10, max_relative=1.0e-10);
+    assert_relative_eq!(r, r_ref, epsilon=1.0e-10, max_relative=1.0e-10);
 }
 
 #[cfg(feature = "blaslapack")]
@@ -40,8 +40,8 @@ fn decompose_qr0()
                                         0.0, 4.681669871625427, 0.9664479316145234;
                                         0.0, 0.0, 4.184328063894809];
 
-    assert!(q.compare_neighbourhood(&q_ref, 1.0e-10));
-    assert!(r.compare_neighbourhood(&r_ref, 1.0e-10));
+    assert_relative_eq!(q, q_ref, epsilon=1.0e-10, max_relative=1.0e-10);
+    assert_relative_eq!(r, r_ref, epsilon=1.0e-10, max_relative=1.0e-10);
 }
 
 #[cfg(feature = "native")]
@@ -65,9 +65,9 @@ fn decompose_qr1()
                                         0.0, 0.0, 1.0, 0.0;
                                         0.8, -0.2683281572999747, 0.0, 0.5366563145999494 ];
 
-    assert!(r.compare_neighbourhood(&r_ref, 1.0e-10));
-    assert!(q.compare_neighbourhood(&q_ref, 1.0e-10));
-    assert!(a.compare_neighbourhood(&(q * r), 1.0e-10));
+    assert_relative_eq!(r, r_ref, epsilon=1.0e-10);
+    assert_relative_eq!(q, q_ref, epsilon=1.0e-10);
+    assert_relative_eq!(a, q * r, epsilon=1.0e-10);
 }
 
 #[cfg(feature = "blaslapack")]
@@ -90,10 +90,7 @@ fn decompose_qr1()
                                         0.0, 0.8944271909999159, 0.0, 0.4472135954999579;
                                         0.0, 0.0, 1.0, 0.0;
                                         0.8, -0.2683281572999747, 0.0, 0.5366563145999494 ];
-
-    assert!(r.compare_neighbourhood(&r_ref, 1.0e-10));
-    //assert!(q.compare_environment(&q_ref, 1.0e-10));
-    //assert!(compare_matrix_epsilon(&a, &(q * r), 1.0e-10));
+    assert_relative_eq!(r, r_ref, epsilon=1.0e-10);
 }
 
 #[cfg(feature = "native")]
@@ -106,7 +103,7 @@ fn decompose_qr2()
 
     let (q, r): (Matrix<f64>, Matrix<f64>) = a.dec_qr().qr();
 
-    let r_ref = matrix![    14.0, 21.0, -14.0;
+    let r_ref: Matrix<f64> = matrix![    14.0, 21.0, -14.0;
                             0.0, 175.0, -70.0;
                             0.0, 0.0, -35.0];
 
@@ -114,9 +111,9 @@ fn decompose_qr2()
                                         4.285714285714286e-01, 9.028571428571428e-01, -3.428571428571425e-02;
                                         -2.857142857142858e-01, 1.714285714285714e-01,  9.428571428571428e-01];
 
-    assert!(q.compare_neighbourhood(&q_ref, 1.0e-10));
-    assert!(r.compare_neighbourhood(&r_ref, 1.0e-10));
-    assert!(a.compare_neighbourhood(&(&q * &r), 1.0e-10));
+    assert_relative_eq!(q, q_ref, epsilon=1.0e-10);
+    assert_relative_eq!(r, r_ref, epsilon=1.0e-10);
+    assert_relative_eq!(a, &q * &r, epsilon=1.0e-10);
 }
 
 #[cfg(feature = "blaslapack")]
@@ -137,7 +134,7 @@ fn decompose_qr2()
                             0.0, -175.0, 70.0;
                             0.0, 0.0, -35.0];
 
-    assert!(q.compare_neighbourhood(&q_ref, 1.0e-10));
-    assert!(r.compare_neighbourhood(&r_ref, 1.0e-10));
-    assert!(a.compare_neighbourhood(&(&q * &r), 1.0e-10));
+    assert_relative_eq!(q, q_ref, epsilon=1.0e-10);
+    assert_relative_eq!(r, r_ref, epsilon=1.0e-10);
+    assert_relative_eq!(a, &q * &r, epsilon=1.0e-10);
 }

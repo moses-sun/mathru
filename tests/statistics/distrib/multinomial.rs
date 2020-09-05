@@ -9,7 +9,7 @@ fn pmf0()
     let x: Vector<u32> = vector![3; 7];
     let prob: f64 = distrib.pmf(x);
 
-    assert!((0.2668279319999999 - prob).abs() < 0.0001);
+    assert_relative_eq!(prob, 0.2668 , epsilon=0.0001);
 }
 
 #[test]
@@ -20,7 +20,7 @@ fn pmf1()
     let distrib : Multinomial<f64> = Multinomial::new(p);
     let prob: f64 = distrib.pmf(n);
 
-    assert!((0.135 - prob).abs() < 0.0001 );
+    assert_relative_eq!(prob, 0.135, epsilon=0.0001);
 }
 
 //    #[test]

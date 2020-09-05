@@ -51,7 +51,7 @@ fn find_root_new()
 
 	let root_hat: Vector<f64> = nr.find_root(&problem, &x_0).unwrap();
 
-	assert!((root - root_hat).p_norm(&2.0) < 10e-6);
+	assert_relative_eq!(root, root_hat, epsilon=10e-6);
 }
 
 
@@ -66,6 +66,6 @@ fn find_root_default()
 
 	let root_hat: Vector<f64> = nr.find_root(&problem, &x_0).unwrap();
 
-	assert!((root - root_hat).p_norm(&2.0) < 10e-3);
+	assert_relative_eq!(root, root_hat ,epsilon=10e-3);
 }
 

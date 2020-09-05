@@ -13,7 +13,7 @@ fn macro_vector_column()
 
     let vec_ref: Vector<f32> = Vector::new_column(3, vec![1.0, 2.0, 3.0]);
 
-    assert_eq!(vec_ref, vec);
+    assert_relative_eq!(vec_ref, vec);
 }
 
 #[test]
@@ -23,7 +23,7 @@ fn macro_vector_row()
 
     let vec_ref: Vector<f32> = Vector::new_row(3, vec![1.0, 2.0, 3.0]);
 
-    assert_eq!(vec_ref, vec);
+    assert_relative_eq!(vec_ref, vec);
 }
 
 #[test]
@@ -34,7 +34,7 @@ fn serde_0()
 
     let mat_s: Vector<f64> = serde_json::from_str(&serialized).unwrap();
 
-    assert_eq!(mat_s, mat);
+    assert_relative_eq!(mat_s, mat);
 }
 
 #[test]
@@ -49,7 +49,7 @@ fn zero()
 
     for i in 0..rows
     {
-        assert_eq!(*(m_zero.get(i)), 0.0);
+        assert_relative_eq!(*(m_zero.get(i)), 0.0);
     }
 }
 
@@ -58,7 +58,7 @@ fn partial_eq0()
 {
     let lhs: Vector<f32> = Vector::new_column(2, vec![1.0, 2.0]);
     let rhs: Vector<f32> = Vector::new_column(2, vec![1.0, 2.0]);
-    assert_eq!(lhs, rhs);
+    assert_relative_eq!(lhs, rhs);
 }
 
 #[test]
@@ -66,7 +66,7 @@ fn partial_eq1()
 {
     let lhs: Vector<f32> = Vector::new_column(2, vec![1.0, 2.0]);
     let rhs: Vector<f32> = Vector::new_column(2, vec![1.0, 2.0]);
-    assert_eq!(lhs, rhs);
+    assert_relative_eq!(lhs, rhs);
 }
 
 #[test]
@@ -79,10 +79,7 @@ fn add_owner()
 
     let res: Vector<f32> = a + b;
 
-    for i in 0..dim
-    {
-        assert_eq!(*(res.get(i)), *(res_ref.get(i)));
-    }
+    assert_relative_eq!(res_ref, res);
 }
 
 #[test]
@@ -95,10 +92,7 @@ fn add_borrow()
 
     let res: Vector<f32> = &a + &b;
 
-    for i in 0..dim
-    {
-        assert_eq!(*(res.get(i)), *(res_ref.get(i)));
-    }
+    assert_relative_eq!(res, res_ref);
 }
 
 #[test]
@@ -110,10 +104,8 @@ fn scalar_add_owner()
 
     let res: Vector<f32> = a + 5.0;
 
-    for i in 0..dim
-    {
-        assert_eq!(*(res.get(i)), *(res_ref.get(i)));
-    }
+
+    assert_relative_eq!(res, res_ref);
 }
 
 #[test]
@@ -125,10 +117,7 @@ fn scalar_add_borrow()
 
     let res: Vector<f32> = &a + &5.0;
 
-    for i in 0..dim
-    {
-        assert_eq!(*(res.get(i)), *(res_ref.get(i)));
-    }
+    assert_relative_eq!(res, res_ref);
 }
 
 #[test]
@@ -140,10 +129,7 @@ fn scalar_sub_owner()
 
     let res: Vector<f32> = a - 5.0;
 
-    for i in 0..dim
-    {
-        assert_eq!(*(res.get(i)), *(res_ref.get(i)));
-    }
+    assert_relative_eq!(res, res_ref);
 }
 
 #[test]
@@ -155,10 +141,7 @@ fn scalar_sub_borrow()
 
     let res: Vector<f32> = &a - &5.0;
 
-    for i in 0..dim
-    {
-        assert_eq!(*(res.get(i)), *(res_ref.get(i)));
-    }
+    assert_relative_eq!(res, res_ref);
 }
 
 #[test]
@@ -170,7 +153,7 @@ fn scalar_mul_owner()
 
     let res: Vector<f32> = a * 5.0;
 
-    assert_eq!(res, res_ref);
+    assert_relative_eq!(res, res_ref);
 }
 
 #[test]
@@ -182,7 +165,7 @@ fn scalar_mul_borrow()
 
     let res: Vector<f32> = &a * &-5.0;
 
-    assert_eq!(res, res_ref);
+    assert_relative_eq!(res, res_ref);
 }
 
 #[test]
@@ -194,7 +177,7 @@ fn scalar_div_owner()
 
     let res: Vector<f32> = a / -2.0;
 
-    assert_eq!(res, res_ref);
+    assert_relative_eq!(res, res_ref);
 }
 
 #[test]
@@ -205,7 +188,7 @@ fn scalar_div_borrow()
 
     let res: Vector<f32> = &a / &-2.0;
 
-    assert_eq!(res, res_ref);
+    assert_relative_eq!(res, res_ref);
 }
 
 #[test]
@@ -218,10 +201,8 @@ fn sub()
 
     let res: Vector<f32> = a - b;
 
-    for i in 0..dim
-    {
-        assert_eq!(*(res.get(i)), *(res_ref.get(i)));
-    }
+    assert_relative_eq!(res, res_ref);
+
 }
 
 #[test]
@@ -234,10 +215,7 @@ fn sub_ref()
 
     let res: Vector<f32> = &a - &b;
 
-    for i in 0..dim
-    {
-        assert_eq!(*(res.get(i)), *(res_ref.get(i)));
-    }
+    assert_relative_eq!(res, res_ref);
 }
 
 #[test]
@@ -246,10 +224,8 @@ fn get_0()
     let dim: usize = 5;
     let res: Vector<f32> = Vector::new_column(dim, vec![1.0, 2.0, 3.0, 4.0, 5.0]);
     let res_ref: Vector<f32> = Vector::new_column(dim, vec![1.0, 2.0, 3.0, 4.0, 5.0]);
-    for i in 0..dim
-    {
-        assert_eq!(*(res_ref.get(i)), *(res.get(i)));
-    }
+
+    assert_relative_eq!(res, res_ref);
 }
 
 #[test]
@@ -258,10 +234,8 @@ fn get_1()
     let dim: usize = 5;
     let res: Vector<f32> = Vector::new_row(dim, vec![1.0, 2.0, 3.0, 4.0, 5.0]);
     let res_ref: Vector<f32> = Vector::new_column(dim, vec![1.0, 2.0, 3.0, 4.0, 5.0]);
-    for i in 0..dim
-    {
-        assert_eq!(*(res_ref.get(i)), *(res.get(i)));
-    }
+
+    assert_relative_eq!(res, res_ref);
 }
 
 #[test]
@@ -273,7 +247,7 @@ fn get_slice_0()
 
     let slice: Vector<f32> = res.get_slice(2, 4);
 
-    assert_eq!(res_ref, slice);
+    assert_relative_eq!(res_ref, slice);
 }
 
 #[test]
@@ -286,7 +260,7 @@ fn set_slice_0()
 
     a.set_slice(&b, 2);
 
-    assert_eq!(res_ref, a);
+    assert_relative_eq!(res_ref, a);
 }
 
 #[test]
@@ -308,7 +282,7 @@ fn dotp_0()
     let b: Vector<f32> = Vector::new_column(4, vec![-2.0, -5.0, -3.0, 2.0]);
     let dotp_ref: f32 = -3.0;
     let dotp: f32 = a.dotp(&b);
-    assert_eq!(dotp_ref, dotp);
+    assert_relative_eq!(dotp_ref, dotp);
 }
 
 #[test]
@@ -317,7 +291,7 @@ fn dotp_1()
     let a: Vector<f32> = Vector::new_column(4, vec![-1.0, -3.0, 6.0, -1.0]);
     let dotp_ref: f32 = 47.0;
     let dotp: f32 = a.dotp(&a);
-    assert_eq!(dotp_ref, dotp);
+    assert_relative_eq!(dotp_ref, dotp);
 }
 
 //    #[test]
@@ -327,7 +301,7 @@ fn dotp_1()
 //        let b: Vector<f32> = Vector::new_column(3, vec![-2.0, -5.0,-3.0]);
 //        let crossp_ref : f32 = -3.0;
 //        let cross : Vector<f32> = a.crossp(&b);
-//        assert_eq!(crossp_ref, crossp);
+//        assert_relative_eq!(crossp_ref, crossp);
 //    }
 
 #[test]
@@ -345,7 +319,7 @@ fn dyadp()
 
     let p: Matrix<f32> = x.dyadp(&y);
 
-    assert_eq!(dyadp_ref, p);
+    assert_relative_eq!(dyadp_ref, p);
 }
 
 #[test]
@@ -355,7 +329,7 @@ fn p_norm()
     let v: Vector<f32> = Vector::new_column(4, vec![-2.0, -5.0, -3.0, 2.0]);
     let p_norm_ref: f32 = 42.0.pow(0.5);
     let p_norm: f32 = v.p_norm(&p);
-    assert_eq!(p_norm_ref, p_norm);
+    assert_relative_eq!(p_norm_ref, p_norm);
 }
 
 #[test]
@@ -367,7 +341,7 @@ fn matrix_mul_owner()
 
     let res = v * m;
 
-    assert_eq!(prod_ref, res);
+    assert_relative_eq!(prod_ref, res);
 }
 
 #[test]
@@ -379,7 +353,7 @@ fn matrix_mul_borrow()
 
     let res = &v * &m;
 
-    assert_eq!(prod_ref, res);
+    assert_relative_eq!(prod_ref, res);
 }
 
 #[test]
@@ -406,7 +380,7 @@ fn sign()
     let sign: Vector<f64> = vector![1.0, -1.0, 0.0, -1.0];
     let sign_hat: Vector<f64> = v.sign();
 
-    assert_eq!(sign, sign_hat);
+    assert_relative_eq!(sign, sign_hat);
 }
 
 #[test]
@@ -417,5 +391,5 @@ fn abs()
     let abs_ref: Vector<f64> = vector![1.0, 2.0, 0.0, 4.0];
     let abs: Vector<f64> = v.abs();
 
-    assert_eq!(abs_ref, abs);
+    assert_relative_eq!(abs_ref, abs);
 }

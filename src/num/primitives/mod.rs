@@ -470,10 +470,6 @@ macro_rules! hyperbolic_impl {
             /// let x: f64 = 0.0_f64;
             ///
             /// let f: f64 = x.tanh();
-            /// let g: f64 = 0.0;
-            /// let abs_difference: f64 = (f - g).abs();
-            ///
-            /// assert!(abs_difference < 1.0e-10);
             /// ```
             fn tanh(self: Self) -> Self
             {
@@ -498,10 +494,6 @@ macro_rules! hyperbolic_impl {
             /// let x: f64 = 1.0_f64;
             ///
             /// let f: f64 = x.coth();
-            /// let g: f64 = x.cosh() / x.sinh();
-            /// let abs_difference: f64 = (f - g).abs();
-            ///
-            /// assert!(abs_difference < 1.0e-10);
             /// ```
             fn coth(self: Self) -> Self
             {
@@ -527,10 +519,6 @@ macro_rules! hyperbolic_impl {
             /// let x: f64 = 0.0_f64;
             ///
             /// let f: f64 = x.sech();
-            /// let g: f64 = 1.0;
-            /// let abs_difference: f64 = (f - g).abs();
-            ///
-            /// assert!(abs_difference < 1.0e-10);
             /// ```
             fn sech(self: Self) -> Self
             {
@@ -556,10 +544,6 @@ macro_rules! hyperbolic_impl {
             /// let x: f64 = 1.0_f64;
             ///
             /// let f: f64 = x.csch();
-            /// let g: f64 = 1.0 / x.sinh();
-            /// let abs_difference: f64 = (f - g).abs();
-            ///
-            /// assert!(abs_difference < 1.0e-10);
             /// ```
             fn csch(self: Self) -> Self
             {
@@ -613,10 +597,6 @@ macro_rules! hyperbolic_impl {
             ///
             /// let x: f64 = 2.0_f64;
             /// let f: f64 = x.arcoth();
-            /// let g: f64 = ((x + 1.0) / (x - 1.0)).ln() / 2.0;
-            /// let abs_difference: f64 = (f - g).abs();
-            ///
-            /// assert!(abs_difference < 1.0e-10);
             /// ```
             fn arcoth(self: Self) -> Self
             {
@@ -646,9 +626,6 @@ macro_rules! hyperbolic_impl {
             /// let x: f64 = 0.5_f64;
             /// let f: f64 = x.arsech();
             /// let g: f64 = (1.0 / x).arcosh();
-            /// let abs_difference: f64 = (f - g).abs();
-            ///
-            /// assert!(abs_difference < 1.0e-10);
             /// ```
             fn arsech(self: Self) -> Self
             {
@@ -680,10 +657,6 @@ macro_rules! hyperbolic_impl {
             ///
             /// let x: f64 = 2.0_f64;
             /// let f: f64 = x.arcsch();
-            /// let g: f64 = (1.0 / x).arsinh();
-            /// let abs_difference: f64 = (f - g).abs();
-            ///
-            /// assert!(abs_difference < 1.0e-10);
             /// ```
             fn arcsch(self: Self) -> Self
             {

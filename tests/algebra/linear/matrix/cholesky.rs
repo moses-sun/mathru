@@ -13,5 +13,5 @@ fn cholesky_decomposition()
 
     let g = a.dec_cholesky().unwrap().l();
 
-    assert_eq!(true, g.compare_neighbourhood(&g_ref, 1.0e-10));
+    assert_relative_eq!(g, g_ref, epsilon=1.0e-10);
 }

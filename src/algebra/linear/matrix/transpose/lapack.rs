@@ -20,11 +20,9 @@ impl<T> Transpose for Matrix<T>
     /// use mathru::algebra::linear::Matrix;
     /// use mathru::algebra::linear::matrix::Transpose;
     ///
-    /// let mut uut: Matrix<f64> = Matrix::new(4, 2, vec![1.0, 0.0, 3.0, 0.0, 1.0, -7.0, 0.5, 0.25]);
-    /// uut = uut.transpose();
+    /// let m: Matrix<f64> = Matrix::new(4, 2, vec![1.0, 0.0, 3.0, 0.0, 1.0, -7.0, 0.5, 0.25]);
+    /// let m_transposed = m.transpose();
     ///
-    /// let refer: Matrix<f64> = Matrix::new(2, 4, vec![1.0, 1.0, 0.0, -7.0, 3.0, 0.5, 0.0, 0.25]);
-    /// assert_eq!(refer, uut);
     /// ```
     fn transpose(self: Self) -> Matrix<T>
     {

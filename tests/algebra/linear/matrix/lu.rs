@@ -24,11 +24,11 @@ fn decompose_lu_0()
 
     let (l, u, p): (Matrix<f64>, Matrix<f64>, Matrix<f64>) = a.dec_lu().unwrap().lup();
 
-    assert!(l.compare_neighbourhood(&l_ref, 1.0e-10));
-    assert!(u.compare_neighbourhood(&u_ref, 1.0e-10));
-    assert!(p.compare_neighbourhood(&p_ref, 1.0e-10));
+    assert_relative_eq!(l, l_ref, epsilon=1.0e-10);
+    assert_relative_eq!(u, u_ref, epsilon=1.0e-10);
+    assert_relative_eq!(p, p_ref, epsilon=1.0e-10);
 
-    assert_eq!(&p * &a, &l * &u);
+    assert_relative_eq!(&p * &a, &l * &u, epsilon=1.0e-10);
 }
 
 #[test]
@@ -56,9 +56,9 @@ fn decompose_lu_1()
 
     let (l, u, p): (Matrix<f64>, Matrix<f64>, Matrix<f64>) = a.dec_lu().unwrap().lup();
 
-    assert!(l.compare_neighbourhood(&l_ref, 1.0e-10));
-    assert!(u.compare_neighbourhood(&u_ref, 1.0e-10));
-    assert!(p.compare_neighbourhood(&p_ref, 1.0e-10));
+    assert_relative_eq!(l, l_ref, epsilon=1.0e-10);
+    assert_relative_eq!(u, u_ref, epsilon=1.0e-10);
+    assert_relative_eq!(p, p_ref, epsilon=1.0e-10);
 }
 
 #[test]
@@ -70,8 +70,8 @@ fn decompose_lu2()
 
     let (l, u, _p): (Matrix<f64>, Matrix<f64>, Matrix<f64>) = a.dec_lu().unwrap().lup();
 
-    assert!(l.compare_neighbourhood(&l_ref, 1.0e-10));
-    assert!(u.compare_neighbourhood(&u_ref, 1.0e-10));
+    assert_relative_eq!(l, l_ref, epsilon=1.0e-10);
+    assert_relative_eq!(u, u_ref, epsilon=1.0e-10);
 }
 
 #[test]
@@ -88,7 +88,7 @@ fn decompose_lu3()
 
     let x = p * l.substitute_forward(y);
 
-    assert!(x.compare_neighbourhood(&x_ref, 1.0e-10));
+    assert_relative_eq!(x, x_ref, epsilon=1.0e-10);
 }
 
 #[test]
@@ -101,7 +101,7 @@ fn solve_0()
     let x: Vector<f64> = lu_dec.solve(&b).unwrap();
     let x_ref: Vector<f64> = vector![7.0; 8.0; 10.0];
 
-    assert!(x.compare_neighbourhood(&x_ref, 10e-10));
+    assert_relative_eq!(x, x_ref, epsilon=10e-10);
 }
 
 #[test]
@@ -119,7 +119,7 @@ fn solve_1()
 
     let x = a.solve(&id).unwrap();
 
-    assert!(x.compare_neighbourhood(&x_ref, 10e-10));
+    assert_relative_eq!(x, x_ref, epsilon=10e-10);
 }
 
 #[test]
@@ -135,7 +135,7 @@ fn inv_0()
 
     let a_inv: Matrix<f64> = a.dec_lu().unwrap().inv().unwrap();
 
-    assert!(a_inv.compare_neighbourhood(&a_inv_ref, 1.0e-10));
+    assert_relative_eq!(a_inv, a_inv_ref, epsilon=1.0e-10);
 }
 
 #[test]
@@ -151,7 +151,7 @@ fn inv_1()
 
     let a_inv: Matrix<f64> = a.dec_lu().unwrap().inv().unwrap();
 
-    assert!(a_inv.compare_neighbourhood(&a_inv_ref, 1.0e-10));
+    assert_relative_eq!(a_inv, a_inv_ref, epsilon=1.0e-10);
 }
 
 #[test]
@@ -172,5 +172,5 @@ fn inv_2()
 
     let a_inv: Matrix<f64> = a.dec_lu().unwrap().inv().unwrap();
 
-    assert!(a_inv.compare_neighbourhood(&a_inv_ref, 1.0e-10));
+    assert_relative_eq!(a_inv, a_inv_ref, epsilon=1.0e-10);
 }

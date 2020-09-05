@@ -10,7 +10,7 @@ fn hypergeometrical_f21_0()
 
     let h: f64 = special::hypergeometric::f21(a, b, c, z);
 
-    assert_eq!(0.6463419208795624, h);
+    assert_relative_eq!(0.6463419208795624, h);
 }
 
 #[test]
@@ -23,7 +23,7 @@ fn hypergeometrical_f21_1()
 
     let h: f64 = special::hypergeometric::f21(a, b, c, z);
 
-    assert_eq!(0.9157005646955769, h);
+    assert_relative_eq!(0.9157005646955769, h);
 }
 
 #[test]
@@ -36,7 +36,7 @@ fn hypergeometrical_f21_2()
 
     let h: f64 = special::hypergeometric::f21(a, b, c, z);
 
-    assert_eq!(1.1561182056693702, h);
+    assert_relative_eq!(1.1561182056693702, h);
 }
 
 #[test]
@@ -49,7 +49,7 @@ fn hypergeometrical_f21_3()
 
     let h: f64 = special::hypergeometric::f21(a, b, c, z);
 
-    assert_eq!(1.3858902990044464, h);
+    assert_relative_eq!(1.3858902990044464, h);
 }
 
 #[test]
@@ -62,7 +62,7 @@ fn hypergeometrical_f21_4()
 
     let h: f64 = special::hypergeometric::f21(a, b, c, z);
 
-    assert_eq!(1.577586297244991, h);
+    assert_relative_eq!(1.577586297244991, h);
 }
 
 //    #[test]
@@ -75,7 +75,7 @@ fn hypergeometrical_f21_4()
 //
 //        let h: f64 = special::hypergeometrical::f21(a, b, c, z);
 //
-//        assert_eq!(1.3858900032709065, h);
+//        assert_relative_eq!(1.3858900032709065, h);
 //    }
 
 //    #[test]
@@ -88,7 +88,7 @@ fn hypergeometrical_f21_4()
 //
 //        let h: f64 = special::hypergeometrical::f21(a, b, c, z);
 //
-//        assert_eq!(1.577586290185282, h);
+//        assert_relative_eq!(1.577586290185282, h);
 //    }
 
 #[test]
@@ -101,7 +101,7 @@ fn hypergeometrical_f21_7()
 
     let h: f64 = special::hypergeometric::f21(a, b, c, z);
 
-    assert_eq!(0.7834881981920094, h);
+    assert_relative_eq!(0.7834881981920094, h);
 }
 
 #[test]
@@ -114,5 +114,5 @@ fn hypergeometrical_f21_8()
 
     let h: f64 = special::hypergeometric::f21(a, b, c, z);
 
-    assert_eq!(1.0464328112173522, h);
+    assert_relative_eq!(1.0464328112173522, h);
 }
