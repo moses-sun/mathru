@@ -35,16 +35,11 @@ impl<T> Matrix<T> where T: Field + Scalar + Power
     /// let l: (Matrix<f64>) = a.dec_cholesky().unwrap().l();
     /// # }
     /// ```
-    pub fn dec_cholesky<'a>(self: &'a Self) -> Result<CholeskyDec<T>, ()>
+    pub fn dec_cholesky(self: &Self) -> Result<CholeskyDec<T>, ()>
     {
         let (m, n): (usize, usize) = self.dim();
         assert_eq!(m, n);
-        self.dec_cholesky_r()
-    }
 
-    #[cfg(feature = "blaslapack")]
-    fn dec_cholesky_r<'a>(self: &'a Self) -> Result<CholeskyDec<T>, ()>
-    {
         let (_m, n) = self.dim();
         let n_i32: i32 = n as i32;
 

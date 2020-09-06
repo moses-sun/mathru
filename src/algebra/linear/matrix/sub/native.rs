@@ -26,7 +26,7 @@ impl<T> Sub for Matrix<T> where T: Field + Scalar
     /// let a: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
     /// let b: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
     ///
-    /// assert_eq!(Matrix::zero(2, 2), a - b);
+    /// let c: Matrix<f64> = a - b;
     /// ```
     fn sub(self: Self, rhs: Self) -> Self::Output
     {
@@ -66,9 +66,7 @@ impl<'a, 'b, T> Sub<&'b T> for &'a Matrix<T> where T: Field + Scalar
     /// use mathru::algebra::linear::Matrix;
     ///
     /// let a: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
-    /// let b: Matrix<f64> = Matrix::new(2, 2, vec![5.0, 4.0, 7.0, -3.0]);
-    ///
-    /// assert_eq!(b, &a - &-4.0);
+    /// let b: Matrix<f64> = &a - &-4.0;
     /// ```
     fn sub(self: Self, rhs: &T) -> Self::Output
     {
@@ -88,9 +86,7 @@ impl<T> Sub<T> for Matrix<T> where T: Field + Scalar
     /// use mathru::algebra::linear::Matrix;
     ///
     /// let a: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
-    /// let b: Matrix<f64> = Matrix::new(2, 2, vec![5.0, 4.0, 7.0, -3.0]);
-    ///
-    /// assert_eq!(b, a - -4.0);
+    /// let b: Matrix<f64> = a - -4.0;
     /// ```
     fn sub(self: Self, rhs: T) -> Self::Output
     {

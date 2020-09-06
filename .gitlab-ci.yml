@@ -55,7 +55,7 @@ test-openblas:
   needs: ["build-openblas"]
   image: rust:latest
   script:
-    - cargo test --no-default-features --features openblas
+    - cargo test --tests --no-default-features --features openblas
 
 build-netlib:
   stage: build
@@ -68,7 +68,7 @@ test-netlib:
   needs: ["build-netlib"]
   image: rust:latest
   script:
-    - cargo test --no-default-features --features netlib
+    - cargo test --tests --no-default-features --features netlib
 
 build-intelmkl:
   stage: build
@@ -81,5 +81,5 @@ test-intelmkl:
   needs: ["build-intelmkl"]
   image: rust:latest
   script:
-    - cargo test --no-default-features --features intel-mkl
+    - cargo test --tests --no-default-features --features intel-mkl
 

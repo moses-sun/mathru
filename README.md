@@ -2,7 +2,7 @@
 
 [![crate](https://img.shields.io/crates/v/mathru.svg)](https://crates.io/crates/mathru)
 [![documentation](https://docs.rs/mathru/badge.svg)](https://docs.rs/mathru)
-![minimum rustc 1.44.0](https://img.shields.io/badge/rustc-1.45.0-green.svg)
+![minimum rustc 1.46.0](https://img.shields.io/badge/rustc-1.46.0-green.svg)
 ![maintenance](https://img.shields.io/badge/maintenance-actively--developed-brightgreen.svg)
 [![pipeline status](https://gitlab.com/matthiaseiholzer/mathru/badges/master/pipeline.svg)](https://gitlab.com/matthiaseiholzer/mathru/-/commits/master)
 ------------
@@ -26,7 +26,7 @@ The following features are implemented in this create:
         * Pseudo inverse
         * Determinant
         * Trace
-        * [Solve linear system](https://matthiaseiholzer.gitlab.io/mathru/documentation/algebra/matrix/#linear-system-resolution)
+        * [Solve linear system](https://matthiaseiholzer.gitlab.io/mathru/documentation/algebra/linear/matrix/#linear-system-resolution)
 
 * [Ordinary differential equation (ODE)](https://matthiaseiholzer.gitlab.io/mathru/documentation/analysis/differentialeq/)
     * [Explicit methods](https://matthiaseiholzer.gitlab.io/mathru/documentation/analysis/differentialeq/ode/explicit/)

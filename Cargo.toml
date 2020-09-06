@@ -56,10 +56,10 @@ debug = false
 [dependencies]
 
 [dependencies.rand]
-version = "0.7.3"
+version = "0.7"
 
 [dependencies.serde]
-version =  "^1.0"
+version =  "1.0"
 features = ["derive"]
 
 [dependencies.lapack]
@@ -71,11 +71,11 @@ version = "0.20"
 optional = true
 
 [dependencies.blas-src]
-version = "0.6.1"
+version = "0.6"
 optional = true
 
 [dependencies.lapack-src]
-version = "0.6.0"
+version = "0.6"
 optional = true
 
 [dev-dependencies.serde_json]
@@ -85,10 +85,10 @@ version = "1.0"
 version = "^0.3"
 
 [dev-dependencies.nalgebra]
-version = "0.21.0"
+version = "0.22"
 
 [dev-dependencies.plotters]
-version = "0.2.15"
+version = "0.3"
 
 [[bench]]
 name = "benchmark"
