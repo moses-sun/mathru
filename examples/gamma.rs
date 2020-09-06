@@ -22,7 +22,7 @@ fn main()
         .margin(20)
         .set_label_area_size(LabelAreaPosition::Left, 40)
         .set_label_area_size(LabelAreaPosition::Bottom, 40)
-        .build_ranged(x_start..x_end, -10.0f64..25.0f64)
+        .build_cartesian_2d(x_start..x_end, -10.0f64..25.0f64)
         .unwrap();
 
     ctx.configure_mesh()
