@@ -62,18 +62,18 @@ pub trait Discrete<T, A, B>
     /// # Arguments
     ///
     /// *`x`:
-    fn pmf<'a, 'b>(self: &'a Self, x: A) -> T;
+    fn pmf(self: &Self, x: A) -> T;
 
     ///Cumulative distribution function
     ///
     /// # Arguments
     ///
     /// * `x`:
-    fn cdf<'a, 'b>(self: &'a Self, x: B) -> T;
+    fn cdf(self: &Self, x: B) -> T;
 
     /// Mean
-    fn mean<'a>(self: &'a Self) -> T;
+    fn mean(self: &Self) -> T;
 
     /// Variance
-    fn variance<'a>(self: &'a Self) -> T;
+    fn variance(self: & Self) -> T;
 }

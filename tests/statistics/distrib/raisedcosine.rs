@@ -10,7 +10,7 @@ fn pdf0()
     let x: f64 = PI;
     let prob: f64 = distrib.pdf(x);
 
-    assert_eq!(0.0, prob);
+    assert_abs_diff_eq!(0.0, prob, epsilon=1.0e-10);
 }
 
 #[test]
@@ -22,7 +22,7 @@ fn pdf1()
     let x: f64 = 0.0;
     let prob: f64 = distrib.pdf(x);
 
-    assert_eq!(1.0 / PI, prob);
+    assert_relative_eq!(1.0 / PI, prob, epsilon=1.0e-10);
 }
 
 #[test]
@@ -34,7 +34,7 @@ fn pdf2()
     let x: f64 = PI;
     let prob: f64 = distrib.pdf(x);
 
-    assert_eq!(1.0, prob);
+    assert_relative_eq!(1.0, prob, epsilon=1.0e-10);
 }
 
 #[test]
@@ -46,7 +46,7 @@ fn cdf0()
     let x: f64 = PI;
     let prob: f64 = distrib.cdf(x);
 
-    assert_eq!(0.5, prob);
+    assert_relative_eq!(0.5, prob, epsilon=1.0e-10);
 }
 
 #[test]
@@ -58,7 +58,7 @@ fn cdf1()
     let x: f64 = mu - s;
     let prob: f64 = distrib.cdf(x);
 
-    assert!((prob - 0.0).abs() < 0.000000000001);
+    assert_abs_diff_eq!(0.0, prob, epsilon=0.00000001);
 }
 
 #[test]
@@ -70,7 +70,7 @@ fn cdf2()
     let x: f64 = PI + s;
     let prob: f64 = distrib.cdf(x);
 
-    assert_eq!(1.0, prob);
+    assert_relative_eq!(1.0, prob);
 }
 
 #[test]
@@ -81,7 +81,7 @@ fn mean()
     let distrib: RaisedCosine<f64> = RaisedCosine::new(mu, s);
     let mean: f64 = distrib.mean();
 
-    assert_eq!(mu, mean);
+    assert_relative_eq!(mu, mean, epsilon=1.0e-10);
 }
 
 #[test]
@@ -92,7 +92,7 @@ fn variance()
     let distrib: RaisedCosine<f64> = RaisedCosine::new(mu, s);
     let variance: f64 = distrib.variance();
 
-    assert_eq!(s * s * (1.0 / 3.0 - 2.0 / PI / PI), variance);
+    assert_relative_eq!(s * s * (1.0 / 3.0 - 2.0 / PI / PI), variance, epsilon=1.0e-10);
 }
 
 #[test]
@@ -102,7 +102,7 @@ fn median()
     let s: f64 = 2.0 * PI;
     let distrib: RaisedCosine<f64> = RaisedCosine::new(mu, s);
 
-    assert_eq!(mu, distrib.median());
+    assert_relative_eq!(mu, distrib.median(), epsilon=1.0e-10);
 }
 
 #[test]
@@ -112,5 +112,5 @@ fn skewness()
     let s: f64 = 2.0 * PI;
     let distrib: RaisedCosine<f64> = RaisedCosine::new(mu, s);
 
-    assert_eq!(0.0, distrib.skewness());
+    assert_abs_diff_eq!(0.0, distrib.skewness(), epsilon=1.0e-10);
 }

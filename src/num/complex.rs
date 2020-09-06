@@ -8,6 +8,7 @@ use crate::{
         Scalar, Semigroup, SemigroupAdd, SemigroupMul, Sign, Zero,
     },
     elementary::{Exponential, Hyperbolic, Power, Trigonometry},
+    algebra::abstr::AbsDiffEq,
 };
 
 use std::{
@@ -1262,6 +1263,22 @@ impl<T> Magma<Addition> for Complex<T> where T: Real
     fn operate(self, rhs: Self) -> Self
     {
         return Complex::new(self.re + rhs.re, self.im + rhs.im);
+    }
+}
+
+impl<T> AbsDiffEq for Complex<T>
+    where T: Real
+{
+    type Epsilon = Self;
+
+    fn default_epsilon() -> Self
+    {
+        unimplemented!()
+    }
+
+    fn abs_diff_eq(&self, _other: &Self, _epsilon: Self) -> bool
+    {
+        unimplemented!();
     }
 }
 

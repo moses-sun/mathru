@@ -8,7 +8,7 @@ fn pdf0()
 
     let t: T<f64> = T::new(n);
 
-    assert_eq!(0.3535533905932741, t.pdf(x));
+    assert_relative_eq!(0.3535, t.pdf(x), epsilon=0.0001);
 }
 
 #[test]
@@ -19,7 +19,7 @@ fn pdf1()
 
     let t: T<f64> = T::new(n);
 
-    assert_eq!(0.21967979735098045, t.pdf(x));
+    assert_relative_eq!(0.2196, t.pdf(x), epsilon=0.0001);
 }
 
 #[test]
@@ -30,7 +30,7 @@ fn pdf2()
 
     let t: T<f64> = T::new(n);
 
-    assert!((t.pdf(x) - 0.283).abs() < 0.001);
+    assert_relative_eq!(0.283, t.pdf(x), epsilon=0.001);
 }
 
 #[test]
@@ -41,7 +41,7 @@ fn cdf0()
 
     let t: T<f64> = T::new(n);
 
-    assert_eq!(0.5, t.cdf(x));
+    assert_relative_eq!(0.5, t.cdf(x), epsilon=0.001);
 }
 
 #[test]
@@ -52,7 +52,7 @@ fn cdf1()
 
     let t: T<f64> = T::new(n);
 
-    assert_eq!(0.33333333333333315, t.cdf(x));
+    assert_relative_eq!(0.3333, t.cdf(x), epsilon=0.0001);
 }
 
 
@@ -65,7 +65,7 @@ fn skewness()
 
     let t: T<f64> = T::new(n);
 
-    assert_eq!(t.skewness(), 0.0);
+    assert_abs_diff_eq!(0.0, t.skewness(), epsilon=0.0001);
 }
 
 #[test]
@@ -75,5 +75,5 @@ fn median()
 
     let t: T<f64> = T::new(n);
 
-    assert_eq!(t.median(), 0.0);
+    assert_abs_diff_eq!(0.0, t.median(), epsilon=0.0001);
 }

@@ -10,7 +10,7 @@ fn pdf0()
     let x: f64 = 0.0;
     let prob: f64 = distrib.pdf(x);
 
-    assert_eq!(0.3989422804014327, prob);
+    assert_relative_eq!(0.3989422804014327, prob);
 }
 
 //Does not work all the time, because the used function random is not mocked.
@@ -42,7 +42,7 @@ fn cdf0()
     let variance: f64 = 1.0;
     let distrib: Normal<f64> = Normal::new(mean, variance);
 
-    assert_eq!(0.5, distrib.cdf(0.0))
+    assert_relative_eq!(0.5, distrib.cdf(0.0))
 }
 
 #[test]
@@ -52,7 +52,7 @@ fn quantile0()
     let variance: f64 = 1.0;
     let distrib: Normal<f64> = Normal::new(mean, variance);
 
-    assert_eq!(1.2815515655446006, distrib.quantile(0.9));
+    assert_relative_eq!(1.2815515655446006, distrib.quantile(0.9));
 }
 
 #[test]
@@ -62,7 +62,7 @@ fn quantile1()
     let variance: f64 = 0.5;
     let distrib: Normal<f64> = Normal::new(mean, variance);
 
-    assert_eq!(1.0, distrib.quantile(0.5));
+    assert_relative_eq!(1.0, distrib.quantile(0.5));
 }
 
 #[test]
@@ -72,7 +72,7 @@ fn mean()
     let variance: f64 = 0.5;
     let distrib: Normal<f64> = Normal::new(mean, variance);
 
-    assert_eq!(mean, distrib.mean());
+    assert_relative_eq!(mean, distrib.mean());
 }
 
 #[test]
@@ -82,7 +82,7 @@ fn median()
     let variance: f64 = 0.5;
     let distrib: Normal<f64> = Normal::new(mean, variance);
 
-    assert_eq!(mean, distrib.median());
+    assert_relative_eq!(mean, distrib.median());
 }
 
 #[test]
@@ -92,7 +92,7 @@ fn skewness()
     let variance: f64 = 0.5;
     let distrib: Normal<f64> = Normal::new(mean, variance);
 
-    assert_eq!(0.0, distrib.skewness());
+    assert_relative_eq!(0.0, distrib.skewness());
 }
 
 #[test]
@@ -102,7 +102,7 @@ fn entropy()
     let variance: f64 = 0.5;
     let distrib: Normal<f64> = Normal::new(mean, variance);
 
-    assert_eq!(2.0 * PI * E * variance, distrib.entropy());
+    assert_relative_eq!(2.0 * PI * E * variance, distrib.entropy());
 }
 
 //    #[test]

@@ -1,9 +1,6 @@
 #[macro_use]
 extern crate mathru;
 
-#[macro_use]
-extern crate approx;
-
 pub mod algebra;
 pub mod analysis;
 pub mod elementary;

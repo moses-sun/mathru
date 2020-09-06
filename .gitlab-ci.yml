@@ -7,6 +7,7 @@ cache:
   key: ${CI_COMMIT_REF_SLUG}
   paths:
     - target
+    - Cargo.lock
 
 variables:
   CARGO_HOME: $CI_PROJECT_DIR/cargo
@@ -36,11 +37,25 @@ build-native:
     script:
       - cargo build --no-default-features --features native
 
+test-native:
+    stage: test
+    needs: ["build-native"]
+    image: rust:latest
+    script:
+      - cargo test --no-default-features --features native
+
 build-openblas:
     stage: build
     image: rust:latest
     script:
       - cargo build --no-default-features --features openblas
+
+test-openblas:
+  stage: test
+  needs: ["build-openblas"]
+  image: rust:latest
+  script:
+    - cargo test --tests --no-default-features --features openblas
 
 build-netlib:
   stage: build
@@ -48,16 +63,23 @@ build-netlib:
   script:
     - cargo build --no-default-features --features netlib
 
+test-netlib:
+  stage: test
+  needs: ["build-netlib"]
+  image: rust:latest
+  script:
+    - cargo test --tests --no-default-features --features netlib
+
 build-intelmkl:
   stage: build
   image: rust:latest
   script:
     - cargo build --no-default-features --features intel-mkl
 
-#test-blaslapack:
-#    stage: test
-#    needs: ["build-blaslapack"]
-#    image: rust:latest
-#    script:
-#      - cargo test --no-default-features --features blaslapack
+test-intelmkl:
+  stage: test
+  needs: ["build-intelmkl"]
+  image: rust:latest
+  script:
+    - cargo test --tests --no-default-features --features intel-mkl
 

@@ -5,17 +5,6 @@ use mathru::{
 
 use super::problem::{ExplicitODE1, ExplicitODE2};
 
-fn compare_epsilon(a: f64, b: f64, epsilon: f64) -> bool
-{
-    if (a - b).abs() > epsilon
-    {
-        println!("|a-b|: {}", (a - b).abs());
-        return false;
-    }
-
-    return true;
-}
-
 #[test]
 fn fn1_1_step()
 {
@@ -29,10 +18,8 @@ fn fn1_1_step()
     let time_span: (f64, f64) = problem.time_span();
     let init_cond: Vector<f64> = problem.init_cond();
 
-    assert!(compare_epsilon(time_span.1, t[len - 1], 0.000000001));
-    assert!(compare_epsilon(*init_cond.get(0) * (2.0 * time_span.1).exp(),
-                            *y[len - 1].get(0),
-                            0.2));
+    assert_relative_eq!(time_span.1, t[len - 1], epsilon=0.000000001);
+    assert_relative_eq!(*init_cond.get(0) * (2.0 * time_span.1).exp(), *y[len - 1].get(0), epsilon=0.2);
 }
 
 #[test]
@@ -48,10 +35,8 @@ fn fn1_2_steps()
     let time_span: (f64, f64) = problem.time_span();
     let init_cond: Vector<f64> = problem.init_cond();
 
-    assert!(compare_epsilon(time_span.1, t[len - 1], 0.000000001));
-    assert!(compare_epsilon(*init_cond.get(0) * (2.0 * time_span.1).exp(),
-                            *y[len - 1].get(0),
-                            0.0003));
+    assert_relative_eq!(time_span.1, t[len - 1], epsilon=0.000000001);
+    assert_relative_eq!(*init_cond.get(0) * (2.0 * time_span.1).exp(), *y[len - 1].get(0), epsilon=0.0003);
 }
 
 #[test]
@@ -67,10 +52,8 @@ fn fn1_3_steps()
     let time_span: (f64, f64) = problem.time_span();
     let init_cond: Vector<f64> = problem.init_cond();
 
-    assert!(compare_epsilon(time_span.1, t[len - 1], 0.000000001));
-    assert!(compare_epsilon(*init_cond.get(0) * (2.0 * time_span.1).exp(),
-                            *y[len - 1].get(0),
-                            0.00006));
+    assert_relative_eq!(time_span.1, t[len - 1], epsilon=0.000000001);
+    assert_relative_eq!(*init_cond.get(0) * (2.0 * time_span.1).exp(), *y[len - 1].get(0), epsilon=0.00006);
 }
 
 #[test]
@@ -86,10 +69,10 @@ fn fn1_4_steps()
     let time_span: (f64, f64) = problem.time_span();
     let init_cond: Vector<f64> = problem.init_cond();
 
-    assert!(compare_epsilon(time_span.1, t[len - 1], 0.000000001));
-    assert!(compare_epsilon(*init_cond.get(0) * (2.0 * time_span.1).exp(),
+    assert_relative_eq!(time_span.1, t[len - 1], epsilon=0.000000001);
+    assert_relative_eq!(*init_cond.get(0) * (2.0 * time_span.1).exp(),
                             *y[len - 1].get(0),
-                            0.000055));
+                            epsilon=0.000055);
 }
 
 #[test]
@@ -105,10 +88,8 @@ fn fn1_5_steps()
     let time_span: (f64, f64) = problem.time_span();
     let init_cond: Vector<f64> = problem.init_cond();
 
-    assert!(compare_epsilon(time_span.1, t[len - 1], 0.000000001));
-    assert!(compare_epsilon(*init_cond.get(0) * (2.0 * time_span.1).exp(),
-                            *y[len - 1].get(0),
-                            0.000055));
+    assert_relative_eq!(time_span.1, t[len - 1], epsilon=0.000000001);
+    assert_relative_eq!(*init_cond.get(0) * (2.0 * time_span.1).exp(), *y[len - 1].get(0), epsilon=0.000055);
 }
 
 //	#[test]
@@ -123,8 +104,8 @@ fn fn1_5_steps()
 //
 //		let time_span: (f64, f64) = problem.time_span();
 //
-//		assert!(compare_epsilon(time_span.1, t[len - 1], 0.000000001));
-//		assert!(compare_epsilon(1.0 / (2.0 - 1.8) - *y[len -1].get(0), 1.89756,
+//		assert_relative_eq!(time_span.1, t[len - 1], 0.000000001));
+//		assert_relative_eq!(1.0 / (2.0 - 1.8) - *y[len -1].get(0), 1.89756,
 // 0.00006)); 	}
 
 #[test]
@@ -139,6 +120,6 @@ fn fn2_1_step()
 
     let time_span: (f64, f64) = problem.time_span();
 
-    assert!(compare_epsilon(time_span.1, t[len - 1], 0.00000001));
-    assert!(compare_epsilon(time_span.1.tan(), *y[len - 1].get(0), 0.07));
+    assert_relative_eq!(time_span.1, t[len - 1], epsilon=0.00000001);
+    assert_relative_eq!(time_span.1.tan(), *y[len - 1].get(0), epsilon=0.07);
 }

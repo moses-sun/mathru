@@ -27,10 +27,8 @@ impl<T> Matrix<T> where T: Field + Scalar + Power
     pub fn dec_eigen(self: Self) -> EigenDec<T>
     {
         let (m, n): (usize, usize) = self.dim();
-        assert!(m == n,
-                "Unable to compute the eigen value of a non-square matrix");
-        assert!(m != 0,
-                "Unable to compute the eigen vlaue of an empty matrix.");
+        assert!(m == n, "Unable to compute the eigen value of a non-square matrix");
+        assert!(m != 0, "Unable to compute the eigen vlaue of an empty matrix.");
 
         let (m, n): (usize, usize) = self.dim();
 

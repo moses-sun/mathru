@@ -4,16 +4,6 @@ use mathru::{
     analysis::differential_equation::ordinary::{ExplicitODE, RungeKuttaFehlberg54},
 };
 
-fn compare_epsilon(a: f64, b: f64, epsilon: f64) -> bool
-{
-    if (a - b).abs() > epsilon
-    {
-        println!("|a-b|: {}", (a - b).abs());
-        return false;
-    }
-
-    return true;
-}
 
 #[test]
 fn setter_getter_test()
@@ -29,17 +19,17 @@ fn setter_getter_test()
     let mut solver: RungeKuttaFehlberg54<f64> =
         RungeKuttaFehlberg54::new(n_max, h_0, fac, fac_min, fac_max, abs_tol, rel_tol);
 
-    assert_eq!(abs_tol, *solver.get_abs_tol());
+    assert_relative_eq!(abs_tol, *solver.get_abs_tol());
 
     let abs_tol_new: f64 = 0.2;
     solver.set_abs_tol(abs_tol_new);
-    assert_eq!(abs_tol_new, *solver.get_abs_tol());
+    assert_relative_eq!(abs_tol_new, *solver.get_abs_tol());
 
-    assert_eq!(rel_tol, *solver.get_rel_tol());
+    assert_relative_eq!(rel_tol, *solver.get_rel_tol());
 
     let rel_tol_new: f64 = 0.2;
     solver.set_rel_tol(abs_tol_new);
-    assert_eq!(rel_tol_new, *solver.get_rel_tol());
+    assert_relative_eq!(rel_tol_new, *solver.get_rel_tol());
 }
 
 #[test]
@@ -65,10 +55,8 @@ fn fn1()
     let time_span: (f64, f64) = problem.time_span();
     let init_cond: Vector<f64> = problem.init_cond();
 
-    assert!(compare_epsilon(time_span.1, t[len - 1], 0.001));
-    assert!(compare_epsilon(*init_cond.get(0) * (2.0 * time_span.1).exp(),
-                            *y[len - 1].get(0),
-                            0.002));
+    assert_relative_eq!(time_span.1, t[len - 1], epsilon=0.001);
+    assert_relative_eq!(*init_cond.get(0) * (2.0 * time_span.1).exp(), *y[len - 1].get(0), epsilon=0.002);
 }
 
 #[test]
@@ -93,6 +81,6 @@ fn fn2()
 
     let time_span: (f64, f64) = problem.time_span();
 
-    assert!(compare_epsilon(time_span.1, t[len - 1], 0.0001));
-    assert!(compare_epsilon(time_span.1.tan(), *y[len - 1].get(0), 0.0007));
+    assert_relative_eq!(time_span.1, t[len - 1], epsilon=0.0001);
+    assert_relative_eq!(time_span.1.tan(), *y[len - 1].get(0), epsilon=0.0007);
 }

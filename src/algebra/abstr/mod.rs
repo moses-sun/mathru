@@ -23,6 +23,8 @@ mod operator;
 mod quasigroup;
 mod real;
 mod semigroup;
+mod abs_diff_eq;
+mod relative_eq;
 
 pub use self::{
     abeliangroup::{AbelianGroup, AbelianGroupAdd, AbelianGroupMul},
@@ -35,9 +37,10 @@ pub use self::{
     operator::{Addition, Multiplication, Operator},
     quasigroup::Quasigroup,
     semigroup::{Semigroup, SemigroupAdd, SemigroupMul},
+    abs_diff_eq::{AbsDiffEq, AbsDiff},
+    relative_eq::{RelativeEq, Relative},
 };
 
-//pub use self::semiring::{Semiring, Zero, One};
 #[cfg(feature = "blaslapack")]
 pub use self::scalar::{Blas, Lapack};
 pub use self::{

@@ -35,17 +35,12 @@ impl<T> Matrix<T> where T: Field + Scalar + Power
     /// let l: (Matrix<f64>) = a.dec_cholesky().unwrap().l();
     /// # }
     /// ```
-    pub fn dec_cholesky<'a>(self: &'a Self) -> Result<CholeskyDec<T>, ()>
+    pub fn dec_cholesky(self: &Self) -> Result<CholeskyDec<T>, ()>
     {
         let (m, n): (usize, usize) = self.dim();
         assert_eq!(m, n);
-        self.dec_cholesky_r()
-    }
 
-    fn dec_cholesky_r<'a>(self: &'a Self) -> Result<CholeskyDec<T>, ()>
-    {
         let (m, n) = self.dim();
-        let exponent_sqrt: T = T::from_f64(0.5);
         let mut l: Matrix<T> = Matrix::zero(m, n);
 
         for i in 0..n
@@ -60,7 +55,7 @@ impl<T> Matrix<T> where T: Field + Scalar + Power
 
                 if i == j
                 {
-                    *l.get_mut(i, j) = (*self.get(i, i) - sum).pow(exponent_sqrt)
+                    *l.get_mut(i, j) = (*self.get(i, i) - sum).sqrt();
                 }
                 else
                 {

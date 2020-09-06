@@ -18,8 +18,8 @@ fn hessenberg_decomposition_0()
 
     let (q, h): (Matrix<f64>, Matrix<f64>) = a.dec_hessenberg().qh();
 
-    assert!(q.compare_neighbourhood(&q_ref, 1.0e-10));
-    assert!(h.compare_neighbourhood(&h_ref, 1.0e-10));
+    assert_relative_eq!(q, q_ref, epsilon=1.0e-10);
+    assert_relative_eq!(h, h_ref, epsilon=1.0e-10);
 }
 
 #[cfg(feature = "blaslapack")]
@@ -40,6 +40,6 @@ fn hessenberg_decomposition_0()
 
     let (q, h): (Matrix<f64>, Matrix<f64>) = a.dec_hessenberg().qh();
 
-    assert!(q.compare_neighbourhood(&q_ref, 1.0e-10));
-    assert!(h.compare_neighbourhood(&h_ref, 1.0e-10));
+    assert_relative_eq!(q, q_ref, epsilon=1.0e-10);
+    assert_relative_eq!(h, h_ref, epsilon=1.0e-10);
 }

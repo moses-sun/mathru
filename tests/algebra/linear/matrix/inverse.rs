@@ -14,7 +14,7 @@ fn inv_0()
 
     let a_inv: Matrix<f64> = a.inv().unwrap();
 
-    assert!(a_inv.compare_neighbourhood(&a_inv_ref, 1.0e-10));
+    assert_relative_eq!(a_inv, a_inv_ref, epsilon=1.0e-10);
 }
 
 #[test]
@@ -30,7 +30,7 @@ fn inv_1()
 
     let a_inv: Matrix<f64> = a.inv().unwrap();
 
-    assert!(a_inv.compare_neighbourhood(&a_inv_ref, 1.0e-10));
+    assert_relative_eq!(a_inv, a_inv_ref, epsilon=1.0e-10);
 }
 
 #[test]
@@ -51,5 +51,5 @@ fn inv_2()
 
     let a_inv: Matrix<f64> = a.inv().unwrap();
 
-    assert!(a_inv.compare_neighbourhood(&a_inv_ref, 1.0e-10));
+    assert_relative_eq!(a_inv, a_inv_ref, epsilon=1.0e-10);
 }

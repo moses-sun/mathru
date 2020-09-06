@@ -6,6 +6,7 @@ use crate::{
     algebra::{
         abstr::{Addition, Field, Identity, Multiplication, Scalar},
         linear::{matrix::Substitute, Vector, matrix::Transpose},
+        abstr::{AbsDiffEq, RelativeEq},
     },
     elementary::Power,
 };
@@ -146,9 +147,7 @@ impl<T> Matrix<T> where T: Field + Scalar + Power
     /// use mathru::algebra::linear::Matrix;
     ///
     /// let a: Matrix<f64> = Matrix::new(2, 2, vec![1.0, -2.0, 3.0, -7.0]);
-    /// let determinant_a: f64 = a.det();
-    ///
-    /// assert_eq!(-1.0, determinant_a);
+    /// let det: f64 = a.det();
     /// ```
     pub fn det<'a>(self: &'a Self) -> T
     {
@@ -927,8 +926,6 @@ impl<T> Matrix<T> where T: Field + Scalar
     ///
     /// let a: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
     /// let b: Matrix<f64> = &a + &Matrix::zero(2, 2);
-    ///
-    /// assert_eq!(a, b);
     /// ```
     pub fn zero(m: usize, n: usize) -> Self
     {
@@ -949,8 +946,6 @@ impl<T> Identity<Addition> for Matrix<T> where T: Identity<Addition>
     ///
     /// let a: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
     /// let b: Matrix<f64> = &a + &Matrix::zero(2, 2);
-    ///
-    /// assert_eq!(a, b);
     /// ```
     fn id() -> Self
     {
@@ -975,8 +970,6 @@ impl<T> Matrix<T> where T: Field + Scalar
     ///
     /// let a: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
     /// let b: Matrix<f64> = &a * &Matrix::one(2);
-    ///
-    /// assert_eq!(a, b);
     /// ```
     pub fn one(size: usize) -> Self
     {
@@ -1070,39 +1063,108 @@ impl<T> Matrix<T>
     }
 }
 
-impl<T> Matrix<T> where T: Field + Scalar
+// impl<T> Matrix<T> where T: Field + Scalar
+// {
+//     /// Compares to matrices
+//     ///
+//     /// Checks if all elements in the self matrix are in a epsilon
+//     /// neighbourhood of exp
+//     ///
+//     /// # Example
+//     ///
+//     /// ```
+//     /// use mathru::algebra::linear::{Matrix};
+//     ///
+//     /// let a: Matrix<f64> = Matrix::new(4, 2, vec![1.0, 0.0, 3.0, 0.0, 1.0, -7.0, 0.5, 0.25]);
+//     pub fn compare_neighbourhood(self: &Self, act: &Self, epsilon: T) -> bool
+//     {
+//         let (act_m, act_n): (usize, usize) = act.dim();
+//         let (self_m, self_n): (usize, usize) = self.dim();
+//
+//         assert!(act_m == self_m);
+//         assert!(act_n == self_n);
+//
+//         for i in 0..act_m
+//         {
+//             for k in 0..act_n
+//             {
+//                 if (*act.get(i, k) - *self.get(i, k)).abs() > epsilon
+//                 {
+//                     println!("exp: {}, act: {} exp - act: {}", self, act, (act - self));
+//                     return false;
+//                 }
+//             }
+//         }
+//
+//         return true;
+//     }
+// }
+
+
+macro_rules! impl_abs_diff_eq
 {
-    /// Compares to matrices
-    ///
-    /// Checks if all elements in the self matrix are in a epsilon
-    /// neighbourhood of exp
-    ///
-    /// # Example
-    ///
-    /// ```
-    /// use mathru::algebra::linear::{Matrix};
-    ///
-    /// let a: Matrix<f64> = Matrix::new(4, 2, vec![1.0, 0.0, 3.0, 0.0, 1.0, -7.0, 0.5, 0.25]);
-    pub fn compare_neighbourhood(self: &Self, act: &Self, epsilon: T) -> bool
+    ($T:ident, $epsilon: expr) =>
     {
-        let (act_m, act_n): (usize, usize) = act.dim();
-        let (self_m, self_n): (usize, usize) = self.dim();
-
-        assert!(act_m == self_m);
-        assert!(act_n == self_n);
-
-        for i in 0..act_m
+        impl AbsDiffEq for Matrix<$T>
         {
-            for k in 0..act_n
+            type Epsilon = $T;
+
+            fn default_epsilon() -> $T
             {
-                if (*act.get(i, k) - *self.get(i, k)).abs() > epsilon
+                $T::default_epsilon()
+            }
+
+            fn abs_diff_eq(&self, other: &Matrix<$T>, epsilon: $T) -> bool
+            {
+                for (a, b) in self.iter().zip(other.iter())
                 {
-                    println!("exp: {}, act: {} exp - act: {}", self, act, (act - self));
-                    return false;
+                    if a.abs_diff_ne(b, epsilon)
+                    {
+                        return false;
+                    }
+
+                    return true;
                 }
+
+                return true;
             }
         }
-
-        return true;
-    }
+    };
 }
+
+impl_abs_diff_eq!(f32, f32::EPSILON);
+impl_abs_diff_eq!(f64, f64::EPSILON);
+
+macro_rules! impl_relative_eq
+{
+    ($T:ident, $epsilon: expr) =>
+    {
+        impl RelativeEq for Matrix<$T>
+        {
+
+            fn default_max_relative() -> $T
+            {
+                $T::EPSILON
+            }
+
+            /// A test for equality that uses a relative comparison if the values are far apart.
+            fn relative_eq(&self, other: &Matrix<$T>, epsilon: Self::Epsilon, max_relative: Self::Epsilon) -> bool
+            {
+                for (a, b) in self.iter().zip(other.iter())
+                {
+                    if a.relative_ne(b, epsilon, max_relative)
+                    {
+                        return false;
+                    }
+
+                    return true;
+                }
+
+                return true;
+            }
+        }
+    };
+}
+
+impl_relative_eq!(f32, f32::EPSILON);
+impl_relative_eq!(f64, f64::EPSILON);

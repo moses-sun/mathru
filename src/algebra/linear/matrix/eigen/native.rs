@@ -27,17 +27,15 @@ impl<T> Matrix<T> where T: Real
     pub fn dec_eigen(self: Self) -> EigenDec<T>
     {
         let (m, n): (usize, usize) = self.dim();
-        assert!(m == n,
-                "Unable to compute the eigen value of a non-square matrix");
-        assert!(m != 0,
-                "Unable to compute the eigen vlaue of an empty matrix.");
+        assert!(m == n, "Unable to compute the eigen value of a non-square matrix");
+        assert!(m != 0, "Unable to compute the eigen vlaue of an empty matrix.");
 
         let value: Vector<T> = self.eigenvalue_r();
         let vector: Matrix<T> = self.eigenvector_r(&value);
+
         return EigenDec::new(value, vector);
     }
 
-    #[cfg(feature = "native")]
     pub fn eigenvalue_r(self: &Self) -> Vector<T>
     {
         let (m, _n): (usize, usize) = self.dim();
@@ -56,7 +54,6 @@ impl<T> Matrix<T> where T: Real
         return eig;
     }
 
-    #[cfg(feature = "native")]
     fn francis(mut self: Self) -> (Matrix<T>, Matrix<T>)
     {
         let epsilon: T = T::epsilon();
@@ -159,7 +156,6 @@ impl<T> Matrix<T> where T: Real
         return (u, self);
     }
 
-    #[cfg(feature = "native")]
     pub fn eigenvector_r(self: &Self, value: &Vector<T>) -> Matrix<T>
     {
         let eye: Matrix<T> = Matrix::one(self.m);
