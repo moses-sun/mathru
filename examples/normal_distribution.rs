@@ -30,7 +30,7 @@ fn main()
             "Probability distribution function of Normal distribution",
             ("Arial", 40),
         )
-        .build_ranged(x_start..x_end, 0.0f64..0.45f64)
+        .build_cartesian_2d(x_start..x_end, 0.0f64..0.45f64)
         .unwrap();
 
     ctx.configure_mesh()

@@ -37,7 +37,7 @@ fn main()
                                     .set_label_area_size(LabelAreaPosition::Left, 40)
                                     .set_label_area_size(LabelAreaPosition::Bottom, 40)
                                     .caption("ODE solved with implicit Euler", ("Arial", 40))
-                                    .build_ranged(x_start..x_end, -1.0f64..1.5f64)
+                                    .build_cartesian_2d(x_start..x_end, -1.0f64..1.5f64)
                                     .unwrap();
 
     ctx.configure_mesh()

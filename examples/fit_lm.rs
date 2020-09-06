@@ -127,7 +127,7 @@ fn main()
                                               .set_label_area_size(LabelAreaPosition::Bottom, 40)
                                               .caption("Parameter fitting with Levenberg Marquardt",
                                                        ("Arial", 40))
-                                              .build_ranged(t_0..t_1, -0.5f64..6.0f64)
+                                              .build_cartesian_2d(t_0..t_1, -0.5f64..6.0f64)
                                               .unwrap();
 
     ctx.configure_mesh()
