@@ -5,15 +5,23 @@ use crate::algebra::{
 
 pub struct VectorIteratorMut<'a, T>
 {
-    pub iter: MatrixIteratorMut<'a, T>,
+    iter: MatrixIteratorMut<'a, T>,
+}
+
+impl<'a, T> VectorIteratorMut<'a, T>
+{
+    pub fn new(iter: MatrixIteratorMut<'a, T>) -> VectorIteratorMut<'a, T>
+    {
+       VectorIteratorMut{ iter }
+    }
 }
 
 impl<'a, T> Iterator for VectorIteratorMut<'a, T> where T: Field + Scalar
 {
-    type Item = T;
+    type Item = &'a mut T;
 
     fn next(&mut self) -> Option<Self::Item>
     {
-        return Some(T::zero());
+        return self.iter.next();
     }
 }

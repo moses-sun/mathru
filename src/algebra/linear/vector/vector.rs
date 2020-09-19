@@ -73,13 +73,12 @@ pub struct Vector<T>
 
 impl<T> IntoIterator for Vector<T> where T: Field + Scalar
 {
-    type IntoIter = VectorIntoIterator<T>;
     type Item = T;
+    type IntoIter = VectorIntoIterator<T>;
 
     fn into_iter(self: Self) -> Self::IntoIter
     {
-        VectorIntoIterator { //_phantom: PhantomData::default()//
-                             iter: self.data.into_iter() }
+        VectorIntoIterator::new(self.data.into_iter() )
     }
 }
 
@@ -94,12 +93,12 @@ impl<T> Vector<T>
 {
     pub fn iter(self: &Self) -> VectorIterator<T>
     {
-        VectorIterator { iter: self.data.iter() }
+        VectorIterator::new(self.data.iter())
     }
 
     pub fn iter_mut(self: &mut Self) -> VectorIteratorMut<T>
     {
-        VectorIteratorMut { iter: self.data.iter_mut() }
+        VectorIteratorMut::new(self.data.iter_mut())
     }
 }
 
@@ -127,7 +126,7 @@ impl<T> Vector<T> where T: Field + Scalar + Power
     ///
     /// assert_eq!(norm_ref, norm);
     /// ```
-    pub fn p_norm<'a, 'b>(self: &'a Self, p: &'b T) -> T
+    pub fn p_norm(self: &Self, p: &T) -> T
     {
         assert!(*p >= T::one());
 
@@ -176,7 +175,7 @@ impl<T> Vector<T> where T: Field + Scalar + Power + Exponential
     ///
     /// assert_eq!(norm_ref, norm);
     /// ```
-    pub fn eucl_norm<'a, 'b>(self: &'a Self) -> T
+    pub fn eucl_norm(self: &Self) -> T
     {
         let exp: T = T::from_f64(2.0);
 
@@ -199,7 +198,7 @@ impl<T> Vector<T> where T: Clone + Copy
     ///
     /// let a: Vector<f64> = Vector::new_row(4, vec![1.0, 0.0, 3.0, -2.0]);
     /// ```
-    pub fn new_row<'a, 'b>(n: usize, data: Vec<T>) -> Self
+    pub fn new_row(n: usize, data: Vec<T>) -> Self
     {
         assert_eq!(n, data.len());
         Vector { data: Matrix::new(1, n, data) }
@@ -828,3 +827,5 @@ macro_rules! impl_relative_eq
 
 impl_relative_eq!(f32, f32::EPSILON);
 impl_relative_eq!(f64, f64::EPSILON);
+
+

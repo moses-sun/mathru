@@ -1,5 +1,6 @@
 use crate::mathru::algebra::linear::matrix::Substitute;
 use mathru::algebra::linear::{matrix::{Transpose, Solve}, Matrix, Vector};
+use mathru::algebra::linear::matrix::{MatrixIterator, MatrixIteratorMut, MatrixIntoIterator};
 
 #[test]
 fn macro_0()
@@ -75,6 +76,20 @@ fn one()
             }
         }
     }
+}
+
+#[test]
+fn ones()
+{
+    let rows: usize = 3;
+    let columns: usize = 5;
+    let m_ones: Matrix<f64> = Matrix::ones(rows, columns);
+
+    let ones_ref: Matrix<f64> = matrix![    1.0, 1.0, 1.0, 1.0, 1.0;
+                                1.0, 1.0, 1.0, 1.0, 1.0;
+                                1.0, 1.0, 1.0, 1.0, 1.0];
+
+    assert_eq!(m_ones, ones_ref);
 }
 
 #[test]
@@ -669,4 +684,38 @@ fn pinv_0()
                                             2.6666666666666474, -2.66666666666661, 1.0];
 
     assert_relative_eq!(a_pinv, a_pinv_ref, epsilon=10e-10);
+}
+
+#[test]
+fn iter()
+{
+    let m: Matrix<f64> = matrix![1.0, -4.0];
+    let mut iter: MatrixIterator<f64> = m.iter();
+
+    assert_eq!(iter.next(), Some(&1.0f64));
+    assert_eq!(iter.next(), Some(&-4.0f64));
+}
+
+#[test]
+fn iter_mut()
+{
+    let mut m: Matrix<f64> = matrix![1.0, -4.0];
+    let mut iter_mut: MatrixIteratorMut<f64> = m.iter_mut();
+
+    assert_eq!(iter_mut.next(), Some(&mut 1.0f64));
+    let last = iter_mut.next().unwrap();
+    assert_eq!(*last, -4.0f64);
+    *last = 3.0;
+    assert_eq!(*last, 3.0f64);
+}
+
+#[test]
+fn into_iter()
+{
+    let m: Matrix<f64> = matrix![1.0, -4.0];
+    let mut iter: MatrixIntoIterator<f64> = m.into_iter();
+
+    assert_eq!(iter.next(), Some(1.0f64));
+    let last: f64 = iter.next().unwrap();
+    assert_eq!(last, -4.0f64);
 }

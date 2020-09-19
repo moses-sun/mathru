@@ -12,6 +12,6 @@ impl<T> Iterator for MatrixIntoIterator<T> where T: Field + Scalar
 
     fn next(self: &mut Self) -> Option<Self::Item>
     {
-        return Some(T::zero());
+        return self.iter.next();
     }
 }

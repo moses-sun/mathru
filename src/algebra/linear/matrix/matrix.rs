@@ -93,12 +93,12 @@ impl<T> Matrix<T>
 {
     pub fn iter(self: &Self) -> MatrixIterator<T>
     {
-        MatrixIterator { iter: self.data.iter() }
+        MatrixIterator::new( self.data.iter() )
     }
 
     pub fn iter_mut(self: &mut Self) -> MatrixIteratorMut<T>
     {
-        MatrixIteratorMut { iter: self.data.iter_mut() }
+        MatrixIteratorMut::new(self.data.iter_mut())
     }
 
     pub fn row_iter(self: &Self) -> MatrixRowIterator<T>
