@@ -1,20 +1,28 @@
-use crate::algebra::abstr::{Field, Scalar};
+use crate::algebra::abstr::{Field, Scalar, Zero};
+use crate::algebra::linear::{Vector};
 use std::slice::Iter;
 
 pub struct MatrixRowIterator<'a, T>
 {
-    //_phantom: PhantomData<T>
-    pub iter: Iter<'a, T>,
+    iter: Iter<'a, T>,
+    vec: Vector<T>,
+}
+
+impl<'a, T> MatrixRowIterator<'a, T>
+    where T: Zero
+{
+    pub fn new(iter: Iter<'a, T>) -> MatrixRowIterator<'a, T>
+    {
+        return MatrixRowIterator{iter: iter, vec: vector![T::zero()]};
+    }
 }
 
 impl<'a, T> Iterator for MatrixRowIterator<'a, T> where T: Field + Scalar
 {
-    type Item = T;
+    type Item = &'a Vector<T>;
 
-    // just return the str reference
-    fn next(&mut self) -> Option<Self::Item>
+    fn next(&'a mut self) -> Option<Self::Item>
     {
-        //self.iter.next()
-        Some(T::zero())
+        Some(&self.vec)
     }
 }
