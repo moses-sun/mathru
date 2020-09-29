@@ -2,6 +2,7 @@ use mathru::{
     algebra::{
         abstr::Sign,
         linear::{Matrix, Vector},
+        linear::vector::{VectorIterator, VectorIteratorMut, VectorIntoIterator},
     },
     elementary::Power,
 };
@@ -392,4 +393,38 @@ fn abs()
     let abs: Vector<f64> = v.abs();
 
     assert_relative_eq!(abs_ref, abs);
+}
+
+#[test]
+fn iter()
+{
+    let v: Vector<f64> = vector![1.0, -4.0];
+    let mut iter: VectorIterator<f64> = v.iter();
+
+    assert_eq!(iter.next(), Some(&1.0f64));
+    assert_eq!(iter.next(), Some(&-4.0f64));
+}
+
+#[test]
+fn iter_mut()
+{
+    let mut v: Vector<f64> = vector![1.0, -4.0];
+    let mut iter_mut: VectorIteratorMut<f64> = v.iter_mut();
+
+    assert_eq!(iter_mut.next(), Some(&mut 1.0f64));
+    let last = iter_mut.next().unwrap();
+    assert_eq!(*last, -4.0f64);
+    *last = 3.0;
+    assert_eq!(*last, 3.0f64);
+}
+
+#[test]
+fn into_iter()
+{
+    let v: Vector<f64> = vector![1.0, -4.0];
+    let mut iter: VectorIntoIterator<f64> = v.into_iter();
+
+    assert_eq!(iter.next(), Some(1.0f64));
+    let last = iter.next().unwrap();
+    assert_eq!(last, -4.0f64);
 }

@@ -1,12 +1,18 @@
+//! Chi-Squared distribution
+
 use super::Normal;
 use crate::{algebra::abstr::Real, special::error::Error, special::gamma::Gamma, statistics::distrib::Continuous};
 use crate::special::gamma;
 use crate::special::error;
 
+use serde::{Deserialize, Serialize};
+use std::clone::Clone;
+
 /// Chi-Squared distribution
 ///
 /// Fore more information:
 /// <a href="https://en.wikipedia.org/wiki/Chi-squared_distribution">https://en.wikipedia.org/wiki/Chi-squared_distribution</a>
+#[derive(Clone, Copy, Debug, Serialize, Deserialize)]
 pub struct ChiSquared<T>
 {
     k: T, //degree of freedom

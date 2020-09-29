@@ -4,10 +4,13 @@ use crate::{
     algebra::{abstr::Real, linear::Vector},
     analysis::differential_equation::ordinary::fixed_stepper::ExplicitFixedStepper,
 };
+use serde::{Deserialize, Serialize};
+use std::clone::Clone;
 
 /// Solves an ODE using midpoint method.
 ///
 /// <a href="https://en.wikipedia.org/wiki/Midpoint_method">https://en.wikipedia.org/wiki/Midpoint_method</a>
+#[derive(Clone, Copy, Debug, Serialize, Deserialize)]
 pub struct Midpoint<T>
 {
     stepper: ExplicitFixedStepper<T>,

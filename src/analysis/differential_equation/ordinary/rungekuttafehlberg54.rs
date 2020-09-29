@@ -4,6 +4,8 @@ use super::{
 };
 use crate::algebra::{abstr::Real, linear::Vector};
 use std::default::Default;
+use serde::{Deserialize, Serialize};
+use std::clone::Clone;
 
 /// Solves an ODE using the 4th order Runge-Kutta-Fehlberg algorithm.
 ///
@@ -95,6 +97,7 @@ use std::default::Default;
 ///
 /// # }
 /// ```
+#[derive(Clone, Copy, Debug, Serialize, Deserialize)]
 pub struct RungeKuttaFehlberg54<T>
 {
     stepper: AdaptiveStepper<T>,

@@ -5,7 +5,15 @@ use crate::algebra::{
 
 pub struct VectorIterator<'a, T>
 {
-    pub iter: MatrixIterator<'a, T>,
+    iter: MatrixIterator<'a, T>,
+}
+
+impl<'a, T> VectorIterator<'a, T>
+{
+    pub fn new(iter: MatrixIterator<'a, T>) -> VectorIterator<'a, T>
+    {
+        VectorIterator{iter}
+    }
 }
 
 impl<'a, T> Iterator for VectorIterator<'a, T> where T: Field + Scalar

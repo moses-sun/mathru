@@ -6,7 +6,15 @@ use std::iter::Iterator;
 
 pub struct VectorIntoIterator<T>
 {
-    pub iter: MatrixIntoIterator<T>,
+    iter: MatrixIntoIterator<T>,
+}
+
+impl<T> VectorIntoIterator<T>
+{
+    pub fn new(iter: MatrixIntoIterator<T>) -> VectorIntoIterator<T>
+    {
+        VectorIntoIterator{ iter }
+    }
 }
 
 impl<T> Iterator for VectorIntoIterator<T> where T: Field + Scalar

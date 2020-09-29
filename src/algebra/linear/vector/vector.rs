@@ -73,13 +73,12 @@ pub struct Vector<T>
 
 impl<T> IntoIterator for Vector<T> where T: Field + Scalar
 {
-    type IntoIter = VectorIntoIterator<T>;
     type Item = T;
+    type IntoIter = VectorIntoIterator<T>;
 
     fn into_iter(self: Self) -> Self::IntoIter
     {
-        VectorIntoIterator { //_phantom: PhantomData::default()//
-                             iter: self.data.into_iter() }
+        VectorIntoIterator::new(self.data.into_iter() )
     }
 }
 
@@ -94,12 +93,12 @@ impl<T> Vector<T>
 {
     pub fn iter(self: &Self) -> VectorIterator<T>
     {
-        VectorIterator { iter: self.data.iter() }
+        VectorIterator::new(self.data.iter())
     }
 
     pub fn iter_mut(self: &mut Self) -> VectorIteratorMut<T>
     {
-        VectorIteratorMut { iter: self.data.iter_mut() }
+        VectorIteratorMut::new(self.data.iter_mut())
     }
 }
 
@@ -127,7 +126,7 @@ impl<T> Vector<T> where T: Field + Scalar + Power
     ///
     /// assert_eq!(norm_ref, norm);
     /// ```
-    pub fn p_norm<'a, 'b>(self: &'a Self, p: &'b T) -> T
+    pub fn p_norm(self: &Self, p: &T) -> T
     {
         assert!(*p >= T::one());
 
@@ -176,7 +175,7 @@ impl<T> Vector<T> where T: Field + Scalar + Power + Exponential
     ///
     /// assert_eq!(norm_ref, norm);
     /// ```
-    pub fn eucl_norm<'a, 'b>(self: &'a Self) -> T
+    pub fn eucl_norm(self: &Self) -> T
     {
         let exp: T = T::from_f64(2.0);
 
@@ -199,7 +198,7 @@ impl<T> Vector<T> where T: Clone + Copy
     ///
     /// let a: Vector<f64> = Vector::new_row(4, vec![1.0, 0.0, 3.0, -2.0]);
     /// ```
-    pub fn new_row<'a, 'b>(n: usize, data: Vec<T>) -> Self
+    pub fn new_row(n: usize, data: Vec<T>) -> Self
     {
         assert_eq!(n, data.len());
         Vector { data: Matrix::new(1, n, data) }
@@ -407,7 +406,7 @@ impl<T> Vector<T>
     ///
     /// let m: Matrix<f64> = a.dyadp(&b);
     /// ```
-    pub fn dyadp<'a, 'b>(self: &'a Self, rhs: &'b Self) -> Matrix<T>
+    pub fn dyadp(self: &Self, rhs: &Self) -> Matrix<T>
     {
         let (x_m, _x_n): (usize, usize) = self.dim();
         let (y_m, _y_n): (usize, usize) = rhs.dim();
@@ -444,7 +443,7 @@ impl<T> Vector<T>
     ///
     /// *a.get_mut(1) = -4.0;
     /// ```
-    pub fn get_mut<'a>(self: &'a mut Self, i: usize) -> &'a mut T
+    pub fn get_mut(self: &mut Self, i: usize) -> &mut T
     {
         let (m, n): (usize, usize) = self.data.dim();
         assert!(m == 1 || n == 1);
@@ -482,7 +481,7 @@ impl<T> Vector<T>
     ///
     /// assert_eq!(-2.0, *a.get_mut(3))
     /// ```
-    pub fn get<'a>(self: &'a Self, i: usize) -> &'a T
+    pub fn get(self: &Self, i: usize) -> &T
     {
         let (m, n): (usize, usize) = self.data.dim();
         assert!(m == 1 || n == 1);
@@ -676,26 +675,6 @@ impl<T> Vector<T>
     }
 }
 
-//impl<T> Vector<T>
-//{
-//    pub fn get_mut<'a, 'b>(self: &'a mut Self, i: &'b usize) -> &'a mut T
-//    {
-//        assert!(*i < self.m);
-//        & mut(self.data[i * self.n + j])
-//    }
-//}
-//
-//impl<T> Matrix<T>
-//{
-//    ///x = self_ij
-//    pub fn get<'a, 'b, 'c>(self: &'a Self, i: &'b usize) -> &'a T
-//    {
-//        assert!(*i < self.m);
-//
-//        & self.data[i * self.n + j]
-//    }
-//}
-
 impl<T> PartialEq<Self> for Vector<T> where T: Scalar
 {
     /// Compares if two vectors are equal
@@ -710,7 +689,7 @@ impl<T> PartialEq<Self> for Vector<T> where T: Scalar
     ///
     /// assert_eq!(true, a.eq(&b))
     /// ```
-    fn eq<'a, 'b>(self: &'a Self, other: &'b Self) -> bool
+    fn eq(self: &Self, other: &Self) -> bool
     {
         if self.data == other.data
         {
@@ -744,13 +723,11 @@ impl<T> Sign for Vector<T> where T: Field + Scalar
     fn is_positive(self: &Self) -> bool
     {
         unimplemented!();
-        //return *self > $zero;
     }
 
     fn is_negative(&self) -> bool
     {
         unimplemented!();
-        //return *self < $zero;
     }
 }
 
@@ -828,3 +805,5 @@ macro_rules! impl_relative_eq
 
 impl_relative_eq!(f32, f32::EPSILON);
 impl_relative_eq!(f64, f64::EPSILON);
+
+

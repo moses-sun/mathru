@@ -4,6 +4,8 @@ use crate::{
     algebra::{abstr::Real, linear::Vector},
     analysis::differential_equation::ordinary::fixed_stepper::ExplicitFixedStepper,
 };
+use serde::{Deserialize, Serialize};
+use std::clone::Clone;
 
 /// Solves an ODE using the 3th order Runge-Kutta algorithm.
 ///
@@ -81,6 +83,7 @@ use crate::{
 ///
 /// # }
 /// ```
+#[derive(Clone, Copy, Debug, Serialize, Deserialize)]
 pub struct Kutta3<T>
 {
     stepper: ExplicitFixedStepper<T>,

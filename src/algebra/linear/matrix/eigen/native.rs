@@ -166,7 +166,7 @@ impl<T> Matrix<T> where T: Real
         {
             let diff: Matrix<T> = self - &(&eye * val);
             let vec: Vector<T> = diff.solve(&zero_vector).unwrap();
-            vectors = vectors.set_column(&vec, c);
+            vectors.set_column(&vec, c);
         }
 
         return vectors;

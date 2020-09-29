@@ -1,6 +1,10 @@
 # Change Log
 All notable changes starting with the version 0.6.9 are documented here.
 
+## [0.7.3]
+- Column/row iterators implemented
+- Serde support
+
 ## [0.7.2]
 - assert_eq! for floats replaced with assert_relative_eq! and assert_diff_abs_eq!
 - CI pipeline for blas/lapack backends fixed

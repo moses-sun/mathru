@@ -1,12 +1,16 @@
+// Binomial distribution
 use crate::{
     algebra::abstr::Real,
     statistics::{combins, distrib::Discrete},
 };
+use serde::{Deserialize, Serialize};
+use std::clone::Clone;
 
 /// Binomial distribution
 ///
 /// Fore more information:
 /// <a href="https://en.wikipedia.org/wiki/Binomial_distribution">https://en.wikipedia.org/wiki/Binomial_distribution</a>
+#[derive(Clone, Copy, Debug, Serialize, Deserialize)]
 pub struct Binomial<T>
 {
     p: T,

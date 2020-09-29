@@ -3,10 +3,19 @@ use std::slice::Iter;
 
 pub struct MatrixIterator<'a, T>
 {
-    pub iter: Iter<'a, T>,
+    iter: Iter<'a, T>,
 }
 
-impl<'a, T> Iterator for MatrixIterator<'a, T> where T: Field + Scalar
+impl<'a, T> MatrixIterator<'a, T>
+{
+    pub fn new(iter: Iter<'a, T>) -> MatrixIterator<'a, T>
+    {
+        MatrixIterator{ iter}
+    }
+}
+
+impl<'a, T> Iterator for MatrixIterator<'a, T>
+    where T: Field + Scalar
 {
     type Item = &'a T;
 

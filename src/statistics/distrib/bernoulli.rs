@@ -1,10 +1,14 @@
+//! Bernoulli Distribution
 use crate::{algebra::abstr::Real, statistics::distrib::Discrete};
+use serde::{Deserialize, Serialize};
+use std::clone::Clone;
 
 /// Bernoulli distribution
 ///
 /// Fore more information:
 ///
 /// <a href="https://en.wikipedia.org/wiki/Bernoulli_distribution">https://en.wikipedia.org/wiki/Bernoulli_distribution</a>
+#[derive(Clone, Copy, Debug, Serialize, Deserialize)]
 pub struct Bernoulli<T>
 {
     p: T,

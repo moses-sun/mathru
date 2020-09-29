@@ -4,6 +4,8 @@ use crate::{
 };
 extern crate rand;
 use crate::algebra::abstr::Real;
+use serde::{Deserialize, Serialize};
+use std::clone::Clone;
 
 /// Gradient method
 ///
@@ -31,7 +33,7 @@ use crate::algebra::abstr::Real;
 /// \lvert d_{k} \rvert \rvert_{2}^{2} `$     set  $` \alpha_{k} := \alpha_{k}
 /// /2 `$ 4. $` x_{k + 1} := x_{k} + \alpha_{k} d_{k} `$
 /// 5. $` k := k + 1 `$ go to 2.
-#[derive(Clone, Copy, Debug)]
+#[derive(Clone, Copy, Debug, Serialize, Deserialize,)]
 pub struct Gradient<T>
 {
     /// Learningrate

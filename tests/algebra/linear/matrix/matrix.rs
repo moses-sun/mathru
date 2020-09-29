@@ -1,6 +1,7 @@
 use crate::mathru::algebra::linear::matrix::Substitute;
 use mathru::algebra::linear::{matrix::{Transpose, Solve}, Matrix, Vector};
 
+
 #[test]
 fn macro_0()
 {
@@ -75,6 +76,20 @@ fn one()
             }
         }
     }
+}
+
+#[test]
+fn ones()
+{
+    let rows: usize = 3;
+    let columns: usize = 5;
+    let m_ones: Matrix<f64> = Matrix::ones(rows, columns);
+
+    let ones_ref: Matrix<f64> = matrix![    1.0, 1.0, 1.0, 1.0, 1.0;
+                                1.0, 1.0, 1.0, 1.0, 1.0;
+                                1.0, 1.0, 1.0, 1.0, 1.0];
+
+    assert_eq!(m_ones, ones_ref);
 }
 
 #[test]

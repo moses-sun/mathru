@@ -3,11 +3,15 @@ use crate::{
     statistics::distrib::{Continuous, Distribution},
 };
 use rand::{rngs::ThreadRng, Rng};
+use serde::{Deserialize, Serialize};
+use std::clone::Clone;
 
 /// Uniform distribution
 ///
 /// Fore more information:
 /// <a href="https://en.wikipedia.org/wiki/Uniform_distribution_(continuous)">https://en.wikipedia.org/wiki/Uniform_distribution_(continuous)</a>
+///
+#[derive(Clone, Copy, Debug, Serialize, Deserialize)]
 pub struct Uniform<T>
 {
     a: T,

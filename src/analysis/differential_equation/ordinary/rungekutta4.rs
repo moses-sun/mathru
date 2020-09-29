@@ -5,10 +5,14 @@ use crate::{
     analysis::differential_equation::ordinary::fixed_stepper::ExplicitFixedStepper,
 };
 
+use serde::{Deserialize, Serialize};
+use std::clone::Clone;
+
 /// Solves an ODE using the 4th order Runge-Kutta algorithm.
 ///
 ///<a href="https://en.wikipedia.org/wiki/Runge%E2%80%93Kutta_methods">https://en.wikipedia
 /// .org/wiki/Rung-Kutta_methods</a>
+#[derive(Clone, Copy, Debug, Serialize, Deserialize)]
 pub struct RungeKutta4<T>
 {
     stepper: ExplicitFixedStepper<T>,

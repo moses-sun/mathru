@@ -1,6 +1,14 @@
+//! Matrix
 use super::{
-    MatrixColumnIterator, MatrixColumnIteratorMut, MatrixIntoIterator, MatrixIterator,
-    MatrixIteratorMut, MatrixRowIterator, MatrixRowIteratorMut,
+    //MatrixColumnIterator,
+    //MatrixColumnIteratorMut,
+    MatrixColumnIntoIterator,
+    MatrixIntoIterator,
+    MatrixIterator,
+    MatrixIteratorMut,
+    //MatrixRowIterator,
+    //MatrixRowIteratorMut,
+    MatrixRowIntoIterator
 };
 use crate::{
     algebra::{
@@ -12,10 +20,8 @@ use crate::{
 };
 use rand::{self, Rng};
 use serde::{Deserialize, Serialize};
-/// Matrix
 use std::clone::Clone;
 use std::{fmt, fmt::Display};
-
 use std::convert::From;
 
 /// Macro to construct matrices
@@ -61,11 +67,11 @@ macro_rules! matrix
 pub struct Matrix<T>
 {
     /// Num of rows which the matrix has
-    pub(crate) m: usize,
+    pub(super) m: usize,
     /// Num of columns which the matrix ha
-    pub(crate) n: usize,
+    pub(super) n: usize,
     /// Matrix entries
-    pub(crate) data: Vec<T>,
+    pub(super) data: Vec<T>,
 }
 
 impl<T> From<Vector<T>> for Matrix<T> where T: Field + Scalar
@@ -80,8 +86,8 @@ impl<T> From<Vector<T>> for Matrix<T> where T: Field + Scalar
 
 impl<T> IntoIterator for Matrix<T> where T: Field + Scalar
 {
-    type IntoIter = MatrixIntoIterator<T>;
     type Item = T;
+    type IntoIter = MatrixIntoIterator<T>;
 
     fn into_iter(self) -> Self::IntoIter
     {
@@ -93,33 +99,44 @@ impl<T> Matrix<T>
 {
     pub fn iter(self: &Self) -> MatrixIterator<T>
     {
-        MatrixIterator { iter: self.data.iter() }
+        MatrixIterator::new( self.data.iter() )
     }
 
     pub fn iter_mut(self: &mut Self) -> MatrixIteratorMut<T>
     {
-        MatrixIteratorMut { iter: self.data.iter_mut() }
+        MatrixIteratorMut::new(self.data.iter_mut())
     }
 
-    pub fn row_iter(self: &Self) -> MatrixRowIterator<T>
+    pub fn row_into_iter(self: &Self) -> MatrixRowIntoIterator<T>
     {
-        MatrixRowIterator { iter: self.data.iter() }
+        MatrixRowIntoIterator::new(self)
+    }
+    // pub fn row_iter(self: &Self) -> MatrixRowIterator<T>
+    //     where T: Zero
+    // {
+    //     MatrixRowIterator::new(self.data.iter())
+    // }
+
+    // pub fn row_iter_mut(self: &mut Self) -> MatrixRowIteratorMut<T>
+    //     where T: Zero
+    // {
+    //     MatrixRowIteratorMut::new(self.data.iter_mut())
+    // }
+
+    pub fn column_into_iter(self: &Self) -> MatrixColumnIntoIterator<T>
+    {
+         MatrixColumnIntoIterator::new(self)
     }
 
-    pub fn row_iter_mut(self: &mut Self) -> MatrixRowIteratorMut<T>
-    {
-        MatrixRowIteratorMut { iter: self.data.iter_mut() }
-    }
+    // pub fn column_iter(self: &Self) -> MatrixColumnIterator<T>
+    // {
+    //     MatrixColumnIterator::new(self.data.iter())
+    // }
 
-    pub fn column_iter(self: &Self) -> MatrixColumnIterator<T>
-    {
-        MatrixColumnIterator { iter: self.data.iter() }
-    }
-
-    pub fn column_iter_mut(self: &mut Self) -> MatrixColumnIteratorMut<T>
-    {
-        MatrixColumnIteratorMut { iter: self.data.iter_mut() }
-    }
+    // pub fn column_iter_mut(self: &mut Self) -> MatrixColumnIteratorMut<T>
+    // {
+    //     MatrixColumnIteratorMut::new(self.data.iter_mut())
+    // }
 }
 
 impl<T> Matrix<T> where T: Clone
@@ -149,7 +166,7 @@ impl<T> Matrix<T> where T: Field + Scalar + Power
     /// let a: Matrix<f64> = Matrix::new(2, 2, vec![1.0, -2.0, 3.0, -7.0]);
     /// let det: f64 = a.det();
     /// ```
-    pub fn det<'a>(self: &'a Self) -> T
+    pub fn det(self: &Self) -> T
     {
         assert_eq!(self.m, self.n);
 
@@ -239,7 +256,7 @@ impl<T> Matrix<T> where T: Field + Scalar + Power
 #[cfg(feature = "native")]
 impl<T> Matrix<T> where T: Scalar
 {
-    pub(super) fn swap_rows<'a>(self: &'a mut Self, i: usize, j: usize)
+    pub(super) fn swap_rows<'a>(self: &mut Self, i: usize, j: usize)
     {
         for k in 0..self.n
         {
@@ -252,10 +269,11 @@ impl<T> Matrix<T> where T: Scalar
 
 impl<T> Matrix<T> where T: Field + Scalar
 {
-    //
     // returns column vector
-    pub fn get_column<'a>(self: &'a Self, i: usize) -> Vector<T>
+    pub fn get_column(self: &Self, i: usize) -> Vector<T>
     {
+        assert!(i < self.n);
+
         let mut v: Vector<T> = Vector::zero(self.m);
 
         for k in 0..self.m
@@ -266,12 +284,13 @@ impl<T> Matrix<T> where T: Field + Scalar
         v
     }
 
-    ///
     /// return row vector
     ///
     /// i: row
-    pub fn get_row<'a>(self: &'a Self, i: usize) -> Vector<T>
+    pub fn get_row(self: &Self, i: usize) -> Vector<T>
     {
+        assert!(i < self.m);
+
         let mut v: Vector<T> = Vector::zero(self.n);
         v = v.transpose();
 
@@ -284,7 +303,7 @@ impl<T> Matrix<T> where T: Field + Scalar
     }
 
     /// set column
-    pub fn set_column(mut self: Self, column: &Vector<T>, i: usize) -> Matrix<T>
+    pub fn set_column(self: &mut Self, column: &Vector<T>, i: usize)
     {
         let (m, _n) = column.dim();
         if m != self.m
@@ -294,9 +313,8 @@ impl<T> Matrix<T> where T: Field + Scalar
 
         for k in 0..self.m
         {
-            *self.get_mut(k, i) = *column.get(k);
+            *(self.get_mut(k, i)) = *column.get(k);
         }
-        self
     }
 
     /// set row
@@ -480,7 +498,7 @@ impl<T> Matrix<T> where T: Field + Scalar + Power
     ///
     /// let (u, s, v): (Matrix<f64>, Matrix<f64>, Matrix<f64>) = a.dec_sv();
     /// ```
-    pub fn dec_sv<'a>(self: &'a Self) -> (Self, Self, Self)
+    pub fn dec_sv(self: &Self) -> (Self, Self, Self)
     {
         let (mut u, mut b, mut v): (Matrix<T>, Matrix<T>, Matrix<T>) = self.householder_bidiag();
 
@@ -509,7 +527,7 @@ impl<T> Matrix<T> where T: Field + Scalar + Power
                 *b.get_mut(l, l) = -*b.get(l, l);
                 let mut column_l: Vector<T> = u.get_column(l);
                 column_l = &column_l * &-T::one();
-                u = u.set_column(&column_l, l);
+                u.set_column(&column_l, l);
             }
         }
 
@@ -554,7 +572,6 @@ impl<T> Matrix<T> where T: Field + Scalar + Power
             b = &b * &q_t;
             v = &v * &q_t;
 
-            //B(find(abs(B)<1.e-13))=0;
 
             // Construct matrix Q and multiply on the left by Q.
             // Q annihilates B(k+1,k) but makes B(k,k+1) and
@@ -568,7 +585,6 @@ impl<T> Matrix<T> where T: Field + Scalar + Power
 
             b = &q * &b;
             u = &q * &u;
-            //B(find(abs(B)<1.e-13))=0;
         }
 
         return (u, b, v);
@@ -576,9 +592,9 @@ impl<T> Matrix<T> where T: Field + Scalar + Power
 
     pub fn rot(f: T, g: T) -> (T, T, T)
     {
-        if f == T::zero()
+        return if f == T::zero()
         {
-            return (T::zero(), T::one(), g);
+            (T::zero(), T::one(), g)
         }
         else
         {
@@ -589,14 +605,14 @@ impl<T> Matrix<T> where T: Field + Scalar + Power
                 let t: T = g / f;
                 let t1: T = (T::one() + t.pow(expo)).pow(sqrt);
 
-                return (T::one() / t1, t / t1, f * t1);
+                (T::one() / t1, t / t1, f * t1)
             }
             else
             {
                 let t: T = f / g;
                 let t1: T = (T::one() + t.pow(expo)).pow(sqrt);
 
-                return (t / t1, T::one() / t1, g * t1);
+                (t / t1, T::one() / t1, g * t1)
             }
         }
     }
@@ -607,7 +623,7 @@ impl<T> Matrix<T> where T: Field + Scalar + Power
     /// U \in T^{m \times n}
     /// B \in T^{n \times n}
     /// V \in T^{n \times n}
-    pub fn householder_bidiag<'a>(self: &'a Self) -> (Self, Self, Self)
+    pub fn householder_bidiag(self: &Self) -> (Self, Self, Self)
     {
         let (m, n): (usize, usize) = self.dim();
         if m < n
@@ -617,7 +633,6 @@ impl<T> Matrix<T> where T: Field + Scalar + Power
 
         let mut u: Matrix<T> = Matrix::one(m);
         let mut v: Matrix<T> = Matrix::one(n);
-        //let mut b_i : Matrix<T> = Matrix::zero(&n, &n);
         let mut a_i: Matrix<T> = self.clone();
 
         for i in 0..n - 1
@@ -813,7 +828,7 @@ impl<T> Matrix<T>
     /// assert_eq!(a_updated, a);
     /// # }
     /// ```
-    pub fn get_mut<'a>(self: &'a mut Self, i: usize, j: usize) -> &'a mut T
+    pub fn get_mut(self: &mut Self, i: usize, j: usize) -> &mut T
     {
         assert!(i < self.m);
         assert!(j < self.n);
@@ -863,7 +878,7 @@ impl<T> PartialEq for Matrix<T> where T: PartialEq
     ///
     /// assert_eq!(true, a == b);
     /// ```
-    fn eq<'a, 'b>(self: &'a Self, other: &'b Self) -> bool
+    fn eq(self: &Self, other: &Self) -> bool
     {
         if self.dim() != other.dim()
         {
@@ -890,7 +905,7 @@ impl<T> Matrix<T> where T: Clone + Copy
     ///   3, 4, 5,
     ///   6, 7, 8
     /// ] => vec![ 0, 3, 6, 1, 4, 7, 2, 5, 8]
-    pub fn new<'a, 'b>(m: usize, n: usize, data: Vec<T>) -> Self
+    pub fn new(m: usize, n: usize, data: Vec<T>) -> Self
     {
         assert_eq!(m * n, data.len());
         Matrix { m, n, data }
@@ -944,8 +959,6 @@ impl<T> Identity<Addition> for Matrix<T> where T: Identity<Addition>
     /// ```
     /// use mathru::algebra::linear::Matrix;
     ///
-    /// let a: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
-    /// let b: Matrix<f64> = &a + &Matrix::zero(2, 2);
     /// ```
     fn id() -> Self
     {
@@ -1037,10 +1050,10 @@ impl<T> Matrix<T>
     /// use mathru::algebra::linear::{Matrix};
     ///
     /// let a: Matrix<f64> = Matrix::new(4, 2, vec![1.0, 0.0, 3.0, 0.0, 1.0, -7.0, 0.5, 0.25]);
-    /// let m: usize = a.nrow();
+    /// let m: usize = a.nrows();
     ///
     /// assert_eq!(4, m);
-    pub fn nrow(&self) -> usize
+    pub fn nrows(self: &Self) -> usize
     {
         return self.m;
     }
@@ -1053,11 +1066,11 @@ impl<T> Matrix<T>
     /// use mathru::algebra::linear::Matrix;
     ///
     /// let a: Matrix<f64> = Matrix::new(4, 2, vec![1.0, 0.0, 3.0, 0.0, 1.0, -7.0, 0.5, 0.25]);
-    /// let n: usize = a.ncol();
+    /// let n: usize = a.ncols();
     ///
     /// assert_eq!(2, n);
     /// ```
-    pub fn ncol(&self) -> usize
+    pub fn ncols(self: &Self) -> usize
     {
         return self.n;
     }

@@ -82,8 +82,7 @@ impl<T> Inverse<T> for LUDec<T> where T: Field + Scalar
     /// ```
     fn inv(self: &Self) -> Result<Matrix<T>, ()>
     {
-        assert_eq!(self.p.nrow(), self.p.ncol());
-        let b = Matrix::one(self.p.nrow());
+        let b = Matrix::one(self.p.nrows());
         let x: Matrix<T> = self.solve(&b)?;
         return Ok(x);
     }

@@ -4,8 +4,11 @@ use super::{
     ExplicitODE, ImplicitODE,
 };
 use crate::algebra::{abstr::Real, linear::Vector};
+use serde::{Deserialize, Serialize};
+use std::clone::Clone;
 
 /// Fixed step size Stepper
+#[derive(Clone, Copy, Debug, Serialize, Deserialize)]
 pub struct ExplicitFixedStepper<T>
 {
     /// Step size
@@ -83,6 +86,7 @@ impl<T> ExplicitFixedStepper<T> where T: Real
 }
 
 /// Fixed step size Stepper
+#[derive(Clone, Copy, Debug, Serialize, Deserialize)]
 pub struct ImplicitFixedStepper<T>
 {
     /// Step size

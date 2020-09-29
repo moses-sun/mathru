@@ -1,39 +1,10 @@
 use mathru::{
     algebra::{
-        linear::{Matrix, Vector},
+        linear::{Vector},
     },
-    optimization::{LevenbergMarquardt, Optim},
+    optimization::{LevenbergMarquardt},
 };
-
-struct QuadraticFunction {}
-
-//F(x) = 0.5 (x1^2 + x2^2)^2
-impl QuadraticFunction
-{
-    pub fn new() -> QuadraticFunction
-    {
-        QuadraticFunction {}
-    }
-}
-
-impl Optim<f64> for QuadraticFunction
-{
-    fn eval(&self, x: &Vector<f64>) -> Vector<f64>
-    {
-        return vector![x.dotp(x) * x.dotp(x) * 0.5];
-    }
-
-    fn jacobian(&self, input: &Vector<f64>) -> Matrix<f64>
-    {
-        let mut jacobian: Matrix<f64> = Matrix::zero(1, 2);
-
-        let quadratic: f64 = input.dotp(input);
-        *jacobian.get_mut(0, 0) = *input.get(0) * quadratic;
-        *jacobian.get_mut(0, 1) = *input.get(1) * quadratic;
-
-        return jacobian;
-    }
-}
+use crate::optimization::problem::QuadraticFunction;
 
 #[test]
 fn minimization()

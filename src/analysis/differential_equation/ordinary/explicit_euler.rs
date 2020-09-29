@@ -4,6 +4,8 @@ use crate::{
     algebra::{abstr::Real, linear::Vector},
     analysis::differential_equation::ordinary::fixed_stepper::ExplicitFixedStepper,
 };
+use serde::{Deserialize, Serialize};
+use std::clone::Clone;
 
 /// Solves an ODE using Euler's method.
 ///
@@ -81,6 +83,7 @@ use crate::{
 /// let (t, y): (Vec<f64>, Vec<Vector<f64>>) = solver.solve(&problem).unwrap();
 /// # }
 /// ```
+#[derive(Clone, Copy, Debug, Serialize, Deserialize)]
 pub struct ExplicitEuler<T>
 {
     stepper: ExplicitFixedStepper<T>,

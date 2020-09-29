@@ -7,7 +7,7 @@ mod field;
 mod ring;
 mod scalar;
 mod sign;
-//mod semiring;
+mod semiring;
 
 mod abeliangroup;
 mod complex;
