@@ -7,8 +7,11 @@ use crate::{
     analysis::{Function, Jacobian},
 };
 use std::default::Default;
+use serde::{Deserialize, Serialize};
+use std::clone::Clone;
 
 /// Newton Raphson
+#[derive(Clone, Copy, Debug, Serialize, Deserialize)]
 pub struct NewtonRaphson<T>
 {
     iters: u64,

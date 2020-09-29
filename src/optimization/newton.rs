@@ -5,6 +5,9 @@ use crate::{
     },
     optimization::{Optim, OptimResult},
 };
+use serde::{Deserialize, Serialize};
+use std::clone::Clone;
+
 
 /// Newton's method
 ///
@@ -35,6 +38,8 @@ use crate::{
 /// 5. while  $` f(x_{k} + \alpha_{k}d_{k}) > f(x_{k}) + \sigma \alpha_{k}
 /// \nabla f(x_{k})^{T}d_{k} `$ set $` \alpha_{k} `$ 6. $` x_{k + 1} := x_{k} +
 /// d_{k} `$ 7. $` k := k + 1 `$  go to 2.
+///
+#[derive(Clone, Copy, Debug, Serialize, Deserialize,)]
 pub struct Newton<T>
 {
     iters: u64,

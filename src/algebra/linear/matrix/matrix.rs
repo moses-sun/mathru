@@ -2,11 +2,13 @@
 use super::{
     //MatrixColumnIterator,
     //MatrixColumnIteratorMut,
+    MatrixColumnIntoIterator,
     MatrixIntoIterator,
     MatrixIterator,
     MatrixIteratorMut,
     //MatrixRowIterator,
     //MatrixRowIteratorMut,
+    MatrixRowIntoIterator
 };
 use crate::{
     algebra::{
@@ -65,11 +67,11 @@ macro_rules! matrix
 pub struct Matrix<T>
 {
     /// Num of rows which the matrix has
-    pub(crate) m: usize,
+    pub(super) m: usize,
     /// Num of columns which the matrix ha
-    pub(crate) n: usize,
+    pub(super) n: usize,
     /// Matrix entries
-    pub(crate) data: Vec<T>,
+    pub(super) data: Vec<T>,
 }
 
 impl<T> From<Vector<T>> for Matrix<T> where T: Field + Scalar
@@ -105,6 +107,10 @@ impl<T> Matrix<T>
         MatrixIteratorMut::new(self.data.iter_mut())
     }
 
+    pub fn row_into_iter(self: &Self) -> MatrixRowIntoIterator<T>
+    {
+        MatrixRowIntoIterator::new(self)
+    }
     // pub fn row_iter(self: &Self) -> MatrixRowIterator<T>
     //     where T: Zero
     // {
@@ -116,6 +122,11 @@ impl<T> Matrix<T>
     // {
     //     MatrixRowIteratorMut::new(self.data.iter_mut())
     // }
+
+    pub fn column_into_iter(self: &Self) -> MatrixColumnIntoIterator<T>
+    {
+         MatrixColumnIntoIterator::new(self)
+    }
 
     // pub fn column_iter(self: &Self) -> MatrixColumnIterator<T>
     // {
@@ -261,6 +272,8 @@ impl<T> Matrix<T> where T: Field + Scalar
     // returns column vector
     pub fn get_column(self: &Self, i: usize) -> Vector<T>
     {
+        assert!(i < self.n);
+
         let mut v: Vector<T> = Vector::zero(self.m);
 
         for k in 0..self.m
@@ -276,6 +289,8 @@ impl<T> Matrix<T> where T: Field + Scalar
     /// i: row
     pub fn get_row(self: &Self, i: usize) -> Vector<T>
     {
+        assert!(i < self.m);
+
         let mut v: Vector<T> = Vector::zero(self.n);
         v = v.transpose();
 
@@ -1035,10 +1050,10 @@ impl<T> Matrix<T>
     /// use mathru::algebra::linear::{Matrix};
     ///
     /// let a: Matrix<f64> = Matrix::new(4, 2, vec![1.0, 0.0, 3.0, 0.0, 1.0, -7.0, 0.5, 0.25]);
-    /// let m: usize = a.nrow();
+    /// let m: usize = a.nrows();
     ///
     /// assert_eq!(4, m);
-    pub fn nrow(self: &Self) -> usize
+    pub fn nrows(self: &Self) -> usize
     {
         return self.m;
     }
@@ -1051,11 +1066,11 @@ impl<T> Matrix<T>
     /// use mathru::algebra::linear::Matrix;
     ///
     /// let a: Matrix<f64> = Matrix::new(4, 2, vec![1.0, 0.0, 3.0, 0.0, 1.0, -7.0, 0.5, 0.25]);
-    /// let n: usize = a.ncol();
+    /// let n: usize = a.ncols();
     ///
     /// assert_eq!(2, n);
     /// ```
-    pub fn ncol(self: Self) -> usize
+    pub fn ncols(self: &Self) -> usize
     {
         return self.n;
     }

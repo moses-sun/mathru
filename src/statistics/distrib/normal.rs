@@ -1,3 +1,4 @@
+//! Normal distribution
 use crate::{
     algebra::abstr::Real,
     special::error,
@@ -6,11 +7,15 @@ use crate::{
     special::error::Error,
 };
 use rand;
+use serde::{Deserialize, Serialize};
+use std::clone::Clone;
 
 /// Normal distribution
 ///
 /// Fore more information:
 /// <a href="https://en.wikipedia.org/wiki/Normal_distribution">https://en.wikipedia.org/wiki/Normal_distribution</a>
+///
+#[derive(Clone, Copy, Debug, Serialize, Deserialize)]
 pub struct Normal<T>
 {
     mean: T,

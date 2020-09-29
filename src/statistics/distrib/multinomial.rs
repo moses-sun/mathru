@@ -8,6 +8,7 @@ use crate::algebra::abstr::Real;
 /// Fore more information:
 /// <a href="https://en.wikipedia.org/wiki/Multinomial_distribution">https://en.wikipedia.org/wiki/Multinomial_distribution</a>
 ///
+#[derive(Clone, Copy, Debug, Serialize, Deserialize)]
 pub struct Multinomial<T>
 {
     p: Vector<T>,

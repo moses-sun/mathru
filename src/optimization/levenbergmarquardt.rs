@@ -6,6 +6,9 @@ use crate::{
     optimization::{Optim, OptimResult},
 };
 
+use serde::{Deserialize, Serialize};
+use std::clone::Clone;
+
 /// Levenberg-Marquardt method
 ///
 /// input: $` f \colon \mathbb{R}^{n} \to \mathbb{R} `$ with initial
@@ -22,6 +25,8 @@ use crate::{
 /// $`\Delta_{k + 1} := \Delta_{k}/2`$ and go to 2. 5. if $`\rho_{k} > \rho^{+}
 /// `$ than $` \Delta_{k + 1} := 2\Delta_{k}`$, else $`\Delta_{k + 1} :=
 /// \Delta_{k}`$ 6. set $` k:= k + 1 `$, go to 2.
+///
+#[derive(Clone, Copy, Debug, Serialize, Deserialize,)]
 pub struct LevenbergMarquardt<T>
 {
     iters: u64,

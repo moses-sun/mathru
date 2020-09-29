@@ -1,3 +1,4 @@
+//! Poisson distribution
 use crate::{
     algebra::abstr::Real,
     special,
@@ -5,10 +6,14 @@ use crate::{
     statistics::{combins, distrib::Discrete},
 };
 
+use serde::{Deserialize, Serialize};
+use std::clone::Clone;
+
 /// Poisson distribution
 ///
 /// Fore more information:
 /// <a href="https://en.wikipedia.org/wiki/Poisson_distribution">https://en.wikipedia.org/wiki/Poisson_distribution</a>
+#[derive(Clone, Copy, Debug, Serialize, Deserialize)]
 pub struct Poisson<T>
 {
     gamma: T,

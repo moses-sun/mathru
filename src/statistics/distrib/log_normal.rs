@@ -1,11 +1,14 @@
 use crate::{algebra::abstr::Real, statistics::distrib::{Distribution, Continuous, Normal}};
 use crate::special::{gamma::Gamma, error::Error};
 use std::f64::consts::PI;
+use serde::{Deserialize, Serialize};
+use std::clone::Clone;
 
 /// Log-Normal distribution
 ///
 /// Fore more information:
 /// <a href="https://en.wikipedia.org/wiki/Log-normal_distribution">https://en.wikipedia.org/wiki/Log-normal_distribution</a>
+#[derive(Clone, Copy, Debug, Serialize, Deserialize)]
 pub struct LogNormal<T>
 {
     mu: T,

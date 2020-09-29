@@ -10,6 +10,8 @@ use crate::{
         NewtonRaphson,
     },
 };
+use serde::{Deserialize, Serialize};
+use std::clone::Clone;
 
 /// Solves an ODE using backward Euler
 ///
@@ -90,6 +92,7 @@ use crate::{
 ///
 /// # }
 /// ```
+#[derive(Clone, Copy, Debug, Serialize, Deserialize)]
 pub struct ImplicitEuler<T>
 {
     stepper: ImplicitFixedStepper<T>,

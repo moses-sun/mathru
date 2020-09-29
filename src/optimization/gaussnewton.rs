@@ -6,8 +6,12 @@ use crate::{
     optimization::{Optim, OptimResult},
 };
 use std::marker::PhantomData;
+use serde::{Deserialize, Serialize};
+use std::clone::Clone;
 
 /// Gauss-Newton method
+///
+#[derive(Clone, Copy, Debug, Serialize, Deserialize,)]
 pub struct GaussNewton<T>
 {
     iters: u64,

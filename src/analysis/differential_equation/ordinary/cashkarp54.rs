@@ -5,6 +5,9 @@ use super::{
 use crate::algebra::{abstr::Real, linear::Vector};
 use std::default::Default;
 
+use serde::{Deserialize, Serialize};
+use std::clone::Clone;
+
 /// Solves an ODE using the 4th order Cash-Karp algorithm.
 ///
 ///<a href="https://en.wikipedia.org/wiki/Cash-Karp_method">https://en.wikipedia.org/wiki/Cash-Karp_method</a>
@@ -90,6 +93,7 @@ use std::default::Default;
 ///
 /// # }
 /// ```
+#[derive(Clone, Copy, Debug, Serialize, Deserialize)]
 pub struct CashKarp54<T>
 {
     stepper: AdaptiveStepper<T>,

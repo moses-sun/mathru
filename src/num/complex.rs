@@ -21,6 +21,7 @@ use std::{
 #[cfg(feature = "blaslapack")]
 use crate::algebra::abstr::{Blas, Lapack};
 
+#[doc(hidden)]
 #[macro_export]
 macro_rules! Complex {
     ($r:expr, $i:expr) => {
@@ -28,13 +29,14 @@ macro_rules! Complex {
     };
 }
 
+#[doc(hidden)]
 #[macro_export]
 macro_rules! Complex32 {
     ($r:expr, $i:expr) => {
         (Complex::new($r, $i));
     };
 }
-
+#[doc(hidden)]
 #[macro_export]
 macro_rules! Complex64 {
     ($r:expr, $i:expr) => {

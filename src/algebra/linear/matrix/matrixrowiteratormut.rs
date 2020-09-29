@@ -6,7 +6,6 @@ use std::slice::IterMut;
 pub struct MatrixRowIteratorMut<'a, T>
 {
     iter: IterMut<'a, T>,
-    vec: Vector<T>,
 }
 
 impl<'a, T> MatrixRowIteratorMut<'a, T>
@@ -14,7 +13,7 @@ impl<'a, T> MatrixRowIteratorMut<'a, T>
 {
     pub fn new(iter: IterMut<'a, T>) -> MatrixRowIteratorMut<'a, T>
     {
-        return MatrixRowIteratorMut{iter: iter, vec: vector![T::zero()]};
+        return MatrixRowIteratorMut{iter};
     }
 }
 
@@ -24,6 +23,6 @@ impl<'a, T> Iterator for MatrixRowIteratorMut<'a, T> where T: Field + Scalar
 
     fn next(&'a mut self) -> Option<Self::Item>
     {
-        Some(mut &'a self.vec)
+        None
     }
 }

@@ -3,8 +3,11 @@
 use super::{explicit_method::ExplicitAdaptiveMethod, ExplicitODE};
 use crate::algebra::{abstr::Real, linear::Vector};
 use std::default::Default;
+use serde::{Deserialize, Serialize};
+use std::clone::Clone;
 
 /// Adaptive step size stepper
+#[derive(Clone, Copy, Debug, Serialize, Deserialize)]
 pub struct AdaptiveStepper<T>
 {
     /// Step size

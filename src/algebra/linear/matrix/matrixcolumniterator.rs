@@ -6,6 +6,7 @@ use std::slice::Iter;
 pub struct MatrixColumnIterator<'a, T>
 {
     iter: Iter<'a, T>,
+    column: usize
 }
 
 impl<'a, T> MatrixColumnIterator<'a, T>
@@ -23,6 +24,6 @@ impl<'a, T> Iterator for MatrixColumnIterator<'a, T> where T: Field + Scalar
     // just return the str reference
     fn next(&mut self) -> Option<Self::Item>
     {
-        Some(vector![T::one()])
+        None
     }
 }

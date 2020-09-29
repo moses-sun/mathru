@@ -1,9 +1,13 @@
 use crate::{algebra::abstr::Real, statistics::distrib::Continuous};
+use serde::{Deserialize, Serialize};
+use std::clone::Clone;
 
 /// Raised Cosine distribution
 ///
 /// Fore more information:
 /// <a href="https://en.wikipedia.org/wiki/Raised_cosine_distribution">https://en.wikipedia.org/wiki/Raised_cosine_distribution</a>
+///
+#[derive(Clone, Copy, Debug, Serialize, Deserialize)]
 pub struct RaisedCosine<T>
 {
     mu: T,

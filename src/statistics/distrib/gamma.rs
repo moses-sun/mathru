@@ -1,10 +1,13 @@
+//! Gamma distribution
 use crate::{algebra::abstr::Real, special::gamma, statistics::distrib::Continuous};
-
+use serde::{Deserialize, Serialize};
+use std::clone::Clone;
 
 /// Gamma distribution
 ///
 /// Fore more information:
 /// <a href="https://en.wikipedia.org/wiki/Gamma_distribution">https://en.wikipedia.org/wiki/Gamma_distribution</a>
+#[derive(Clone, Copy, Debug, Serialize, Deserialize)]
 pub struct Gamma<T>
 {
     alpha: T,

@@ -1,9 +1,13 @@
+// Beta distribution
 use crate::{algebra::abstr::Real, special, special::beta, statistics::distrib::Continuous};
+use serde::{Deserialize, Serialize};
+use std::clone::Clone;
 
 /// Beta distribution
 ///
 /// Fore more information:
 /// <a href="https://en.wikipedia.org/wiki/Beta_distribution">https://en.wikipedia.org/wiki/Beta_distribution</a>
+#[derive(Clone, Copy, Debug, Serialize, Deserialize)]
 pub struct Beta<T>
 {
     p: T,

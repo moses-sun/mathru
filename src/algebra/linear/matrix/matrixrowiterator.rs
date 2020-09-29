@@ -5,7 +5,6 @@ use std::slice::Iter;
 pub struct MatrixRowIterator<'a, T>
 {
     iter: Iter<'a, T>,
-    vec: Vector<T>,
 }
 
 impl<'a, T> MatrixRowIterator<'a, T>
@@ -13,7 +12,7 @@ impl<'a, T> MatrixRowIterator<'a, T>
 {
     pub fn new(iter: Iter<'a, T>) -> MatrixRowIterator<'a, T>
     {
-        return MatrixRowIterator{iter: iter, vec: vector![T::zero()]};
+        return MatrixRowIterator{iter};
     }
 }
 

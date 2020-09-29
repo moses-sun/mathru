@@ -6,11 +6,15 @@ use crate::{
     special::gamma::Gamma,
 };
 use crate::special::hypergeometric::Hypergeometric;
+use serde::{Deserialize, Serialize};
+use std::clone::Clone;
 
 /// T distribution
 ///
 /// Fore more information:
 /// <a href="https://en.wikipedia.org/wiki/T_distribution">https://en.wikipedia.org/wiki/T_distribution</a>
+///
+#[derive(Clone, Copy, Debug, Serialize, Deserialize)]
 pub struct T<K>
 {
     // degrees of freedom

@@ -6,11 +6,15 @@ use crate::{
     },
     special::{error::Error, gamma::Gamma},
 };
+use serde::{Deserialize, Serialize};
+use std::clone::Clone;
 
 /// Chi-Squared Test
 ///
 /// Fore more information:
 /// <a href="https://en.wikipedia.org/wiki/Chi-squared_test">https://en.wikipedia.org/wiki/Chi-squared_test</a>
+///
+#[derive(Clone, Copy, Debug, Serialize, Deserialize)]
 pub struct ChiSquared<T>
 {
     df: u32,

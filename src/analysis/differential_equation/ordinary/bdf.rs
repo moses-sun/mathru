@@ -3,6 +3,8 @@ use crate::{
     algebra::{abstr::Real, linear::vector::vector::Vector},
     analysis::differential_equation::ordinary::ImplicitODE,
 };
+use serde::{Deserialize, Serialize};
+use std::clone::Clone;
 
 /// Backward differentitation formula
 ///
@@ -78,6 +80,7 @@ use crate::{
 /// let (t, x): (Vec<f64>, Vec<Vector<f64>>) = solver.solve(&problem).unwrap();
 /// # }
 /// ```
+#[derive(Clone, Copy, Debug, Serialize, Deserialize)]
 pub struct BDF<T>
 {
     k: u8,

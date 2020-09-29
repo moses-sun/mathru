@@ -7,7 +7,8 @@ mod matrixiterator;
 mod matrixiteratormut;
 //mod matrixrowiterator;
 //mod matrixrowiteratormut;
-
+mod matrixcolumnintoiterator;
+mod matrixrowintoiterator;
 mod eigen;
 pub use self::eigen::EigenDec;
 
@@ -38,11 +39,13 @@ pub use self::{
     matrix::Matrix,
     //matrixcolumniterator::MatrixColumnIterator,
     //matrixcolumniteratormut::MatrixColumnIteratorMut,
+    matrixcolumnintoiterator::MatrixColumnIntoIterator,
     matrixintoiterator::MatrixIntoIterator,
     matrixiterator::MatrixIterator,
     matrixiteratormut::MatrixIteratorMut,
     //matrixrowiterator::MatrixRowIterator,
     //matrixrowiteratormut::MatrixRowIteratorMut,
+    matrixrowintoiterator::MatrixRowIntoIterator,
     solve::Solve,
     substitute::Substitute, transpose::Transpose
 

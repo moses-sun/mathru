@@ -4,11 +4,15 @@ use crate::{
     special::gamma::Gamma,
     special::error::Error,
 };
+use serde::{Deserialize, Serialize};
+use std::clone::Clone;
 
 /// G-Test
 ///
 /// Fore more information:
 /// <a href="https://de.wikipedia.org/wiki/G-Test">https://de.wikipedia.org/wiki/G-Test</a>
+///
+#[derive(Clone, Copy, Debug, Serialize, Deserialize)]
 pub struct G<T>
 {
     df: u32,

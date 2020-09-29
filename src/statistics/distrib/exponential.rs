@@ -1,10 +1,14 @@
+//! Exponential distribution
 use crate::{algebra::abstr::Real, statistics::distrib::Continuous};
 use rand;
+use serde::{Deserialize, Serialize};
+use std::clone::Clone;
 
 /// Exponential distribution
 ///
 /// Fore more information:
 /// <a href="https://en.wikipedia.org/wiki/Exponential_distribution">https://en.wikipedia.org/wiki/Exponential_distribution</a>
+#[derive(Clone, Copy, Debug, Serialize, Deserialize)]
 pub struct Exponential<T>
 {
     lambda: T,

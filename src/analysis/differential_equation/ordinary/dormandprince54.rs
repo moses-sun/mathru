@@ -5,6 +5,9 @@ use crate::algebra::{
     linear::Vector,
 };
 
+use serde::{Deserialize, Serialize};
+use std::clone::Clone;
+
 /// Solves an ODE using the 5th order Runge-Kutta-Dormand-Prince algorithm.
 ///
 ///<a href="https://en.wikipedia.org/wiki/Dormand-Prince_method">https://en.wikipedia.org/wiki/Dormand-Prince_method</a>
@@ -84,6 +87,7 @@ use crate::algebra::{
 ///
 /// # }
 /// ```
+#[derive(Clone, Copy, Debug, Serialize, Deserialize)]
 pub struct DormandPrince54<T>
 {
     abs_tol: T,

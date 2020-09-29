@@ -4,6 +4,9 @@ use crate::{
     analysis::differential_equation::ordinary::explicit_ode::ExplicitODE,
 };
 
+use serde::{Deserialize, Serialize};
+use std::clone::Clone;
+
 /// Adams-Bashforth method
 /// # Example
 ///
@@ -78,6 +81,7 @@ use crate::{
 ///
 /// # }
 /// ```
+#[derive(Clone, Copy, Debug, Serialize, Deserialize)]
 pub struct AdamsBashforth<T>
 {
     k: u8,

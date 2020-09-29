@@ -1,6 +1,5 @@
 use std::{f32, f64};
 
-
 /// The requisite parameters for testing for approximate equality using a
 /// absolute difference based comparison.
 ///
@@ -71,7 +70,6 @@ pub trait AbsDiffEq<Rhs = Self>: PartialEq<Rhs>
     /// The default tolerance to use when testing values that are close together.
     ///
     /// This is used when no `epsilon` value is supplied to the [`abs_diff_eq!`], [`relative_eq!`],
-    /// or [`ulps_eq!`] macros.
     fn default_epsilon() -> Self::Epsilon;
 
     /// A test for equality that uses the absolute difference to compute the approximate
@@ -84,10 +82,6 @@ pub trait AbsDiffEq<Rhs = Self>: PartialEq<Rhs>
         !Self::abs_diff_eq(self, other, epsilon)
     }
 }
-
-////////////////////////////////////////////////////////////////////////////////////////////////////
-// Base implementations
-////////////////////////////////////////////////////////////////////////////////////////////////////
 
 macro_rules! impl_unsigned_abs_diff_eq
 {
@@ -151,7 +145,7 @@ impl_signed_abs_diff_eq!(isize, 0);
 impl_signed_abs_diff_eq!(f32, f32::EPSILON);
 impl_signed_abs_diff_eq!(f64, f64::EPSILON);
 
-
+/// Approximate equality using the absolute difference.
 #[macro_export]
 macro_rules! abs_diff_eq {
     ($lhs:expr, $rhs:expr $(, $opt:ident = $val:expr)*) => {
@@ -162,7 +156,7 @@ macro_rules! abs_diff_eq {
     };
 }
 
-/// Approximate inequality of using the absolute difference.
+/// Approximate inequality using the absolute difference.
 #[macro_export]
 macro_rules! abs_diff_ne {
     ($lhs:expr, $rhs:expr $(, $opt:ident = $val:expr)*) => {
@@ -172,7 +166,6 @@ macro_rules! abs_diff_ne {
         $crate::algebra::abstr::AbsDiff::default()$(.$opt($val))*.ne(&$lhs, &$rhs)
     };
 }
-
 
 #[doc(hidden)]
 #[macro_export]

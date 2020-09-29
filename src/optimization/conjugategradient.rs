@@ -6,6 +6,9 @@ use crate::{
     optimization::{Optim, OptimResult},
 };
 
+use serde::{Deserialize, Serialize};
+use std::clone::Clone;
+
 /// Conjugate Gradient method
 ///
 /// The conjugate gradient method is a solver for systems of linear equations
@@ -87,6 +90,7 @@ use crate::{
 /// // Minimize function
 /// 	let x_min: Vector<f64> = optim.minimize(&leq, &x_0).arg();
 /// ```
+#[derive(Clone, Copy, Debug, Serialize, Deserialize,)]
 pub struct ConjugateGradient<T>
 {
     iters: u64,
