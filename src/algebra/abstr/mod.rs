@@ -53,3 +53,8 @@ pub use self::{
     scalar::Scalar,
     sign::Sign,
 };
+
+
+mod polynomial;
+
+pub use self::polynomial::Polynomial;

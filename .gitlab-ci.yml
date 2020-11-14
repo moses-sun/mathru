@@ -1,6 +1,7 @@
 stages:
-    - build
-    - test
+    - syntax-check
+    - lint
+    - unit-test
     - deploy
 
 cache:
@@ -18,67 +19,50 @@ before_script:
   - apt-get install -o dir::cache::archives="$APT_CACHE_DIR" -y cmake gfortran
   - cargo --version
 
-build-default:
-  stage: build
-  image: rust:latest
-  script:
-    - cargo build
+syntax-check:
+    stage: syntax-check
+    image: rust:latest
+    script:
+      - cargo check
+
+fmt:
+    stage: lint
+    needs: ["syntax-check"]
+    image: rust:latest
+    script:
+      - echo
 
 test-default:
-    stage: test
-    needs: ["build-default"]
+    stage: unit-test
+    needs: ["fmt"]
     image: rust:latest
     script:
       - cargo test
 
-build-native:
-    stage: build
-    image: rust:latest
-    script:
-      - cargo build --no-default-features --features native
-
 test-native:
-    stage: test
-    needs: ["build-native"]
+    stage: unit-test
+    needs: ["fmt"]
     image: rust:latest
     script:
       - cargo test --no-default-features --features native
 
-build-openblas:
-    stage: build
-    image: rust:latest
-    script:
-      - cargo build --no-default-features --features openblas
-
 test-openblas:
-  stage: test
-  needs: ["build-openblas"]
+  stage: unit-test
+  needs: ["fmt"]
   image: rust:latest
   script:
     - cargo test --tests --no-default-features --features openblas
 
-build-netlib:
-  stage: build
-  image: rust:latest
-  script:
-    - cargo build --no-default-features --features netlib
-
 test-netlib:
-  stage: test
-  needs: ["build-netlib"]
+  stage: unit-test
+  needs: ["fmt"]
   image: rust:latest
   script:
     - cargo test --tests --no-default-features --features netlib
 
-build-intelmkl:
-  stage: build
-  image: rust:latest
-  script:
-    - cargo build --no-default-features --features intel-mkl
-
 test-intelmkl:
-  stage: test
-  needs: ["build-intelmkl"]
+  stage: unit-test
+  needs: ["fmt"]
   image: rust:latest
   script:
     - cargo test --tests --no-default-features --features intel-mkl

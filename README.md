@@ -1,4 +1,4 @@
-# mathru
+# Mathru
 
 [![crate](https://img.shields.io/crates/v/mathru.svg)](https://crates.io/crates/mathru)
 [![documentation](https://docs.rs/mathru/badge.svg)](https://docs.rs/mathru)
@@ -10,23 +10,25 @@ Mathru is a numeric library containing algorithms for linear algebra, analysis a
 
 ## Features
 The following features are implemented in this create:
-
-* [Linear algebra](https://matthiaseiholzer.gitlab.io/mathru/documentation/algebra/linear/)
-    * [Vector](https://matthiaseiholzer.gitlab.io/mathru/documentation/algebra/linear/vector/)
-    * [Matrix](https://matthiaseiholzer.gitlab.io/mathru/documentation/algebra/linear/matrix/)
-        * Basic matrix operations(+,-,*)
-        * Transposition
-        * [LU decomposition](https://matthiaseiholzer.gitlab.io/mathru/documentation/algebra/linear/matrix/#lu-with-partial-pivoting)
-        * [QR decomposition](https://matthiaseiholzer.gitlab.io/mathru/documentation/algebra/linear/matrix/#qr)
-        * [Hessenberg decomposition](https://matthiaseiholzer.gitlab.io/mathru/documentation/algebra/linear/matrix/#hessenberg)
-        * [Cholesky decomposition](https://matthiaseiholzer.gitlab.io/mathru/documentation/algebra/linear/matrix/#cholesky)
-        * Eigen decomposition
-        * Singular value decomposition
-        * Inverse
-        * Pseudo inverse
-        * Determinant
-        * Trace
-        * [Solve linear system](https://matthiaseiholzer.gitlab.io/mathru/documentation/algebra/linear/matrix/#linear-system-resolution)
+* [Algebra](https://matthiaseiholzer.gitlab.io/mathru/documentation/algebra/)
+    * [Abstract](https://matthiaseiholzer.gitlab.io/mathru/documentation/algebra/abstract/)
+        * [Polynomial](https://matthiaseiholzer.gitlab.io/mathru/documentation/algebra/abstract/polynomial/)
+    * [Linear algebra](https://matthiaseiholzer.gitlab.io/mathru/documentation/algebra/linear/)
+        * [Vector](https://matthiaseiholzer.gitlab.io/mathru/documentation/algebra/linear/vector/)
+        * [Matrix](https://matthiaseiholzer.gitlab.io/mathru/documentation/algebra/linear/matrix/)
+            * Basic matrix operations(+     ,-,*)
+            * Transposition
+            * [LU decomposition](https://matthiaseiholzer.gitlab.io/mathru/documentation/algebra/linear/matrix/#lu-with-partial-pivoting)
+            * [QR decomposition](https://matthiaseiholzer.gitlab.io/mathru/documentation/algebra/linear/matrix/#qr)
+            * [Hessenberg decomposition](https://matthiaseiholzer.gitlab.io/mathru/documentation/algebra/linear/matrix/#hessenberg)
+            * [Cholesky decomposition](https://matthiaseiholzer.gitlab.io/mathru/documentation/algebra/linear/matrix/#cholesky)
+            * Eigen decomposition
+            * Singular value decomposition
+            * Inverse
+            * Pseudo inverse
+            * Determinant
+            * Trace
+            * [Solve linear system](https://matthiaseiholzer.gitlab.io/mathru/documentation/algebra/linear/matrix/#linear-system-resolution)
 
 * [Ordinary differential equation (ODE)](https://matthiaseiholzer.gitlab.io/mathru/documentation/analysis/differentialeq/)
     * [Explicit methods](https://matthiaseiholzer.gitlab.io/mathru/documentation/analysis/differentialeq/ode/explicit/)
@@ -55,31 +57,31 @@ The following features are implemented in this create:
     * Conjugate gradient method
 
 * [Statistics](https://matthiaseiholzer.gitlab.io/mathru/documentation/statistics)
-    * probability distribution
+    * Probability distribution
         * Bernoulli
         * Beta
         * Binomial
         * Exponential
         * Gamma
         * Chi-squared
-        * Normal
+        * [Normal](https://matthiaseiholzer.gitlab.io/mathru/documentation/statistics/distribution/normal/)
         * Log-Normal
         * Poisson
         * Raised cosine
         * Student-t
         * Uniform
-    * test
+    * [Test](https://matthiaseiholzer.gitlab.io/mathru/documentation/statistics/test/)
         * Chi-squared
         * G
-        * Student-t
+        * [Student-t](https://matthiaseiholzer.gitlab.io/mathru/documentation/statistics/test/t_test/)
 
-* elementary functions
+* Elementary functions
     * trigonometric functions
     * hyperbolic functions
     * exponential functions
 
 * [special functions](https://matthiaseiholzer.gitlab.io/mathru/documentation/special)
-    * gamma functions
+    * [gamma functions](https://matthiaseiholzer.gitlab.io/mathru/documentation/special/gamma/)
         * gamma function
         * log-gamma function
         * digamma function
@@ -87,11 +89,11 @@ The following features are implemented in this create:
         * upper incomplete regularized gamma function
         * lower incomplete gamma function
         * lower regularized incomplete gamma function
-    * beta functions
+    * [beta functions](https://matthiaseiholzer.gitlab.io/mathru/documentation/special/beta/)
         * beta function
         * incomplete beta function
         * incomplete regularized beta function
-    * error functions
+    * [error functions](https://matthiaseiholzer.gitlab.io/mathru/documentation/special/error/)
         * error function
         * complementary error function
         * inverse error function
@@ -104,13 +106,13 @@ Add this to your `Cargo.toml` for the native Rust implementation:
 
 ```toml
 [dependencies.mathru]
-version = "^0.7"
+version = "0.7"
 ```
 Add the following lines to 'Cargo.toml' if the openblas library should be used:
 
 ```toml
 [dependencies.mathru]
-version = "^0.7"
+version = "0.7"
 default-features = false
 features = "openblas"
 ```

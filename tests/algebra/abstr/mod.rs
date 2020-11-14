@@ -27,3 +27,5 @@ mod semigroup;
 //#[cfg(feature = "blaslapack")]
 //pub use self::real::{Blas, Lapack};
 //pub use self::complex::Complex;
+
+mod polynomial;
