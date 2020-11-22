@@ -1,4 +1,4 @@
-//! quasigroop
+//! quasigroup
 
 use super::{Addition, Identity, Magma, Multiplication, Operator};
 

@@ -1,23 +1,23 @@
 //! Magma
 use super::operator::{Addition, Multiplication, Operator};
 use std::{
-    //cmp::PartialEq,
     ops::{Add, AddAssign, Mul, MulAssign},
 };
+use crate::algebra::abstr::AbsDiffEq;
 
-use super::abs_diff_eq::AbsDiffEq;
 
 /// A Magma is a pair $`(\mathbb{M}, \circ)`$, composed by a set $`\mathbb{M}`$
-/// and a binary inner operation $`\circ`$: # Definition
+/// and a binary inner operation $`\circ`$:
 ///
 /// ```math
-/// \circ: \mathbb{M} \times \mathbb{M} \rightarrow \mathbb{M} , (x, y) \mapsto x \circ y
+/// \circ: \mathbb{M} \times \mathbb{M} \rightarrow \mathbb{M} ,\\\\ (x, y) \mapsto x \circ y
 /// ```
-pub trait Magma<O: Operator>: Sized + AbsDiffEq + Clone
+pub trait Magma<O: Operator>: Sized + Clone + AbsDiffEq
 {
     /// binary operation
     fn operate(self, rhs: Self) -> Self;
 }
+
 
 macro_rules! impl_magma
 (

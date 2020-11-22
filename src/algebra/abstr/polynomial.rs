@@ -1,12 +1,18 @@
 //! Polynomial
 use std::fmt::{Result, Formatter, Display};
-use crate::algebra::abstr::{Real, AbsDiffEq};
+use crate::algebra::abstr::{Real, AbsDiffEq, Monoid, Semigroup, SemigroupAdd, Quasigroup};
 use crate::algebra::{
     abstr::{Field, Scalar},
 };
-use std::ops::{Add, Mul, Div, Sub, Neg};
+use std::ops::{Add, Mul, Div, Sub, Neg, AddAssign, MulAssign, SubAssign};
 use crate::algebra::abstr::Zero;
 use crate::abs_diff_eq;
+use crate::algebra::abstr::magma::{MagmaAdd, MagmaMul, Magma};
+use crate::algebra::abstr::monoid::{MonoidAdd};
+use crate::algebra::abstr::identity::{Identity};
+use crate::algebra::abstr::operator::{Addition, Multiplication};
+use crate::algebra::abstr::group::{Group, GroupAdd};
+use crate::algebra::abstr::loop_::{Loop};
 
 
 /// Polynomial expression
@@ -16,8 +22,9 @@ pub struct Polynomial<T> {
 }
 
 impl<T> Polynomial<T>
+
 {
-    /// Creates a new polynomial
+    /// Creates a new polynomial with the given coefficients
     ///
     /// # Arguments
     ///
@@ -36,9 +43,9 @@ impl<T> Polynomial<T>
     /// ```
     /// use mathru::algebra::abstr::Polynomial;
     ///
-    /// let a: Polynomial<f64> = Polynomial::new(vec![1.0, 2.0, 3.0]);
+    /// let a: Polynomial<f64> = Polynomial::from_coef(vec![1.0, 2.0, 3.0]);
     /// ```
-    pub fn new(coef: Vec<T>) -> Polynomial<T>
+    pub fn from_coef(coef: Vec<T>) -> Polynomial<T>
     {
         if coef.len() == 0
         {
@@ -50,6 +57,63 @@ impl<T> Polynomial<T>
             coef
         }
     }
+
+    /// Creates a new polynomial from the given roots
+    ///
+    ///
+    /// https://en.wikipedia.org/wiki/Vieta%27s_formulas
+    ///
+    /// # Arguments
+    ///
+    /// * `root`:  Roots
+    ///
+    /// # Panics
+    ///
+    /// If the root is an empty vector
+    ///
+    /// # Example
+    ///
+    /// ```math
+    /// (x - 1)(x - 2)(x - 3) = -6 + 11x -6x^2 + x^3
+    /// ```
+    ///
+    /// ```
+    /// use mathru::algebra::abstr::Polynomial;
+    ///
+    /// let a: Polynomial<f64> = Polynomial::from_root(vec![1.0, 2.0, 3.0]);
+    ///
+    /// let b: Polynomial<f64> = Polynomial::from_coef(vec![-6.0, 11.0, -6.0, 1.0]);
+    ///
+    /// assert_eq!(b, a);
+    /// ```
+    pub fn from_root(root: Vec<T>) -> Polynomial<T>
+        where T: Field + Scalar
+    {
+        if root.len() == 0
+        {
+            panic!()
+        }
+
+        let n: usize = root.len();
+        println!("n: {}", n);
+        let mut coef: Vec<T> = vec![T::zero(); n + 1];
+
+        // Set highest order coefficient as 1
+        coef[n] = T::one();
+
+        for i in 1..n + 1
+        {
+            for j in n - i..n
+            {
+                let c: T = coef.clone()[j+1];
+                let r: T = root[i - 1];
+                coef[j] += (-T::one()) * r * c;
+            }
+        }
+
+        Polynomial::from_coef(coef)
+    }
+
 }
 
 impl<T> Display for Polynomial<T>
@@ -115,7 +179,7 @@ impl<T> Polynomial<T>
     /// ```
     /// use mathru::algebra::abstr::Polynomial;
     ///
-    /// let a: Polynomial<f64> = Polynomial::new(vec![1.0, 2.0, 3.0]);
+    /// let a: Polynomial<f64> = Polynomial::from_coef(vec![1.0, 2.0, 3.0]);
     ///
     /// assert_eq!(17.0, a.eval(2.0));
     /// ```
@@ -132,8 +196,8 @@ impl<T> Polynomial<T>
 }
 
 
-impl<'a, 'b, T> Add<&'b Polynomial<T>> for &'a Polynomial<T>
-    where T: Field + Scalar
+impl<T> Add<Polynomial<T>> for Polynomial<T>
+    where T: MagmaAdd + Scalar
 {
     type Output = Polynomial<T>;
 
@@ -148,9 +212,37 @@ impl<'a, 'b, T> Add<&'b Polynomial<T>> for &'a Polynomial<T>
     /// ```
     /// use mathru::algebra::abstr::Polynomial;
     ///
-    /// let a: Polynomial<f64> = Polynomial::new(vec![1.0, 2.0, 3.0]);
-    /// let b: Polynomial<f64> = Polynomial::new(vec![1.0, 2.0]);
-    /// let c: Polynomial<f64> = Polynomial::new(vec![2.0, 4.0, 3.0]);
+    /// let a: Polynomial<f64> = Polynomial::from_coef(vec![1.0, 2.0, 3.0]);
+    /// let b: Polynomial<f64> = Polynomial::from_coef(vec![1.0, 2.0]);
+    /// let c: Polynomial<f64> = Polynomial::from_coef(vec![2.0, 4.0, 3.0]);
+    ///
+    /// assert_eq!(c, a + b);
+    /// ```
+    fn add(self: Self, rhs: Polynomial<T>) -> Self::Output
+    {
+        return (&self).add(&rhs);
+    }
+}
+
+impl<'a, 'b, T> Add<&'b Polynomial<T>> for &'a Polynomial<T>
+    where T: MagmaAdd + Scalar
+{
+    type Output = Polynomial<T>;
+
+    /// Adds two polynomials
+    ///
+    /// # Example
+    ///
+    /// ```math
+    /// (1 + 2x + 3x^2) + (1 + 2x) = 2 + 4x + 3x^2
+    /// ```
+    ///
+    /// ```
+    /// use mathru::algebra::abstr::Polynomial;
+    ///
+    /// let a: Polynomial<f64> = Polynomial::from_coef(vec![1.0, 2.0, 3.0]);
+    /// let b: Polynomial<f64> = Polynomial::from_coef(vec![1.0, 2.0]);
+    /// let c: Polynomial<f64> = Polynomial::from_coef(vec![2.0, 4.0, 3.0]);
     ///
     /// assert_eq!(c, &a + &b);
     /// ```
@@ -169,12 +261,48 @@ impl<'a, 'b, T> Add<&'b Polynomial<T>> for &'a Polynomial<T>
             sum[i] = *a_i + *b_i
         }
 
-        return Polynomial::new(sum)
+        return Polynomial::from_coef(sum)
+    }
+}
+
+impl<T> AddAssign for Polynomial<T>
+    where T: MagmaAdd + Scalar
+{
+    fn add_assign(self: &mut Self, rhs: Self)
+    {
+        *self = (*self).clone().add(rhs)
+    }
+}
+impl<T> Sub<Polynomial<T>> for Polynomial<T>
+    where T: Sub<Output = T> + Scalar
+{
+    type Output = Polynomial<T>;
+
+    /// Subtracts two polynomials
+    ///
+    /// # Example
+    ///
+    /// ```math
+    /// (1 + 2x + 3x^2) + (1 + 2x) = 2 + 4x + 3x^2
+    /// ```
+    ///
+    /// ```
+    /// use mathru::algebra::abstr::Polynomial;
+    ///
+    /// let a: Polynomial<f64> = Polynomial::from_coef(vec![1.0, 2.0, 3.0]);
+    /// let b: Polynomial<f64> = Polynomial::from_coef(vec![1.0, 2.0]);
+    /// let c: Polynomial<f64> = Polynomial::from_coef(vec![0.0, 0.0, 3.0]);
+    ///
+    /// assert_eq!(c, a - b);
+    /// ```
+    fn sub(self: Self, rhs: Polynomial<T>) -> Self::Output
+    {
+        return (&self).sub(&rhs);
     }
 }
 
 impl<'a, 'b, T> Sub<&'b Polynomial<T>> for &'a Polynomial<T>
-    where T: Field + Scalar
+    where T: Sub<Output = T> + Scalar
 {
     type Output = Polynomial<T>;
 
@@ -189,9 +317,9 @@ impl<'a, 'b, T> Sub<&'b Polynomial<T>> for &'a Polynomial<T>
     /// ```
     /// use mathru::algebra::abstr::Polynomial;
     ///
-    /// let a: Polynomial<f64> = Polynomial::new(vec![1.0, 2.0, 3.0]);
-    /// let b: Polynomial<f64> = Polynomial::new(vec![1.0, 2.0]);
-    /// let c: Polynomial<f64> = Polynomial::new(vec![0.0, 0.0, 3.0]);
+    /// let a: Polynomial<f64> = Polynomial::from_coef(vec![1.0, 2.0, 3.0]);
+    /// let b: Polynomial<f64> = Polynomial::from_coef(vec![1.0, 2.0]);
+    /// let c: Polynomial<f64> = Polynomial::from_coef(vec![0.0, 0.0, 3.0]);
     ///
     /// assert_eq!(c, &a - &b);
     /// ```
@@ -210,21 +338,31 @@ impl<'a, 'b, T> Sub<&'b Polynomial<T>> for &'a Polynomial<T>
             sum[i] = *a_i - *b_i
         }
 
-        return Polynomial::new(sum)
+        return Polynomial::from_coef(sum)
     }
 }
+
+impl<T> SubAssign for Polynomial<T>
+    where T: Sub<Output = T> + Scalar
+{
+    fn sub_assign(self: &mut Self, rhs: Self)
+    {
+        *self = (*self).clone().sub(rhs)
+    }
+}
+
 
 impl<T> Zero for Polynomial<T>
     where T: Zero
 {
     fn zero() -> Polynomial<T>
     {
-        return Polynomial::new(vec![T::zero()])
+        return Polynomial::from_coef(vec![T::zero()])
     }
 }
 
 impl<'a, T> Neg for &'a Polynomial<T>
-    where T: Field
+    where T: Neg<Output = T> + Clone
 {
     type Output = Polynomial<T>;
 
@@ -238,21 +376,21 @@ impl<'a, T> Neg for &'a Polynomial<T>
     /// ```
     /// use mathru::algebra::abstr::Polynomial;
     ///
-    /// let a: Polynomial<f64> = Polynomial::new(vec![1.0, 2.0]);
+    /// let a: Polynomial<f64> = Polynomial::from_coef(vec![1.0, 2.0]);
     ///
-    /// assert_eq!(Polynomial::new(vec![-1.0, -2.0]), -a);
+    /// assert_eq!(Polynomial::from_coef(vec![-1.0, -2.0]), -a);
     /// ```
     ///
     fn neg(self) -> Self::Output
     {
-        Polynomial::new(
+        Polynomial::from_coef(
             self.coef.clone().into_iter().map(|x| -x).collect::<Vec<T>>()
         )
     }
 }
 
 impl<T> Neg for Polynomial<T>
-    where T: Field
+    where T: Neg<Output = T>
 {
     type Output = Polynomial<T>;
 
@@ -263,13 +401,13 @@ impl<T> Neg for Polynomial<T>
     /// ```
     /// use mathru::algebra::abstr::Polynomial;
     ///
-    /// let a: Polynomial<f64> = Polynomial::new(vec![1.0, 2.0, 3.0]);
+    /// let a: Polynomial<f64> = Polynomial::from_coef(vec![1.0, 2.0, 3.0]);
     ///
-    /// assert_eq!(Polynomial::new(vec![-1.0, -2.0, -3.0]), -a)
+    /// assert_eq!(Polynomial::from_coef(vec![-1.0, -2.0, -3.0]), -a)
     /// ```
     fn neg(self) -> Self::Output
     {
-        Polynomial::new(
+        Polynomial::from_coef(
             self.coef.into_iter().map(|x| -x).collect::<Vec<T>>()
         )
     }
@@ -288,7 +426,7 @@ impl<T> Polynomial<T>
     /// ```
     /// use mathru::algebra::abstr::Polynomial;
     ///
-    /// let a: Polynomial<f64> = Polynomial::new(vec![1.0, 2.0, 3.0]);
+    /// let a: Polynomial<f64> = Polynomial::from_coef(vec![1.0, 2.0, 3.0]);
     ///
     /// assert_eq!(2, a.degree())
     /// ```
@@ -298,10 +436,8 @@ impl<T> Polynomial<T>
     }
 }
 
-
-
-impl<'a, 'b, T> Mul<&'b Polynomial<T>> for &'a Polynomial<T>
-    where T: Field + Scalar
+impl<T> Mul<Polynomial<T>> for Polynomial<T>
+    where T: MagmaMul + MonoidAdd + Scalar
 {
     type Output = Polynomial<T>;
 
@@ -321,9 +457,42 @@ impl<'a, 'b, T> Mul<&'b Polynomial<T>> for &'a Polynomial<T>
     /// ```
     /// use mathru::algebra::abstr::Polynomial;
     ///
-    /// let a: Polynomial<f64> = Polynomial::new(vec![1.0, 2.0, 3.0]);
-    /// let b: Polynomial<f64> = Polynomial::new(vec![1.0, 1.0]);
-    /// let c: Polynomial<f64> = Polynomial::new(vec![1.0, 3.0, 5.0, 3.0]);
+    /// let a: Polynomial<f64> = Polynomial::from_coef(vec![1.0, 2.0, 3.0]);
+    /// let b: Polynomial<f64> = Polynomial::from_coef(vec![1.0, 1.0]);
+    /// let c: Polynomial<f64> = Polynomial::from_coef(vec![1.0, 3.0, 5.0, 3.0]);
+    ///
+    /// assert_eq!(c, a * b)
+    /// ```
+    fn mul(self: Self, rhs: Polynomial<T>) -> Self::Output
+    {
+        return (&self).mul(&rhs);
+    }
+}
+
+impl<'a, 'b, T> Mul<&'b Polynomial<T>> for &'a Polynomial<T>
+    where T: MagmaMul + MonoidAdd + Scalar
+{
+    type Output = Polynomial<T>;
+
+    /// Multiplies two polynomials
+    ///
+    /// # Arguments
+    ///
+    /// * `self': Factor
+    /// * `rhs?: Factor
+    ///
+    /// # Example
+    ///
+    /// ```math
+    /// (1 + 2x + 3x^2)(1 + x) = (1 + 3x + 5x^2 + 3x^3)
+    /// ```
+    ///
+    /// ```
+    /// use mathru::algebra::abstr::Polynomial;
+    ///
+    /// let a: Polynomial<f64> = Polynomial::from_coef(vec![1.0, 2.0, 3.0]);
+    /// let b: Polynomial<f64> = Polynomial::from_coef(vec![1.0, 1.0]);
+    /// let c: Polynomial<f64> = Polynomial::from_coef(vec![1.0, 3.0, 5.0, 3.0]);
     ///
     /// assert_eq!(c, &a * &b)
     /// ```
@@ -344,10 +513,18 @@ impl<'a, 'b, T> Mul<&'b Polynomial<T>> for &'a Polynomial<T>
             }
         }
 
-        return Polynomial::new(res);
+        return Polynomial::from_coef(res);
     }
 }
 
+impl<T> MulAssign for Polynomial<T>
+    where T: MagmaMul + MonoidAdd + Scalar
+{
+    fn mul_assign(self: &mut Self, rhs: Self)
+    {
+        *self = (*self).clone().mul(rhs)
+    }
+}
 
 impl<'a, 'b, T> Div<&'b Polynomial<T>> for &'a Polynomial<T>
     where T: Field + Scalar
@@ -366,9 +543,9 @@ impl<'a, 'b, T> Div<&'b Polynomial<T>> for &'a Polynomial<T>
     /// use mathru::algebra::abstr::Polynomial;
     /// use crate::mathru::algebra::abstr::Zero;
     ///
-    /// let a: Polynomial<f64> = Polynomial::new(vec![1.0, 2.0, 3.0]);
-    /// let b: Polynomial<f64> = Polynomial::new(vec![1.0, 1.0]);
-    /// let c: Polynomial<f64> = Polynomial::new(vec![1.0, 3.0, 5.0, 3.0]);
+    /// let a: Polynomial<f64> = Polynomial::from_coef(vec![1.0, 2.0, 3.0]);
+    /// let b: Polynomial<f64> = Polynomial::from_coef(vec![1.0, 1.0]);
+    /// let c: Polynomial<f64> = Polynomial::from_coef(vec![1.0, 3.0, 5.0, 3.0]);
     ///
     /// assert_eq!(b, (&c / &a).0);
     /// assert_eq!(Polynomial::zero(), (&c / &a).1)
@@ -396,7 +573,7 @@ impl<'a, 'b, T> Div<&'b Polynomial<T>> for &'a Polynomial<T>
             }
         }
 
-        return (Polynomial::new(quotient), Polynomial::new(Polynomial::reduce_coef(remainder)));
+        return (Polynomial::from_coef(quotient), Polynomial::from_coef(Polynomial::reduce_coef(remainder)));
     }
 }
 
@@ -423,7 +600,7 @@ impl<T> Polynomial<T>
 
     pub fn reduce(self: Self) -> Self
     {
-       return Polynomial::new(Polynomial::reduce_coef(self.coef));
+       return Polynomial::from_coef(Polynomial::reduce_coef(self.coef));
     }
 }
 
@@ -445,8 +622,8 @@ impl<T> Polynomial<T>
     /// ```
     /// use mathru::algebra::abstr::Polynomial;
     ///
-    /// let c: Polynomial<f64> = Polynomial::new(vec![1.0, 3.0, 5.0, 3.0]);
-    /// let c_s: Polynomial<f64> = Polynomial::new(vec![3.0, 10.0, 9.0]);
+    /// let c: Polynomial<f64> = Polynomial::from_coef(vec![1.0, 3.0, 5.0, 3.0]);
+    /// let c_s: Polynomial<f64> = Polynomial::from_coef(vec![3.0, 10.0, 9.0]);
     ///
     /// assert_eq!(c_s, c.differentiate());
     /// ```
@@ -454,7 +631,7 @@ impl<T> Polynomial<T>
     {
         if self.degree() == 0
         {
-            return Polynomial::new(vec![T::zero()]);
+            return Polynomial::from_coef(vec![T::zero()]);
         }
 
         let mut coef_diff = Vec::with_capacity(self.degree());
@@ -463,7 +640,7 @@ impl<T> Polynomial<T>
             coef_diff.push(T::from_f64((i + 1) as f64) * *a_i);
         }
 
-        return Polynomial::new(Polynomial::reduce_coef(coef_diff));
+        return Polynomial::from_coef(Polynomial::reduce_coef(coef_diff));
     }
 
     /// Integrate polynomial
@@ -481,8 +658,8 @@ impl<T> Polynomial<T>
     /// ```
     /// use mathru::algebra::abstr::Polynomial;
     ///
-    /// let c: Polynomial<f64> = Polynomial::new(vec![1.0, 2.0, 3.0]);
-    /// let c_s: Polynomial<f64> = Polynomial::new(vec![0.0, 1.0, 1.0, 1.0]);
+    /// let c: Polynomial<f64> = Polynomial::from_coef(vec![1.0, 2.0, 3.0]);
+    /// let c_s: Polynomial<f64> = Polynomial::from_coef(vec![0.0, 1.0, 1.0, 1.0]);
     ///
     /// assert_eq!(c_s, c.integrate());
     /// ```
@@ -496,6 +673,107 @@ impl<T> Polynomial<T>
             coef_int.push(*a_i / T::from_f64((i + 1) as f64));
         }
 
-        return Polynomial::new(Polynomial::reduce_coef(coef_int));
+        return Polynomial::from_coef(Polynomial::reduce_coef(coef_int));
     }
+}
+
+impl<T> AbsDiffEq for Polynomial<T>
+    where T: AbsDiffEq<Epsilon = T>
+{
+    type Epsilon = T;
+
+    fn default_epsilon() -> T
+    {
+        T::default_epsilon()
+    }
+
+    fn abs_diff_eq(&self, _other: &Polynomial<T>, epsilon: T) -> bool
+    {
+       unimplemented!();
+    }
+}
+
+impl<T> Magma<Addition> for Polynomial<T>
+    where T: MagmaAdd + Magma<Addition> + Scalar + AbsDiffEq<Epsilon = T>
+{
+    fn operate(self, rhs: Self) -> Self
+    {
+        self.add(rhs)
+    }
+}
+
+impl<T> MagmaAdd for Polynomial<T>
+    where T: MagmaAdd + Scalar + AbsDiffEq<Epsilon = T>
+{
+
+}
+
+impl<T> Magma<Multiplication> for Polynomial<T>
+    where T: MagmaMul + MonoidAdd + Magma<Multiplication> + Scalar + AbsDiffEq<Epsilon = T>
+{
+    fn operate(self, rhs: Self) -> Self
+    {
+        self.mul(rhs)
+    }
+}
+
+impl<T> MagmaMul for Polynomial<T>
+    where T: MagmaMul + MonoidAdd + Scalar + AbsDiffEq<Epsilon = T>
+{
+
+}
+
+impl<T> Semigroup<Addition> for Polynomial<T>
+    where T: MagmaAdd + Scalar + AbsDiffEq<Epsilon = T>
+{
+
+}
+
+impl<T> SemigroupAdd for Polynomial<T>
+    where T: SemigroupAdd + Semigroup<Addition> + MagmaAdd + Scalar + AbsDiffEq<Epsilon = T>
+{
+}
+
+impl<T> Identity<Addition> for Polynomial<T>
+    where T: Identity<Addition>
+{
+    fn id() -> Self
+    {
+        return Polynomial::from_coef(vec![T::id()]);
+    }
+}
+
+impl<T> Monoid<Addition> for Polynomial<T>
+    where T: MagmaAdd + Scalar + Identity<Addition> + AbsDiffEq<Epsilon = T>
+{
+}
+
+impl<T> MonoidAdd for Polynomial<T>
+    where T: Monoid<Addition> + SemigroupAdd + Zero + Scalar + AbsDiffEq<Epsilon = T>
+{
+
+}
+
+impl<T> Quasigroup<Addition> for Polynomial<T>
+    where T: Quasigroup<Addition> + Scalar + MagmaAdd + AbsDiffEq<Epsilon = T>
+{
+
+}
+
+impl<T> Loop<Addition> for Polynomial<T>
+    where T: Loop<Addition> + Quasigroup<Addition> + Scalar + MagmaAdd + AbsDiffEq<Epsilon = T>
+{
+
+}
+
+impl<T> Group<Addition> for Polynomial<T>
+    where T: Group<Addition> + Loop<Addition> + Quasigroup<Addition> + Scalar + MagmaAdd + AbsDiffEq<Epsilon = T>
+{
+
+}
+
+impl<T> GroupAdd for Polynomial<T>
+    where T: GroupAdd + Group<Addition> + Loop<Addition> + Quasigroup<Addition> + Scalar + MagmaAdd + AbsDiffEq<Epsilon = T> + MonoidAdd
+{
+
 }
