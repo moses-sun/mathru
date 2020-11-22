@@ -131,6 +131,65 @@ Then import the modules and it is ready to be used.
 use mathru as mr;
 ```
 
+### Solve linear system
+
+```rust
+use mathru::{
+    algebra::linear::{
+        matrix::{LUDec, Solve},
+        Matrix, Vector,
+    },
+    matrix, vector,
+};
+
+/// Solves a system of linear equations
+fn main()
+{
+    let a: Matrix<f64> = matrix![6.0, 2.0, -1.0; -3.0, 5.0, 3.0; -2.0, 1.0, 3.0];
+    let b: Vector<f64> = vector![48.0; 49.0; 24.0];
+
+    // Decompose a into a lower and upper matrix
+    let lu_dec: LUDec<f64> = a.dec_lu().unwrap();
+
+    // Solve the system of linear equations with the decomposed matrix
+    let _x1: Vector<f64> = lu_dec.solve(&b).unwrap();
+
+    // Solve it directly
+    let _x2: Vector<f64> = a.solve(&b).unwrap();
+}
+```
+
+### Solve ordinary differential equation with the Dormand-Prince algorithm
+
+```rust
+use mathru::{
+    algebra::linear::Vector,
+    analysis::differential_equation::ordinary::{problem, DormandPrince54, ExplicitODE},
+};
+
+fn main()
+{
+    // Create an ODE instance
+    let problem: problem::Euler<f64> = problem::Euler::default();
+
+    let (x_start, x_end) = problem.time_span();
+
+    // Create a ODE solver instance
+    let h_0: f64 = 0.0001;
+    let n_max: u32 = 800;
+    let abs_tol: f64 = 10e-7;
+
+    let solver: DormandPrince54<f64> = DormandPrince54::new(abs_tol, h_0, n_max);
+
+    // Solve ODE
+    let (x, y): (Vec<f64>, Vec<Vector<f64>>) = solver.solve(&problem).unwrap();
+}
+```
+
+### Further examples
+
+For further examples, see [project page](https://matthiaseiholzer.gitlab.io/mathru)
+
 ## Documentation
 
 See [project page](https://matthiaseiholzer.gitlab.io/mathru) for more information and examples.

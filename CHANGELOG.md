@@ -1,9 +1,12 @@
 # Change Log
 All notable changes starting with the version 0.6.9 are documented here.
+
+## [0.8.0]
+- Implement polynomial
+
 ## [0.7.4]
 - Improve documentation
 - Update dependencies
--
 
 ## [0.7.3]
 - Column/row iterators implemented

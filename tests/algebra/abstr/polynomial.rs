@@ -4,7 +4,7 @@ use crate::mathru::algebra::abstr::Zero;
 #[test]
 fn fmt_constant()
 {
-    let poly: Polynomial<f64> = Polynomial::new(vec![1.0]);
+    let poly: Polynomial<f64> = Polynomial::from_coef(vec![1.0]);
 
     let output = format!("{}", poly);
 
@@ -14,7 +14,7 @@ fn fmt_constant()
 #[test]
 fn fmt_coefficent_zero()
 {
-    let poly: Polynomial<f64> = Polynomial::new(vec![1.0, 0.0, 1.0]);
+    let poly: Polynomial<f64> = Polynomial::from_coef(vec![1.0, 0.0, 1.0]);
 
     let output = format!("{}", poly);
 
@@ -24,7 +24,7 @@ fn fmt_coefficent_zero()
 #[test]
 fn fmt_start_zero_term()
 {
-    let poly: Polynomial<f64> = Polynomial::new(vec![0.0, 1.0]);
+    let poly: Polynomial<f64> = Polynomial::from_coef(vec![0.0, 1.0]);
 
     let output = format!("{}", poly);
 
@@ -34,19 +34,35 @@ fn fmt_start_zero_term()
 #[test]
 fn fmt()
 {
-    let poly: Polynomial<f64> = Polynomial::new(vec![1.0, 2.0, 3.0]);
+    let poly: Polynomial<f64> = Polynomial::from_coef(vec![1.0, 2.0, 3.0]);
 
     let output = format!("{}", poly);
 
     assert_eq!("1 + 2x + 3x^2", output)
 }
 
+#[test]
+fn from_root_1()
+{
+    let poly: Polynomial<f64> = Polynomial::from_root(vec![1.0]);
+    let poly_ref: Polynomial<f64> = Polynomial::from_coef( vec![-1.0, 1.0]);
 
+    assert_eq!(poly_ref, poly)
+}
+
+#[test]
+fn from_root_2()
+{
+    let poly: Polynomial<f64> = Polynomial::from_root(vec![1.0, 2.0]);
+    let poly_ref: Polynomial<f64> = Polynomial::from_coef( vec![2.0, -3.0, 1.0]);
+
+    assert_eq!(poly_ref, poly)
+}
 
 #[test]
 fn eval_degree_0()
 {
-    let poly: Polynomial<f64> = Polynomial::new(vec![1.0]);
+    let poly: Polynomial<f64> = Polynomial::from_coef(vec![1.0]);
 
     let value = poly.eval(2.0);
 
@@ -56,7 +72,7 @@ fn eval_degree_0()
 #[test]
 fn eval_odd()
 {
-    let poly: Polynomial<f64> = Polynomial::new(vec![1.0, 2.0, 3.0]);
+    let poly: Polynomial<f64> = Polynomial::from_coef(vec![1.0, 2.0, 3.0]);
 
     let value = poly.eval(2.0);
 
@@ -66,20 +82,18 @@ fn eval_odd()
 #[test]
 fn eval_degree_even()
 {
-    let poly: Polynomial<f64> = Polynomial::new(vec![1.0, 2.0]);
+    let poly: Polynomial<f64> = Polynomial::from_coef(vec![1.0, 2.0]);
 
     let value = poly.eval(2.0);
 
     assert_eq!(5.0, value)
 }
 
-
-
 #[test]
 fn add_with_zero()
 {
-    let a: Polynomial<f64> = Polynomial::new(vec![1.0, 2.0, 3.0]);
-    let b: Polynomial<f64> = Polynomial::new(vec![0.0]);
+    let a: Polynomial<f64> = Polynomial::from_coef(vec![1.0, 2.0, 3.0]);
+    let b: Polynomial<f64> = Polynomial::from_coef(vec![0.0]);
 
     assert_eq!(a, &a + &b)
 }
@@ -87,9 +101,9 @@ fn add_with_zero()
 #[test]
 fn add()
 {
-    let a: Polynomial<f64> = Polynomial::new(vec![1.0, 2.0, 3.0]);
-    let b: Polynomial<f64> = Polynomial::new(vec![1.0, 2.0]);
-    let c: Polynomial<f64> = Polynomial::new(vec![2.0, 4.0, 3.0]);
+    let a: Polynomial<f64> = Polynomial::from_coef(vec![1.0, 2.0, 3.0]);
+    let b: Polynomial<f64> = Polynomial::from_coef(vec![1.0, 2.0]);
+    let c: Polynomial<f64> = Polynomial::from_coef(vec![2.0, 4.0, 3.0]);
 
     assert_eq!(c, &a + &b)
 }
@@ -97,8 +111,8 @@ fn add()
 #[test]
 fn sub_with_zero()
 {
-    let a: Polynomial<f64> = Polynomial::new(vec![1.0, 2.0, 3.0]);
-    let b: Polynomial<f64> = Polynomial::new(vec![0.0]);
+    let a: Polynomial<f64> = Polynomial::from_coef(vec![1.0, 2.0, 3.0]);
+    let b: Polynomial<f64> = Polynomial::from_coef(vec![0.0]);
 
     assert_eq!(a, &a - &b)
 }
@@ -106,9 +120,9 @@ fn sub_with_zero()
 #[test]
 fn sub()
 {
-    let a: Polynomial<f64> = Polynomial::new(vec![1.0, 2.0, 3.0]);
-    let b: Polynomial<f64> = Polynomial::new(vec![1.0, 2.0]);
-    let c: Polynomial<f64> = Polynomial::new(vec![0.0, 0.0, 3.0]);
+    let a: Polynomial<f64> = Polynomial::from_coef(vec![1.0, 2.0, 3.0]);
+    let b: Polynomial<f64> = Polynomial::from_coef(vec![1.0, 2.0]);
+    let c: Polynomial<f64> = Polynomial::from_coef(vec![0.0, 0.0, 3.0]);
 
     assert_eq!(c, &a - &b)
 }
@@ -117,8 +131,8 @@ fn sub()
 #[test]
 fn neg_ref()
 {
-    let a: Polynomial<f64> = Polynomial::new(vec![1.0, 2.0, 3.0]);
-    let c: Polynomial<f64> = Polynomial::new(vec![-1.0, -2.0, -3.0]);
+    let a: Polynomial<f64> = Polynomial::from_coef(vec![1.0, 2.0, 3.0]);
+    let c: Polynomial<f64> = Polynomial::from_coef(vec![-1.0, -2.0, -3.0]);
 
     assert_eq!(c, -&a)
 }
@@ -126,8 +140,8 @@ fn neg_ref()
 #[test]
 fn neg()
 {
-    let a: Polynomial<f64> = Polynomial::new(vec![1.0, 2.0, 3.0]);
-    let c: Polynomial<f64> = Polynomial::new(vec![-1.0, -2.0, -3.0]);
+    let a: Polynomial<f64> = Polynomial::from_coef(vec![1.0, 2.0, 3.0]);
+    let c: Polynomial<f64> = Polynomial::from_coef(vec![-1.0, -2.0, -3.0]);
 
     assert_eq!(c, -a)
 }
@@ -135,7 +149,7 @@ fn neg()
 #[test]
 fn degree()
 {
-    let a: Polynomial<f64> = Polynomial::new(vec![1.0, 2.0, 3.0]);
+    let a: Polynomial<f64> = Polynomial::from_coef(vec![1.0, 2.0, 3.0]);
 
     assert_eq!(2, a.degree())
 }
@@ -144,9 +158,9 @@ fn degree()
 #[test]
 fn mul_with_degree_zero()
 {
-    let a: Polynomial<f64> = Polynomial::new(vec![1.0, 2.0, 3.0]);
-    let b: Polynomial<f64> = Polynomial::new(vec![0.0]);
-    let c: Polynomial<f64> = Polynomial::new(vec![0.0, 0.0, 0.0]);
+    let a: Polynomial<f64> = Polynomial::from_coef(vec![1.0, 2.0, 3.0]);
+    let b: Polynomial<f64> = Polynomial::from_coef(vec![0.0]);
+    let c: Polynomial<f64> = Polynomial::from_coef(vec![0.0, 0.0, 0.0]);
 
     assert_eq!(c, &a * &b)
 }
@@ -154,9 +168,9 @@ fn mul_with_degree_zero()
 #[test]
 fn mul_with_degree_one()
 {
-    let a: Polynomial<f64> = Polynomial::new(vec![1.0, 2.0, 3.0]);
-    let b: Polynomial<f64> = Polynomial::new(vec![1.0, 1.0]);
-    let c: Polynomial<f64> = Polynomial::new(vec![1.0, 3.0, 5.0, 3.0]);
+    let a: Polynomial<f64> = Polynomial::from_coef(vec![1.0, 2.0, 3.0]);
+    let b: Polynomial<f64> = Polynomial::from_coef(vec![1.0, 1.0]);
+    let c: Polynomial<f64> = Polynomial::from_coef(vec![1.0, 3.0, 5.0, 3.0]);
 
     assert_eq!(c, &a * &b)
 }
@@ -164,8 +178,8 @@ fn mul_with_degree_one()
 #[test]
 fn reduce()
 {
-    let a: Polynomial<f64> = Polynomial::new(vec![1.0, 2.0, 0.0, 1.0, 0.0, 0.0]);
-    let reduced: Polynomial<f64> = Polynomial::new(vec![1.0, 2.0, 0.0, 1.0]);
+    let a: Polynomial<f64> = Polynomial::from_coef(vec![1.0, 2.0, 0.0, 1.0, 0.0, 0.0]);
+    let reduced: Polynomial<f64> = Polynomial::from_coef(vec![1.0, 2.0, 0.0, 1.0]);
 
     assert_eq!(reduced, a.reduce())
 }
@@ -173,19 +187,19 @@ fn reduce()
 #[test]
 fn div_1()
 {
-    let a: Polynomial<f64> = Polynomial::new(vec![1.0, 2.0, 3.0]);
-    let b: Polynomial<f64> = Polynomial::new(vec![1.0, 1.0]);
+    let a: Polynomial<f64> = Polynomial::from_coef(vec![1.0, 2.0, 3.0]);
+    let b: Polynomial<f64> = Polynomial::from_coef(vec![1.0, 1.0]);
 
-    assert_eq!(Polynomial::new(vec![0.0]), (&b / &a).0);
+    assert_eq!(Polynomial::from_coef(vec![0.0]), (&b / &a).0);
     assert_eq!(b, (&b / &a).1);
 }
 
 #[test]
 fn div_2()
 {
-    let a: Polynomial<f64> = Polynomial::new(vec![1.0, 2.0, 3.0]);
-    let b: Polynomial<f64> = Polynomial::new(vec![1.0, 1.0]);
-    let c: Polynomial<f64> = Polynomial::new(vec![1.0, 3.0, 5.0, 3.0]);
+    let a: Polynomial<f64> = Polynomial::from_coef(vec![1.0, 2.0, 3.0]);
+    let b: Polynomial<f64> = Polynomial::from_coef(vec![1.0, 1.0]);
+    let c: Polynomial<f64> = Polynomial::from_coef(vec![1.0, 3.0, 5.0, 3.0]);
 
     assert_eq!(b, (&c / &a).0);
     assert_eq!(Polynomial::zero(), (&c / &a).1)
@@ -194,19 +208,19 @@ fn div_2()
 #[test]
 fn div_with_remainder()
 {
-    let a: Polynomial<f64> = Polynomial::new(vec![1.0, 2.0, 3.0]);
-    let b: Polynomial<f64> = Polynomial::new(vec![1.0, 1.0]);
-    let c: Polynomial<f64> = Polynomial::new(vec![0.0, 3.0, 5.0, 3.0]);
+    let a: Polynomial<f64> = Polynomial::from_coef(vec![1.0, 2.0, 3.0]);
+    let b: Polynomial<f64> = Polynomial::from_coef(vec![1.0, 1.0]);
+    let c: Polynomial<f64> = Polynomial::from_coef(vec![0.0, 3.0, 5.0, 3.0]);
 
     assert_eq!(b, (&c / &a).0);
-    assert_eq!(Polynomial::new(vec![-1.0]), (&c / &a).1)
+    assert_eq!(Polynomial::from_coef(vec![-1.0]), (&c / &a).1)
 }
 
 #[test]
 fn differentiate_degree_zero()
 {
-    let c: Polynomial<f64> = Polynomial::new(vec![1.0]);
-    let c_s: Polynomial<f64> = Polynomial::new(vec![0.0]);
+    let c: Polynomial<f64> = Polynomial::from_coef(vec![1.0]);
+    let c_s: Polynomial<f64> = Polynomial::from_coef(vec![0.0]);
 
     assert_eq!(c_s, c.differentiate());
 }
@@ -214,8 +228,8 @@ fn differentiate_degree_zero()
 #[test]
 fn differentiate_degree_one()
 {
-    let c: Polynomial<f64> = Polynomial::new(vec![1.0, 3.0]);
-    let c_s: Polynomial<f64> = Polynomial::new(vec![3.0]);
+    let c: Polynomial<f64> = Polynomial::from_coef(vec![1.0, 3.0]);
+    let c_s: Polynomial<f64> = Polynomial::from_coef(vec![3.0]);
 
     assert_eq!(c_s, c.differentiate());
 }
@@ -223,8 +237,8 @@ fn differentiate_degree_one()
 #[test]
 fn differentiate_general()
 {
-    let c: Polynomial<f64> = Polynomial::new(vec![1.0, 3.0, 5.0, 3.0]);
-    let c_s: Polynomial<f64> = Polynomial::new(vec![3.0, 10.0, 9.0]);
+    let c: Polynomial<f64> = Polynomial::from_coef(vec![1.0, 3.0, 5.0, 3.0]);
+    let c_s: Polynomial<f64> = Polynomial::from_coef(vec![3.0, 10.0, 9.0]);
 
     assert_eq!(c_s, c.differentiate());
 }
@@ -232,8 +246,8 @@ fn differentiate_general()
 #[test]
 fn integrate_degree_zero_null()
 {
-    let c: Polynomial<f64> = Polynomial::new(vec![0.0]);
-    let c_s: Polynomial<f64> = Polynomial::new(vec![0.0]);
+    let c: Polynomial<f64> = Polynomial::from_coef(vec![0.0]);
+    let c_s: Polynomial<f64> = Polynomial::from_coef(vec![0.0]);
 
     assert_eq!(c_s, c.integrate());
 }
@@ -241,8 +255,8 @@ fn integrate_degree_zero_null()
 #[test]
 fn integrate_degree_zero_not_null()
 {
-    let c: Polynomial<f64> = Polynomial::new(vec![1.0]);
-    let c_s: Polynomial<f64> = Polynomial::new(vec![0.0, 1.0]);
+    let c: Polynomial<f64> = Polynomial::from_coef(vec![1.0]);
+    let c_s: Polynomial<f64> = Polynomial::from_coef(vec![0.0, 1.0]);
 
     assert_eq!(c_s, c.integrate());
 }
@@ -250,8 +264,8 @@ fn integrate_degree_zero_not_null()
 #[test]
 fn integrate_general()
 {
-    let c: Polynomial<f64> = Polynomial::new(vec![1.0, 2.0, 3.0]);
-    let c_s: Polynomial<f64> = Polynomial::new(vec![0.0, 1.0, 1.0, 1.0]);
+    let c: Polynomial<f64> = Polynomial::from_coef(vec![1.0, 2.0, 3.0]);
+    let c_s: Polynomial<f64> = Polynomial::from_coef(vec![0.0, 1.0, 1.0, 1.0]);
 
     assert_eq!(c_s, c.integrate());
 }
