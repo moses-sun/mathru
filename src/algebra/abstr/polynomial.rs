@@ -687,7 +687,7 @@ impl<T> AbsDiffEq for Polynomial<T>
         T::default_epsilon()
     }
 
-    fn abs_diff_eq(&self, _other: &Polynomial<T>, epsilon: T) -> bool
+    fn abs_diff_eq(&self, _other: &Polynomial<T>, _epsilon: T) -> bool
     {
        unimplemented!();
     }
