@@ -106,13 +106,13 @@ Add this to your `Cargo.toml` for the native Rust implementation:
 
 ```toml
 [dependencies.mathru]
-version = "0.7"
+version = "^0.8"
 ```
 Add the following lines to 'Cargo.toml' if the openblas library should be used:
 
 ```toml
 [dependencies.mathru]
-version = "0.7"
+version = "^0.8"
 default-features = false
 features = "openblas"
 ```
@@ -131,7 +131,7 @@ Then import the modules and it is ready to be used.
 use mathru as mr;
 ```
 
-### Solve linear system
+### Solve a system of linear equations
 
 ```rust
 use mathru::{
