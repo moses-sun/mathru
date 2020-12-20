@@ -78,27 +78,17 @@ fn quantile()
 
     let distrib: ChiSquare<f64> = ChiSquare::new(df);
 
-    assert_relative_eq!(7.711853942311415, distrib.quantile(0.9))
+    assert_relative_eq!(7.779440339734858, distrib.quantile(0.9))
 }
 
 #[test]
-fn quantile1()
+fn quantile_1()
 {
     let df: u32 = 4;
 
     let distrib: ChiSquare<f64> = ChiSquare::new(df);
 
-    assert_relative_eq!(0.7107, distrib.quantile(0.05))
-}
-
-#[test]
-fn quantile_4()
-{
-    let df: u32 = 10;
-
-    let distrib: ChiSquare<f64> = ChiSquare::new(df);
-
-    assert_relative_eq!(18.307, distrib.quantile(0.95))
+    assert_relative_eq!(0.7107230213973239, distrib.quantile(0.05), epsilon=3.0 * f64::EPSILON )
 }
 
 #[test]
@@ -108,9 +98,8 @@ fn quantile_2()
 
     let distrib: ChiSquare<f64> = ChiSquare::new(df);
 
-    assert_relative_eq!(14.07, distrib.quantile(0.95), max_relative=0.00001)
+    assert_relative_eq!(14.067140449340169, distrib.quantile(0.95), max_relative=0.00001)
 }
-
 
 #[test]
 fn quantile_3()
@@ -119,5 +108,15 @@ fn quantile_3()
 
     let distrib: ChiSquare<f64> = ChiSquare::new(df);
 
-    assert_relative_eq!(2.1673, distrib.quantile(0.05), max_relative=0.00001)
+    assert_relative_eq!(2.167349909298057, distrib.quantile(0.05), max_relative=0.00001)
+}
+
+#[test]
+fn quantile_4()
+{
+    let df: u32 = 10;
+
+    let distrib: ChiSquare<f64> = ChiSquare::new(df);
+
+    assert_relative_eq!(18.307038053275146, distrib.quantile(0.95), epsilon=80.0 * f64::EPSILON)
 }

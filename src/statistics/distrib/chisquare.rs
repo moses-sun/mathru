@@ -1,6 +1,5 @@
 //! Chi-Square distribution
 
-use super::Normal;
 use crate::{algebra::abstr::Real, special::error::Error, special::gamma::Gamma, statistics::distrib::Continuous};
 use crate::special::gamma;
 use crate::special::error;
@@ -132,12 +131,7 @@ impl<T> Continuous<T> for ChiSquare<T>
     /// Quantile function or inverse cdf
     fn quantile(self: &Self, p: T) -> T
     {
-        let std_distrib: Normal<T> = Normal::new(T::zero(), T::one());
-        let q: T = T::from_f64(0.5)
-            * (std_distrib.quantile(p) + (T::from_f64(2.0) * self.k - T::one()).sqrt())
-                .pow(T::from_f64(2.0));
-
-        return q;
+        T::from_f64(2.0) * (self.k / T::from_f64(2.0)).gamma_ur_inv(T::from_f64(1.0) - p)
     }
 
     /// Expected value
