@@ -10,7 +10,7 @@
 mod bernoulli;
 mod beta;
 mod binomial;
-mod chisquared;
+mod chisquare;
 mod distrib;
 mod exponential;
 mod gamma;
@@ -25,7 +25,7 @@ pub use self::{
     bernoulli::Bernoulli,
     beta::Beta,
     binomial::Binomial,
-    chisquared::ChiSquared,
+    chisquare::ChiSquare,
     distrib::{Continuous, Discrete, Distribution},
     exponential::Exponential,
     gamma::Gamma,

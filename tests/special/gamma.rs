@@ -91,7 +91,7 @@ fn digamma_0()
 
     let digamma: f64 = gamma::digamma(x);
 
-    assert_relative_eq!(-f64::gamma(), digamma, epsilon=2.0 * f64::EPSILON);
+    assert_relative_eq!(-f64::euler_gamma(), digamma, epsilon=2.0 * f64::EPSILON);
 }
 
 #[test]
@@ -101,7 +101,7 @@ fn digamma_1()
 
     let digamma: f64 = gamma::digamma(x);
 
-    assert_relative_eq!(- 2.0 * 2.0_f64.ln() - f64::gamma(), digamma);
+    assert_relative_eq!(- 2.0 * 2.0_f64.ln() - f64::euler_gamma(), digamma);
 }
 
 #[test]
@@ -111,7 +111,7 @@ fn digamma_2()
 
     let digamma: f64 = gamma::digamma(x);
 
-    assert_relative_eq!(-f64_PI / 2.0 - 3.0 * 2.0_f64.ln() - f64::gamma(), digamma);
+    assert_relative_eq!(-f64_PI / 2.0 - 3.0 * 2.0_f64.ln() - f64::euler_gamma(), digamma);
 }
 
 
@@ -136,6 +136,63 @@ fn gamma_lr0()
 
     assert_relative_eq!(gamma::gamma_l(a, x) / gamma::gamma(a), gamma);
 }
+
+#[test]
+fn gamma_ur_inv_0()
+{
+    let x: f64 = 0.5;
+    let a: f64 = 0.5;
+
+    let y: f64 = gamma::gamma_ur(a, x);
+
+    assert_relative_eq!(gamma::gamma_ur_inv(a, y), x);
+}
+
+#[test]
+fn gamma_ur_inv_a_is_one()
+{
+    let x: f64 = 0.4;
+    let a: f64 = 1.0;
+
+    let y: f64 = gamma::gamma_ur(a, x);
+
+    assert_relative_eq!(gamma::gamma_ur_inv(a, y), x);
+}
+
+#[test]
+fn gamma_ur_inv_x_0_first()
+{
+    let x: f64 = 0.5;
+    let a: f64 = 0.3;
+
+    let y: f64 = gamma::gamma_ur(a, x);
+
+    assert_relative_eq!(gamma::gamma_ur_inv(a, y), x);
+}
+
+#[test]
+fn gamma_ur_inv_1()
+{
+    let x: f64 = 0.2;
+    let a: f64 = 2.0;
+
+    let y: f64 = gamma::gamma_ur(a, x);
+
+    assert_relative_eq!(gamma::gamma_ur_inv(a, y), x);
+}
+
+#[test]
+fn gamma_ur_inv_2()
+{
+    let x: f64 = 0.1;
+    let a: f64 = 2.0;
+
+    let y: f64 = gamma::gamma_lr(a, x);
+
+    assert_relative_eq!(gamma::gamma_ur_inv(a, y), x);
+}
+
+
 
 #[test]
 fn gamma_l0()
