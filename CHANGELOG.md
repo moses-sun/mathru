@@ -1,6 +1,9 @@
 # Change Log
 All notable changes starting with the version 0.6.9 are documented here.
 
+## [0.9.0]
+- Update blas-src dependency
+
 ## [0.8.1]
 - README corrections
 

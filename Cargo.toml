@@ -71,7 +71,7 @@ version = "0.20"
 optional = true
 
 [dependencies.blas-src]
-version = "0.6"
+version = "0.7"
 optional = true
 
 [dependencies.lapack-src]
