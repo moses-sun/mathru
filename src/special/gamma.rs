@@ -2,6 +2,9 @@
 
 use crate::algebra::abstr::Real;
 use crate::elementary::Power;
+use std::f64;
+use crate::algebra::abstr::cast::FromPrimitive;
+use crate::algebra::abstr::cast::ToPrimitive;
 
 /// Provides [gamma](https://en.wikipedia.org/wiki/Beta_function) related functions
 pub trait Gamma
@@ -32,7 +35,6 @@ pub trait Gamma
     /// let gamma: f64 = z.gamma();
     /// ```
     fn gamma(self: Self) -> Self;
-
 
     /// Log-gamma function
     ///
@@ -105,7 +107,7 @@ pub trait Gamma
     /// Upper incomplete regularized gamma function
     ///
     /// ```math
-    /// P(s,x)=\frac{\gamma(s,x)}{\Gamma(s)}
+        /// P(s,x)=\frac{\gamma(s,x)}{\Gamma(s)}
     /// ```
     ///
     /// Fore more information:
@@ -185,6 +187,64 @@ pub trait Gamma
     /// let gamma_lr: f64 = a.gamma_lr(x);
     /// ```
     fn gamma_lr(self: Self, x: Self) -> Self;
+
+    /// Inverse of the upper incomplete regularized gamma function
+    ///
+    /// ```math
+    /// Q^-1(s,x)
+    /// ```
+    ///
+    /// Fore more information:
+    /// <a href="https://en.wikipedia
+    /// .org/wiki/Incomplete_gamma_function#Regularized_Gamma_functions_and_Poisson_random_variables">https://en
+    /// .wikipedia.org/wiki/Incomplete_gamma_function#
+    /// Regularized_Gamma_functions_and_Poisson_random_variables</a>
+    ///
+    /// # Arguments
+    ///
+    /// * `a`
+    /// * `x`
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// use mathru::special::gamma;
+    ///
+    /// let a: f64 = 0.5_f64;
+    /// let x: f64 = 0.3_f64;
+    /// let y = gamma::gamma_ur(a, x);
+    /// let x_s: f64 = gamma::gamma_ur_inv(a, y);
+    /// ```
+    fn gamma_ur_inv(self: Self, p: Self) -> Self;
+
+    /// Inverse of the lower incomplete regularized gamma function
+    ///
+    /// ```math
+    /// P^-1(s,x)
+    /// ```
+    ///
+    /// Fore more information:
+    /// <a href="https://en.wikipedia
+    /// .org/wiki/Incomplete_gamma_function#Regularized_Gamma_functions_and_Poisson_random_variables">https://en
+    /// .wikipedia.org/wiki/Incomplete_gamma_function#
+    /// Regularized_Gamma_functions_and_Poisson_random_variables</a>
+    ///
+    /// # Arguments
+    ///
+    /// * `a`
+    /// * `x`
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// use mathru::special::gamma;
+    ///
+    /// let a: f64 = 0.5_f64;
+    /// let x: f64 = 0.3_f64;
+    /// let y = gamma::gamma_lr(a, x);
+    /// let x_s: f64 = gamma::gamma_lr_inv(a, y);
+    /// ```
+    fn gamma_lr_inv(self: Self, p: Self) -> Self;
 }
 
 macro_rules! impl_gamma
@@ -269,6 +329,8 @@ macro_rules! impl_gamma
                 }
             }
 
+
+            //
             fn digamma(self: Self) -> Self
             {
                 let c: Self = 8.5;
@@ -281,7 +343,7 @@ macro_rules! impl_gamma
                     x2 = x2 + 1.0;
                 }
                 /*
-                  Use Stirling's (actually de Moivre's) expansion.
+                  Use Stirling's (actually de Moivre's) expansion
                 */
                 let mut r: Self = 1.0 / x2;
                 value = value + x2.ln() - 0.5 * r;
@@ -421,6 +483,181 @@ macro_rules! impl_gamma
 
                 1.0 - ax.exp() * ans
             }
+
+            /// Computation of the Incomplete Gamma Function Ratios and their Inverse
+            /// ARMIDO R. DIDONATO and ALFRED H. MORRIS, JR. U.S. Naval Surface Weapons Center
+            /// ACM Transactions on Mathematical Software, Vol. 12, No. 4, December 1986
+            fn gamma_ur_inv(self: Self, q: Self) -> Self
+            {
+                let a: Self = self;
+                let c: Self = 0.5772156649015328606065;
+                let eps: Self = 1.0e-10;
+                let tau: Self = 1.0e-5;
+
+                if a == 1.0
+                {
+                    return - q.ln();
+                }
+
+                let b: Self = q * gamma(a);
+                let p: Self = 1.0 - q;
+                let x_0: Self;
+
+                if 0.6 < b || ( 0.45 <= b && a >= 0.3)
+                {
+                    let u: Self = if b * q > 1.0e-8
+                    {
+                        (p * gamma(a + 1.0)).pow(1.0 / a)
+                    }
+                    else
+                    {
+                        (-q / a - c).exp()
+                    };
+
+                    x_0 = u / (1.0 - u / (a + 1.0))
+                }
+                else
+                {
+                    if a < 0.3 && 0.35 <= b && b <= 0.6
+                    {
+                        let t: Self = (-c - b).exp();
+                        let u: Self = t * t.exp();
+                        x_0 = t * u.exp()
+                    }
+                    else
+                    {
+                        if (0.15 <= b && b < 0.35) || (0.35 <= a && 0.15 <= b && b < 0.45)
+                        {
+                            let y: Self = -b.ln();
+                            let v: Self = y - (1.0 - a) * y.ln();
+                            x_0 = y - (1.0 - a) * v.ln() - (1.0 + (1.0 - a) / (1.0 + v)).ln();
+                        }
+                        else
+                        {
+                            if 0.01 < b && b < 0.15
+                            {
+                                let y: Self = -b.ln();
+                                let v: Self = y - (1.0 - a) * y.ln();
+                                x_0 = y - (1.0 - a) * v.ln() - ((v * v + 2.0 * (3.0 - a) * v + (2.0 - a) * (3.0 - a)) / (v * v + (5.0 - a) * v + 2.0)).ln()
+                            }
+                            else
+                            {
+                                let y: Self = -b.ln();
+                                let c_1: Self = (a - 1.0) * y.ln();
+
+                                let c_2: Self = (a - 1.0) * (1.0 + c_1);
+
+                                let c_1_2: Self = c_1 * c_1;
+                                let c_3: Self = (a - 1.0) * (-c_1_2 / 2.0 + (a - 2.0) * c_1 + (3.0 * a - 5.0) / 2.0);
+
+                                let a_2: Self= a * a;
+
+                                let c_1_3: Self = c_1_2 * c_1;
+                                let c_4: Self = (a - 1.0) * (c_1_3 / 3.0 - (3.0 * a - 5.0) / 2.0 * c_1_2 + (a_2 + -6.0 * a + 7.0) * c_1 + (11.0 * a_2 - 46.0 * a + 47.0) / 6.0);
+
+                                let c_1_4: Self = c_1_3 * c_1;
+
+                                let a_3: Self = a_2 * a;
+
+                                let c_5: Self = (a - 1.0) * (-c_1_4 / 4.0 + (11.0 * a - 17.0) / 6.0 * c_1_3 + (-3.0 * a_2 + 13.0 * a - 13.0) * c_1_2 + (2.0 * a_3 - 25.0 * a_2 + 72.0 * a - 61.0) / 2.0 * c_1 + (25.0 * a_3 - 195.0 * a_2 + 477.0 * a - 379.0) / 12.0);
+
+                                let y_2: Self = y * y;
+                                let y_3: Self = y_2 * y;
+                                let y_4: Self = y_3 * y;
+
+                                x_0 = y + c_1 + c_2 / y + c_3 / y_2 + c_4 / y_3 + c_5 / y_4;
+                            }
+                        }
+                    }
+                }
+
+                let mut x_n: Self = x_0;
+
+                for _i in 0..20
+                {
+                    let r_x: Self = Self::from_f64(r(a.to_f64(), x_n.to_f64()));
+                    let w_n: Self = (a - 1.0 - x_n) / 2.0;
+
+                    let t_n: Self = if p <= 0.5
+                    {
+                        (gamma_lr(a, x_n) - p) / r_x
+                    }
+                    else
+                    {
+                        (q - gamma_ur(a, x_n)) / r_x
+                    };
+
+                    let x_n_1: Self = if t_n.abs() <= 0.1 && (w_n * t_n).abs() <= 0.1
+                    {
+                        // Schröder method
+                        let k: Self =  w_n * t_n * t_n;
+                        let h_n: Self = t_n + k;
+                        let x_n_1: Self = x_n * (1.0 - h_n);
+
+                        if w_n.abs() >= 1.0 && k.abs() <= eps
+                        {
+                            return x_n_1;
+                        }
+
+                        x_n_1
+                    }
+                    else
+                    {
+                        // Newton-Raphson
+                        let h_n: Self = t_n;
+                        let x_n_1: Self = x_n * (1.0 - h_n);
+
+                        if h_n.abs() < eps
+                        {
+                            return x_n_1;
+                        }
+
+                        if h_n.abs() <= tau
+                        {
+                            if p <= 0.5
+                            {
+                                if (gamma_lr(a, x_n) - p).abs() < tau * p
+                                {
+                                    return x_n_1;
+                                }
+                            }
+                            else
+                            {
+                                if (q - gamma_ur(a, x_n)).abs() <= tau * q
+                                {
+                                    return x_n_1;
+                                }
+                            }
+                        }
+
+                        x_n_1
+                    };
+
+                    x_n = x_n_1;
+
+                }
+
+                return x_n;
+
+                fn r(a: f64, x: f64) -> f64
+                {
+                    if a <= 0.0
+                    {
+                        panic!();
+                    }
+                    if x < 0.0
+                    {
+                        panic!();
+                    }
+
+                    x.powf(a) * (-x).exp() / gamma(a)
+                }
+            }
+
+            fn gamma_lr_inv(self: Self, q: Self) -> Self
+            {
+                1.0 - self.gamma_ur_inv(q)
+            }
         }
     };
 }
@@ -547,7 +784,7 @@ pub fn gamma_u<T>(a: T, x: T) -> T
 /// Upper incomplete regularized gamma function
 ///
 /// ```math
-/// P(s,x)=\frac{\gamma(s,x)}{\Gamma(s)}
+/// Q(s,x)=\frac{\Gamma(s,x)}{\Gamma(s)}
 /// ```
 ///
 /// Fore more information:
@@ -574,6 +811,39 @@ pub fn gamma_ur<T>(a: T, x: T) -> T
     where T: Real + Gamma
 {
     return a.gamma_ur(x);
+}
+
+/// Inverse of the upper incomplete regularized gamma function
+///
+/// ```math
+/// Q^-1(s,x)
+/// ```
+///
+/// Fore more information:
+/// <a href="https://en.wikipedia
+/// .org/wiki/Incomplete_gamma_function#Regularized_Gamma_functions_and_Poisson_random_variables">https://en
+/// .wikipedia.org/wiki/Incomplete_gamma_function#
+/// Regularized_Gamma_functions_and_Poisson_random_variables</a>
+///
+/// # Arguments
+///
+/// * `a`
+/// * `x`
+///
+/// # Example
+///
+/// ```
+/// use mathru::special::gamma;
+///
+/// let a: f64 = 0.5_f64;
+/// let x: f64 = 0.3_f64;
+/// let y = gamma::gamma_ur(a, x);
+/// let x_s: f64 = gamma::gamma_ur_inv(a, y);
+/// ```
+pub fn gamma_ur_inv<T>(a: T, p: T) -> T
+    where T: Real + Gamma
+{
+    return a.gamma_ur_inv(p);
 }
 
 /// Lower incomplete gamma function
@@ -611,7 +881,7 @@ pub fn gamma_l<T>(a: T, x: T) -> T
 /// Lower regularized incomplete gamma function
 ///
 /// ```math
-/// Q(s,x)=\frac{\Gamma(s,x)}{\Gamma(s)}=1-P(s,x)
+/// P(s,x)=\frac{\gamma(s,x)}{\Gamma(s)}=1-Q(s,x)
 /// ```
 ///
 /// Fore more information:
@@ -639,4 +909,39 @@ pub fn gamma_lr<T>(a: T, x: T) -> T
     where T: Real + Gamma
 {
     return a.gamma_lr(x);
+}
+
+
+
+/// Inverse of the lower incomplete regularized gamma function
+///
+/// ```math
+/// P^-1(s,x)
+/// ```
+///
+/// Fore more information:
+/// <a href="https://en.wikipedia
+/// .org/wiki/Incomplete_gamma_function#Regularized_Gamma_functions_and_Poisson_random_variables">https://en
+/// .wikipedia.org/wiki/Incomplete_gamma_function#
+/// Regularized_Gamma_functions_and_Poisson_random_variables</a>
+///
+/// # Arguments
+///
+/// * `a`
+/// * `x`
+///
+/// # Example
+///
+/// ```
+/// use mathru::special::gamma;
+///
+/// let a: f64 = 0.5_f64;
+/// let x: f64 = 0.3_f64;
+/// let y = gamma::gamma_lr(a, x);
+/// let x_s: f64 = gamma::gamma_lr_inv(a, y);
+/// ```
+pub fn gamma_lr_inv<T>(a: T, p: T) -> T
+    where T: Real + Gamma
+{
+    return a.gamma_lr_inv(p);
 }

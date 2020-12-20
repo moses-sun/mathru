@@ -114,7 +114,6 @@ fn digamma_2()
     assert_relative_eq!(-f64_PI / 2.0 - 3.0 * 2.0_f64.ln() - f64::euler_gamma(), digamma);
 }
 
-
 #[test]
 fn gamma_ur0()
 {
@@ -187,12 +186,10 @@ fn gamma_ur_inv_2()
     let x: f64 = 0.1;
     let a: f64 = 2.0;
 
-    let y: f64 = gamma::gamma_lr(a, x);
+    let y: f64 = gamma::gamma_ur(a, x);
 
-    assert_relative_eq!(gamma::gamma_ur_inv(a, y), x);
+    assert_relative_eq!(gamma::gamma_ur_inv(a, y), x, epsilon=2.0 * f64::EPSILON);
 }
-
-
 
 #[test]
 fn gamma_l0()
@@ -204,7 +201,6 @@ fn gamma_l0()
 
     assert_relative_eq!(1.0 - (-x).exp(), gamma);
 }
-
 
 #[test]
 fn gamma_u0()
