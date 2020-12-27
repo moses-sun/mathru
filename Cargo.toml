@@ -1,6 +1,6 @@
 [package]
 name = "mathru"
-version = "0.8.1"
+version = "0.8.2"
 description = "Mathematics library written in Rust"
 authors = ["Matthias Eiholzer <matthias.eiholzer@gmail.com>"]
 exclude = ["literature/*", "tests/*", "backup/*", ".gitignore"]
@@ -56,7 +56,7 @@ debug = false
 [dependencies]
 
 [dependencies.rand]
-version = "0.7"
+version = "0.8"
 
 [dependencies.serde]
 version =  "1.0"
