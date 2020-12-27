@@ -1,6 +1,6 @@
 use crate::{
     algebra::abstr::Real,
-    statistics::distrib::{ChiSquared, Continuous},
+    statistics::distrib::{ChiSquare, Continuous},
     special::gamma::Gamma,
     special::error::Error,
 };
@@ -75,7 +75,7 @@ impl<T> G<T> where T: Real + Gamma + Error
 
     pub fn p_value(self: &Self) -> T
     {
-        let distrib: ChiSquared<T> = ChiSquared::new(self.df);
+        let distrib: ChiSquare<T> = ChiSquare::new(self.df);
         T::one() - distrib.cdf(self.g)
     }
 }

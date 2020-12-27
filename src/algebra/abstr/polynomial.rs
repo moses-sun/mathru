@@ -95,7 +95,6 @@ impl<T> Polynomial<T>
         }
 
         let n: usize = root.len();
-        println!("n: {}", n);
         let mut coef: Vec<T> = vec![T::zero(); n + 1];
 
         // Set highest order coefficient as 1
@@ -113,7 +112,6 @@ impl<T> Polynomial<T>
 
         Polynomial::from_coef(coef)
     }
-
 }
 
 impl<T> Display for Polynomial<T>

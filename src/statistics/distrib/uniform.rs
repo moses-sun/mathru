@@ -50,7 +50,7 @@ impl<T> Distribution<T> for Uniform<T> where T: Real
     fn random(self: &Self) -> T
     {
         let mut rng: ThreadRng = rand::thread_rng();
-        return T::from_f64(rng.gen_range(self.a.to_f64(), self.b.to_f64()));
+        return T::from_f64(rng.gen_range(self.a.to_f64()..self.b.to_f64()));
     }
 }
 

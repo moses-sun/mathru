@@ -1,7 +1,7 @@
 mod bernoulli;
 mod beta;
 mod binomial;
-mod chisquared;
+mod chisquare;
 mod exponential;
 mod gamma;
 mod normal;

@@ -1,6 +1,11 @@
 # Change Log
 All notable changes starting with the version 0.6.9 are documented here.
 
+## [0.8.2]
+- Update dependencies
+- Implement inverse of lower/upper regularized incomplete gamma function
+- Improve accuracy of of the quantile function of the Chi-square distribution
+
 ## [0.8.1]
 - README corrections
 

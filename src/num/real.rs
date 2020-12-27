@@ -8,32 +8,32 @@ use elementary::{Exponential, Trigonometry, Power, Hyperbolic};
 use algebra::abstr::cast::{ToPrimitive, FromPrimitive, NumCast};
 use algebra::abstr::cast;
 
-#[macro_export]
-macro_rules! Real
-{
-    ($v:expr) =>
-    {
-		(Real::new($v));
-    };
-}
-
-#[macro_export]
-macro_rules! Real32
-{
-    ($v:expr) =>
-    {
-		(Real::new($v));
-    };
-}
-
-#[macro_export]
-macro_rules! Real64
-{
-    ($v:expr) =>
-    {
-		(Real::new($v));
-    };
-}
+// #[macro_export]
+// macro_rules! Real
+// {
+//     ($v:expr) =>
+//     {
+// 		(Real::new($v));
+//     };
+// }
+//
+// #[macro_export]
+// macro_rules! Real32
+// {
+//     ($v:expr) =>
+//     {
+// 		(Real::new($v));
+//     };
+// }
+//
+// #[macro_export]
+// macro_rules! Real64
+// {
+//     ($v:expr) =>
+//     {
+// 		(Real::new($v));
+//     };
+// }
 
 
 pub type Real32 = Real<f32>;
@@ -53,7 +53,7 @@ impl<T> Real<T>
 	{
 		Real
 		{
-			num: num,
+			num
 		}
 	}
 }
@@ -152,14 +152,14 @@ impl<T> Sign for Real<T>
 {
 	fn sgn(self: &Self) -> Self
 	{
-		if self < &Self::zero()
+		return if self < &Self::zero()
 		{
-			return -Self::one()
+			-Self::one()
 		}
 		else
 		{
-			return Self::one()
-		}
+			Self::one()
+		};
 	}
 }
 
@@ -200,7 +200,7 @@ impl<T> Number for Real<T>
 impl<T> PartialEq for Real<T>
     where T: PartialEq
 {
-    fn eq<'a, 'b>(self: &'a Self, other: &Self) -> bool
+    fn eq(self: &Self, other: &Self) -> bool
     {
         if self.num == other.num
         {
@@ -568,7 +568,6 @@ impl<T> Exponential for Real<T>
 		}
 	}
 
-	///Exponential function
 	fn exp(self: &Self) -> Self
 	{
 		Real
@@ -577,7 +576,6 @@ impl<T> Exponential for Real<T>
 		}
 	}
 
-	///Logiarithm function
 	fn ln(self: &Self) -> Self
 	{
 		Real

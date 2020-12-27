@@ -8,13 +8,12 @@ macro_rules! impl_real
     	$(
         impl Real for $t
         {
-			/// Returns the smallest integer greater than or equal to a number.
+
 			fn ceil(self: &Self) -> Self
 			{
 				(*self).ceil()
 			}
 
-			/// Returns the largest integer less than or equal to a number.
 			fn floor(self: &Self) -> Self
 			{
 				(*self).floor()
@@ -22,12 +21,12 @@ macro_rules! impl_real
 
 			fn epsilon() -> Self
 			{
-				return std::$id::EPSILON;
+				std::$id::EPSILON
 			}
 
-			fn gamma() -> Self
+			fn euler_gamma() -> Self
 			{
-                return 0.5772156649015328606065;
+                0.5772156649015328606065
 			}
 
 			fn infinity() -> Self
@@ -61,11 +60,11 @@ pub trait Real: Field + Lattice + Scalar + Exponential + Trigonometry + Power + 
     {
         if self <= a
         {
-            return self;
+            self
         }
         else
         {
-            return a;
+            a
         }
     }
 
@@ -73,17 +72,19 @@ pub trait Real: Field + Lattice + Scalar + Exponential + Trigonometry + Power + 
     {
         if self >= a
         {
-            return self;
+            self
         }
         else
         {
-            return a;
+            a
         }
     }
 
+    /// Machine epsilon
     fn epsilon() -> Self;
 
-    fn gamma() -> Self;
+    /// Euler–Mascheroni constant
+    fn euler_gamma() -> Self;
 
     fn infinity() -> Self;
 

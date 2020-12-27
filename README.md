@@ -87,8 +87,10 @@ The following features are implemented in this create:
         * digamma function
         * upper incomplete gamma function
         * upper incomplete regularized gamma function
+        * inverse upper incomplete regularized gamma function
         * lower incomplete gamma function
         * lower regularized incomplete gamma function
+        * inverse lower regularized incomplete gamma function
     * [beta functions](https://matthiaseiholzer.gitlab.io/mathru/documentation/special/beta/)
         * beta function
         * incomplete beta function
