@@ -20,7 +20,7 @@ pub struct RungeKutta4<T>
 
 impl<T> RungeKutta4<T> where T: Real
 {
-    /// Creates a RungeKutta4 instance
+    // Creates a RungeKutta4 instance
     pub fn new(step_size: T) -> RungeKutta4<T>
     {
         return RungeKutta4 { stepper: ExplicitFixedStepper::new(step_size) };
@@ -66,7 +66,7 @@ impl<T> ExplicitFixedStepSizeMethod<T> for RungeKutta4<T> where T: Real
         return x_n + &((k1 + ((k2 + k3) * T::from_f64(2.0)) + k4) * *h / T::from_f64(6.0));
     }
 
-    /// Runge-Kutta 4 is a fourth order method
+    // Runge-Kutta 4 is a fourth order method
     fn order(self: &Self) -> u8
     {
         return 4;

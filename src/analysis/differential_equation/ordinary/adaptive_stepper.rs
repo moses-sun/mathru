@@ -65,7 +65,7 @@ impl<T> AdaptiveStepper<T> where T: Real
                                  rel_tol };
     }
 
-    /// Returns the aboslute tolerance
+    /// Returns the absolute tolerance
     pub fn get_abs_tol(self: &Self) -> &T
     {
         return &self.abs_tol;
@@ -77,7 +77,7 @@ impl<T> AdaptiveStepper<T> where T: Real
         return &self.rel_tol;
     }
 
-    /// Sets the aboslute tolerance
+    /// Sets the absolute tolerance
     ///
     /// # Parameters
     ///
@@ -115,7 +115,7 @@ impl<T> AdaptiveStepper<T> where T: Real
     ///
     /// # Arguments
     ///
-    /// * 'func' is an explict oridnary diffential equation
+    /// * 'func' is an explicit ordinary differential equation
     /// * 'init' is the initial value at the time 't_start'
     /// * 't_span' Time span t_span.0 = t_start, t_span.1 = t_stop
     ///
@@ -192,7 +192,7 @@ impl<T> AdaptiveStepper<T> where T: Real
         }
         if t_n < t_stop
         {
-            return Err("Maxmimum number of iterations reached");
+            return Err("Maximum number of iterations reached");
         }
         return Ok((t_vec, res_vec));
     }

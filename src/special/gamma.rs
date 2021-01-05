@@ -81,7 +81,7 @@ pub trait Gamma
     /// Upper incomplete gamma function
     ///
     /// ```math
-    /// \Gamma(s,x) = \int_x^{\infty} t^{s-1}\,\mathrm{e}^{-t}\,{\rm d}t
+    /// \Gamma(a,x) = \int_x^{\infty} t^{a-1}\,\mathrm{e}^{-t}\,{\rm d}t
     /// ```
     ///
     /// Fore more information:
@@ -107,7 +107,7 @@ pub trait Gamma
     /// Upper incomplete regularized gamma function
     ///
     /// ```math
-        /// P(s,x)=\frac{\gamma(s,x)}{\Gamma(s)}
+    /// Q(a,x)=\frac{\Gamma(a,x)}{\Gamma(a)}
     /// ```
     ///
     /// Fore more information:
@@ -135,7 +135,7 @@ pub trait Gamma
     /// Lower incomplete gamma function
     ///
     /// ```math
-    /// \gamma(s,x) = \int_0^x t^{s-1}\,\mathrm{e}^{-t}\,{\rm d}t
+    /// \gamma(a,x) = \int_0^x t^{a-1}\,\mathrm{e}^{-t}\,{\rm d}t
     /// ```
     ///
     /// Fore more information:
@@ -163,7 +163,7 @@ pub trait Gamma
     /// Lower regularized incomplete gamma function
     ///
     /// ```math
-    /// Q(s,x)=\frac{\Gamma(s,x)}{\Gamma(s)}=1-P(s,x)
+    /// P(a,x)=\frac{\gamma(a,x)}{\Gamma(a)}=1-Q(a,x)
     /// ```
     ///
     /// Fore more information:
@@ -191,7 +191,7 @@ pub trait Gamma
     /// Inverse of the upper incomplete regularized gamma function
     ///
     /// ```math
-    /// Q^-1(s,x)
+    /// Q^{-1}(q,x)
     /// ```
     ///
     /// Fore more information:
@@ -202,7 +202,7 @@ pub trait Gamma
     ///
     /// # Arguments
     ///
-    /// * `a`
+    /// * `q`
     /// * `x`
     ///
     /// # Example
@@ -212,15 +212,15 @@ pub trait Gamma
     ///
     /// let a: f64 = 0.5_f64;
     /// let x: f64 = 0.3_f64;
-    /// let y = gamma::gamma_ur(a, x);
-    /// let x_s: f64 = gamma::gamma_ur_inv(a, y);
+    /// let q = gamma::gamma_ur(a, x);
+    /// let x_s: f64 = gamma::gamma_ur_inv(a, q);
     /// ```
     fn gamma_ur_inv(self: Self, p: Self) -> Self;
 
     /// Inverse of the lower incomplete regularized gamma function
     ///
     /// ```math
-    /// P^-1(s,x)
+    /// P^{-1}(a,p)
     /// ```
     ///
     /// Fore more information:
@@ -241,8 +241,8 @@ pub trait Gamma
     ///
     /// let a: f64 = 0.5_f64;
     /// let x: f64 = 0.3_f64;
-    /// let y = gamma::gamma_lr(a, x);
-    /// let x_s: f64 = gamma::gamma_lr_inv(a, y);
+    /// let p = gamma::gamma_lr(a, x);
+    /// let x_s: f64 = gamma::gamma_lr_inv(a, p);
     /// ```
     fn gamma_lr_inv(self: Self, p: Self) -> Self;
 }
@@ -754,7 +754,7 @@ pub fn digamma<T>(x: T) -> T
 /// Upper incomplete gamma function
 ///
 /// ```math
-/// \Gamma(s,x) = \int_x^{\infty} t^{s-1}\,\mathrm{e}^{-t}\,{\rm d}t
+/// \Gamma(a,x) = \int_x^{\infty} t^{a-1}\,\mathrm{e}^{-t}\,{\rm d}t
 /// ```
 ///
 /// Fore more information:
@@ -784,7 +784,7 @@ pub fn gamma_u<T>(a: T, x: T) -> T
 /// Upper incomplete regularized gamma function
 ///
 /// ```math
-/// Q(s,x)=\frac{\Gamma(s,x)}{\Gamma(s)}
+/// Q(a,x)=\frac{\Gamma(a,x)}{\Gamma(a)}
 /// ```
 ///
 /// Fore more information:
@@ -816,7 +816,7 @@ pub fn gamma_ur<T>(a: T, x: T) -> T
 /// Inverse of the upper incomplete regularized gamma function
 ///
 /// ```math
-/// Q^-1(s,x)
+/// Q^{-1}(a,q)
 /// ```
 ///
 /// Fore more information:
@@ -828,7 +828,7 @@ pub fn gamma_ur<T>(a: T, x: T) -> T
 /// # Arguments
 ///
 /// * `a`
-/// * `x`
+/// * `q`
 ///
 /// # Example
 ///
@@ -837,19 +837,19 @@ pub fn gamma_ur<T>(a: T, x: T) -> T
 ///
 /// let a: f64 = 0.5_f64;
 /// let x: f64 = 0.3_f64;
-/// let y = gamma::gamma_ur(a, x);
-/// let x_s: f64 = gamma::gamma_ur_inv(a, y);
+/// let q = gamma::gamma_ur(a, x);
+/// let x_s: f64 = gamma::gamma_ur_inv(a, q);
 /// ```
-pub fn gamma_ur_inv<T>(a: T, p: T) -> T
+pub fn gamma_ur_inv<T>(a: T, q: T) -> T
     where T: Real + Gamma
 {
-    return a.gamma_ur_inv(p);
+    return a.gamma_ur_inv(q);
 }
 
 /// Lower incomplete gamma function
 ///
 /// ```math
-/// \gamma(s,x) = \int_0^x t^{s-1}\,\mathrm{e}^{-t}\,{\rm d}t
+/// \gamma(a,x) = \int_0^x t^{a-1}\,\mathrm{e}^{-t}\,{\rm d}t
 /// ```
 ///
 /// Fore more information:
@@ -881,7 +881,7 @@ pub fn gamma_l<T>(a: T, x: T) -> T
 /// Lower regularized incomplete gamma function
 ///
 /// ```math
-/// P(s,x)=\frac{\gamma(s,x)}{\Gamma(s)}=1-Q(s,x)
+/// P(a,x)=\frac{\gamma(a,x)}{\Gamma(a)}=1-Q(a,x)
 /// ```
 ///
 /// Fore more information:
@@ -916,7 +916,7 @@ pub fn gamma_lr<T>(a: T, x: T) -> T
 /// Inverse of the lower incomplete regularized gamma function
 ///
 /// ```math
-/// P^-1(s,x)
+/// P^{-1}(a,p)
 /// ```
 ///
 /// Fore more information:
@@ -928,7 +928,7 @@ pub fn gamma_lr<T>(a: T, x: T) -> T
 /// # Arguments
 ///
 /// * `a`
-/// * `x`
+/// * `p`
 ///
 /// # Example
 ///
@@ -937,8 +937,8 @@ pub fn gamma_lr<T>(a: T, x: T) -> T
 ///
 /// let a: f64 = 0.5_f64;
 /// let x: f64 = 0.3_f64;
-/// let y = gamma::gamma_lr(a, x);
-/// let x_s: f64 = gamma::gamma_lr_inv(a, y);
+/// let p = gamma::gamma_lr(a, x);
+/// let x_s: f64 = gamma::gamma_lr_inv(a, p);
 /// ```
 pub fn gamma_lr_inv<T>(a: T, p: T) -> T
     where T: Real + Gamma

@@ -21,7 +21,7 @@ pub struct Ralston<T>
 
 impl<T> Ralston<T> where T: Real
 {
-    /// Creates a Ralstons instance with step size 'step_size'
+    // Creates a Ralston instance with step size 'step_size'
     pub fn new(step_size: T) -> Ralston<T>
     {
         return Ralston { stepper: ExplicitFixedStepper::new(step_size) };
@@ -57,7 +57,7 @@ impl<T> ExplicitFixedStepSizeMethod<T> for Ralston<T> where T: Real
         return x_n + &(((k_1 * T::from_f64(1.0 / 4.0)) + (k_2 * T::from_f64(3.0 / 4.0))) * *h);
     }
 
-    /// Ralston's method is a 3rd order method
+    // Ralston's method is a 3rd order method
     fn order(self: &Self) -> u8
     {
         return 3;

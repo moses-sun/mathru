@@ -104,7 +104,7 @@ impl<T> Polynomial<T>
         {
             for j in n - i..n
             {
-                let c: T = coef.clone()[j+1];
+                let c: T = coef[j+1];
                 let r: T = root[i - 1];
                 coef[j] += (-T::one()) * r * c;
             }
@@ -271,6 +271,7 @@ impl<T> AddAssign for Polynomial<T>
         *self = (*self).clone().add(rhs)
     }
 }
+
 impl<T> Sub<Polynomial<T>> for Polynomial<T>
     where T: Sub<Output = T> + Scalar
 {
@@ -345,7 +346,7 @@ impl<T> SubAssign for Polynomial<T>
 {
     fn sub_assign(self: &mut Self, rhs: Self)
     {
-        *self = (*self).clone().sub(rhs)
+        *self = self.clone().sub(rhs)
     }
 }
 

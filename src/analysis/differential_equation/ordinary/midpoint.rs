@@ -18,7 +18,7 @@ pub struct Midpoint<T>
 
 impl<T> Midpoint<T> where T: Real
 {
-    /// Creates a Euler instance with step size 'step_size'
+    // Creates a Euler instance with step size 'step_size'
     pub fn new(step_size: T) -> Midpoint<T>
     {
         return Midpoint { stepper: ExplicitFixedStepper::new(step_size) };
@@ -50,7 +50,7 @@ impl<T> ExplicitFixedStepSizeMethod<T> for Midpoint<T> where T: Real
         return x_n + &(&prob.func(&(*t_n + *h / T::from_f64(2.0)), &x_n_1_2) * h);
     }
 
-    /// The mitdpoint methods is a 2nd order method
+    // The midpoint methods is a 2nd order method
     fn order(self: &Self) -> u8
     {
         return 2;

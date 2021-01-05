@@ -1,7 +1,6 @@
 use super::ImplicitODE;
 use crate::algebra::{abstr::Real, linear::Vector};
 
-///
 pub trait ImplicitFixedStepSizeMethod<T>
     where T: Real
 {
