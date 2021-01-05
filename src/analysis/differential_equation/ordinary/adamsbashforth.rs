@@ -70,7 +70,7 @@ use std::clone::Clone;
 ///     }
 /// }
 ///
-/// // We instanciate Heuns algorithm with a stepsize of 0.001
+/// // We instantiate Heun's algorithm with a step size of 0.001
 /// let step_size: f64 = 0.001;
 /// let solver: AdamsBashforth<f64> = AdamsBashforth::new(1, step_size);
 ///
@@ -112,7 +112,7 @@ impl<T> AdamsBashforth<T> where T: Real
     ///
     /// # Arguments
     ///
-    /// * 'func' is an explict oridnary diffential equation
+    /// * 'func' is an explicit ordinary differential equation
     /// * 'init' is the initial value at the time 't_start'
     /// * 't_span' Time span
     ///

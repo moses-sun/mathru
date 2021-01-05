@@ -72,7 +72,7 @@ use std::clone::Clone;
 ///     }
 /// }
 ///
-/// // We instanciate CashKarp algorithm
+/// // We instantiate CashKarp algorithm
 /// let step_size: f64 = 0.001;
 /// let solver: Kutta3<f64> = Kutta3::new(step_size);
 ///

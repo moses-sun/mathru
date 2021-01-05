@@ -78,7 +78,7 @@ use std::clone::Clone;
 ///     }
 /// }
 ///
-/// // We instanciate CashKarp algorithm
+/// // We instantiate CashKarp algorithm
 /// let h_0: f64 = 0.0001;
 /// let fac: f64 = 0.9;
 /// let fac_min: f64 = 0.01;

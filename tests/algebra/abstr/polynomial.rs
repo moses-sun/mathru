@@ -12,7 +12,7 @@ fn fmt_constant()
 }
 
 #[test]
-fn fmt_coefficent_zero()
+fn fmt_coefficient_zero()
 {
     let poly: Polynomial<f64> = Polynomial::from_coef(vec![1.0, 0.0, 1.0]);
 
@@ -70,7 +70,7 @@ fn eval_degree_0()
 }
 
 #[test]
-fn eval_odd()
+fn eval_degree_odd()
 {
     let poly: Polynomial<f64> = Polynomial::from_coef(vec![1.0, 2.0, 3.0]);
 

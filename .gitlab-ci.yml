@@ -66,4 +66,3 @@ test-intelmkl:
   image: rust:latest
   script:
     - cargo test --tests --no-default-features --features intel-mkl
-

@@ -73,7 +73,7 @@ use std::clone::Clone;
 ///     }
 /// }
 ///
-/// // We instanciate Heuns algorithm with a stepsize of 0.001
+/// // We instantiate Heun's algorithm with a step size of 0.001
 /// let step_size: f64 = 0.001;
 /// let solver: Heun<f64> = Heun::new(step_size);
 ///
@@ -121,9 +121,9 @@ impl<T> ExplicitFixedStepSizeMethod<T> for Heun<T> where T: Real
         where F: ExplicitODE<T>
     {
         let k_1: Vector<T> = prob.func(t_n, x_n);
-        let k_2: Vector<T> = prob.func(&(*t_n + *h), &(x_n + &(k_1.clone() * *h)));
+        let k_2: Vector<T> = prob.func(&(*t_n + *h), &(x_n + &(&k_1 * h)));
 
-        return x_n.clone() + (&k_1 + &k_2) * *h / T::from_f64(2.0);
+        return x_n + &((&k_1 + &k_2) * *h / T::from_f64(2.0));
     }
 
     ///
