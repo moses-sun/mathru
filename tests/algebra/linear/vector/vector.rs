@@ -27,6 +27,7 @@ fn macro_vector_row()
     assert_relative_eq!(vec_ref, vec);
 }
 
+#[cfg(feature = "serde")]
 #[test]
 fn serde_0()
 {

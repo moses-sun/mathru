@@ -6,6 +6,7 @@ use crate::{
     },
     special::{error::Error, gamma::Gamma},
 };
+#[cfg(feature = "serde")]
 use serde::{Deserialize, Serialize};
 use std::clone::Clone;
 
@@ -14,7 +15,8 @@ use std::clone::Clone;
 /// Fore more information:
 /// <a href="https://en.wikipedia.org/wiki/Chi-square_test">https://en.wikipedia.org/wiki/Chi-square_test</a>
 ///
-#[derive(Clone, Copy, Debug, Serialize, Deserialize)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[derive(Clone, Copy, Debug)]
 pub struct ChiSquare<T>
 {
     df: u32,

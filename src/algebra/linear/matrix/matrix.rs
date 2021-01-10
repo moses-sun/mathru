@@ -19,6 +19,7 @@ use crate::{
     elementary::Power,
 };
 use rand::{self, Rng};
+#[cfg(feature = "serde")]
 use serde::{Deserialize, Serialize};
 use std::clone::Clone;
 use std::{fmt, fmt::Display};
@@ -63,7 +64,8 @@ macro_rules! matrix
     }
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[derive(Debug, Clone)]
 pub struct Matrix<T>
 {
     /// Num of rows which the matrix has

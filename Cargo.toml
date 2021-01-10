@@ -1,6 +1,6 @@
 [package]
 name = "mathru"
-version = "0.8.2"
+version = "0.8.3"
 description = "Mathematics library written in Rust"
 authors = ["Matthias Eiholzer <matthias.eiholzer@gmail.com>"]
 exclude = ["literature/*", "tests/*", "backup/*", ".gitignore"]
@@ -29,6 +29,7 @@ path = "src/lib.rs"
 default = ["native"]
 native = []
 blaslapack = []
+serde-serialize = ["serde"]
 
 openblas = ["lapack", "blas", "lapack-src/openblas", "blas-src/openblas", "blaslapack"]
 netlib = ["lapack", "blas", "lapack-src/netlib", "blas-src/netlib", "blaslapack"]
@@ -61,6 +62,7 @@ version = "0.8"
 [dependencies.serde]
 version =  "1.0"
 features = ["derive"]
+optional = true
 
 [dependencies.lapack]
 version = "0.16"

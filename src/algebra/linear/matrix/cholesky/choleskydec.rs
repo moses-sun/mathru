@@ -1,9 +1,13 @@
-use crate::algebra::linear::Matrix;
+#[cfg(feature = "serde")]
 use serde::{Deserialize, Serialize};
+
+use crate::algebra::linear::Matrix;
 use std::clone::Clone;
 
-/// Result of a cholesky decomposition
-#[derive(Debug, Clone, Serialize, Deserialize)]
+
+/// Result of a Cholesky decomposition
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[derive(Debug, Clone)]
 pub struct CholeskyDec<T>
 {
     l: Matrix<T>,

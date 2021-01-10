@@ -5,6 +5,7 @@ use crate::algebra::{
     linear::Vector,
 };
 
+#[cfg(feature = "serde")]
 use serde::{Deserialize, Serialize};
 use std::clone::Clone;
 
@@ -87,7 +88,8 @@ use std::clone::Clone;
 ///
 /// # }
 /// ```
-#[derive(Clone, Copy, Debug, Serialize, Deserialize)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[derive(Clone, Copy, Debug)]
 pub struct DormandPrince54<T>
 {
     abs_tol: T,

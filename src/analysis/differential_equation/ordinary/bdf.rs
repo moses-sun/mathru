@@ -3,6 +3,7 @@ use crate::{
     algebra::{abstr::Real, linear::vector::vector::Vector},
     analysis::differential_equation::ordinary::ImplicitODE,
 };
+#[cfg(feature = "serde")]
 use serde::{Deserialize, Serialize};
 use std::clone::Clone;
 
@@ -80,7 +81,8 @@ use std::clone::Clone;
 /// let (t, x): (Vec<f64>, Vec<Vector<f64>>) = solver.solve(&problem).unwrap();
 /// # }
 /// ```
-#[derive(Clone, Copy, Debug, Serialize, Deserialize)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[derive(Clone, Copy, Debug)]
 pub struct BDF<T>
 {
     k: u8,

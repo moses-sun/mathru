@@ -5,6 +5,7 @@ use crate::{
     analysis::differential_equation::ordinary::fixed_stepper::ExplicitFixedStepper,
 };
 
+#[cfg(feature = "serde")]
 use serde::{Deserialize, Serialize};
 use std::clone::Clone;
 
@@ -13,7 +14,8 @@ use std::clone::Clone;
 /// Ralston's method is a second-order metho
 ///
 /// <a href="https://en.wikipedia.org/wiki/List_of_Runge-Kutta_methods#Forward_Euler">https://en.wikipedia.org/wiki/List_of_Runge-Kutta_methods#Forward_Euler</a>
-#[derive(Clone, Copy, Debug, Serialize, Deserialize)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[derive(Clone, Copy, Debug)]
 pub struct Ralston<T>
 {
     stepper: ExplicitFixedStepper<T>,

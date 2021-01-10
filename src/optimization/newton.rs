@@ -5,6 +5,7 @@ use crate::{
     },
     optimization::{Optim, OptimResult},
 };
+#[cfg(feature = "serde")]
 use serde::{Deserialize, Serialize};
 use std::clone::Clone;
 
@@ -39,7 +40,8 @@ use std::clone::Clone;
 /// \nabla f(x_{k})^{T}d_{k} `$ set $` \alpha_{k} `$ 6. $` x_{k + 1} := x_{k} +
 /// d_{k} `$ 7. $` k := k + 1 `$  go to 2.
 ///
-#[derive(Clone, Copy, Debug, Serialize, Deserialize,)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[derive(Clone, Copy, Debug)]
 pub struct Newton<T>
 {
     iters: u64,

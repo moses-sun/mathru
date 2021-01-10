@@ -5,6 +5,7 @@ use crate::{
     analysis::differential_equation::ordinary::fixed_stepper::ExplicitFixedStepper,
 };
 
+#[cfg(feature = "serde")]
 use serde::{Deserialize, Serialize};
 use std::clone::Clone;
 
@@ -12,7 +13,8 @@ use std::clone::Clone;
 ///
 ///<a href="https://en.wikipedia.org/wiki/Runge%E2%80%93Kutta_methods">https://en.wikipedia
 /// .org/wiki/Rung-Kutta_methods</a>
-#[derive(Clone, Copy, Debug, Serialize, Deserialize)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[derive(Clone, Copy, Debug)]
 pub struct RungeKutta4<T>
 {
     stepper: ExplicitFixedStepper<T>,

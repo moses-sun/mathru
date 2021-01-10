@@ -4,6 +4,7 @@ use crate::{
 };
 extern crate rand;
 use crate::algebra::abstr::Real;
+#[cfg(feature = "serde")]
 use serde::{Deserialize, Serialize};
 use std::clone::Clone;
 
@@ -33,10 +34,11 @@ use std::clone::Clone;
 /// \lvert d_{k} \rvert \rvert_{2}^{2} `$     set  $` \alpha_{k} := \alpha_{k}
 /// /2 `$ 4. $` x_{k + 1} := x_{k} + \alpha_{k} d_{k} `$
 /// 5. $` k := k + 1 `$ go to 2.
-#[derive(Clone, Copy, Debug, Serialize, Deserialize,)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[derive(Clone, Copy, Debug)]
 pub struct Gradient<T>
 {
-    /// Learningrate
+    /// Learning rate
     sigma: T,
     /// The number of iterations to run.
     iters: usize,

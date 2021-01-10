@@ -1,8 +1,10 @@
 use crate::algebra::linear::{Matrix, Vector};
+#[cfg(feature = "serde")]
 use serde::{Deserialize, Serialize};
 use std::clone::Clone;
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[derive(Debug, Clone)]
 pub struct EigenDec<T>
 {
     value: Vector<T>,

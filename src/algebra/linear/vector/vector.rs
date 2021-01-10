@@ -10,6 +10,7 @@ use crate::{
     },
     elementary::{Exponential, Power},
 };
+#[cfg(feature = "serde")]
 use serde::{Deserialize, Serialize};
 use std::{
     fmt,
@@ -65,7 +66,8 @@ macro_rules! vector
     };
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[derive(Debug, Clone)]
 pub struct Vector<T>
 {
     pub(super) data: Matrix<T>,

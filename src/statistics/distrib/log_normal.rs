@@ -1,6 +1,7 @@
 use crate::{algebra::abstr::Real, statistics::distrib::{Distribution, Continuous, Normal}};
 use crate::special::{gamma::Gamma, error::Error};
 use std::f64::consts::PI;
+#[cfg(feature = "serde")]
 use serde::{Deserialize, Serialize};
 use std::clone::Clone;
 
@@ -8,7 +9,8 @@ use std::clone::Clone;
 ///
 /// Fore more information:
 /// <a href="https://en.wikipedia.org/wiki/Log-normal_distribution">https://en.wikipedia.org/wiki/Log-normal_distribution</a>
-#[derive(Clone, Copy, Debug, Serialize, Deserialize)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[derive(Clone, Copy, Debug)]
 pub struct LogNormal<T>
 {
     mu: T,

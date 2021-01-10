@@ -6,7 +6,9 @@ use super::ExplicitODE;
 /// Solves an ordinary differential equation using the 4th order Tsitouras algorithm
 ///
 ///<a href="http://users.ntua.gr/tsitoura/RK54_new_v2.pdf">http://users.ntua.gr/tsitoura/RK54_new_v2.pdf</a>
-#[derive(Clone, Copy, Debug, Serialize, Deserialize)]
+#[cfg(feature = "serde")]
+#[dervice(Serialize, Deserialize)]
+#[derive(Clone, Copy, Debug)]
 pub struct Tsitouras54<T>
 {
     abs_tol: T,
