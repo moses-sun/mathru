@@ -6,6 +6,7 @@ use crate::{
     optimization::{Optim, OptimResult},
 };
 
+#[cfg(feature = "serde")]
 use serde::{Deserialize, Serialize};
 use std::clone::Clone;
 
@@ -26,7 +27,8 @@ use std::clone::Clone;
 /// `$ than $` \Delta_{k + 1} := 2\Delta_{k}`$, else $`\Delta_{k + 1} :=
 /// \Delta_{k}`$ 6. set $` k:= k + 1 `$, go to 2.
 ///
-#[derive(Clone, Copy, Debug, Serialize, Deserialize,)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[derive(Clone, Copy, Debug)]
 pub struct LevenbergMarquardt<T>
 {
     iters: u64,

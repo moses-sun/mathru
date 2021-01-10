@@ -4,6 +4,7 @@ use crate::{
     algebra::{abstr::Real, linear::Vector},
     analysis::differential_equation::ordinary::fixed_stepper::ExplicitFixedStepper,
 };
+#[cfg(feature = "serde")]
 use serde::{Deserialize, Serialize};
 use std::clone::Clone;
 
@@ -83,7 +84,8 @@ use std::clone::Clone;
 ///
 /// # }
 /// ```
-#[derive(Clone, Copy, Debug, Serialize, Deserialize)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[derive(Clone, Copy, Debug)]
 pub struct Kutta3<T>
 {
     stepper: ExplicitFixedStepper<T>,

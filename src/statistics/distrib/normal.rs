@@ -7,6 +7,7 @@ use crate::{
     special::error::Error,
 };
 use rand;
+#[cfg(feature = "serde")]
 use serde::{Deserialize, Serialize};
 use std::clone::Clone;
 
@@ -15,7 +16,8 @@ use std::clone::Clone;
 /// Fore more information:
 /// <a href="https://en.wikipedia.org/wiki/Normal_distribution">https://en.wikipedia.org/wiki/Normal_distribution</a>
 ///
-#[derive(Clone, Copy, Debug, Serialize, Deserialize)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[derive(Clone, Copy, Debug)]
 pub struct Normal<T>
 {
     mean: T,

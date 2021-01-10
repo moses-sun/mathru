@@ -25,6 +25,7 @@ fn macro_1()
     assert_relative_eq!(mat, mat_ref);
 }
 
+#[cfg(feature = "serde")]
 #[test]
 fn serde_0()
 {

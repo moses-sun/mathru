@@ -4,6 +4,7 @@ use super::{
 };
 use crate::algebra::{abstr::Real, linear::Vector};
 use std::default::Default;
+#[cfg(feature = "serde")]
 use serde::{Deserialize, Serialize};
 use std::clone::Clone;
 
@@ -97,7 +98,8 @@ use std::clone::Clone;
 ///
 /// # }
 /// ```
-#[derive(Clone, Copy, Debug, Serialize, Deserialize)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[derive(Clone, Copy, Debug)]
 pub struct RungeKuttaFehlberg54<T>
 {
     stepper: AdaptiveStepper<T>,

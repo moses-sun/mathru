@@ -6,6 +6,7 @@ use crate::{
     optimization::{Optim, OptimResult},
 };
 
+#[cfg(feature = "serde")]
 use serde::{Deserialize, Serialize};
 use std::clone::Clone;
 
@@ -90,7 +91,8 @@ use std::clone::Clone;
 /// // Minimize function
 /// 	let x_min: Vector<f64> = optim.minimize(&leq, &x_0).arg();
 /// ```
-#[derive(Clone, Copy, Debug, Serialize, Deserialize,)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[derive(Clone, Copy, Debug)]
 pub struct ConjugateGradient<T>
 {
     iters: u64,

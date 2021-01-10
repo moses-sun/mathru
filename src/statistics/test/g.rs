@@ -4,15 +4,18 @@ use crate::{
     special::gamma::Gamma,
     special::error::Error,
 };
-use serde::{Deserialize, Serialize};
 use std::clone::Clone;
+
+#[cfg(feature = "serde")]
+use serde::{Deserialize, Serialize};
 
 /// G-Test
 ///
 /// Fore more information:
 /// <a href="https://de.wikipedia.org/wiki/G-Test">https://de.wikipedia.org/wiki/G-Test</a>
 ///
-#[derive(Clone, Copy, Debug, Serialize, Deserialize)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[derive(Clone, Copy, Debug)]
 pub struct G<T>
 {
     df: u32,

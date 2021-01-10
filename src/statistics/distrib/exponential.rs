@@ -1,6 +1,7 @@
 //! Exponential distribution
 use crate::{algebra::abstr::Real, statistics::distrib::Continuous};
 use rand;
+#[cfg(feature = "serde")]
 use serde::{Deserialize, Serialize};
 use std::clone::Clone;
 
@@ -8,7 +9,8 @@ use std::clone::Clone;
 ///
 /// Fore more information:
 /// <a href="https://en.wikipedia.org/wiki/Exponential_distribution">https://en.wikipedia.org/wiki/Exponential_distribution</a>
-#[derive(Clone, Copy, Debug, Serialize, Deserialize)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[derive(Clone, Copy, Debug)]
 pub struct Exponential<T>
 {
     lambda: T,

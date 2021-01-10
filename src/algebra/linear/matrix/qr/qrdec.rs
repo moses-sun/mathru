@@ -1,9 +1,11 @@
 use crate::algebra::linear::Matrix;
+#[cfg(feature = "serde")]
 use serde::{Deserialize, Serialize};
 use std::clone::Clone;
 
 /// QR decomposition
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[derive(Debug, Clone)]
 pub struct QRDec<T>
 {
     q: Matrix<T>,

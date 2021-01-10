@@ -3,13 +3,15 @@ use super::{
     adaptive_stepper::AdaptiveStepper, explicit_method::ExplicitAdaptiveMethod, ExplicitODE,
 };
 use crate::algebra::{abstr::Real, linear::Vector};
+#[cfg(feature = "serde")]
 use serde::{Deserialize, Serialize};
 use std::clone::Clone;
 
 /// Solves an ODE using the Bogacki Shampine algorithm.
 ///
 ///<a href="https://en.wikipedia.org/wiki/Bogacki-Shampine_method">https://en.wikipedia.org/wiki/Bogacki-Shampine_method</a>
-#[derive(Clone, Copy, Debug, Serialize, Deserialize)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[derive(Clone, Copy, Debug)]
 pub struct BogackiShampine32<T>
 {
     stepper: AdaptiveStepper<T>,

@@ -3,6 +3,7 @@ use crate::{
     statistics::distrib::{Continuous, Distribution},
 };
 use rand::{rngs::ThreadRng, Rng};
+#[cfg(feature = "serde")]
 use serde::{Deserialize, Serialize};
 use std::clone::Clone;
 
@@ -11,7 +12,8 @@ use std::clone::Clone;
 /// Fore more information:
 /// <a href="https://en.wikipedia.org/wiki/Uniform_distribution_(continuous)">https://en.wikipedia.org/wiki/Uniform_distribution_(continuous)</a>
 ///
-#[derive(Clone, Copy, Debug, Serialize, Deserialize)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[derive(Clone, Copy, Debug)]
 pub struct Uniform<T>
 {
     a: T,

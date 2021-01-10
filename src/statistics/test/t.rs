@@ -9,8 +9,10 @@ use crate::{
     special::error::Error,
 };
 use crate::special::hypergeometric::Hypergeometric;
-use serde::{Deserialize, Serialize};
 use std::clone::Clone;
+
+#[cfg(feature = "serde")]
+use serde::{Deserialize, Serialize};
 
 /// T-Test
 ///
@@ -58,7 +60,8 @@ use std::clone::Clone;
 /// measure = T::test_independence_equal_variance(&rv1, &rv5);
 /// println!("{}", measure.value());
 /// ```
-#[derive(Clone, Copy, Debug, Serialize, Deserialize)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[derive(Clone, Copy, Debug)]
 pub struct T<K>
 {
     p: K,
