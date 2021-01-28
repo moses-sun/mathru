@@ -3,7 +3,6 @@ use crate::algebra::{
     linear::{matrix::LUDec, Matrix},
 };
 
-#[cfg(feature = "blaslapack")]
 use crate::algebra::abstr::Zero;
 
 impl<T> Matrix<T> where T: Field + Scalar
@@ -24,16 +23,11 @@ impl<T> Matrix<T> where T: Field + Scalar
     ///
     /// let (l, u, p): (Matrix<f64>, Matrix<f64>, Matrix<f64>) = a.dec_lu().unwrap().lup();
     /// ```
-    pub fn dec_lu<'a>(self: &'a Self) -> Result<LUDec<T>, ()>
+    pub fn dec_lu(self: &Self) -> Result<LUDec<T>, ()>
     {
         let (m, n): (usize, usize) = self.dim();
         assert_eq!(m, n);
-        return self.dec_lu_r();
-    }
 
-    #[cfg(feature = "blaslapack")]
-    fn dec_lu_r<'a>(self: &'a Self) -> Result<LUDec<T>, ()>
-    {
         let (m, n): (usize, usize) = self.dim();
         let m_i32: i32 = m as i32;
         let n_i32: i32 = n as i32;
@@ -65,7 +59,6 @@ impl<T> Matrix<T> where T: Field + Scalar
         return Ok(LUDec::new(l, u, p));
     }
 
-    #[cfg(feature = "blaslapack")]
     fn l(mut mat: Matrix<T>) -> Self
     {
         let (m, n): (usize, usize) = mat.dim();
@@ -88,7 +81,6 @@ impl<T> Matrix<T> where T: Field + Scalar
         mat
     }
 
-    #[cfg(feature = "blaslapack")]
     fn u(mut mat: Matrix<T>) -> Self
     {
         let (m, _n): (usize, usize) = mat.dim();
@@ -105,7 +97,6 @@ impl<T> Matrix<T> where T: Field + Scalar
         mat
     }
 
-    #[cfg(feature = "blaslapack")]
     /// transforms a sequence of permutations to a permutation matrix
     fn p(per: Vec<i32>) -> Self
     {

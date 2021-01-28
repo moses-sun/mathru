@@ -76,6 +76,4 @@ impl<T> Substitute<Matrix<T>> for Matrix<T> where T: Field + Scalar
                  c.m as i32);
         return c;
     }
-
-
 }

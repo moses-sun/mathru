@@ -5,7 +5,6 @@ use crate::algebra::{
 
 use super::Solve;
 
-
 impl<T> Solve<Vector<T>> for Matrix<T> where T: Field + Scalar
 {
     /// Solves Ax = y
