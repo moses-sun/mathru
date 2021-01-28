@@ -5,15 +5,43 @@ use crate::algebra::{
 
 use super::Transpose;
 
+impl<T> Matrix<T>
+{
+    pub fn gcd(mut m: usize, mut n: usize) -> usize
+    {
+        while m != 0
+        {
+            let old_m: usize = m;
+            m = n % m;
+            n = old_m;
+        }
+        n
+    }
+
+    fn gather(self: &Self, i: usize, j: usize, b: usize) -> usize
+    {
+        return (i + (j / b)) % self.m;
+    }
+
+    fn gather_sa(self: &Self, i: usize, j: usize, a: usize) -> usize
+    {
+        return (j + i * self.n - i / a) % self.m;
+    }
+
+    fn scatter_da(self: &Self, i: usize, j: usize, b: usize) -> usize
+    {
+        return (((i + j / b) % self.m) + j * self.m) % self.n;
+    }
+}
+
 impl<T> Transpose for Matrix<T>
     where T: Field + Scalar
 {
     type Output = Matrix<T>;
-    /// Function to transpose a matrix without allocating memory for the
-    /// transposed matrix
+    /// Transpose a matrix without allocating memory for the transposed matrix
     ///
     /// catanzaro.name/papers/PPoPP-2014.pdf
-    /// TODO
+    ///
     /// # Example
     ///
     /// ```
@@ -24,19 +52,65 @@ impl<T> Transpose for Matrix<T>
     /// let m_transposed = m.transpose();
     ///
     /// ```
-    fn transpose(self: Self) -> Matrix<T>
+    fn transpose(mut self: Self) -> Matrix<T>
     {
-        let (m, n): (usize, usize) = self.dim();
-        let mut matrix_t: Matrix<T> = Matrix::zero(n, m);
+        let gcdiv: usize = Matrix::<T>::gcd(self.m, self.n);
 
-        for i in 0..m
+        let a: usize = self.m / gcdiv;
+        let b: usize = self.n / gcdiv;
+
+        let bigger: usize = self.m.max(self.n);
+
+        let mut temp: Vec<T> = Vec::with_capacity(bigger);
+        //Bad
+        unsafe { temp.set_len(bigger) };
+
+        if gcdiv > 1
         {
-            for j in 0..n
+            for j in 0..self.n
             {
-                *matrix_t.get_mut(j, i) = *self.get(i, j);
+                for i in 0..self.m
+                {
+                    temp[i] = *self.get(self.gather(i, j, b), j)
+                }
+
+                for i in 0..self.m
+                {
+                    *self.get_mut(i, j) = temp[i];
+                }
             }
         }
 
-        return matrix_t;
+        for i in 0..self.m
+        {
+            for j in 0..self.n
+            {
+                temp[self.scatter_da(i, j, b)] = *self.get(i, j);
+            }
+
+            for j in 0..self.n
+            {
+                *self.get_mut(i, j) = temp[j];
+            }
+        }
+
+        for j in 0..self.n
+        {
+            for i in 0..self.m
+            {
+                temp[i] = *self.get(self.gather_sa(i, j, a), j);
+            }
+
+            for i in 0..self.m
+            {
+                *self.get_mut(i, j) = temp[i];
+            }
+        }
+
+        let temp_m: usize = self.m;
+        self.m = self.n;
+        self.n = temp_m;
+
+        return self;
     }
 }

@@ -27,8 +27,8 @@ impl<T> Matrix<T> where T: Real
     pub fn dec_eigen(self: Self) -> EigenDec<T>
     {
         let (m, n): (usize, usize) = self.dim();
-        assert!(m == n, "Unable to compute the eigen value of a non-square matrix");
-        assert!(m != 0, "Unable to compute the eigen vlaue of an empty matrix.");
+        assert_eq!(m, n, "Unable to compute the eigen value of a non-square matrix");
+        assert_ne!(m, 0, "Unable to compute the eigen value of an empty matrix.");
 
         let value: Vector<T> = self.eigenvalue_r();
         let vector: Matrix<T> = self.eigenvector_r(&value);

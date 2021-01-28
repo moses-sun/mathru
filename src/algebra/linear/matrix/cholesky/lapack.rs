@@ -53,7 +53,6 @@ impl<T> Matrix<T> where T: Field + Scalar + Power
         {
             return Err(());
         }
-        //assert!(info >= 0);
 
         let mut l: Matrix<T> = Matrix::new(n, n, l_data);
 

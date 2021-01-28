@@ -1,6 +1,9 @@
 # Change Log
 All notable changes starting with the version 0.6.9 are documented here.
 
+## [0.8.4]
+- Replace the out-of-place transpose algorithm with an in-place algorithm, therewith it matches to the documentation
+
 ## [0.8.3]
 - Make serde dependency optional
 

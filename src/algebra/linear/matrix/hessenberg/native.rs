@@ -33,15 +33,9 @@ impl<T> Matrix<T> where T: Field + Scalar + Power
     pub fn dec_hessenberg(self: &Self) -> HessenbergDec<T>
     {
         let (m, n): (usize, usize) = self.dim();
-        assert!(m == n,
-                "Unable to compute the hessenberg decompositoin of a non-square matrix");
-        assert!(m != 0,
-                "Unable to compute the hessenberg decomposition of an empty matrix.");
-        return self.dec_hessenberg_r();
-    }
+        assert_eq!(m, n, "Unable to compute the hessenberg decomposition of a non-square matrix");
+        assert_ne!(m, 0, "Unable to compute the hessenberg decomposition of an empty matrix.");
 
-    fn dec_hessenberg_r(self: &Self) -> HessenbergDec<T>
-    {
         let (m, _n): (usize, usize) = self.dim();
 
         let mut q: Matrix<T> = Matrix::one(m);

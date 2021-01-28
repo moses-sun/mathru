@@ -17,7 +17,7 @@ The following features are implemented in this create:
         * [Vector](https://matthiaseiholzer.gitlab.io/mathru/documentation/algebra/linear/vector/)
         * [Matrix](https://matthiaseiholzer.gitlab.io/mathru/documentation/algebra/linear/matrix/)
             * Basic matrix operations(+,-,*)
-            * Transposition
+            * Transposition (In-place)
             * [LU decomposition](https://matthiaseiholzer.gitlab.io/mathru/documentation/algebra/linear/matrix/#lu-with-partial-pivoting)
             * [QR decomposition](https://matthiaseiholzer.gitlab.io/mathru/documentation/algebra/linear/matrix/#qr)
             * [Hessenberg decomposition](https://matthiaseiholzer.gitlab.io/mathru/documentation/algebra/linear/matrix/#hessenberg)
@@ -38,11 +38,11 @@ The following features are implemented in this create:
         * Ralston's method
         * Kutta 3rd order
         * Runge-Kutta 4th order
-        * Runge-Kutta-Felhberg 4(5)
-        * Dormand-Prince 4(5)
-        * Cash-Karp 4(5)
-        * Tsitouras 4(5)
-        * Bogacki-Shampine 2(3)
+        * Runge-Kutta-Felhberg
+        * Dormand-Prince
+        * Cash-Karp
+        * Tsitouras
+        * Bogacki-Shampine
         * Adams-Bashforth
     * Automatic step size control with starting step size
     * [Implicit methods](https://matthiaseiholzer.gitlab.io/mathru/documentation/analysis/differentialeq/ode/implicit)

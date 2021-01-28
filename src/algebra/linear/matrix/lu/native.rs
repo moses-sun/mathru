@@ -3,9 +3,6 @@ use crate::algebra::{
     linear::{matrix::LUDec, Matrix},
 };
 
-#[cfg(feature = "blaslapack")]
-use crate::algebra::abstr::Zero;
-
 impl<T> Matrix<T> where T: Field + Scalar
 {
     /// Decomposes the matrix into a upper and a lower matrix
@@ -24,16 +21,11 @@ impl<T> Matrix<T> where T: Field + Scalar
     ///
     /// let (l, u, p): (Matrix<f64>, Matrix<f64>, Matrix<f64>) = a.dec_lu().unwrap().lup();
     /// ```
-    pub fn dec_lu<'a>(self: &'a Self) -> Result<LUDec<T>, ()>
+    pub fn dec_lu(self: &Self) -> Result<LUDec<T>, ()>
     {
         let (m, n): (usize, usize) = self.dim();
         assert_eq!(m, n);
-        return self.dec_lu_r();
-    }
 
-    #[cfg(feature = "native")]
-    fn dec_lu_r<'a>(self: &'a Self) -> Result<LUDec<T>, ()>
-    {
         let mut l: Matrix<T> = Matrix::one(self.m);
         let mut u: Matrix<T> = Matrix::one(self.n);
         let mut p: Matrix<T> = Matrix::one(self.m);
