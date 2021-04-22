@@ -1,5 +1,9 @@
 # Change Log
 All notable changes starting with the version 0.6.9 are documented here.
+## [0.9.0]
+- Implement additional ODE solvers
+- Update dependencies
+- Implement explicit ODE solvers with Butcher tableaus
 
 ## [0.8.4]
 - Replace the out-of-place transpose algorithm with an in-place algorithm, therewith it matches to the documentation

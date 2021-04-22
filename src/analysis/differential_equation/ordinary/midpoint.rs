@@ -1,55 +1,46 @@
 //! Solves an ODE using midpoint method.
-use super::{explicit_method::ExplicitFixedStepSizeMethod, ExplicitODE};
+use super::{explicit_method::ExplicitMethod, ExplicitODE};
 use crate::{
     algebra::{abstr::Real, linear::Vector},
-    analysis::differential_equation::ordinary::fixed_stepper::ExplicitFixedStepper,
+    analysis::differential_equation::ordinary::ButcherFixedStepSize
 };
+use std::clone::Clone;
+
 #[cfg(feature = "serde")]
 use serde::{Deserialize, Serialize};
-use std::clone::Clone;
+
 
 /// Solves an ODE using midpoint method.
 ///
 /// <a href="https://en.wikipedia.org/wiki/Midpoint_method">https://en.wikipedia.org/wiki/Midpoint_method</a>
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
-#[derive(Clone, Copy, Debug)]
+#[derive(Clone, Debug)]
 pub struct Midpoint<T>
 {
-    stepper: ExplicitFixedStepper<T>,
+    butcher: ButcherFixedStepSize<T>
 }
 
-impl<T> Midpoint<T> where T: Real
+impl<T> Default for Midpoint<T> where T: Real
 {
-    // Creates a Euler instance with step size 'step_size'
-    pub fn new(step_size: T) -> Midpoint<T>
+    /// Creates a Euler instance
+    fn default() -> Midpoint<T>
     {
-        return Midpoint { stepper: ExplicitFixedStepper::new(step_size) };
-    }
+        let a: Vec<T> = vec![T::from_f64(0.5)];
+        let b: Vec<T> = vec![T::zero(), T::one()];
+        let c: Vec<T> = vec![T::from_f64(0.5)];
 
-    pub fn solve<F>(self: &Self, prob: &F) -> Result<(Vec<T>, Vec<Vector<T>>), ()>
-        where F: ExplicitODE<T>
-    {
-        return self.stepper.solve(prob, self);
-    }
-
-    pub fn get_step_size(self: &Self) -> &T
-    {
-        return self.stepper.get_step_size();
-    }
-
-    pub fn set_step_size(self: &mut Self, step_size: T)
-    {
-        self.stepper.set_step_size(step_size)
+        return Midpoint {
+            butcher: ButcherFixedStepSize::new(a, b, c)
+        };
     }
 }
 
-impl<T> ExplicitFixedStepSizeMethod<T> for Midpoint<T> where T: Real
+impl<T> ExplicitMethod<T> for Midpoint<T> where T: Real
 {
     fn do_step<F>(self: &Self, prob: &F, t_n: &T, x_n: &Vector<T>, h: &T) -> Vector<T>
         where F: ExplicitODE<T>
     {
-        let x_n_1_2: Vector<T> = x_n + &(&prob.func(t_n, x_n) * &(*h / T::from_f64(2.0)));
-        return x_n + &(&prob.func(&(*t_n + *h / T::from_f64(2.0)), &x_n_1_2) * h);
+        return self.butcher.do_step(prob, t_n, x_n, h);
     }
 
     // The midpoint methods is a 2nd order method

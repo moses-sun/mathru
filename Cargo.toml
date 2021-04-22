@@ -1,9 +1,9 @@
 [package]
 name = "mathru"
-version = "0.8.4"
+version = "0.9.0"
 description = "Mathematics library written in Rust"
 authors = ["Matthias Eiholzer <matthias.eiholzer@gmail.com>"]
-exclude = ["literature/*", "tests/*", "backup/*", ".gitignore"]
+exclude = ["literature/*", "tests/*", ".gitignore"]
 keywords = ["optimization", "statistics", "algebra", "matrix", "ode"]
 categories = ["mathematics", "science", "algorithms"]
 readme = "README.md"
@@ -28,13 +28,12 @@ path = "src/lib.rs"
 [features]
 default = ["native"]
 native = []
-blaslapack = []
 serde-serialize = ["serde"]
 
-openblas = ["lapack", "blas", "lapack-src/openblas", "blas-src/openblas", "blaslapack"]
-netlib = ["lapack", "blas", "lapack-src/netlib", "blas-src/netlib", "blaslapack"]
-accelerate = ["lapack", "blas", "lapack-src/accelerate", "blas-src/accelerate", "blaslapack"]
-intel-mkl = ["lapack", "blas", "lapack-src/intel-mkl", "blas-src/intel-mkl", "blaslapack"]
+openblas = ["lapack", "blas", "lapack-src/openblas", "blas-src/openblas"]
+netlib = ["lapack", "blas", "lapack-src/netlib", "blas-src/netlib"]
+accelerate = ["lapack", "blas", "lapack-src/accelerate", "blas-src/accelerate"]
+intel-mkl = ["lapack", "blas", "lapack-src/intel-mkl", "blas-src/intel-mkl"]
 
 
 [profile.dev]
@@ -65,11 +64,11 @@ features = ["derive"]
 optional = true
 
 [dependencies.lapack]
-version = "0.16"
+version = "0.18"
 optional = true
 
 [dependencies.blas]
-version = "0.20"
+version = "0.22"
 optional = true
 
 [dependencies.blas-src]
@@ -87,7 +86,7 @@ version = "1.0"
 version = "^0.3"
 
 [dev-dependencies.nalgebra]
-version = "0.23"
+version = "0.24"
 
 [dev-dependencies.plotters]
 version = "0.3"

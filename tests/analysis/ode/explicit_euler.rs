@@ -1,16 +1,15 @@
 use super::problem::{ExplicitODE1, ExplicitODE2};
 use mathru::{
     algebra::linear::Vector,
-    analysis::differential_equation::ordinary::{ExplicitEuler, ExplicitODE},
+    analysis::differential_equation::ordinary::{ExplicitEuler, FixedStepper, ExplicitODE},
 };
 
 #[test]
 fn fn1()
 {
     let problem: ExplicitODE1 = ExplicitODE1::default();
-    let solver: ExplicitEuler<f64> = ExplicitEuler::new(0.00001);
-
-    let (t, y): (Vec<f64>, Vec<Vector<f64>>) = solver.solve(&problem).unwrap();
+    let solver: FixedStepper<f64> = FixedStepper::new(0.00001);
+    let (t, y): (Vec<f64>, Vec<Vector<f64>>) = solver.solve(&problem, &ExplicitEuler::default()).unwrap();
 
     let len: usize = y.len();
 
@@ -25,9 +24,8 @@ fn fn1()
 fn fn2()
 {
     let problem: ExplicitODE2 = ExplicitODE2::default();
-    let solver: ExplicitEuler<f64> = ExplicitEuler::new(0.00001);
-
-    let (t, y): (Vec<f64>, Vec<Vector<f64>>) = solver.solve(&problem).unwrap();
+    let solver: FixedStepper<f64> = FixedStepper::new(0.00001);
+    let (t, y): (Vec<f64>, Vec<Vector<f64>>) = solver.solve(&problem, &ExplicitEuler::default()).unwrap();
 
     let len: usize = y.len();
 

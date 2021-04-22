@@ -1,14 +1,15 @@
 //! Solves an ODE using Heun's method.
-use super::{explicit_method::ExplicitFixedStepSizeMethod, ExplicitODE};
+use super::{explicit_method::ExplicitMethod, ExplicitODE};
 use crate::{
     algebra::{abstr::Real, linear::Vector},
-    analysis::differential_equation::ordinary::fixed_stepper::ExplicitFixedStepper,
+    analysis::differential_equation::ordinary::ButcherFixedStepSize
 };
 #[cfg(feature = "serde")]
 use serde::{Deserialize, Serialize};
 use std::clone::Clone;
 
-/// Solves an ODE using Heun's method.
+
+/// Solves an ODE using Heun's 3rd order method.
 ///
 /// <a href="https://en.wikipedia.org/wiki/Heun's_method">https://en.wikipedia.org/wiki/Heun's_method</a>
 ///
@@ -38,7 +39,7 @@ use std::clone::Clone;
 /// # {
 /// use mathru::{
 ///     algebra::linear::Vector,
-///     analysis::differential_equation::ordinary::{ExplicitODE, Heun},
+///     analysis::differential_equation::ordinary::{ExplicitODE, FixedStepper, Heun3},
 /// };
 ///
 /// pub struct ExplicitODE1
@@ -75,62 +76,50 @@ use std::clone::Clone;
 /// }
 ///
 /// // We instantiate Heun's algorithm with a step size of 0.001
-/// let step_size: f64 = 0.001;
-/// let solver: Heun<f64> = Heun::new(step_size);
+/// let solver: FixedStepper<f64> = FixedStepper::new(0.001);
 ///
 /// let problem: ExplicitODE1 = ExplicitODE1::default();
 ///
 /// // Solve the ODE
-/// let (t, y): (Vec<f64>, Vec<Vector<f64>>) = solver.solve(&problem).unwrap();
+/// let (t, y): (Vec<f64>, Vec<Vector<f64>>) = solver.solve(&problem, &Heun3::default()).unwrap();
 ///
 /// # }
 /// ```
+///
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
-#[derive(Clone, Copy, Debug)]
-pub struct Heun<T>
+#[derive(Clone, Debug)]
+pub struct Heun3<T>
 {
-    stepper: ExplicitFixedStepper<T>,
+    butcher: ButcherFixedStepSize<T>
 }
 
-impl<T> Heun<T> where T: Real
+impl<T> Default for Heun3<T> where T: Real
 {
-    /// Creates a Heun instance with step size 'step_size'
-    pub fn new(step_size: T) -> Heun<T>
+    /// Creates a Heun3 instance
+    fn default() -> Heun3<T>
     {
-        return Heun { stepper: ExplicitFixedStepper::new(step_size) };
-    }
+        let a: Vec<T> = vec![T::from_f64(1.0 / 3.0),
+                             T::zero(), T::from_f64(2.0 / 3.0)];
+        let b: Vec<T> = vec![T::from_f64(1.0 / 4.0), T::zero(), T::from_f64(3.0 / 4.0)];
+        let c: Vec<T> = vec![T::from_f64(1.0 / 3.0), T::from_f64(2.0 / 3.0)];
 
-    pub fn solve<F>(self: &Self, prob: &F) -> Result<(Vec<T>, Vec<Vector<T>>), ()>
-        where F: ExplicitODE<T>
-    {
-        return self.stepper.solve(prob, self);
-    }
-
-    pub fn get_step_size(self: &Self) -> &T
-    {
-        return self.stepper.get_step_size();
-    }
-
-    pub fn set_step_size(self: &mut Self, step_size: T)
-    {
-        self.stepper.set_step_size(step_size)
+        return Heun3 {
+            butcher: ButcherFixedStepSize::new(a, b, c)
+        };
     }
 }
 
-impl<T> ExplicitFixedStepSizeMethod<T> for Heun<T> where T: Real
+impl<'a, T> ExplicitMethod<T> for Heun3<T> where T: Real
 {
     fn do_step<F>(self: &Self, prob: &F, t_n: &T, x_n: &Vector<T>, h: &T) -> Vector<T>
         where F: ExplicitODE<T>
     {
-        let k_1: Vector<T> = prob.func(t_n, x_n);
-        let k_2: Vector<T> = prob.func(&(*t_n + *h), &(x_n + &(&k_1 * h)));
-
-        return x_n + &((&k_1 + &k_2) * *h / T::from_f64(2.0));
+        return self.butcher.do_step(prob, t_n, x_n, h);
     }
 
-    ///
+
     fn order(self: &Self) -> u8
     {
-        return 2;
+        return 3;
     }
 }

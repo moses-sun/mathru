@@ -1,6 +1,6 @@
 use mathru::{
     algebra::linear::Vector,
-    analysis::differential_equation::ordinary::{ExplicitODE, RungeKutta4},
+    analysis::differential_equation::ordinary::{ExplicitODE, FixedStepper, RungeKutta4},
 };
 
 use super::problem::{ExplicitODE1, ExplicitODE2};
@@ -9,9 +9,8 @@ use super::problem::{ExplicitODE1, ExplicitODE2};
 fn fn1()
 {
     let problem: ExplicitODE1 = ExplicitODE1::default();
-    let solver: RungeKutta4<f64> = RungeKutta4::new(0.01);
-
-    let (t, y): (Vec<f64>, Vec<Vector<f64>>) = solver.solve(&problem).unwrap();
+    let solver: FixedStepper<f64> = FixedStepper::new(0.01);
+    let (t, y): (Vec<f64>, Vec<Vector<f64>>) = solver.solve(&problem, &RungeKutta4::default()).unwrap();
 
     let len: usize = y.len();
 
@@ -26,9 +25,8 @@ fn fn1()
 fn fn2()
 {
     let problem: ExplicitODE2 = ExplicitODE2::default();
-    let solver: RungeKutta4<f64> = RungeKutta4::new(0.1);
-
-    let (t, y): (Vec<f64>, Vec<Vector<f64>>) = solver.solve(&problem).unwrap();
+    let solver: FixedStepper<f64> = FixedStepper::new(0.1);
+    let (t, y): (Vec<f64>, Vec<Vector<f64>>) = solver.solve(&problem, &RungeKutta4::default()).unwrap();
 
     let len: usize = y.len();
 

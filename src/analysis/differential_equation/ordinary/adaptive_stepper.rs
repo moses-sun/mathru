@@ -1,16 +1,21 @@
 //! Adaptive step size stepper
 
-use super::{explicit_method::ExplicitAdaptiveMethod, ExplicitODE};
+use super::{explicit_method::ExplicitEmbeddedMethod, ExplicitODE};
 use crate::algebra::{abstr::Real, linear::Vector};
 use std::default::Default;
 #[cfg(feature = "serde")]
 use serde::{Deserialize, Serialize};
 use std::clone::Clone;
 
-/// Adaptive step size stepper
+
+
+/// Proportional Control
+///
+/// Numerical Recipes
+/// William H. Press, Saul Teukolsky, William T. Vetterling und Brian P. Flannery,
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[derive(Clone, Copy, Debug)]
-pub struct AdaptiveStepper<T>
+pub struct ProportionalControl<T>
 {
     /// Step size
     n_max: u32,
@@ -21,16 +26,16 @@ pub struct AdaptiveStepper<T>
     /// abs_tol: Absolute tolerance. This is the tolerance on local error
     /// estimates, not necessarily the global error. Defaults to 1e-6.
     abs_tol: T,
-    ///reltol: Relative tolerance. This is the tolerance on local error
+    /// reltol: Relative tolerance. This is the tolerance on local error
     /// estimates, not necessarily the global error. Defaults to 1e-3.
     rel_tol: T,
 }
 
-impl<T> Default for AdaptiveStepper<T> where T: Real
+impl<T> Default for ProportionalControl<T> where T: Real
 {
-    fn default() -> AdaptiveStepper<T>
+    fn default() -> ProportionalControl<T>
     {
-        return AdaptiveStepper::new(1000,
+        return ProportionalControl::new(1000,
                                     T::from_f64(0.02),
                                     T::from_f64(0.8),
                                     T::from_f64(0.001),
@@ -40,14 +45,13 @@ impl<T> Default for AdaptiveStepper<T> where T: Real
     }
 }
 
-impl<T> AdaptiveStepper<T> where T: Real
+impl<T> ProportionalControl<T> where T: Real
 {
-    /// Creates an instance with the given step siz
-    ///a
+    /// Creates an instance with the given step size
     ///
     /// # Param
     ///
-    /// * 'fac_min':
+    /// *'fac_min':
     /// *'fac_max': 1.5 <= fac_max <= 5.0
     pub fn new(n_max: u32,
                h_0: T,
@@ -56,9 +60,9 @@ impl<T> AdaptiveStepper<T> where T: Real
                fac_max: T,
                abs_tol: T,
                rel_tol: T)
-               -> AdaptiveStepper<T>
+               -> ProportionalControl<T>
     {
-        return AdaptiveStepper { n_max,
+        return ProportionalControl { n_max,
                                  h_0,
                                  fac,
                                  fac_min,
@@ -134,7 +138,7 @@ impl<T> AdaptiveStepper<T> where T: Real
                        method: &M)
                        -> Result<(Vec<T>, Vec<Vector<T>>), &'static str>
         where F: ExplicitODE<T>,
-              M: ExplicitAdaptiveMethod<T>
+              M: ExplicitEmbeddedMethod<T>
     {
         let t_span: (T, T) = prob.time_span();
         let t_start: T = t_span.0;
@@ -145,7 +149,7 @@ impl<T> AdaptiveStepper<T> where T: Real
         }
 
         let order: (u8, u8) = method.order();
-        let q: T = T::from_u8(order.0.max(order.1));
+        let q: T = T::from_u8(order.0);
         let l: T = T::one() / (q + T::one());
         let mut x_n: Vector<T> = prob.init_cond();
         let mut t_n: T = t_start;
@@ -209,13 +213,13 @@ impl<T> AdaptiveStepper<T> where T: Real
         {
             let y_i: T = *y.get(i);
             let y_hat_i: T = *y_hat.get(i);
-            let sc: T = self.abs_tol + y_i.abs().max(y_hat_i.abs()) * self.rel_tol;
+            let sc_i: T = self.abs_tol + y_i.abs() * self.rel_tol;
 
-            let k: T = (y_i - y_hat_i) / sc;
+            let k: T = (y_i - y_hat_i) / sc_i;
             sum += k * k;
         }
 
-        let p = (sum / T::from_f64(n as f64)).pow(T::from_f64(0.5));
+        let p = (sum / T::from_f64(n as f64)).sqrt();
         return p;
     }
 }

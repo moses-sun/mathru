@@ -1,6 +1,6 @@
 use mathru::{
     algebra::linear::Vector,
-    analysis::differential_equation::ordinary::{ExplicitODE, Heun},
+    analysis::differential_equation::ordinary::{ExplicitODE, FixedStepper, Ralston3},
 };
 
 use super::problem::{ExplicitODE1, ExplicitODE2};
@@ -9,9 +9,8 @@ use super::problem::{ExplicitODE1, ExplicitODE2};
 fn fn1()
 {
     let problem: ExplicitODE1 = ExplicitODE1::default();
-
-    let solver: Heun<f64> = Heun::new(0.001);
-    let (t, y): (Vec<f64>, Vec<Vector<f64>>) = solver.solve(&problem).unwrap();
+    let solver: FixedStepper<f64> = FixedStepper::new(0.001);
+    let (t, y): (Vec<f64>, Vec<Vector<f64>>) = solver.solve(&problem, &Ralston3::default()).unwrap();
 
     let len: usize = y.len();
 
@@ -19,16 +18,15 @@ fn fn1()
     let init_cond: Vector<f64> = problem.init_cond();
 
     assert_relative_eq!(time_span.1, t[len - 1], epsilon=0.000000001);
-    assert_relative_eq!(*init_cond.get(0) * (2.0 * time_span.1).exp(), *y[len - 1].get(0), epsilon=0.0001);
+    assert_relative_eq!(*init_cond.get(0) * (2.0 * time_span.1).exp(), *y[len - 1].get(0), epsilon=0.00001);
 }
 
 #[test]
 fn fn2()
 {
     let problem: ExplicitODE2 = ExplicitODE2::default();
-
-    let solver: Heun<f64> = Heun::new(0.001);
-    let (t, y): (Vec<f64>, Vec<Vector<f64>>) = solver.solve(&problem).unwrap();
+    let solver: FixedStepper<f64> = FixedStepper::new(0.001);
+    let (t, y): (Vec<f64>, Vec<Vector<f64>>) = solver.solve(&problem, &Ralston3::default()).unwrap();
 
     let len: usize = y.len();
 

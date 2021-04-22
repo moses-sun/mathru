@@ -2,7 +2,7 @@
 
 [![crate](https://img.shields.io/crates/v/mathru.svg)](https://crates.io/crates/mathru)
 [![documentation](https://docs.rs/mathru/badge.svg)](https://docs.rs/mathru)
-![minimum rustc 1.49.0](https://img.shields.io/badge/rustc-1.49.0-green.svg)
+![minimum rustc 1.51.0](https://img.shields.io/badge/rustc-1.51.0-green.svg)
 ![maintenance](https://img.shields.io/badge/maintenance-actively--developed-brightgreen.svg)
 [![pipeline status](https://gitlab.com/matthiaseiholzer/mathru/badges/main/pipeline.svg)](https://gitlab.com/matthiaseiholzer/mathru/-/commits/main)
 ------------
@@ -32,11 +32,13 @@ The following features are implemented in this create:
 
 * [Ordinary differential equation (ODE)](https://matthiaseiholzer.gitlab.io/mathru/documentation/analysis/differentialeq/)
     * [Explicit methods](https://matthiaseiholzer.gitlab.io/mathru/documentation/analysis/differentialeq/ode/explicit/)
-        * Heun's method
         * Euler method
+        * Heun's 2nd order method
         * Midpoint method
-        * Ralston's method
+        * Ralston's 2nd order method
         * Kutta 3rd order
+        * Heun's 3rd order method
+        * Ralston's 3rd order method
         * Runge-Kutta 4th order
         * Runge-Kutta-Felhberg
         * Dormand-Prince
@@ -114,7 +116,7 @@ Add the following lines to 'Cargo.toml' if the openblas library should be used:
 
 ```toml
 [dependencies.mathru]
-version = "^0.8"
+version = "^0.9"
 default-features = false
 features = "openblas"
 ```

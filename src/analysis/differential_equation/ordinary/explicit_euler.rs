@@ -1,12 +1,12 @@
 //! Solves an ODE using Euler's method.
-use super::{explicit_method::ExplicitFixedStepSizeMethod, ExplicitODE};
+use super::{explicit_method::ExplicitMethod, ExplicitODE};
 use crate::{
     algebra::{abstr::Real, linear::Vector},
-    analysis::differential_equation::ordinary::fixed_stepper::ExplicitFixedStepper,
 };
 #[cfg(feature = "serde")]
 use serde::{Deserialize, Serialize};
 use std::clone::Clone;
+use crate::analysis::differential_equation::ordinary::ButcherFixedStepSize;
 
 /// Solves an ODE using Euler's method.
 ///
@@ -38,7 +38,7 @@ use std::clone::Clone;
 /// # {
 /// use mathru::{
 ///     algebra::linear::Vector,
-///     analysis::differential_equation::ordinary::{ExplicitEuler, ExplicitODE},
+///     analysis::differential_equation::ordinary::{ExplicitEuler, FixedStepper, ExplicitODE},
 /// };
 ///
 /// pub struct ExplicitODE1
@@ -74,54 +74,43 @@ use std::clone::Clone;
 ///     }
 /// }
 ///
-/// // We instanciate Eulers algorithm with a stepsize of 0.001
-/// let step_size: f64 = 0.001;
-/// let solver: ExplicitEuler<f64> = ExplicitEuler::new(step_size);
+/// // We instantiate Euler's algorithm with a step size of 0.001
+/// let solver: FixedStepper<f64> = FixedStepper::new(0.001);
 ///
 /// let problem: ExplicitODE1 = ExplicitODE1::default();
 ///
 /// // Solve the ODE
-/// let (t, y): (Vec<f64>, Vec<Vector<f64>>) = solver.solve(&problem).unwrap();
+/// let (t, y): (Vec<f64>, Vec<Vector<f64>>) = solver.solve(&problem, &ExplicitEuler::default()).unwrap();
 /// # }
 /// ```
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
-#[derive(Clone, Copy, Debug)]
+#[derive(Clone, Debug)]
 pub struct ExplicitEuler<T>
 {
-    stepper: ExplicitFixedStepper<T>,
+    butcher: ButcherFixedStepSize<T>
 }
 
-impl<T> ExplicitEuler<T> where T: Real
+impl<T> Default for ExplicitEuler<T> where T: Real
 {
     /// Creates a Euler instance
-    pub fn new(step_size: T) -> ExplicitEuler<T>
+    fn default() -> ExplicitEuler<T>
     {
-        return ExplicitEuler { stepper: ExplicitFixedStepper::new(step_size) };
-    }
+        let a: Vec<T> = vec![];
+        let b: Vec<T> = vec![T::from_f64(1.0)];
+        let c: Vec<T> = vec![];
 
-    pub fn solve<F>(self: &Self, prob: &F) -> Result<(Vec<T>, Vec<Vector<T>>), ()>
-        where F: ExplicitODE<T>
-    {
-        return self.stepper.solve(prob, self);
-    }
-
-    pub fn get_step_size(self: &Self) -> &T
-    {
-        return self.stepper.get_step_size();
-    }
-
-    pub fn set_step_size(self: &mut Self, step_size: T)
-    {
-        self.stepper.set_step_size(step_size)
+        return ExplicitEuler {
+            butcher: ButcherFixedStepSize::new(a, b, c)
+        };
     }
 }
 
-impl<T> ExplicitFixedStepSizeMethod<T> for ExplicitEuler<T> where T: Real
+impl<T> ExplicitMethod<T> for ExplicitEuler<T> where T: Real
 {
     fn do_step<F>(self: &Self, prob: &F, t_n: &T, x_n: &Vector<T>, h: &T) -> Vector<T>
         where F: ExplicitODE<T>
     {
-        return x_n + &(&prob.func(t_n, x_n) * h);
+        return self.butcher.do_step(prob, t_n, x_n, h);
     }
 
     /// Euler's method is a first order method

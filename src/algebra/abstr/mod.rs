@@ -41,7 +41,7 @@ pub use self::{
     relative_eq::{RelativeEq, Relative},
 };
 
-#[cfg(feature = "blaslapack")]
+#[cfg(feature = "lapack")]
 pub use self::scalar::{Blas, Lapack};
 pub use self::{
     complex::Complex,
