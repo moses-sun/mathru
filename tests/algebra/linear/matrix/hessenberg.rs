@@ -22,7 +22,7 @@ fn hessenberg_decomposition_0()
     assert_relative_eq!(h, h_ref, epsilon=1.0e-10);
 }
 
-#[cfg(feature = "blaslapack")]
+#[cfg(feature = "lapack")]
 #[test]
 fn hessenberg_decomposition_0()
 {

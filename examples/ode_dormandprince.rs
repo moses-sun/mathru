@@ -1,6 +1,6 @@
 use mathru::{
     algebra::linear::Vector,
-    analysis::differential_equation::ordinary::{problem, DormandPrince54, ExplicitODE},
+    analysis::differential_equation::ordinary::{problem, DormandPrince, ProportionalControl, ExplicitODE},
 };
 use plotters::prelude::*;
 
@@ -13,12 +13,17 @@ fn main()
 
     // Create a ODE solver instance
     let h_0: f64 = 0.0001;
+    let fac: f64 = 0.9;
+    let fac_min: f64 = 0.01;
+    let fac_max: f64 = 2.0;
     let n_max: u32 = 800;
     let abs_tol: f64 = 10e-7;
+    let rel_tol: f64 = 10e-6;
 
-    let solver: DormandPrince54<f64> = DormandPrince54::new(abs_tol, h_0, n_max);
+    let solver: ProportionalControl<f64> = ProportionalControl::new(n_max, h_0, fac, fac_min, fac_max, abs_tol, rel_tol);
+
     // Solve ODE
-    let (x, y): (Vec<f64>, Vec<Vector<f64>>) = solver.solve(&problem).unwrap();
+    let (x, y): (Vec<f64>, Vec<Vector<f64>>) = solver.solve(&problem, &DormandPrince::default()).unwrap();
 
     //Create chart
     let mut graph_x1: Vec<(f64, f64)> = Vec::with_capacity(x.len());

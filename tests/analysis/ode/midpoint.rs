@@ -1,8 +1,7 @@
 use mathru::{
     algebra::linear::Vector,
-    analysis::differential_equation::ordinary::{ExplicitODE, Midpoint},
+    analysis::differential_equation::ordinary::{ExplicitODE, FixedStepper, Midpoint},
 };
-
 use super::problem::{ExplicitODE1, ExplicitODE2};
 
 #[test]
@@ -10,8 +9,8 @@ fn fn1()
 {
     let problem: ExplicitODE1 = ExplicitODE1::default();
 
-    let solver: Midpoint<f64> = Midpoint::new(0.001);
-    let (t, y): (Vec<f64>, Vec<Vector<f64>>) = solver.solve(&problem).unwrap();
+    let solver: FixedStepper<f64> = FixedStepper::new(0.001);
+    let (t, y): (Vec<f64>, Vec<Vector<f64>>) = solver.solve(&problem, &Midpoint::default()).unwrap();
 
     let len: usize = y.len();
 
@@ -27,8 +26,8 @@ fn fn2()
 {
     let problem: ExplicitODE2 = ExplicitODE2::default();
 
-    let solver: Midpoint<f64> = Midpoint::new(0.01);
-    let (t, y): (Vec<f64>, Vec<Vector<f64>>) = solver.solve(&problem).unwrap();
+    let solver: FixedStepper<f64> = FixedStepper::new(0.01);
+    let (t, y): (Vec<f64>, Vec<Vector<f64>>) = solver.solve(&problem, &Midpoint::default()).unwrap();
 
     let len: usize = y.len();
 

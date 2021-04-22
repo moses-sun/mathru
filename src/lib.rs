@@ -191,11 +191,11 @@ document.addEventListener(\"DOMContentLoaded\", function () {
 //! 	}
 //! ```
 
-#[cfg(feature = "blaslapack")]
+#[cfg(feature = "lapack")]
 extern crate blas;
-#[cfg(feature = "blaslapack")]
+#[cfg(feature = "lapack")]
 extern crate blas_src;
-#[cfg(feature = "blaslapack")]
+#[cfg(feature = "lapack")]
 extern crate lapack;
 
 #[macro_use]

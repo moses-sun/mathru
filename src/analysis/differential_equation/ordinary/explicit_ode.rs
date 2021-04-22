@@ -1,7 +1,7 @@
 //! Explicit ODE
 use crate::algebra::linear::Vector;
 
-/// Explicit ODE algrithm interface
+/// Explicit ODE algorithm interface
 ///
 /// This trait has to be implemented by every ODE which shall be solved with
 /// and explicit ODE solving algorithm.

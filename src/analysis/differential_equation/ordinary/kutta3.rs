@@ -1,12 +1,14 @@
 //! Solves an ODE using the 3th order Runge-Kutta algorithm.
-use super::{explicit_method::ExplicitFixedStepSizeMethod, ExplicitODE};
+use super::{explicit_method::ExplicitMethod, ExplicitODE};
 use crate::{
     algebra::{abstr::Real, linear::Vector},
-    analysis::differential_equation::ordinary::fixed_stepper::ExplicitFixedStepper,
+    analysis::differential_equation::ordinary::ButcherFixedStepSize
 };
+use std::clone::Clone;
+
 #[cfg(feature = "serde")]
 use serde::{Deserialize, Serialize};
-use std::clone::Clone;
+
 
 /// Solves an ODE using the 3th order Runge-Kutta algorithm.
 ///
@@ -37,7 +39,7 @@ use std::clone::Clone;
 /// # {
 /// use mathru::{
 ///     algebra::linear::Vector,
-///     analysis::differential_equation::ordinary::{ExplicitODE, Kutta3},
+///     analysis::differential_equation::ordinary::{ExplicitODE, FixedStepper, Kutta3},
 /// };
 ///
 /// pub struct ExplicitODE1
@@ -73,70 +75,46 @@ use std::clone::Clone;
 ///     }
 /// }
 ///
-/// // We instantiate CashKarp algorithm
-/// let step_size: f64 = 0.001;
-/// let solver: Kutta3<f64> = Kutta3::new(step_size);
 ///
+/// let solver: FixedStepper<f64> = FixedStepper::new(0.01);
 /// let problem: ExplicitODE1 = ExplicitODE1::default();
 ///
 /// // Solve the ODE
-/// let (t, y): (Vec<f64>, Vec<Vector<f64>>) = solver.solve(&problem).unwrap();
+/// let (t, y): (Vec<f64>, Vec<Vector<f64>>) = solver.solve(&problem, &Kutta3::default()).unwrap();
 ///
 /// # }
 /// ```
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
-#[derive(Clone, Copy, Debug)]
+#[derive(Clone, Debug)]
 pub struct Kutta3<T>
 {
-    stepper: ExplicitFixedStepper<T>,
+    butcher: ButcherFixedStepSize<T>
 }
 
-impl<T> Kutta3<T> where T: Real
+impl<T> Default for Kutta3<T> where T: Real
 {
-    /// Creates a Kutta3 instance with step size 'step_size'
-    pub fn new(step_size: T) -> Kutta3<T>
+    /// Creates a Kutta3 instance
+    fn default() -> Kutta3<T>
     {
-        return Kutta3 { stepper: ExplicitFixedStepper::new(step_size) };
-    }
+        let a: Vec<T> = vec![T::from_f64(0.5), -T::one(), T::from_f64(2.0)];
+        let b: Vec<T> = vec![T::from_f64(1.0/6.0), T::from_f64(2.0/3.0), T::from_f64(1.0/6.0)];
+        let c: Vec<T> = vec![T::from_f64(0.5), T::one()];
 
-    pub fn solve<F>(self: &Self, prob: &F) -> Result<(Vec<T>, Vec<Vector<T>>), ()>
-        where F: ExplicitODE<T>
-    {
-        return self.stepper.solve(prob, self);
-    }
-
-    pub fn get_step_size(self: &Self) -> &T
-    {
-        return self.stepper.get_step_size();
-    }
-
-    pub fn set_step_size(self: &mut Self, step_size: T)
-    {
-        self.stepper.set_step_size(step_size)
+        return Kutta3 {
+            butcher: ButcherFixedStepSize::new(a, b, c)
+        };
     }
 }
 
-impl<T> ExplicitFixedStepSizeMethod<T> for Kutta3<T> where T: Real
+impl<T> ExplicitMethod<T> for Kutta3<T> where T: Real
 {
     fn do_step<F>(self: &Self, prob: &F, t_n: &T, x_n: &Vector<T>, h: &T) -> Vector<T>
         where F: ExplicitODE<T>
     {
-        // k1 = f(t_n, x_n)
-        let k1: Vector<T> = prob.func(&t_n, &x_n);
-
-        // k2 = func(t_n + h / 2, x_n + h / 2 k1)
-        let k2: Vector<T> = prob.func(&(*t_n + (*h / T::from_f64(2.0))),
-                                      &(x_n + &((&k1 * h) / T::from_f64(2.0))));
-
-        // k3 = func(t_n + h, x_n + - h k1 + 2h *k2)
-        let k3: Vector<T> = prob.func(&(*t_n + *h),
-                                      &(x_n + &(&(&(&k2 * &T::from_f64(2.0)) - &k1) * h)));
-
-        // x[n+1] = xn + h*(k1 + 4*k2 + k3)/6
-        return x_n + &((k1 + k2 * T::from_f64(4.0) + k3) * *h / T::from_f64(6.0));
+        return self.butcher.do_step(prob, t_n, x_n, h);
     }
 
-    /// Kuttas method is a 3rd order method
+    /// Kutta's method is a 3rd order method
     fn order(self: &Self) -> u8
     {
         return 3;

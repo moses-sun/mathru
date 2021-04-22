@@ -18,7 +18,7 @@ use std::{
     ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Neg, Sub, SubAssign},
 };
 
-#[cfg(feature = "blaslapack")]
+#[cfg(feature = "lapack")]
 use crate::algebra::abstr::{Blas, Lapack};
 
 #[doc(hidden)]
@@ -126,7 +126,7 @@ impl<T> ComplexT for Complex<T> where T: Real
 //	}
 //}
 
-#[cfg(feature = "blaslapack")]
+#[cfg(feature = "lapack")]
 impl<T> Lapack for Complex<T> where T: Real
 {
     fn xgehrd(_n: i32,
@@ -306,7 +306,7 @@ impl<T> Lapack for Complex<T> where T: Real
     }
 }
 
-#[cfg(feature = "blaslapack")]
+#[cfg(feature = "lapack")]
 impl<T> Blas for Complex<T> where T: Real
 {
     fn xgemm(_transa: u8,

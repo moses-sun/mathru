@@ -4,7 +4,7 @@ extern crate mathru;
 
 use super::ode_problems::ExplicitODE1;
 use mathru::analysis::differential_equation::ordinary::{
-    DormandPrince54, ExplicitEuler, Heun, Kutta3, RungeKutta4, RungeKuttaFehlberg54,
+    DormandPrince, ExplicitEuler, Heun, Kutta3, RungeKutta, RungeKuttaFehlberg54,
 };
 
 criterion_group!(ode,
@@ -48,7 +48,7 @@ fn kutta3(bench: &mut Criterion)
 fn rungekutta4(bench: &mut Criterion)
 {
     let problem: ExplicitODE1 = ExplicitODE1::default();
-    let solver: RungeKutta4<f64> = RungeKutta4::new(0.001);
+    let solver: RungeKutta<f64> = RungeKutta::new(0.001);
 
     bench.bench_function("Kutta4", move |bh| {
              bh.iter(|| solver.solve(&problem).unwrap())
@@ -80,7 +80,7 @@ fn dormandprince54(bench: &mut Criterion)
     let h_0: f64 = 0.001;
     let abs_tol: f64 = 10e-7;
     let n_max: u32 = 5000;
-    let solver: DormandPrince54<f64> = DormandPrince54::new(abs_tol, h_0, n_max);
+    let solver: DormandPrince<f64> = DormandPrince::new(abs_tol, h_0, n_max);
 
     bench.bench_function("DormandPrince54", move |bh| {
              bh.iter(|| solver.solve(&problem).unwrap())

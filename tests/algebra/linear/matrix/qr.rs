@@ -22,7 +22,7 @@ fn decompose_qr0()
     assert_relative_eq!(r, r_ref, epsilon=1.0e-10, max_relative=1.0e-10);
 }
 
-#[cfg(feature = "blaslapack")]
+#[cfg(feature = "lapack")]
 #[test]
 fn decompose_qr0()
 {
@@ -70,7 +70,7 @@ fn decompose_qr1()
     assert_relative_eq!(a, q * r, epsilon=1.0e-10);
 }
 
-#[cfg(feature = "blaslapack")]
+#[cfg(feature = "lapack")]
 #[test]
 fn decompose_qr1()
 {
@@ -116,7 +116,7 @@ fn decompose_qr2()
     assert_relative_eq!(a, &q * &r, epsilon=1.0e-10);
 }
 
-#[cfg(feature = "blaslapack")]
+#[cfg(feature = "lapack")]
 #[test]
 fn decompose_qr2()
 {

@@ -24,7 +24,7 @@ mod semigroup;
 //pub use self::natural::Natural;
 //pub use self::integer::Integer;
 //pub use self::real::Real;
-//#[cfg(feature = "blaslapack")]
+//#[cfg(feature = "lapack")]
 //pub use self::real::{Blas, Lapack};
 //pub use self::complex::Complex;
 

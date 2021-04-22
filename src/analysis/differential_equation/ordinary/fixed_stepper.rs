@@ -1,6 +1,6 @@
 //! Fixed step size Stepper
 use super::{
-    explicit_method::ExplicitFixedStepSizeMethod, implicit_method::ImplicitFixedStepSizeMethod,
+    explicit_method::ExplicitMethod, implicit_method::ImplicitFixedStepSizeMethod,
     ExplicitODE, ImplicitODE,
 };
 use crate::algebra::{abstr::Real, linear::Vector};
@@ -11,13 +11,13 @@ use std::clone::Clone;
 /// Fixed step size Stepper
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[derive(Clone, Copy, Debug)]
-pub struct ExplicitFixedStepper<T>
+pub struct FixedStepper<T>
 {
     /// Step size
     step_size: T,
 }
 
-impl<T> ExplicitFixedStepper<T> where T: Real
+impl<T> FixedStepper<T> where T: Real
 {
     /// Creates an instance with the given step size
     ///
@@ -28,18 +28,18 @@ impl<T> ExplicitFixedStepper<T> where T: Real
     /// # Panics
     ///
     /// if 'step_size' <= 0.0
-    pub fn new(step_size: T) -> ExplicitFixedStepper<T>
+    pub fn new(step_size: T) -> FixedStepper<T>
     {
         if step_size <= T::zero()
         {
             panic!();
         }
-        return ExplicitFixedStepper { step_size };
+        return FixedStepper { step_size };
     }
 
     pub fn solve<F, M>(self: &Self, prob: &F, method: &M) -> Result<(Vec<T>, Vec<Vector<T>>), ()>
         where F: ExplicitODE<T>,
-              M: ExplicitFixedStepSizeMethod<T>
+              M: ExplicitMethod<T>
     {
         let t_span = prob.time_span();
         let init = prob.init_cond();

@@ -4,7 +4,7 @@ use crate::algebra::abstr::{
 };
 use std::fmt::{Debug, Display};
 
-#[cfg(feature = "blaslapack")]
+#[cfg(feature = "lapack")]
 use crate::algebra::abstr::Zero;
 
 /// comparisons, basic numeric operations, and string conversion.
@@ -15,7 +15,7 @@ pub trait Scalar<Rhs = Self, Output = Self>:
 }
 
 /// comparisons, basic numeric operations, and string conversion.
-#[cfg(feature = "blaslapack")]
+#[cfg(feature = "lapack")]
 pub trait Scalar<Rhs = Self, Output = Self>:
     Sized
     + Display
@@ -44,7 +44,7 @@ impl_scalar!(/* u8, u16, u32, u64, u128, i8, i16, i32, i64, i128, */ f32,
 impl_scalar!(/* u8, u16, u32, u64, u128, i8, i16, i32, i64, i128, */ f64,
              std::f64::EPSILON);
 
-#[cfg(feature = "blaslapack")]
+#[cfg(feature = "lapack")]
 pub trait Lapack: Sized + Zero
 {
     fn xgehrd(n: i32,
@@ -174,7 +174,7 @@ pub trait Lapack: Sized + Zero
               info: &mut i32);
 }
 
-#[cfg(feature = "blaslapack")]
+#[cfg(feature = "lapack")]
 pub trait Blas: Sized + Zero
 {
     fn xgemm(transa: u8,
