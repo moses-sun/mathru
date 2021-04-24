@@ -64,7 +64,7 @@ features = ["derive"]
 optional = true
 
 [dependencies.lapack]
-version = "0.18"
+version = "0.19"
 optional = true
 
 [dependencies.blas]
@@ -72,11 +72,11 @@ version = "0.22"
 optional = true
 
 [dependencies.blas-src]
-version = "0.7"
+version = "0.8"
 optional = true
 
 [dependencies.lapack-src]
-version = "0.6"
+version = "0.8"
 optional = true
 
 [dev-dependencies.serde_json]
