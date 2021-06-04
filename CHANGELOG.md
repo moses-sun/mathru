@@ -1,5 +1,8 @@
 # Change Log
 All notable changes starting with the version 0.6.9 are documented here.
+## [0.9.1]
+- Update README.md and lib.rs to newest version
+
 ## [0.9.0]
 - Implement additional ODE solvers
 - Update dependencies
