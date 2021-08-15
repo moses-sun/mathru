@@ -733,79 +733,35 @@ impl<T> Sign for Vector<T> where T: Field + Scalar
     }
 }
 
-impl<T> Vector<T>
-    where T: Field + Scalar
+impl<T> AbsDiffEq for Vector<T>
+    where T: Field + Scalar + AbsDiffEq<Epsilon = T>
 {
-    pub fn compare_neighbourhood(self: &Self, b: &Self, epsilon: T) -> bool
+    type Epsilon = T;
+
+    fn default_epsilon() -> T
     {
-        let (self_m, self_n): (usize, usize) = self.dim();
-        let (b_m, b_n): (usize, usize) = b.dim();
+        T::default_epsilon()
+    }
 
-        if self_m != b_m || self_n != b_n
-        {
-            println!("dimension mismatch");
-            return false;
-        }
-
-        for i in 0..self_m
-        {
-            if (*self.get(i) - *b.get(i)).abs() > epsilon
-            {
-                println!("a: {}, b: {} a-b: {}", self, b, self - b);
-                return false;
-            }
-        }
-
-        return true;
+    fn abs_diff_eq(&self, other: &Vector<T>, epsilon: T) -> bool
+    {
+        return self.data.abs_diff_eq(&other.data, epsilon);
     }
 }
 
-macro_rules! impl_abs_diff_eq
+impl<T> RelativeEq for Vector<T>
+    where T: Field + Scalar + AbsDiffEq<Epsilon = T> + RelativeEq
 {
-    ($T:ident, $epsilon: expr) =>
+
+    fn default_max_relative() -> T
     {
-        impl AbsDiffEq for Vector<$T>
-        {
-            type Epsilon = $T;
+        T::default_max_relative()
+    }
 
-            fn default_epsilon() -> $T
-            {
-                $T::default_epsilon()
-            }
-
-            fn abs_diff_eq(&self, other: &Vector<$T>, epsilon: $T) -> bool
-            {
-                return self.data.abs_diff_eq(&other.data, epsilon);
-            }
-        }
-    };
-}
-
-impl_abs_diff_eq!(f32, f32::EPSILON);
-impl_abs_diff_eq!(f64, f64::EPSILON);
-
-macro_rules! impl_relative_eq
-{
-    ($T:ident, $epsilon: expr) =>
+    /// A test for equality that uses a relative comparison if the values are far apart.
+    fn relative_eq(&self, other: &Vector<T>, epsilon: Self::Epsilon, max_relative: Self::Epsilon) -> bool
     {
-        impl RelativeEq for Vector<$T>
-        {
-
-            fn default_max_relative() -> $T
-            {
-                $T::EPSILON
-            }
-
-            /// A test for equality that uses a relative comparison if the values are far apart.
-            fn relative_eq(&self, other: &Vector<$T>, epsilon: Self::Epsilon, max_relative: Self::Epsilon) -> bool
-            {
-                return self.data.relative_eq(&other.data, epsilon, max_relative);
-            }
-        }
-    };
+        return self.data.relative_eq(&other.data, epsilon, max_relative);
+    }
 }
-
-impl_relative_eq!(f32, f32::EPSILON);
-impl_relative_eq!(f64, f64::EPSILON);
-
 

@@ -1,7 +1,6 @@
 use crate::mathru::algebra::linear::matrix::Substitute;
 use mathru::algebra::linear::{matrix::{Transpose, Solve}, Matrix, Vector};
 
-
 #[test]
 fn macro_0()
 {
@@ -172,174 +171,7 @@ fn givens_3()
     assert_relative_eq!(res_ref, res, epsilon=0.00001, max_relative=1.0e-10);
 }
 
-#[test]
-fn transpose_0()
-{
-    let uut: Matrix<f32> = matrix![ 1.0, 0.0;
-                                    3.0, 0.0;
-                                    1.0, -7.0;
-                                   0.5, 0.25];
 
-    let res: Matrix<f32> = uut.clone().transpose();
-
-    let trans_ref: Matrix<f32> = matrix![   1.0, 3.0, 1.0, 0.5;
-                                            0.0, 0.0, -7.0, 0.25];
-
-    assert_relative_eq!(res.clone().transpose(), uut);
-    assert_relative_eq!(trans_ref, res);
-}
-
-#[test]
-fn transpose_1()
-{
-    let res: Matrix<f32> = Matrix::new(3, 2, vec![1.0, 2.0, 3.0, 4.0, 5.0, 6.0]).transpose();
-
-    let trans_ref: Matrix<f32> = Matrix::new(2, 3, vec![1.0, 4.0, 2.0, 5.0, 3.0, 6.0]);
-    assert_relative_eq!(trans_ref, res);
-}
-
-#[test]
-fn transpose_2()
-{
-    let uut: Matrix<f32> = matrix![ 1.0, 0.0;
-                                    3.0, 0.0;
-                                    1.0, -7.0;
-                                    0.5, 0.25];
-
-    let uut_ref: Matrix<f32> =
-        Matrix::new(4, 2, vec![1.0, 3.0, 1.0, 0.5, 0.0, 0.0, -7.0, 0.25]);
-
-    assert_relative_eq!(uut_ref, uut);
-
-    let uut_t: Matrix<f32> = uut_ref.transpose();
-
-    let uut_t_ref: Matrix<f32> =
-        Matrix::new(2, 4, vec![1.0, 0.0, 3.0, 0.0, 1.0, -7.0, 0.5, 0.25]);
-
-    assert_relative_eq!(uut_t_ref, uut_t);
-}
-
-#[test]
-fn transpose_3()
-{
-    let uut: Matrix<f32> = matrix![ 1.0, 0.0;
-                                    3.0, 2.0];
-
-    let uut_t: Matrix<f32> = uut.transpose();
-
-    let uut_t_ref: Matrix<f32> = Matrix::new(2, 2, vec![1.0, 0.0, 3.0, 2.0]);
-
-    assert_relative_eq!(uut_t_ref, uut_t);
-}
-
-#[test]
-fn transpose_4()
-{
-    let uut: Matrix<f32> = matrix![ 1.0, 0.0;
-                                    3.0, 0.0;
-                                    1.0, -7.0;
-                                    0.5, 0.25];
-
-    let uut_ref: Matrix<f32> =
-        Matrix::new(4, 2, vec![1.0, 3.0, 1.0, 0.5, 0.0, 0.0, -7.0, 0.25]);
-
-    assert_relative_eq!(uut_ref, uut);
-
-    let uut_t: Matrix<f32> = uut.transpose();
-
-    let uut_t_ref: Matrix<f32> =
-        Matrix::new(2, 4, vec![1.0, 0.0, 3.0, 0.0, 1.0, -7.0, 0.5, 0.25]);
-
-    assert_relative_eq!(uut_t_ref, uut_t);
-}
-
-#[test]
-fn transpose_5()
-{
-    let uut: Matrix<f32> = matrix![ 1.0, 0.0, 4.0;
-                                    3.0, 2.0, 5.0;
-                                    7.0, -1.0, 8.0];
-
-    let uut_t: Matrix<f32> = uut.transpose();
-
-    let uut_t_ref: Matrix<f32> =
-        Matrix::new(3, 3, vec![1.0, 0.0, 4.0, 3.0, 2.0, 5.0, 7.0, -1.0, 8.0]);
-
-    assert_relative_eq!(uut_t_ref, uut_t);
-}
-
-#[test]
-fn transpose_6()
-{
-    let uut: Matrix<f32> = matrix![ 1.0;
-                                    3.0;
-                                    1.0;
-                                    0.5];
-
-    let uut_ref: Matrix<f32> = Matrix::new(4, 1, vec![1.0, 3.0, 1.0, 0.5]);
-
-    assert_relative_eq!(uut_ref, uut);
-
-    let uut_t: Matrix<f32> = uut.transpose();
-
-    let uut_t_ref: Matrix<f32> = Matrix::new(1, 4, vec![1.0, 3.0, 1.0, 0.5]);
-
-    assert_relative_eq!(uut_t_ref, uut_t);
-}
-
-#[test]
-fn determinant_0()
-{
-    let a: Matrix<f64> = matrix![-2.0];
-    let det: f64 = a.det();
-
-    assert_abs_diff_eq!(-2.0, det, epsilon=1.0e-10);
-}
-
-#[test]
-fn determinant_1()
-{
-    let a: Matrix<f64> = matrix![   1.0, -2.0;
-                                    3.0, -7.0];
-    let det: f64 = a.det();
-
-    assert_abs_diff_eq!(-1.0, det, epsilon=1.0e-10);
-}
-
-#[test]
-fn determinant_2()
-{
-    let a: Matrix<f32> = matrix![   1.0, -2.0, 3.0;
-                                    2.0, -5.0, 12.0;
-                                    1.0, 2.0, -10.0];
-    let det: f32 = a.det();
-
-    assert_abs_diff_eq!(-11.0, det, epsilon=1.0e-4);
-}
-
-#[test]
-fn determinant_3()
-{
-    let a: Matrix<f64> = matrix![   4.0, 1.0, -2.0, 2.0;
-                                    1.0, 2.0, 0.0, -2.0;
-                                    0.0, 3.0, -2.0, 2.0;
-                                    2.0, 1.0, -2.0, -1.0];
-
-    let det: f64 = a.det();
-
-    assert_abs_diff_eq!(76.0, det, epsilon=1.0e-10);
-}
-
-#[test]
-fn determinant_4()
-{
-    let a: Matrix<f64> = matrix![   -9.0, -8.0, -7.0;
-                                    -6.0, 5.0, -6.0;
-                                    -7.0, -8.0, -9.0];
-    let det: f64 = a.det();
-
-    assert_abs_diff_eq!(352.0, det, epsilon=1.0e-10);
-}
 
 #[test]
 fn trace_0()
@@ -562,59 +394,7 @@ fn rot_2()
     assert_relative_eq!(r_ref, r, epsilon=0.0000001, max_relative=1.0e-10);
 }
 
-#[test]
-fn svd_0()
-{
-    let a: Matrix<f64> = matrix![   4.0, 1.0, -2.0, 2.0;
-                                    1.0, 2.0, 0.0, -2.0;
-                                    0.0, 3.0, -2.0, 2.0;
-                                    2.0, 1.0, -2.0, -1.0];
 
-    let (u, s, v): (Matrix<f64>, Matrix<f64>, Matrix<f64>) = a.dec_sv();
-
-    let u_ref: Matrix<f64> = matrix![   0.750618975420566, -0.10396419803551285, -0.5550030946996072, -0.3431241235169467;
-                                        0.16660611095451502, 0.7151480228364393, 0.42071909480760994, -0.5327299057590199;
-                                        0.49145768126990524, -0.4896500732330627, 0.7174571018374751, 0.06298777918484924;
-                                        0.40900232890779536, 0.48784993260512777, -0.014910236788856494, 0.7710364602559809];
-
-    let v_ref: Matrix<f64> = matrix![   0.641413939431974, 0.3770763401833474, -0.5915891468488664, -0.3105219369173845;
-                                        0.4773429354587908, 0.10210161763764197, 0.7839592576263352, -0.3835711981175503;
-                                        -0.5312275172316614, 0.06255922864595094, -0.09543998328421795, -0.8395087119487312;
-                                        0.2802306286004916, -0.9184089700459931, -0.1622386307366823, -0.2273200062245417];
-
-    let s_ref: Matrix<f64> = matrix![   6.216089837372844, 0.0, 0.0, 0.0;
-                                        0.0, 3.3812545631600996, 0.0, 0.0;
-                                        0.0, 0.0, 3.0918649662716553, 0.0;
-                                        0.0, 0.0, 0.0, 1.1694937978293738];
-
-    assert_relative_eq!(u_ref, u, epsilon=0.0000001, max_relative=1.0e-10);
-    assert_relative_eq!(s_ref, s, epsilon=0.0000001, max_relative=1.0e-10);
-    assert_relative_eq!(v_ref, v, epsilon=0.0000001, max_relative=1.0e-10);
-}
-
-#[test]
-fn svd_1()
-{
-    let a: Matrix<f64> = matrix![   4.0, 1.0, -2.0, 2.0;
-                                    1.0, 2.0, 0.0, -2.0;
-                                    0.0, 3.0, -2.0, 2.0;
-                                    2.0, 1.0, -2.0, -1.0];
-
-    let (u, _s, v): (Matrix<f64>, Matrix<f64>, Matrix<f64>) = a.dec_sv();
-
-    let u_ref: Matrix<f64> = matrix![   0.750618975420566, -0.10396419803551285, -0.5550030946996072, -0.3431241235169467;
-                                        0.16660611095451502, 0.7151480228364393, 0.42071909480760994, -0.5327299057590199;
-                                        0.49145768126990524, -0.4896500732330627, 0.7174571018374751, 0.06298777918484924;
-                                        0.40900232890779536, 0.48784993260512777, -0.014910236788856494, 0.7710364602559809];
-
-    let v_ref: Matrix<f64> = matrix![   0.641413939431974, 0.3770763401833474, -0.5915891468488664, -0.3105219369173845;
-                                        0.4773429354587908, 0.10210161763764197, 0.7839592576263352, -0.3835711981175503;
-                                        -0.5312275172316614, 0.06255922864595094, -0.09543998328421795, -0.8395087119487312;
-                                         0.2802306286004916, -0.9184089700459931, -0.1622386307366823, -0.2273200062245417];
-
-    assert_relative_eq!(u_ref, u, epsilon=0.0000001, max_relative=1.0e-10);
-    assert_relative_eq!(v_ref, v, epsilon=0.0000001, max_relative=1.0e-10);
-}
 
 #[test]
 fn apply_0()
@@ -642,7 +422,7 @@ fn subst_backward()
 
     let c_ref: Vector<f64> = vector![2.25; 0.125; 1.5];
 
-    let c: Vector<f64> = a.substitute_backward(b);
+    let c: Vector<f64> = a.substitute_backward(b).unwrap();
 
     assert_relative_eq!(c, c_ref, epsilon=1.0e-10);
 }
@@ -658,7 +438,7 @@ fn subst_forward()
 
     let c_ref: Vector<f64> = vector![1.5; 0.125; 2.25];
 
-    let c: Vector<f64> = a.substitute_forward(b);
+    let c: Vector<f64> = a.substitute_forward(b).unwrap();
 
     assert_relative_eq!(c, c_ref, epsilon=1.0e-10);
 }
@@ -679,7 +459,7 @@ fn solve_0()
 fn pinv_0()
 {
     let a: Matrix<f64> = matrix![1.0, 2.0, 3.0; 4.0, 5.0, 6.0; 8.0, 8.0, 9.0];
-    let a_pinv: Matrix<f64> = a.pinv();
+    let a_pinv: Matrix<f64> = a.pinv().unwrap();
     let a_pinv_ref: Matrix<f64> = matrix![  1.0, -2.0, 1.0;
                                             -4.0, 5.0, -2.0;
                                             2.6666666666666474, -2.66666666666661, 1.0];

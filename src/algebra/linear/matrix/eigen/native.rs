@@ -1,20 +1,17 @@
 use crate::algebra::{
-    abstr::Real,
     linear::{
         matrix::{Transpose, EigenDec, Solve},
         Matrix, Vector,
     },
 };
+use crate::algebra::abstr::{Field, Scalar, AbsDiffEq};
+use crate::elementary::Power;
 
-impl<T> Matrix<T> where T: Real
+impl<T> Matrix<T> where T: Field + Scalar + Power + AbsDiffEq<Epsilon = T>
 {
     /// Computes the eigenvalues of a real matrix
     ///
-    ///
     /// # Arguments
-    ///
-    ///
-    ///
     ///
     /// # Example
     ///
@@ -22,9 +19,9 @@ impl<T> Matrix<T> where T: Real
     /// use mathru::algebra::linear::{matrix::EigenDec, Matrix, Vector};
     ///
     /// let a: Matrix<f64> = Matrix::new(3, 3, vec![1.0, -3.0, 3.0, 3.0, -5.0, 3.0, 6.0, -6.0, 4.0]);
-    /// let eigen: EigenDec<f64> = a.dec_eigen();
+    /// let eigen: EigenDec<f64> = a.dec_eigen().unwrap();
     /// ```
-    pub fn dec_eigen(self: Self) -> EigenDec<T>
+    pub fn dec_eigen(self: Self) -> Result<EigenDec<T>, ()>
     {
         let (m, n): (usize, usize) = self.dim();
         assert_eq!(m, n, "Unable to compute the eigen value of a non-square matrix");
@@ -33,7 +30,7 @@ impl<T> Matrix<T> where T: Real
         let value: Vector<T> = self.eigenvalue_r();
         let vector: Matrix<T> = self.eigenvector_r(&value);
 
-        return EigenDec::new(value, vector);
+        return Ok(EigenDec::new(value, vector));
     }
 
     pub fn eigenvalue_r(self: &Self) -> Vector<T>
@@ -56,7 +53,7 @@ impl<T> Matrix<T> where T: Real
 
     fn francis(mut self: Self) -> (Matrix<T>, Matrix<T>)
     {
-        let epsilon: T = T::epsilon();
+        let epsilon: T = T::default_epsilon();
 
         let (m, n): (usize, usize) = self.dim();
 

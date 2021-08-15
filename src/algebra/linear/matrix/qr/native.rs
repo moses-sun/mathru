@@ -5,8 +5,10 @@ use crate::{
     },
     elementary::Power,
 };
+use crate::algebra::abstr::AbsDiffEq;
 
-impl<T> Matrix<T> where T: Field + Scalar + Power
+impl<T> Matrix<T>
+    where T: Field + Scalar + Power + AbsDiffEq
 {
     /// QR Decomposition with Givens rotations
     ///
@@ -25,9 +27,9 @@ impl<T> Matrix<T> where T: Field + Scalar + Power
     ///
     /// let a: Matrix<f64> = Matrix::new(2, 2, vec![1.0, -2.0, 3.0, -7.0]);
     ///
-    /// let (q, r): (Matrix<f64>, Matrix<f64>) = a.dec_qr().qr();
+    /// let (q, r): (Matrix<f64>, Matrix<f64>) = a.dec_qr().unwrap().qr();
     /// ```
-    pub fn dec_qr(self: &Self) -> QRDec<T>
+    pub fn dec_qr(self: &Self) -> Result<QRDec<T>, ()>
     {
         let (m, n) = self.dim();
         assert!(m >= n);
@@ -41,9 +43,10 @@ impl<T> Matrix<T> where T: Field + Scalar + Power
             {
                 let a_jj: T = *r.get(j, j);
                 let a_ij: T = *r.get(i, j);
-                //let k: T = a_jj.sgn();
-                let p: T = (a_jj * a_jj + a_ij * a_ij).pow(T::from_f64(0.5));
-                if (p != T::zero()) && (a_jj != T::zero()) && (a_ij != T::zero())
+
+                let p: T = (a_jj * a_jj + a_ij * a_ij).sqrt();
+
+                if p.abs_diff_ne(&T::zero(), T::default_epsilon()) && a_jj.abs_diff_ne(&T::zero(), T::default_epsilon()) && a_ij.abs_diff_ne(&T::zero(), T::default_epsilon())
                 {
                     let c: T = a_jj / p;
                     let s: T = -a_ij / p;
@@ -55,6 +58,6 @@ impl<T> Matrix<T> where T: Field + Scalar + Power
             }
         }
         q = q.transpose();
-        return QRDec::new(q, r);
+        return Ok(QRDec::new(q, r));
     }
 }

@@ -1,11 +1,9 @@
 use crate::algebra::{
-    abstr::{Field, Scalar},
+    abstr::{Field, Scalar, AbsDiffEq},
     linear::{matrix::lu::LUDec, matrix::Inverse, Matrix},
 };
 
-
-
-impl<T> Inverse<T> for Matrix<T> where T: Field + Scalar
+impl<T> Inverse<T> for Matrix<T> where T: Field + Scalar + AbsDiffEq
 {
     /// Inverse Matrix
     ///
@@ -23,7 +21,7 @@ impl<T> Inverse<T> for Matrix<T> where T: Field + Scalar
     }
 }
 
-impl<T> Matrix<T> where T: Field + Scalar
+impl<T> Matrix<T> where T: Field + Scalar + AbsDiffEq
 {
     pub fn inv_r(self: &Self) -> Result<Matrix<T>, ()>
     {

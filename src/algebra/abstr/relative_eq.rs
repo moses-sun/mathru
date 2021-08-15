@@ -9,7 +9,6 @@ use crate::algebra::abstr::abs_diff_eq::AbsDiffEq;
 /// # Example
 ///
 /// ```rust
-/// use std::f64;
 /// use mathru::algebra::abstr::Relative;
 ///
 /// Relative::default().eq(&1.0, &1.0);
@@ -113,7 +112,7 @@ pub trait RelativeEq<Rhs = Self>: AbsDiffEq<Rhs>
 
 // Implementation based on: [Comparing Floating Point Numbers, 2012 Edition]
 // (https://randomascii.wordpress.com/2012/02/25/comparing-floating-point-numbers-2012-edition/)
-macro_rules! impl_relative_eq {
+macro_rules! impl_relative_eq_float {
     ($T:ident, $U:ident) => {
         impl RelativeEq for $T {
 
@@ -155,8 +154,8 @@ macro_rules! impl_relative_eq {
     };
 }
 
-impl_relative_eq!(f32, i32);
-impl_relative_eq!(f64, i64);
+impl_relative_eq_float!(f32, i32);
+impl_relative_eq_float!(f64, i64);
 
 /// Approximate equality using both the absolute difference and relative based comparisons.
 #[macro_export]

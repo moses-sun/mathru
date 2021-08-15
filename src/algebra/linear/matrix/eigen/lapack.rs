@@ -22,9 +22,9 @@ impl<T> Matrix<T> where T: Field + Scalar + Power
     /// use mathru::algebra::linear::{matrix::EigenDec, Matrix, Vector};
     ///
     /// let a: Matrix<f64> = Matrix::new(3, 3, vec![1.0, -3.0, 3.0, 3.0, -5.0, 3.0, 6.0, -6.0, 4.0]);
-    /// let eigen: EigenDec<f64> = a.dec_eigen();
+    /// let eigen: EigenDec<f64> = a.dec_eigen().unwrap();
     /// ```
-    pub fn dec_eigen(self: &Self) -> EigenDec<T>
+    pub fn dec_eigen(self: &Self) -> Result<EigenDec<T>, ()>
     {
         let (m, n): (usize, usize) = self.dim();
         assert_eq!(m, n, "Unable to compute the eigen value of a non-square matrix");
@@ -37,8 +37,7 @@ impl<T> Matrix<T> where T: Field + Scalar + Power
 
         let mut info: i32 = 0;
 
-        let mut wr: Vec<T> = vec![T::zero(); n];
-        let mut wi: Vec<T> = vec![T::zero(); n];
+        let mut w: Vec<T> = vec![T::zero(); n];
 
         let mut temp1 = [T::zero()];
         let mut temp2 = vec![T::zero(); n * n];
@@ -48,8 +47,7 @@ impl<T> Matrix<T> where T: Field + Scalar + Power
                                        n_i32,
                                        &mut self_data[..],
                                        n_i32,
-                                       wr.as_mut_slice(),
-                                       wi.as_mut_slice(),
+                                       w.as_mut_slice(),
                                        &mut temp1,
                                        n_i32,
                                        &mut temp2,
@@ -63,8 +61,7 @@ impl<T> Matrix<T> where T: Field + Scalar + Power
                  n_i32,
                  &mut self_data[..],
                  n_i32,
-                 wr.as_mut_slice(),
-                 wi.as_mut_slice(),
+                 w.as_mut_slice(),
                  &mut temp1,
                  1 as i32,
                  &mut temp2,
@@ -73,8 +70,10 @@ impl<T> Matrix<T> where T: Field + Scalar + Power
                  lwork,
                  &mut info);
 
-        assert_eq!(0, info);
+        if info != 0 {
+            return Err(())
+        }
 
-        return EigenDec::new(Vector::new_column(m, wr), Matrix::new(n, n, temp2));
+        return Ok(EigenDec::new(Vector::new_column(m, w), Matrix::new(n, n, temp2)));
     }
 }

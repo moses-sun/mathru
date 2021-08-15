@@ -1,5 +1,10 @@
 # Change Log
 All notable changes starting with the version 0.6.9 are documented here.
+
+## [0.10.0]
+- Code refactoring
+- Bug fix in QR decomposition algorithm
+
 ## [0.9.1]
 - Update README.md and lib.rs to newest version
 

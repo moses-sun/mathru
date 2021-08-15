@@ -2,7 +2,7 @@
 
 [![crate](https://img.shields.io/crates/v/mathru.svg)](https://crates.io/crates/mathru)
 [![documentation](https://docs.rs/mathru/badge.svg)](https://docs.rs/mathru)
-![minimum rustc 1.52.1](https://img.shields.io/badge/rustc-1.52.1-green.svg)
+![minimum rustc 1.54.0](https://img.shields.io/badge/rustc-1.54.0-green.svg)
 ![maintenance](https://img.shields.io/badge/maintenance-actively--developed-brightgreen.svg)
 [![pipeline status](https://gitlab.com/matthiaseiholzer/mathru/badges/main/pipeline.svg)](https://gitlab.com/matthiaseiholzer/mathru/-/commits/main)
 ------------
@@ -110,13 +110,13 @@ Add this to your `Cargo.toml` for the native Rust implementation:
 
 ```toml
 [dependencies.mathru]
-version = "^0.9"
+version = "0.10"
 ```
 Add the following lines to 'Cargo.toml' if the openblas library should be used:
 
 ```toml
 [dependencies.mathru]
-version = "^0.9"
+version = "0.10"
 default-features = false
 features = "openblas"
 ```
@@ -128,12 +128,6 @@ One of the following implementations for linear algebra can be activated as a fe
 - [intel-mkl](https://software.intel.com/content/www/us/en/develop/tools/math-kernel-library.html): Intel Math Kernel Library
 - [accelerate](https://developer.apple.com/documentation/accelerate) Make large-scale mathematical computations and image calculations, optimized for high performance and low-energy consumption.(macOS only)
 
-
-Then import the modules and it is ready to be used.
-
-```rust
-use mathru as mr;
-```
 
 ### Solve a system of linear equations
 

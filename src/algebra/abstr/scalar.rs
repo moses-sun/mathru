@@ -3,6 +3,7 @@ use crate::algebra::abstr::{
     Sign,
 };
 use std::fmt::{Debug, Display};
+use crate::algebra::abstr::Complex;
 
 #[cfg(feature = "lapack")]
 use crate::algebra::abstr::Zero;
@@ -32,17 +33,18 @@ pub trait Scalar<Rhs = Self, Output = Self>:
 }
 
 macro_rules! impl_scalar {
-    ($t:ty, $eps:expr) => {
+    ($t:ty) => {
         impl Scalar for $t
         {
         }
     };
 }
 
-impl_scalar!(/* u8, u16, u32, u64, u128, i8, i16, i32, i64, i128, */ f32,
-             std::f32::EPSILON);
-impl_scalar!(/* u8, u16, u32, u64, u128, i8, i16, i32, i64, i128, */ f64,
-             std::f64::EPSILON);
+impl_scalar!(f32);
+impl_scalar!(f64);
+impl_scalar!(Complex<f32>);
+impl_scalar!(Complex<f64>);
+
 
 #[cfg(feature = "lapack")]
 pub trait Lapack: Sized + Zero
@@ -90,8 +92,7 @@ pub trait Lapack: Sized + Zero
              n: i32,
              a: &mut [Self],
              lda: i32,
-             wr: &mut [Self],
-             wi: &mut [Self],
+             w: &mut [Self],
              vl: &mut [Self],
              ldvl: i32,
              vr: &mut [Self],
@@ -105,8 +106,7 @@ pub trait Lapack: Sized + Zero
                        n: i32,
                        a: &mut [Self],
                        lda: i32,
-                       wr: &mut [Self],
-                       wi: &mut [Self],
+                       w: &mut [Self],
                        vl: &mut [Self],
                        ldvl: i32,
                        vr: &mut [Self],
@@ -155,12 +155,12 @@ pub trait Lapack: Sized + Zero
     fn xgetri(n: i32,
               a: &mut [Self],
               lda: i32,
-              ipiv: &mut [i32],
+              ipiv: &[i32],
               work: &mut [Self],
               lwork: i32,
               info: &mut i32);
 
-    fn xgetri_work_size(n: i32, a: &mut [Self], lda: i32, ipiv: &mut [i32], info: &mut i32) -> i32;
+    fn xgetri_work_size(n: i32, a: &mut [Self], lda: i32, ipiv: &[i32], info: &mut i32) -> i32;
 
     fn xpotrf(uplo: char, n: i32, a: &mut [Self], lda: i32, info: &mut i32);
 

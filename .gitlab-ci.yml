@@ -48,29 +48,29 @@ test-native:
       - cargo test --no-default-features --features native
 
 test-serde:
-  stage: unit-test
-  needs: ["fmt"]
-  image: rust:latest
-  script:
-    - cargo test --no-default-features --features "native serde-serialize"
+    stage: unit-test
+    needs: ["fmt"]
+    image: rust:latest
+    script:
+      - cargo test --no-default-features --features "native serde-serialize"
 
 test-openblas:
-  stage: unit-test
-  needs: ["fmt"]
-  image: rust:latest
-  script:
-    - cargo test --tests --no-default-features --features openblas
+    stage: unit-test
+    needs: ["fmt"]
+    image: rust:latest
+    script:
+      - cargo test --tests --no-default-features --features openblas
 
 test-netlib:
-  stage: unit-test
-  needs: ["fmt"]
-  image: rust:latest
-  script:
-    - cargo test --tests --no-default-features --features netlib
+    stage: unit-test
+    needs: ["fmt"]
+    image: rust:latest
+    script:
+      - cargo test --tests --no-default-features --features netlib
 
 test-intelmkl:
-  stage: unit-test
-  needs: ["fmt"]
-  image: rust:latest
-  script:
-    - cargo test --tests --no-default-features --features intel-mkl
+    stage: unit-test
+    needs: ["fmt"]
+    image: rust:latest
+    script:
+      - cargo test --tests --no-default-features --features intel-mkl

@@ -8,6 +8,7 @@ use crate::algebra::{
 #[cfg(feature = "serde")]
 use serde::{Deserialize, Serialize};
 use std::clone::Clone;
+use crate::algebra::abstr::AbsDiffEq;
 
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[derive(Debug, Clone)]
@@ -48,24 +49,21 @@ impl<T> LUDec<T>
     }
 }
 
-impl<T> Solve<Vector<T>> for LUDec<T> where T: Field + Scalar
+impl<T> Solve<Vector<T>> for LUDec<T> where T: Field + Scalar + AbsDiffEq
 {
     /// Solves Ax = y
-    ///  where A \in R^{m * n}, x \in R^n, y \in R^m
+    /// where A \in R^{m * n}, x \in R^n, y \in R^m
     fn solve(self: &Self, rhs: &Vector<T>) -> Result<Vector<T>, ()>
     {
         let b_hat: Vector<T> = &self.p * rhs;
-
-        let y: Vector<T> = self.l.substitute_forward(b_hat);
-
-        let x: Vector<T> = self.u.substitute_backward(y);
-
-        return Ok(x);
+        let y: Vector<T> = self.l.substitute_forward(b_hat)?;
+        return self.u.substitute_backward(y);
     }
 }
 
 // TODO
-impl<T> Inverse<T> for LUDec<T> where T: Field + Scalar
+impl<T> Inverse<T> for LUDec<T>
+    where T: Field + Scalar + AbsDiffEq
 {
     /// Inverse Matrix
     ///
@@ -91,15 +89,14 @@ impl<T> Inverse<T> for LUDec<T> where T: Field + Scalar
 }
 
 // TODO
-impl<T> Solve<Matrix<T>> for LUDec<T> where T: Field + Scalar
+impl<T> Solve<Matrix<T>> for LUDec<T>
+    where T: Field + Scalar + AbsDiffEq
 {
     fn solve(self: &Self, rhs: &Matrix<T>) -> Result<Matrix<T>, ()>
     {
         let b_hat: Matrix<T> = &self.p * rhs;
 
-        let y: Matrix<T> = self.l.substitute_forward(b_hat);
-        let x: Matrix<T> = self.u.substitute_backward(y);
-
-        return Ok(x);
+        let y: Matrix<T> = self.l.substitute_forward(b_hat)?;
+        return  self.u.substitute_backward(y);
     }
 }

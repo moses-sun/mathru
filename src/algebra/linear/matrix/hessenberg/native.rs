@@ -41,16 +41,16 @@ impl<T> Matrix<T> where T: Field + Scalar + Power
         let mut q: Matrix<T> = Matrix::one(m);
         let mut h: Matrix<T> = self.clone();
 
-        for k in 1..m
+        for k in 1..m-1
         {
             let v: Vector<T> = h.get_column(k - 1);
 
             let househ: Matrix<T> = Matrix::householder(&v, k);
-            h = &househ * &h;
+            h = &househ.clone().transpose() * &h;
             q = &househ * &q;
-            h = &h.clone() * &househ.transpose();
+            h = &h.clone() * &househ;
         }
 
-        return HessenbergDec::new(q.transpose(), h);
+        return HessenbergDec::new(q, h);
     }
 }

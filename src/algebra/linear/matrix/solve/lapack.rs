@@ -6,7 +6,8 @@ use crate::algebra::{
 use super::Solve;
 
 
-impl<T> Solve<Vector<T>> for Matrix<T> where T: Field + Scalar
+impl<T> Solve<Vector<T>> for Matrix<T>
+    where T: Field + Scalar
 {
     /// Solves Ax = y
     /// where A \in R^{m * n}, x \in R^n, y \in R^m
@@ -16,7 +17,8 @@ impl<T> Solve<Vector<T>> for Matrix<T> where T: Field + Scalar
     }
 }
 
-impl<T> Solve<Matrix<T>> for Matrix<T> where T: Field + Scalar
+impl<T> Solve<Matrix<T>> for Matrix<T>
+    where T: Field + Scalar
 {
     fn solve(self: &Self, rhs: &Matrix<T>) -> Result<Matrix<T>, ()>
     {
@@ -24,7 +26,8 @@ impl<T> Solve<Matrix<T>> for Matrix<T> where T: Field + Scalar
     }
 }
 
-impl<T> Matrix<T> where T: Field + Scalar
+impl<T> Matrix<T>
+    where T: Field + Scalar
 {
     fn solve_vector_r(self: &Self, y: &Vector<T>) -> Result<Vector<T>, ()>
     {
@@ -50,7 +53,7 @@ impl<T> Matrix<T> where T: Field + Scalar
                   ipiv.as_mut_slice(),
                   &mut info);
 
-        if info < 0
+        if info != 0
         {
             return Err(());
         }
@@ -73,7 +76,8 @@ impl<T> Matrix<T> where T: Field + Scalar
     }
 }
 
-impl<T> Matrix<T> where T: Field + Scalar
+impl<T> Matrix<T>
+    where T: Field + Scalar
 {
     pub fn solve_matrix_r(self: &Self, y: &Matrix<T>) -> Result<Matrix<T>, ()>
     {
@@ -99,7 +103,7 @@ impl<T> Matrix<T> where T: Field + Scalar
                   ipiv.as_mut_slice(),
                   &mut info);
 
-        if info < 0
+        if info != 0
         {
             return Err(());
         }

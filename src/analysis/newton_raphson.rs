@@ -66,6 +66,6 @@ impl<T> NewtonRaphson<T> where T: Real
             x = x_current;
         }
 
-        return Err("Maxmimum number of iterations reached");
+        return Err("Maximum number of iterations reached");
     }
 }

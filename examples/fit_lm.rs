@@ -104,7 +104,7 @@ fn main()
 
     // Fit parameter
     let beta_0: Vector<f64> = vector![-1.5; 1.0; -2.0];
-    let beta_opt: Vector<f64> = optim.minimize(&example_function, &beta_0).arg();
+    let beta_opt: Vector<f64> = optim.minimize(&example_function, &beta_0).unwrap().arg();
 
     //Create chart
     let mut graph_x: Vec<(f64, f64)> = Vec::with_capacity(x_vec.len());
