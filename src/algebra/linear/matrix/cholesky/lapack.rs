@@ -2,18 +2,18 @@ use crate::{
     algebra::{
         abstr::{Field, Scalar},
         linear::{matrix::CholeskyDec, Matrix},
-    },
-    elementary::Power,
+    }
 };
 
-impl<T> Matrix<T> where T: Field + Scalar + Power
+impl<T> Matrix<T>
+    where T: Field + Scalar
 {
-    /// Decomposes the symetric, positive definite quadractic matrix A into a
+    /// Decomposes the symmetric, positive definite quadratic matrix A into a
     /// lower triangular matrix L A = L L^T
     ///
     /// # Arguments
     ///
-    /// A has to be symetric and postive definite
+    /// A has to be symmetric and positive definite
     ///
     /// # Panics
     ///

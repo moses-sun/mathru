@@ -44,7 +44,7 @@ document.addEventListener(\"DOMContentLoaded\", function () {
 //!
 //! ```toml
 //! [dependencies]
-//! mathru = "^0.9"
+//! mathru = "0.10"
 //! ```
 //!
 //! Then it is ready to be used:
@@ -65,9 +65,9 @@ document.addEventListener(\"DOMContentLoaded\", function () {
 //!
 //! let b_hat = &p * &b;
 //!
-//! let y = u.substitute_backward(b_hat);
+//! let y = u.substitute_backward(b_hat).unwrap();
 //!
-//! let x = p * l.substitute_forward(y);
+//! let x = p * l.substitute_forward(y).unwrap();
 //!
 //! println!("{}", x);
 //! # }
@@ -185,7 +185,7 @@ document.addEventListener(\"DOMContentLoaded\", function () {
 //! 		let optim: LevenbergMarquardt<f64> = LevenbergMarquardt::new(100, 0.3, 0.95);
 //!
 //! 		let beta_0: Vector<f64> = vector![-1.5; 1.0; -2.0];
-//! 		let beta_opt: Vector<f64> = optim.minimize(&example_function, &beta_0).arg();
+//! 		let beta_opt: Vector<f64> = optim.minimize(&example_function, &beta_0).unwrap().arg();
 //!
 //! 	println!("{}", beta_opt);
 //! 	}
@@ -202,8 +202,6 @@ extern crate lapack;
 pub mod algebra;
 pub mod analysis;
 pub mod elementary;
-#[doc(hidden)]
-pub mod num;
 pub mod optimization;
 pub mod special;
 pub mod statistics;

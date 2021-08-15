@@ -40,7 +40,7 @@ impl<T> GaussNewton<T> where T: Real
     /// # Return
     ///
     /// local minimum
-    pub fn minimize<F>(self: &Self, func: &F, x_0: &Vector<T>) -> OptimResult<Vector<T>>
+    pub fn minimize<F>(self: &Self, func: &F, x_0: &Vector<T>) -> Result<OptimResult<Vector<T>>, ()>
         where F: Optim<T>
     {
         let mut x_n: Vector<T> = x_0.clone();
@@ -49,10 +49,14 @@ impl<T> GaussNewton<T> where T: Real
         {
             let jacobian_x_n: Matrix<T> = func.jacobian(&x_n);
             let f_x_n: Vector<T> = func.eval(&x_n);
-            let delta_x_n: Vector<T> = jacobian_x_n.pinv() * f_x_n;
+            let pinv = match jacobian_x_n.pinv() {
+                Ok(pinv) => pinv,
+                Err(e) => return Err(e)
+            };
+            let delta_x_n: Vector<T> = pinv * f_x_n;
             x_n = x_n - delta_x_n;
         }
 
-        return OptimResult::new(x_n);
+        return Ok(OptimResult::new(x_n));
     }
 }

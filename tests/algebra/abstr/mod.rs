@@ -9,7 +9,8 @@
 //mod semiring;
 mod identity;
 mod magma;
-mod operator;
+mod monoid;
+// mod operator;
 mod semigroup;
 //
 //mod natural;
@@ -28,4 +29,9 @@ mod semigroup;
 //pub use self::real::{Blas, Lapack};
 //pub use self::complex::Complex;
 
-mod polynomial;
+// mod polynomial;
+// #[macro_use]
+//pub mod real;
+//pub mod integer;
+//pub mod natural;
+// pub mod complex;

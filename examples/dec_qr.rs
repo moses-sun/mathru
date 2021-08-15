@@ -6,5 +6,5 @@ fn main()
                                     5.0, 1.0, 4.0;
                                     0.0, 4.0, 3.0];
 
-    let (_q, _r): (Matrix<f64>, Matrix<f64>) = a.dec_qr().qr();
+    let (_q, _r): (Matrix<f64>, Matrix<f64>) = a.dec_qr().unwrap().qr();
 }

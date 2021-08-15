@@ -58,7 +58,7 @@ impl<T> LevenbergMarquardt<T> where T: Real
     /// # Return
     ///
     /// local minimum
-    pub fn minimize<F>(self: &Self, func: &F, x_0: &Vector<T>) -> OptimResult<Vector<T>>
+    pub fn minimize<F>(self: &Self, func: &F, x_0: &Vector<T>) -> Result<OptimResult<Vector<T>>, ()>
         where F: Optim<T>
     {
         let mut x_n: Vector<T> = x_0.clone();
@@ -83,9 +83,9 @@ impl<T> LevenbergMarquardt<T> where T: Real
 
                 let numerator: T = f_x_n.dotp(&f_x_n) - f_x_n_1.dotp(&f_x_n_1);
                 let term: Vector<T> = &f_x_n + &(&jacobian_x_n * &d_n);
-                let denumerator: T = f_x_n.dotp(&f_x_n) - term.dotp(&term);
+                let denominator: T = f_x_n.dotp(&f_x_n) - term.dotp(&term);
 
-                let epsilon: T = numerator / denumerator;
+                let epsilon: T = numerator / denominator;
 
                 if epsilon < self.beta_0
                 {
@@ -103,6 +103,6 @@ impl<T> LevenbergMarquardt<T> where T: Real
             x_n = x_n + d_n;
         }
 
-        return OptimResult::new(x_n);
+        return Ok(OptimResult::new(x_n));
     }
 }

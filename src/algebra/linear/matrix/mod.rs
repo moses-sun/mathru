@@ -26,7 +26,8 @@ mod div;
 mod inverse;
 mod mul;
 mod sub;
-
+mod det;
+mod singular;
 mod cholesky;
 pub use self::cholesky::CholeskyDec;
 

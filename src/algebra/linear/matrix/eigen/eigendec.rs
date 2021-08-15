@@ -25,11 +25,13 @@ impl<T> EigenDec<T>
 
     pub fn vector(self: Self) -> Matrix<T>
     {
-        return self.vector;
+        unimplemented!();
+        // return self.vector;
     }
 
     pub fn pair(self: Self) -> (Vector<T>, Matrix<T>)
     {
-        return (self.value, self.vector);
+        unimplemented!();
+        // return (self.value, self.vector);
     }
 }

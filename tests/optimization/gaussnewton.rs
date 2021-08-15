@@ -38,7 +38,7 @@ fn test_minimization()
 
     let gaussnewton: GaussNewton<f64> = GaussNewton::new(5);
     let x_0: Vector<f64> = vector![0.5; -0.1];
-    let x_opt: Vector<f64> = gaussnewton.minimize(&rosenbrock, &x_0).arg();
+    let x_opt: Vector<f64> = gaussnewton.minimize(&rosenbrock, &x_0).unwrap().arg();
 
     let x_opt_ref: Vector<f64> = vector![1.0; 1.0];
 

@@ -25,9 +25,9 @@ impl<T> Matrix<T> where T: Field + Scalar + Power
     ///
     /// let a: Matrix<f64> = Matrix::new(2, 2, vec![1.0, -2.0, 3.0, -7.0]);
     ///
-    /// let (q, r): (Matrix<f64>, Matrix<f64>) = a.dec_qr().qr();
+    /// let (q, r): (Matrix<f64>, Matrix<f64>) = a.dec_qr().unwrap().qr();
     /// ```
-    pub fn dec_qr(self: &Self) -> QRDec<T>
+    pub fn dec_qr(self: &Self) -> Result<QRDec<T>, ()>
     {
         let (m, n) = self.dim();
         assert!(m >= n);
@@ -52,7 +52,10 @@ impl<T> Matrix<T> where T: Field + Scalar + Power
                                              &mut tau[..],
                                              &mut info);
 
-        assert_eq!(0, info);
+        if info != 0
+        {
+            return Err(())
+        }
 
         let mut work: Vec<T> = vec![T::zero(); lwork as usize];
 
@@ -65,7 +68,11 @@ impl<T> Matrix<T> where T: Field + Scalar + Power
                   lwork,
                   &mut info);
 
-        assert_eq!(0, info);
+        if info != 0
+        {
+            return Err(())
+        }
+
         let a: Matrix<T> = Matrix::new(m, n, self_data.clone());
         let r: Matrix<T> = a.r();
 
@@ -76,8 +83,10 @@ impl<T> Matrix<T> where T: Field + Scalar + Power
                                         m_i32,
                                         &mut tau[..],
                                         &mut info);
-
-        assert_eq!(0, info);
+        if info != 0
+        {
+            return Err(())
+        }
 
         let mut work = vec![T::zero(); lwork as usize];
 
@@ -90,11 +99,16 @@ impl<T> Matrix<T> where T: Field + Scalar + Power
                   &mut work,
                   lwork,
                   &mut info);
-        assert_eq!(0, info);
+
+        if info != 0
+        {
+            return Err(())
+        }
+
 
         let q: Matrix<T> = Matrix::new(m, n, self_data);
 
-        return QRDec::new(q, r);
+        return Ok(QRDec::new(q, r));
     }
 
     fn r(mut self: Self) -> Self

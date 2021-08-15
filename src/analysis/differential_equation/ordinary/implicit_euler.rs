@@ -20,11 +20,11 @@ use std::clone::Clone;
 /// # Example
 ///
 /// For this example, we want to solve the following stiff ordinary
-/// differiential equation:
+/// differential equation:
 /// ```math
 /// 0 = -4(y(t) -2) - y(t)^{'} = f(t, y, y^{'})
 /// ```
-/// The inial condition is $`y(0) = 1.0`$ and we solve it in the interval
+/// The initial condition is $`y(0) = 1.0`$ and we solve it in the interval
 /// $`\lbrack 0, 2\rbrack`$.\ The following equation is the closed solution for
 /// this ODE:
 /// ```math
@@ -64,6 +64,12 @@ use std::clone::Clone;
 ///         return result;
 ///     }
 ///
+///     fn jacobian(self: &Self, _t: f64, _input: &Vector<f64>) -> Matrix<f64>
+///     {
+///         let jacobian = matrix![-4.0];
+///         return jacobian;
+///     }
+///
 ///     fn time_span(self: &Self) -> (f64, f64)
 ///     {
 ///         return self.time_span;
@@ -73,15 +79,9 @@ use std::clone::Clone;
 ///     {
 ///         return self.init_cond.clone();
 ///     }
-///
-///     fn jacobian(self: &Self, _t: f64, _input: &Vector<f64>) -> Matrix<f64>
-///     {
-///         let jacobian = matrix![-4.0];
-///         return jacobian;
-///     }
 /// }
 ///
-/// // We instanciate Euler's backward algorithm with a stepsize of 0.001
+/// // We instantiate Euler's backward algorithm with a step size of 0.001
 /// let step_size: f64 = 0.0001;
 /// let solver: ImplicitEuler<f64> = ImplicitEuler::new(step_size);
 ///
@@ -89,7 +89,6 @@ use std::clone::Clone;
 ///
 /// // Solve the ODE
 /// let (t, x): (Vec<f64>, Vec<Vector<f64>>) = solver.solve(&problem).unwrap();
-///
 ///
 /// # }
 /// ```
