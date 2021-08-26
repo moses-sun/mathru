@@ -1,76 +1,109 @@
 stages:
-    - syntax-check
-    - lint
-    - unit-test
-    - deploy
+  - syntax-check
+  - lint
+  - unit-test
+  - report
+  - deploy
 
 cache:
   key: ${CI_COMMIT_REF_SLUG}
   paths:
     - target
     - Cargo.lock
+    - coverage
 
 variables:
   CARGO_HOME: $CI_PROJECT_DIR/cargo
   APT_CACHE_DIR: $CI_PROJECT_DIR/apt
 
 before_script:
-  - apt-get update -yq
-  - apt-get install -o dir::cache::archives="$APT_CACHE_DIR" -y cmake gfortran
+  - set PKG_CONFIG_PATH=/usr/lib/x86_64-linux-gnu/pkgconfig
   - cargo --version
   - rustc --version
 
 syntax-check:
-    stage: syntax-check
-    image: rust:latest
-    script:
-      - cargo check
+  stage: syntax-check
+  image: rust:latest
+  script:
+    - cargo check
 
 fmt:
-    stage: lint
-    needs: ["syntax-check"]
-    image: rust:latest
-    script:
-      - echo
+  stage: lint
+  needs: [ "syntax-check" ]
+  image: rust:latest
+  script:
+    - echo
 
 test-default:
-    stage: unit-test
-    needs: ["fmt"]
-    image: rust:latest
-    script:
-      - cargo test
+  stage: unit-test
+  needs: [ "fmt" ]
+  image: rust:latest
+  script:
+    - cargo test
 
 test-native:
-    stage: unit-test
-    needs: ["fmt"]
-    image: rust:latest
-    script:
-      - cargo test --no-default-features --features native
+  stage: unit-test
+  needs: [ "fmt" ]
+  image: rust:latest
+  script:
+    - cargo test --no-default-features --features native
 
 test-serde:
-    stage: unit-test
-    needs: ["fmt"]
-    image: rust:latest
-    script:
-      - cargo test --no-default-features --features "native serde-serialize"
+  stage: unit-test
+  needs: [ "fmt" ]
+  image: rust:latest
+  script:
+    - cargo test --no-default-features --features "native serde-serialize"
 
 test-openblas:
-    stage: unit-test
-    needs: ["fmt"]
-    image: rust:latest
-    script:
-      - cargo test --tests --no-default-features --features openblas
+  stage: unit-test
+  needs: [ "fmt" ]
+  image: rust:latest
+  script:
+    - cargo test --tests --no-default-features --features openblas
 
 test-netlib:
-    stage: unit-test
-    needs: ["fmt"]
-    image: rust:latest
-    script:
-      - cargo test --tests --no-default-features --features netlib
+  stage: unit-test
+  needs: [ "fmt" ]
+  image: rust:latest
+  script:
+    - cargo test --tests --no-default-features --features netlib
 
 test-intelmkl:
-    stage: unit-test
-    needs: ["fmt"]
-    image: rust:latest
-    script:
-      - cargo test --tests --no-default-features --features intel-mkl
+  stage: unit-test
+  needs: [ "fmt" ]
+  image: rust:latest
+  script:
+    - cargo test --tests --no-default-features --features intel-mkl
+
+coverage:
+  stage: report
+  image: "registry.gitlab.com/matthiaseiholzer/mathru/coverage:latest"
+  variables:
+    RUSTFLAGS: "-Zinstrument-coverage"
+    LLVM_PROFILE_FILE: "coverage-%p-%m.profraw"
+  script:
+    - cargo test
+    # generate html report
+    - $HOME/.cargo/bin/grcov . --binary-path ./target/debug/ -s . -t html --branch --ignore-not-existing --ignore "*cargo*" -o ./coverage/
+    # generate cobertura report for gitlab integration
+    - $HOME/.cargo/bin/grcov . --binary-path ./target/debug/ -s . -t lcov --branch --ignore-not-existing --ignore "*cargo*" -o ./coverage/coverage.lcov
+    - $HOME/.cargo/bin/grcov . --binary-path ./target/debug/ -s . -t cobertura --branch --ignore-not-existing --ignore "*cargo*" -o ./coverage/coverage.xml
+  artifacts:
+    paths:
+      - public
+      - 'coverage'
+    reports:
+      cobertura: coverage/coverage.xml
+
+pages:
+  stage: report
+  only:
+    - main
+  image: "registry.gitlab.com/matthiaseiholzer/mathru/coverage:latest"
+  script:
+    - cp --recursive coverage/ public/mathru/report
+  artifacts:
+    paths:
+      - public
+    expire_in: 1h
