@@ -60,6 +60,8 @@ test-openblas:
   needs: [ "fmt" ]
   image: rust:latest
   script:
+    - apt-get update -yq
+    - apt-get install -o dir::cache::archives="$APT_CACHE_DIR" -y cmake gfortran
     - cargo test --tests --no-default-features --features openblas
 
 test-netlib:
@@ -67,6 +69,8 @@ test-netlib:
   needs: [ "fmt" ]
   image: rust:latest
   script:
+    - apt-get update -yq
+    - apt-get install -o dir::cache::archives="$APT_CACHE_DIR" -y cmake gfortran
     - cargo test --tests --no-default-features --features netlib
 
 test-intelmkl:
@@ -74,6 +78,8 @@ test-intelmkl:
   needs: [ "fmt" ]
   image: rust:latest
   script:
+    - apt-get update -yq
+    - apt-get install -o dir::cache::archives="$APT_CACHE_DIR" -y cmake gfortran
     - cargo test --tests --no-default-features --features intel-mkl
 
 coverage:
@@ -97,7 +103,7 @@ coverage:
       cobertura: coverage/coverage.xml
 
 pages:
-  stage: report
+  stage: deploy
   only:
     - main
   image: "registry.gitlab.com/matthiaseiholzer/mathru/coverage:latest"
