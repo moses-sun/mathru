@@ -108,6 +108,7 @@ pages:
     - main
   image: "registry.gitlab.com/matthiaseiholzer/mathru/coverage:latest"
   script:
+    - mkdir -p public/mathru/report
     - cp --recursive coverage/ public/mathru/report
   artifacts:
     paths:
