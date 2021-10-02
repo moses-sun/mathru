@@ -1,6 +1,9 @@
 # Change Log
 All notable changes starting with the version 0.6.9 are documented here.
 
+## [0.10.1]
+- Fixed Bug in LU decomposition [Issue #7](https://gitlab.com/matthiaseiholzer/mathru/-/issues/7)
+
 ## [0.10.0]
 - Code refactoring
 - Bug fix in QR decomposition algorithm

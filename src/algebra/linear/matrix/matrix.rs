@@ -523,7 +523,8 @@ impl<T> Matrix<T> where T: Field + Scalar
     }
 }
 
-impl<T> Display for Matrix<T> where T: Display
+impl<T> Display for Matrix<T>
+    where T: Display
 {
     fn fmt(self: &Self, f: &mut fmt::Formatter) -> fmt::Result
     {

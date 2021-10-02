@@ -36,14 +36,15 @@ impl<T> Matrix<T> where
         for i in 0..a.m
         {
             //pivoting
-            let mut max: T = *a.get(i, i);
+            let mut max: T = T::zero();
             let mut i_max: usize = i;
 
-            for l in i + 1..a.m
+            for l in i ..a.m
             {
-                if *a.get(l, i) > max
+                let p_cand: T =  a.get(l, i).abs();
+                if p_cand > max
                 {
-                    max = *a.get(l, i);
+                    max = p_cand;
                     i_max = l;
                 }
             }
@@ -56,15 +57,14 @@ impl<T> Matrix<T> where
 
             for j in (i + 1)..a.n
             {
-                let f: T;
-                if a.get(i, i).clone() != T::zero()
+                let f: T = if a.get(i, i).clone() != T::zero()
                 {
-                    f = *(a.get(j, i)) / *a.get(i, i);
+                    *(a.get(j, i)) / *a.get(i, i)
                 }
                 else
                 {
-                    f = *(a.get(j, i));
-                }
+                    *(a.get(j, i))
+                };
 
                 for k in (i + 1)..a.n
                 {

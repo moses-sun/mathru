@@ -148,6 +148,21 @@ fn solve_vector_complex_f64()
     assert_relative_eq!(x, x_ref);
 }
 
+/**
+* Many thanks to Lukas Prediger @lumip
+* https://gitlab.com/matthiaseiholzer/mathru/-/issues/7
+*/
+#[test]
+fn failing()
+{
+    let m: Matrix<f64> = matrix![1., 0., 0., 0. ; 1., 0., -1., 0. ; 0., 1., 0., -1. ; 0., 1., 0., 0. ];
+    let b: Vector<f64> = vector![3.; 0.; 0.; 1.];
+
+    let x: Vector<f64> = m.solve(&b).unwrap();
+
+    assert_relative_eq!(&m * &x, b);
+}
+
 // #[cfg(feature = "native")]
 // #[test]
 // fn solve_vector_infinite_many_solutions()
