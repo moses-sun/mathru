@@ -78,25 +78,25 @@ test-intelmkl:
   script:
     - cargo test --tests --no-default-features --features intel-mkl
 
-coverage:
-  stage: report
-  image: "registry.gitlab.com/matthiaseiholzer/mathru/coverage:latest"
-  variables:
-    RUSTFLAGS: "-Zinstrument-coverage"
-    LLVM_PROFILE_FILE: "coverage-%p-%m.profraw"
-  script:
-    - cargo test
-    # generate html report
-    - $HOME/.cargo/bin/grcov . --binary-path ./target/debug/ -s . -t html --branch --ignore-not-existing --ignore "*cargo*" -o ./coverage/
-    # generate cobertura report for gitlab integration
-    - $HOME/.cargo/bin/grcov . --binary-path ./target/debug/ -s . -t lcov --branch --ignore-not-existing --ignore "*cargo*" -o ./coverage/coverage.lcov
-    - $HOME/.cargo/bin/grcov . --binary-path ./target/debug/ -s . -t cobertura --branch --ignore-not-existing --ignore "*cargo*" -o ./coverage/coverage.xml
-  artifacts:
-    paths:
-      - public
-      - 'coverage'
-    reports:
-      cobertura: coverage/coverage.xml
+#coverage:
+#  stage: report
+#  image: "registry.gitlab.com/matthiaseiholzer/mathru/coverage:latest"
+#  variables:
+#    RUSTFLAGS: "-Zinstrument-coverage"
+#    LLVM_PROFILE_FILE: "coverage-%p-%m.profraw"
+#  script:
+#    - cargo test
+#    # generate html report
+#    - $HOME/.cargo/bin/grcov . --binary-path ./target/debug/ -s . -t html --branch --ignore-not-existing --ignore "*cargo*" -o ./coverage/
+#    # generate cobertura report for gitlab integration
+#    - $HOME/.cargo/bin/grcov . --binary-path ./target/debug/ -s . -t lcov --branch --ignore-not-existing --ignore "*cargo*" -o ./coverage/coverage.lcov
+#    - $HOME/.cargo/bin/grcov . --binary-path ./target/debug/ -s . -t cobertura --branch --ignore-not-existing --ignore "*cargo*" -o ./coverage/coverage.xml
+#  artifacts:
+#    paths:
+#      - public
+#      - 'coverage'
+#    reports:
+#      cobertura: coverage/coverage.xml
 
 pages:
   stage: report
