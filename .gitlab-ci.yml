@@ -17,6 +17,8 @@ variables:
   APT_CACHE_DIR: $CI_PROJECT_DIR/apt
 
 before_script:
+  - apt-get update -yq
+  - apt-get install -o dir::cache::archives="$APT_CACHE_DIR" -y cmake gfortran
   - set PKG_CONFIG_PATH=/usr/lib/x86_64-linux-gnu/pkgconfig
   - cargo --version
   - rustc --version
