@@ -104,15 +104,15 @@ test-intelmkl:
 #    reports:
 #      cobertura: coverage/coverage.xml
 
-pages:
-  stage: deploy
-  only:
-    - main
-  image: "registry.gitlab.com/matthiaseiholzer/mathru/coverage:latest"
-  script:
-    - mkdir -p public/mathru/report
-    - cp --recursive coverage/ public/mathru/report
-  artifacts:
-    paths:
-      - public
-    expire_in: 1h
+#pages:
+#  stage: deploy
+#  only:
+#    - main
+#  image: "registry.gitlab.com/matthiaseiholzer/mathru/coverage:latest"
+#  script:
+#    - mkdir -p public/mathru/report
+#    - cp --recursive coverage/ public/mathru/report
+#  artifacts:
+#    paths:
+#      - public
+#    expire_in: 1h

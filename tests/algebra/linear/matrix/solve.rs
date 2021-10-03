@@ -153,7 +153,7 @@ fn solve_vector_complex_f64()
 * https://gitlab.com/matthiaseiholzer/mathru/-/issues/7
 */
 #[test]
-fn failing()
+fn negative_pivot_in_lu_decomposition()
 {
     let m: Matrix<f64> = matrix![1., 0., 0., 0. ; 1., 0., -1., 0. ; 0., 1., 0., -1. ; 0., 1., 0., 0. ];
     let b: Vector<f64> = vector![3.; 0.; 0.; 1.];
