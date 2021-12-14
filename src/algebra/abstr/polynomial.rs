@@ -46,7 +46,7 @@ impl<T> Polynomial<T>
     /// ```
     pub fn from_coef(coef: Vec<T>) -> Polynomial<T>
     {
-        if coef.len() == 0
+        if coef.is_empty()
         {
             panic!()
         }
@@ -59,8 +59,7 @@ impl<T> Polynomial<T>
 
     /// Creates a new polynomial from the given roots
     ///
-    ///
-    /// https://en.wikipedia.org/wiki/Vieta%27s_formulas
+    /// <https://en.wikipedia.org/wiki/Vieta%27s_formulas>
     ///
     /// # Arguments
     ///
@@ -88,7 +87,7 @@ impl<T> Polynomial<T>
     pub fn from_root(root: Vec<T>) -> Polynomial<T>
         where T: Field + Scalar
     {
-        if root.len() == 0
+        if root.is_empty()
         {
             panic!()
         }
@@ -217,7 +216,7 @@ impl<T> Add<Polynomial<T>> for Polynomial<T>
     /// ```
     fn add(self: Self, rhs: Polynomial<T>) -> Self::Output
     {
-        return (&self).add(&rhs);
+        (&self).add(&rhs)
     }
 }
 
@@ -258,7 +257,7 @@ impl<'a, 'b, T> Add<&'b Polynomial<T>> for &'a Polynomial<T>
             sum[i] = *a_i + *b_i
         }
 
-        return Polynomial::from_coef(sum)
+        Polynomial::from_coef(sum)
     }
 }
 
@@ -295,7 +294,7 @@ impl<T> Sub<Polynomial<T>> for Polynomial<T>
     /// ```
     fn sub(self: Self, rhs: Polynomial<T>) -> Self::Output
     {
-        return (&self).sub(&rhs);
+        (&self).sub(&rhs)
     }
 }
 
@@ -336,7 +335,7 @@ impl<'a, 'b, T> Sub<&'b Polynomial<T>> for &'a Polynomial<T>
             sum[i] = *a_i - *b_i
         }
 
-        return Polynomial::from_coef(sum)
+        Polynomial::from_coef(sum)
     }
 }
 
@@ -355,7 +354,7 @@ impl<T> Zero for Polynomial<T>
 {
     fn zero() -> Polynomial<T>
     {
-        return Polynomial::from_coef(vec![T::zero()])
+        Polynomial::from_coef(vec![T::zero()])
     }
 }
 
@@ -430,7 +429,7 @@ impl<T> Polynomial<T>
     /// ```
     pub fn degree(&self) -> usize
     {
-        return self.coef.len() - 1
+        self.coef.len() - 1
     }
 }
 
@@ -463,7 +462,7 @@ impl<T> Mul<Polynomial<T>> for Polynomial<T>
     /// ```
     fn mul(self: Self, rhs: Polynomial<T>) -> Self::Output
     {
-        return (&self).mul(&rhs);
+        (&self).mul(&rhs)
     }
 }
 
@@ -511,7 +510,7 @@ impl<'a, 'b, T> Mul<&'b Polynomial<T>> for &'a Polynomial<T>
             }
         }
 
-        return Polynomial::from_coef(res);
+        Polynomial::from_coef(res)
     }
 }
 
@@ -529,7 +528,7 @@ impl<'a, 'b, T> Div<&'b Polynomial<T>> for &'a Polynomial<T>
 {
     type Output = (Polynomial<T>, Polynomial<T>);
 
-    /// Dividedes two polynomials
+    /// Divides two polynomials
     ///
     /// # Example
     ///
@@ -552,7 +551,7 @@ impl<'a, 'b, T> Div<&'b Polynomial<T>> for &'a Polynomial<T>
     {
         if rhs.degree() > self.degree()
         {
-            return (Polynomial::zero(), self.clone());
+            return (Polynomial::zero(), self.clone())
         }
 
         let mut remainder: Vec<T> = self.coef.clone();
@@ -571,7 +570,7 @@ impl<'a, 'b, T> Div<&'b Polynomial<T>> for &'a Polynomial<T>
             }
         }
 
-        return (Polynomial::from_coef(quotient), Polynomial::from_coef(Polynomial::reduce_coef(remainder)));
+        (Polynomial::from_coef(quotient), Polynomial::from_coef(Polynomial::reduce_coef(remainder)))
     }
 }
 
@@ -593,12 +592,12 @@ impl<T> Polynomial<T>
             }
         }
 
-        return coef;
+        coef
     }
 
     pub fn reduce(self: Self) -> Self
     {
-       return Polynomial::from_coef(Polynomial::reduce_coef(self.coef));
+       Polynomial::from_coef(Polynomial::reduce_coef(self.coef))
     }
 }
 
@@ -629,7 +628,7 @@ impl<T> Polynomial<T>
     {
         if self.degree() == 0
         {
-            return Polynomial::from_coef(vec![T::zero()]);
+            return Polynomial::from_coef(vec![T::zero()])
         }
 
         let mut coef_diff = Vec::with_capacity(self.degree());
@@ -638,7 +637,7 @@ impl<T> Polynomial<T>
             coef_diff.push(T::from_f64((i + 1) as f64) * *a_i);
         }
 
-        return Polynomial::from_coef(Polynomial::reduce_coef(coef_diff));
+        Polynomial::from_coef(Polynomial::reduce_coef(coef_diff))
     }
 
     /// Integrate polynomial
@@ -671,7 +670,7 @@ impl<T> Polynomial<T>
             coef_int.push(*a_i / T::from_f64((i + 1) as f64));
         }
 
-        return Polynomial::from_coef(Polynomial::reduce_coef(coef_int));
+        Polynomial::from_coef(Polynomial::reduce_coef(coef_int))
     }
 }
 
@@ -721,7 +720,7 @@ impl<T> Identity<Addition> for Polynomial<T>
 {
     fn id() -> Self
     {
-        return Polynomial::from_coef(vec![T::id()]);
+        Polynomial::from_coef(vec![T::id()])
     }
 }
 
@@ -779,7 +778,7 @@ impl<T> AbsDiffEq for Polynomial<T>
                 return false;
             }
         }
-        return true;
+        true
     }
 }
 
@@ -800,6 +799,6 @@ impl<T> RelativeEq for Polynomial<T>
                 return false;
             }
         }
-        return true;
+        true
     }
 }

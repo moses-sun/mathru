@@ -17,7 +17,7 @@ impl<T> Inverse<T> for Matrix<T> where T: Field + Scalar + AbsDiffEq
     /// ```
     fn inv(self: &Self) -> Result<Matrix<T>, ()>
     {
-        return self.inv_r();
+        self.inv_r()
     }
 }
 
@@ -26,6 +26,6 @@ impl<T> Matrix<T> where T: Field + Scalar + AbsDiffEq
     pub fn inv_r(self: &Self) -> Result<Matrix<T>, ()>
     {
         let lu_dec: LUDec<T> = self.dec_lu()?;
-        return lu_dec.inv();
+        lu_dec.inv()
     }
 }

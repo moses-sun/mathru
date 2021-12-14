@@ -8,19 +8,19 @@ use std::clone::Clone;
 pub struct EigenDec<T>
 {
     value: Vector<T>,
-    vector: Matrix<T>,
+    _vector: Matrix<T>,
 }
 
 impl<T> EigenDec<T>
 {
     pub(super) fn new(value: Vector<T>, vector: Matrix<T>) -> EigenDec<T>
     {
-        return EigenDec { value, vector };
+        EigenDec { value, _vector: vector }
     }
 
     pub fn value(self: Self) -> Vector<T>
     {
-        return self.value;
+        self.value
     }
 
     pub fn vector(self: Self) -> Matrix<T>

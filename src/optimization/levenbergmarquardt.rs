@@ -89,20 +89,20 @@ impl<T> LevenbergMarquardt<T> where T: Real
 
                 if epsilon < self.beta_0
                 {
-                    mu_n = mu_n * T::from_f64(2.0);
+                    mu_n *= T::from_f64(2.0);
                 }
                 else
                 {
                     if epsilon > self.beta_1
                     {
-                        mu_n = mu_n / T::from_f64(2.0);
+                        mu_n /= T::from_f64(2.0);
                     }
                     break;
                 }
             }
-            x_n = x_n + d_n;
+            x_n += d_n;
         }
 
-        return Ok(OptimResult::new(x_n));
+        Ok(OptimResult::new(x_n))
     }
 }

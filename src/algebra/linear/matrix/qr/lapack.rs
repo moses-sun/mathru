@@ -108,7 +108,7 @@ impl<T> Matrix<T> where T: Field + Scalar + Power
 
         let q: Matrix<T> = Matrix::new(m, n, self_data);
 
-        return Ok(QRDec::new(q, r));
+        Ok(QRDec::new(q, r))
     }
 
     fn r(mut self: Self) -> Self
@@ -117,7 +117,7 @@ impl<T> Matrix<T> where T: Field + Scalar + Power
         {
             for k in 0..(i.min(self.n))
             {
-                *self.get_mut(i, k) = T::zero();
+                self[[i, k]] = T::zero();
             }
         }
 

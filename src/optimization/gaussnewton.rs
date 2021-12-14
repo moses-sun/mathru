@@ -54,9 +54,9 @@ impl<T> GaussNewton<T> where T: Real
                 Err(e) => return Err(e)
             };
             let delta_x_n: Vector<T> = pinv * f_x_n;
-            x_n = x_n - delta_x_n;
+            x_n -= delta_x_n;
         }
 
-        return Ok(OptimResult::new(x_n));
+        Ok(OptimResult::new(x_n))
     }
 }

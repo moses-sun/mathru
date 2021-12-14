@@ -8,7 +8,7 @@ use super::{
 
 /// Semiring
 ///
-///<a href="https://en.wikipedia.org/wiki/Semiring">https://en.wikipedia.org/wiki/Semiring</a>
+///<https://en.wikipedia.org/wiki/Semiring>
 pub trait Semiring<A: Operator = Addition, M: Operator = Multiplication>: Monoid<A> + Monoid<M>
 {
 

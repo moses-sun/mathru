@@ -11,7 +11,7 @@ use serde::{Deserialize, Serialize};
 
 /// Solves an ODE using Third-order Strong Stability Preserving Runge-Kutta(SSPRK3).
 ///
-/// <a href="https://en.wikipedia.org/wiki/List_of_Runge-Kutta_methods">https://en.wikipedia.org/wiki/List_of_Runge-Kutta_methods</a>
+/// <https://en.wikipedia.org/wiki/List_of_Runge-Kutta_methods>
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[derive(Clone, Debug)]
 pub struct Ssprk3<T>
@@ -29,9 +29,9 @@ impl<T> Default for Ssprk3<T> where T: Real
         let b: Vec<T> = vec![T::from_f64(1.0 / 6.0), T::from_f64(1.0 / 6.0), T::from_f64(2.0 / 3.0)];
         let c: Vec<T> = vec![T::one(), T::from_f64(0.5)];
 
-        return Ssprk3 {
+        Ssprk3 {
             butcher: ButcherFixedStepSize::new(a, b, c)
-        };
+        }
     }
 }
 
@@ -40,12 +40,12 @@ impl<T> ExplicitMethod<T> for Ssprk3<T> where T: Real
     fn do_step<F>(self: &Self, prob: &F, t_n: &T, x_n: &Vector<T>, h: &T) -> Vector<T>
         where F: ExplicitODE<T>
     {
-        return self.butcher.do_step(prob, t_n, x_n, h);
+        self.butcher.do_step(prob, t_n, x_n, h)
     }
 
     // Ssprk3's method is a 3rd order method
     fn order(self: &Self) -> u8
     {
-        return 3;
+        3
     }
 }

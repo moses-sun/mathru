@@ -1,7 +1,7 @@
 //! Fixed step size Stepper
 use super::{
     explicit_method::ExplicitMethod, implicit_method::ImplicitFixedStepSizeMethod,
-    ExplicitODE, ImplicitODE,
+    ExplicitODE, ImplicitODE
 };
 use crate::algebra::{abstr::Real, linear::Vector};
 #[cfg(feature = "serde")]
@@ -17,7 +17,8 @@ pub struct FixedStepper<T>
     step_size: T,
 }
 
-impl<T> FixedStepper<T> where T: Real
+impl<T> FixedStepper<T>
+    where T: Real
 {
     /// Creates an instance with the given step size
     ///
@@ -34,7 +35,7 @@ impl<T> FixedStepper<T> where T: Real
         {
             panic!();
         }
-        return FixedStepper { step_size };
+        FixedStepper { step_size }
     }
 
     pub fn solve<F, M>(self: &Self, prob: &F, method: &M) -> Result<(Vec<T>, Vec<Vector<T>>), ()>
@@ -65,20 +66,19 @@ impl<T> FixedStepper<T> where T: Real
         {
             let h: T = self.step_size.min(t_stop - t_n);
 
-            t_vec.push(t_n);
+            t_vec.push(t_n.clone());
             res_vec.push(x_n.clone());
 
             x_n = method.do_step(prob, &t_n, &x_n, &h);
 
-            t_n = t_n + h;
+            t_n += h;
         }
-
-        return Ok((t_vec, res_vec));
+        Ok((t_vec, res_vec))
     }
 
     pub fn get_step_size(self: &Self) -> &T
     {
-        return &self.step_size;
+        &self.step_size
     }
 
     pub fn set_step_size(mut self: &mut Self, step_size: T)
@@ -96,7 +96,8 @@ pub struct ImplicitFixedStepper<T>
     step_size: T,
 }
 
-impl<T> ImplicitFixedStepper<T> where T: Real
+impl<T> ImplicitFixedStepper<T>
+    where T: Real
 {
     /// Creates an instance with the given step size
     ///
@@ -150,15 +151,15 @@ impl<T> ImplicitFixedStepper<T> where T: Real
 
             x_n = method.do_step(prob, &t_n, &x_n, &h);
 
-            t_n = t_n + h;
+            t_n += h;
         }
 
-        return Ok((t_vec, res_vec));
+        Ok((t_vec, res_vec))
     }
 
     pub fn get_step_size(self: &Self) -> &T
     {
-        return &self.step_size;
+        &self.step_size
     }
 
     pub fn set_step_size(mut self: &mut Self, step_size: T)

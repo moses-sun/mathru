@@ -11,7 +11,7 @@ pub trait Distribution<T>
         let mut v: Vec<T> = Vec::new();
         v.extend(iter::repeat_with(&|| self.random()).take(size as usize));
 
-        return v;
+        v
     }
 }
 

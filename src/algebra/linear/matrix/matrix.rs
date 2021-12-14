@@ -82,7 +82,7 @@ impl<T> From<Vector<T>> for Matrix<T> where T: Field + Scalar
     {
         let (v_m, v_n): (usize, usize) = v.dim();
 
-        return Matrix::new(v_m, v_n, v.convert_to_vec());
+        Matrix::new(v_m, v_n, v.convert_to_vec())
     }
 }
 
@@ -141,7 +141,8 @@ impl<T> Matrix<T>
     // }
 }
 
-impl<T> Matrix<T> where T: Clone
+impl<T> Matrix<T>
+    where T: Clone
 {
     /// Applies the function f on every element in the matrix
     pub fn apply_mut(mut self: Matrix<T>, f: &dyn Fn(&T) -> T) -> Matrix<T>
@@ -152,7 +153,12 @@ impl<T> Matrix<T> where T: Clone
 
     pub fn apply(self: &Matrix<T>, f: &dyn Fn(&T) -> T) -> Matrix<T>
     {
-        return (self.clone()).apply_mut(f);
+        (self.clone()).apply_mut(f)
+    }
+
+    pub fn mut_apply(self: &mut Matrix<T>, f: &dyn Fn(&mut T) -> T)
+    {
+        self.data = self.data.iter_mut().map(f).collect::<Vec<T>>();
     }
 }
 
@@ -190,23 +196,23 @@ impl<T> Matrix<T>
         let mut sum: T = T::zero();
         for i in 0..m
         {
-            sum += *self.get(i, i);
+            sum += self[[i, i]];
         }
 
-        return sum;
+        sum
     }
 }
 
 #[cfg(feature = "native")]
 impl<T> Matrix<T> where T: Scalar
 {
-    pub(super) fn swap_rows<'a>(self: &mut Self, i: usize, j: usize)
+    pub(super) fn swap_rows(self: &mut Self, i: usize, j: usize)
     {
         for k in 0..self.n
         {
-            let temp: T = *self.get(i, k);
-            *(self.get_mut(i, k)) = *self.get(j, k);
-            *(self.get_mut(j, k)) = temp;
+            let temp: T = self[[i, k]];
+            self[[i, k]] = self[[j, k]];
+            self[[j, k]] = temp;
         }
     }
 }
@@ -222,7 +228,7 @@ impl<T> Matrix<T> where T: Field + Scalar
 
         for k in 0..self.m
         {
-            *(v.get_mut(k)) = *(self.get(k, i));
+            v[k] = self[[k, i]];
         }
 
         v
@@ -240,7 +246,7 @@ impl<T> Matrix<T> where T: Field + Scalar
 
         for k in 0..self.n
         {
-            *(v.get_mut(k)) = *(self.get(i, k));
+            v[k] = self[[i, k]];
         }
 
         v
@@ -257,7 +263,7 @@ impl<T> Matrix<T> where T: Field + Scalar
 
         for k in 0..self.m
         {
-            *(self.get_mut(k, i)) = *column.get(k);
+            self[[k, i]] = column[k];
         }
     }
 
@@ -278,7 +284,7 @@ impl<T> Matrix<T> where T: Field + Scalar
 
         for k in 0..self.n
         {
-            *(self.get_mut(i, k)) = *row.get(k);
+            self[[i, k]] = row[k];
         }
     }
 }
@@ -286,7 +292,7 @@ impl<T> Matrix<T> where T: Field + Scalar
 impl<T> Matrix<T> where T: Field + Scalar + Power
 {
     ///
-    pub fn givens<'d, 'e>(m: usize, i: usize, j: usize, c: T, s: T) -> Self
+    pub fn givens(m: usize, i: usize, j: usize, c: T, s: T) -> Self
     {
         if i >= m || j >= m
         {
@@ -294,17 +300,17 @@ impl<T> Matrix<T> where T: Field + Scalar + Power
         }
 
         let mut givens: Matrix<T> = Matrix::one(m);
-        *(givens.get_mut(i, i)) = c;
-        *(givens.get_mut(j, j)) = c;
-        *(givens.get_mut(i, j)) = s;
-        *(givens.get_mut(j, i)) = -s;
+        givens[[i, i]] = c;
+        givens[[j, j]] = c;
+        givens[[i, j]] = s;
+        givens[[j, i]] = -s;
         givens
     }
 
     #[cfg(feature = "native")]
-    /// function [c,s] = Givens(a,b)
+    /// function \[c,s \] = Givens(a,b)
     /// Givens rotation computation
-    /// Determines cosine-sine pair (c,s) so that [c s;-s c]'*[a;b] = [r;0]
+    /// Determines cosine-sine pair (c,s) so that \[c s;-s c\]'*\[a;b\] = \[r;0\]
     /// GVL4: Algorithm 5.1.3
     pub fn givens_cosine_sine_pair(a: T, b: T) -> (T, T)
     {
@@ -335,7 +341,7 @@ impl<T> Matrix<T> where T: Field + Scalar + Power
             }
         }
 
-        return (c, s);
+        (c, s)
     }
 }
 
@@ -375,7 +381,7 @@ impl<T> Matrix<T> where T: Field + Scalar + Power
 
         let alpha: T;
 
-        let d_0: T = *d.get(0);
+        let d_0: T = d[0];
 
         if d_0 >= T::zero()
         {
@@ -397,8 +403,8 @@ impl<T> Matrix<T> where T: Field + Scalar + Power
 
         let mut v: Vector<T> = Vector::zero(d_m);
 
-        *v.get_mut(0) = (T::from_f64(0.5) * (T::one() - d_0 / alpha)).pow(T::from_f64(0.5));
-        let p: T = -alpha * *v.get(0);
+        v[0] = (T::from_f64(0.5) * (T::one() - d_0 / alpha)).pow(T::from_f64(0.5));
+        let p: T = -alpha * v[0];
 
         if d_m - 1 >= 1
         {
@@ -420,7 +426,8 @@ impl<T> Matrix<T> where T: Field + Scalar + Power
     }
 }
 
-impl<T> Matrix<T> where T: Field + Scalar
+impl<T> Matrix<T>
+    where T: Field + Scalar
 {
     /// Returns a slice of the matrix
     ///
@@ -471,10 +478,10 @@ impl<T> Matrix<T> where T: Field + Scalar
         {
             for c in column_s..(column_e + 1)
             {
-                *slice.get_mut(r - row_s, c - column_s) = *self.get(r, c)
+                slice[[r - row_s, c - column_s]] = self[[r, c]];
             }
         }
-        return slice;
+        slice
     }
 
     /// Replaces parts of the matrix with the given values
@@ -516,7 +523,7 @@ impl<T> Matrix<T> where T: Field + Scalar
         {
             for c in column..(column + s_n)
             {
-                *self.get_mut(r, c) = *slice.get(r - row, c - column);
+                self[[r, c]] = slice[[r - row, c - column]];
             }
         }
         self
@@ -533,7 +540,7 @@ impl<T> Display for Matrix<T>
         {
             for j in 0..self.n
             {
-                write!(f, "{} ", self.get(i, j)).unwrap();
+                write!(f, "{} ", self[[i, j]]).unwrap();
             }
             write!(f, "\n").unwrap();
         }
@@ -541,63 +548,10 @@ impl<T> Display for Matrix<T>
     }
 }
 
-impl<T> Matrix<T>
-{
-    /// Returns the mutual element a_ij from the matrix
-    ///
-    /// # Example
-    ///
-    /// ```
-    /// # #[macro_use]
-    /// # extern crate mathru;
-    /// # fn main()
-    /// # {
-    /// use mathru::algebra::linear::{Matrix};
-    ///
-    /// let mut a: Matrix<f64> = matrix![1.0, 0.0; 3.0, -7.0];
-    /// *a.get_mut(1, 0) = -8.0;
-    ///
-    /// let a_updated: Matrix<f64> = matrix![1.0, 0.0; -8.0, -7.0];
-    /// assert_eq!(a_updated, a);
-    /// # }
-    /// ```
-    pub fn get_mut(self: &mut Self, i: usize, j: usize) -> &mut T
-    {
-        assert!(i < self.m);
-        assert!(j < self.n);
-        &mut (self.data[j * self.m + i])
-    }
 
-    /// Returns the element a_ij from the matrix
-    ///
-    /// # Example
-    ///
-    /// ```
-    /// # #[macro_use]
-    /// # extern crate mathru;
-    /// # fn main()
-    /// # {
-    /// use mathru::algebra::linear::{Matrix};
-    ///
-    /// let a: Matrix<f64> = matrix![   1.0, 0.0;
-    ///                                 3.0, -7.0];
-    ///
-    /// let a_ref: f64 = 3.0;
-    /// let element: f64 = *a.get(1, 0);
-    ///
-    /// assert_eq!(a_ref, element);
-    /// # }
-    /// ```
-    pub fn get(self: &Self, i: usize, j: usize) -> &T
-    {
-        assert!(i < self.m);
-        assert!(j < self.n);
 
-        return &self.data[j * self.m + i];
-    }
-}
-
-impl<T> PartialEq for Matrix<T> where T: PartialEq
+impl<T> PartialEq for Matrix<T>
+    where T: PartialEq
 {
     /// Checks if two matrices are equal
     ///
@@ -627,7 +581,8 @@ impl<T> PartialEq for Matrix<T> where T: PartialEq
     }
 }
 
-impl<T> Matrix<T> where T: Clone + Copy
+impl<T> Matrix<T>
+    where T: Clone + Copy
 {
     /// Creates a new Matrix object
     ///
@@ -640,7 +595,7 @@ impl<T> Matrix<T> where T: Clone + Copy
     /// ] => vec![ 0, 3, 6, 1, 4, 7, 2, 5, 8]
     pub fn new(m: usize, n: usize, data: Vec<T>) -> Self
     {
-        assert_eq!(m * n, data.len());
+        // assert_eq!(m * n, data.len());
         Matrix { m, n, data }
     }
 }
@@ -649,11 +604,12 @@ impl<T> Matrix<T>
 {
     pub fn convert_to_vec(self) -> Vec<T>
     {
-        return self.data;
+        self.data
     }
 }
 
-impl<T> Matrix<T> where T: Scalar + Clone + Copy
+impl<T> Matrix<T>
+    where T: Scalar + Clone + Copy
 {
     pub fn new_random(m: usize, n: usize) -> Matrix<T>
     {
@@ -663,7 +619,8 @@ impl<T> Matrix<T> where T: Scalar + Clone + Copy
     }
 }
 
-impl<T> Matrix<T> where T: Field + Scalar
+impl<T> Matrix<T>
+    where T: Field + Scalar
 {
     /// Returns the zero matrix(additive neutral element)
     ///
@@ -677,13 +634,12 @@ impl<T> Matrix<T> where T: Field + Scalar
     /// ```
     pub fn zero(m: usize, n: usize) -> Self
     {
-        return Matrix { m,
-                        n,
-                        data: vec![T::zero(); m * n] };
+        Matrix { m, n, data: vec![T::zero(); m * n] }
     }
 }
 
-impl<T> Identity<Addition> for Matrix<T> where T: Identity<Addition>
+impl<T> Identity<Addition> for Matrix<T>
+    where T: Identity<Addition>
 {
     /// Returns the additive neutral element)
     ///
@@ -705,7 +661,8 @@ impl<T> Identity<Addition> for Matrix<T> where T: Identity<Addition>
     }
 }
 
-impl<T> Matrix<T> where T: Field + Scalar
+impl<T> Matrix<T>
+    where T: Field + Scalar
 {
     /// Returns the eye matrix(multiplicative neutral element)
     ///
@@ -739,7 +696,8 @@ impl<T> Matrix<T> where T: Field + Scalar
     }
 }
 
-impl<T> Matrix<T> where T: Field + Scalar + Power + AbsDiffEq
+impl<T> Matrix<T>
+    where T: Field + Scalar + Power + AbsDiffEq
 {
     /// Calculates the pseudo inverse matrix
     ///
@@ -750,7 +708,7 @@ impl<T> Matrix<T> where T: Field + Scalar + Power + AbsDiffEq
         let x: Matrix<T> = r.clone()
                             .transpose()
                             .substitute_forward(self.clone().transpose())?;
-        return r.substitute_backward(x);
+        r.substitute_backward(x)
     }
 }
 
@@ -771,7 +729,7 @@ impl<T> Matrix<T>
     /// ```
     pub fn dim(&self) -> (usize, usize)
     {
-        return (self.m, self.n);
+        (self.m, self.n)
     }
 
     /// Returns the number of rows
@@ -787,7 +745,7 @@ impl<T> Matrix<T>
     /// assert_eq!(4, m);
     pub fn nrows(self: &Self) -> usize
     {
-        return self.m;
+        self.m
     }
 
     /// Returns the number of columns
@@ -804,7 +762,7 @@ impl<T> Matrix<T>
     /// ```
     pub fn ncols(self: &Self) -> usize
     {
-        return self.n;
+        self.n
     }
 }
 
@@ -828,7 +786,7 @@ impl<T> AbsDiffEq for Matrix<T>
             }
         }
 
-        return true;
+        true
     }
 }
 
@@ -850,6 +808,6 @@ impl<T> RelativeEq for Matrix<T>
                 return false;
             }
         }
-        return true;
+        true
     }
 }

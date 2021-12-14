@@ -4,7 +4,8 @@ use crate::algebra::{
 };
 use std::ops::Sub;
 
-impl<T> Sub for Matrix<T> where T: Field + Scalar
+impl<T> Sub for Matrix<T>
+    where T: Field + Scalar
 {
     type Output = Matrix<T>;
 
@@ -34,7 +35,8 @@ impl<T> Sub for Matrix<T> where T: Field + Scalar
     }
 }
 
-impl<'a, 'b, T> Sub<&'b Matrix<T>> for &'a Matrix<T> where T: Field + Scalar
+impl<'a, 'b, T> Sub<&'b Matrix<T>> for &'a Matrix<T>
+    where T: Field + Scalar
 {
     type Output = Matrix<T>;
 
@@ -52,9 +54,23 @@ impl<'a, 'b, T> Sub<&'b Matrix<T>> for &'a Matrix<T> where T: Field + Scalar
     }
 }
 
+impl<'a, 'b, T> Sub<&'b Matrix<T>> for &'a mut Matrix<T>
+    where T: Field + Scalar
+{
+    type Output = &'a mut Matrix<T>;
+
+    fn sub(self: Self, rhs: &'b Matrix<T>) -> Self::Output
+    {
+        assert_eq!(self.dim(), rhs.dim());
+        self.data.iter_mut().zip(rhs.data.iter()).for_each(|(x, y)| *x -= *y);
+        self
+    }
+}
+
 ///
 /// Subtracts scalar from all matrix elements
-impl<'a, 'b, T> Sub<&'b T> for &'a Matrix<T> where T: Field + Scalar
+impl<'a, 'b, T> Sub<&'b T> for &'a Matrix<T>
+    where T: Field + Scalar
 {
     type Output = Matrix<T>;
 
@@ -70,11 +86,36 @@ impl<'a, 'b, T> Sub<&'b T> for &'a Matrix<T> where T: Field + Scalar
     /// ```
     fn sub(self: Self, rhs: &T) -> Self::Output
     {
-        return self.apply(&|x: &T| -> T { *x - *rhs });
+        self.apply(&|x: &T| -> T { *x - *rhs })
     }
 }
 
-impl<T> Sub<T> for Matrix<T> where T: Field + Scalar
+///
+/// Subtracts scalar from all matrix elements
+impl<'a, 'b, T> Sub<&'b T> for &'a mut Matrix<T>
+    where T: Field + Scalar
+{
+    type Output = &'a mut Matrix<T>;
+
+    /// Subtracts a scalar value from all matrix elements
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// use mathru::algebra::linear::Matrix;
+    ///
+    /// let a: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
+    /// let b: Matrix<f64> = &a - &-4.0;
+    /// ```
+    fn sub(self: Self, rhs: &T) -> Self::Output
+    {
+        let _ = self.data.iter_mut().for_each(&|x: &mut T| *x -= *rhs);
+        self
+    }
+}
+
+impl<T> Sub<T> for Matrix<T>
+    where T: Field + Scalar
 {
     type Output = Matrix<T>;
 
@@ -90,6 +131,9 @@ impl<T> Sub<T> for Matrix<T> where T: Field + Scalar
     /// ```
     fn sub(self: Self, rhs: T) -> Self::Output
     {
-        return (&self).sub(&rhs);
+        (&self).sub(&rhs)
     }
 }
+
+
+

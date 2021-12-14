@@ -1,7 +1,6 @@
 /// Exponential function and its inverse
 ///
-///<a href="https://en.wikipedia.org/wiki/Exponential_function">https://en.wikipedia.org/wiki/Exponential_function</a>
-///
+///<https://en.wikipedia.org/wiki/Exponential_function>
 
 use std::{f32, f64};
 use crate::algebra::abstr::{Complex, Real, Sign};
@@ -53,8 +52,7 @@ impl<T> Exponential for Complex<T>
     /// Returns the euler number represented as a complex number
     fn e() -> Self
     {
-        Complex { re: T::e(),
-            im: T::zero() }
+        Complex { re: T::e(), im: T::zero() }
     }
 
     ///Exponential function
@@ -71,8 +69,7 @@ impl<T> Exponential for Complex<T>
     fn exp(self: Self) -> Self
     {
         let k: T = self.re.exp();
-        Complex { re: k * self.im.cos(),
-            im: k * self.im.sin() }
+        Complex { re: k * self.im.cos(), im: k * self.im.sin() }
     }
 
     ///Logiarithm function
@@ -90,8 +87,7 @@ impl<T> Exponential for Complex<T>
     /// ```
     fn ln(self: Self) -> Self
     {
-        Complex { re: self.abs().re.ln(),
-            im: self.arg().re }
+        Complex { re: self.abs().re.ln(), im: self.arg().re }
     }
 }
 
@@ -102,8 +98,7 @@ impl<T> Exponential for Complex<T>
     /// Returns the euler number represented as a complex number
     fn e() -> Self
     {
-        Complex { re: T::e(),
-            im: T::zero() }
+        Complex { re: T::e(), im: T::zero() }
     }
 
     ///Exponential function
@@ -119,8 +114,7 @@ impl<T> Exponential for Complex<T>
     fn exp(self: Self) -> Self
     {
         let k: T = self.re.exp();
-        Complex { re: k * self.im.cos(),
-            im: k * self.im.sin() }
+        Complex { re: k * self.im.cos(), im: k * self.im.sin() }
     }
 
     ///Logiarithm function
@@ -129,7 +123,6 @@ impl<T> Exponential for Complex<T>
     ///
     /// ```
     /// use mathru::{elementary::Exponential, algebra::abstr::Complex};
-    //     ///
     ///
     /// let a: Complex<f64> = Complex::new(1.0_f64, 2.0_f64);
     /// let refer: Complex<f64> = Complex::new(5.0_f64.powf(0.5_f64).ln(), 2.0_f64.atan());
@@ -138,7 +131,6 @@ impl<T> Exponential for Complex<T>
     /// ```
     fn ln(self: Self) -> Self
     {
-        Complex { re: self.abs().re.ln(),
-            im: self.arg().re }
+        Complex { re: self.abs().re.ln(), im: self.arg().re }
     }
 }

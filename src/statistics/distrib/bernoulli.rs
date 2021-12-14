@@ -8,7 +8,7 @@ use std::clone::Clone;
 ///
 /// Fore more information:
 ///
-/// <a href="https://en.wikipedia.org/wiki/Bernoulli_distribution">https://en.wikipedia.org/wiki/Bernoulli_distribution</a>
+/// <https://en.wikipedia.org/wiki/Bernoulli_distribution>
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[derive(Clone, Copy, Debug)]
 pub struct Bernoulli<T>
@@ -42,7 +42,7 @@ impl<T> Bernoulli<T> where T: Real
             panic!()
         }
 
-        return Bernoulli { p };
+        Bernoulli { p }
     }
 }
 
@@ -67,17 +67,15 @@ impl<T> Discrete<T, u8, T> for Bernoulli<T> where T: Real
     /// let x: u8 = 0;
     /// let p: f64 = distrib.pmf(x);
     /// ```
-    fn pmf<'a>(self: &'a Self, x: u8) -> T
+    fn pmf(self: &Self, x: u8) -> T
     {
         if (x == 1) || (x == 0)
         {
             if x == 0
             {
-                return T::one() - self.p;
-            }
-            else
-            {
-                return self.p;
+                T::one() - self.p
+            } else {
+                self.p
             }
         }
         else
@@ -101,7 +99,7 @@ impl<T> Discrete<T, u8, T> for Bernoulli<T> where T: Real
     /// let x: f64 = 0.4;
     /// let p: f64 = distrib.cdf(x);
     /// ```
-    fn cdf<'a>(self: &'a Self, x: T) -> T
+    fn cdf(self: &Self, x: T) -> T
     {
         if x >= T::one()
         {
@@ -110,11 +108,9 @@ impl<T> Discrete<T, u8, T> for Bernoulli<T> where T: Real
 
         if x <= T::zero()
         {
-            return T::zero();
-        }
-        else
-        {
-            return T::one() - self.p;
+            T::zero()
+        } else {
+            T::one() - self.p
         }
     }
 
@@ -128,7 +124,7 @@ impl<T> Discrete<T, u8, T> for Bernoulli<T> where T: Real
     /// let distrib: Bernoulli<f64> = Bernoulli::new(0.2);
     /// let mean: f64 = distrib.mean();
     /// ```
-    fn mean<'a>(self: &'a Self) -> T
+    fn mean(self: &Self) -> T
     {
         self.p
     }
@@ -143,7 +139,7 @@ impl<T> Discrete<T, u8, T> for Bernoulli<T> where T: Real
     /// let distrib: Bernoulli<f64> = Bernoulli::new(0.2);
     /// let var: f64 = distrib.variance();
     /// ```
-    fn variance<'a>(self: &'a Self) -> T
+    fn variance(self: &Self) -> T
     {
         self.p * (T::one() - self.p)
     }

@@ -22,7 +22,7 @@ impl<T> Div<T> for Matrix<T> where T: Field + Scalar
     /// ```
     fn div(self, m: T) -> Matrix<T>
     {
-        return self * (T::one() / m);
+        self * (T::one() / m)
     }
 }
 
@@ -42,6 +42,6 @@ impl<'a, 'b, T> Div<&'b T> for &'a Matrix<T> where T: Field + Scalar
     /// ```
     fn div(self, m: &'b T) -> Matrix<T>
     {
-        return self.clone() * (T::one() / *m);
+        self.clone() * (T::one() / *m)
     }
 }

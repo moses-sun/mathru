@@ -10,7 +10,7 @@ use std::clone::Clone;
 /// Uniform distribution
 ///
 /// Fore more information:
-/// <a href="https://en.wikipedia.org/wiki/Uniform_distribution_(continuous)">https://en.wikipedia.org/wiki/Uniform_distribution_(continuous)</a>
+/// <https://en.wikipedia.org/wiki/Uniform_distribution_(continuous)>
 ///
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[derive(Clone, Copy, Debug)]
@@ -43,7 +43,7 @@ impl<T> Uniform<T> where T: Real
             panic!();
         }
 
-        return Uniform { a, b };
+        Uniform { a, b }
     }
 }
 
@@ -52,7 +52,7 @@ impl<T> Distribution<T> for Uniform<T> where T: Real
     fn random(self: &Self) -> T
     {
         let mut rng: ThreadRng = rand::thread_rng();
-        return T::from_f64(rng.gen_range(self.a.to_f64()..self.b.to_f64()));
+        T::from_f64(rng.gen_range(self.a.to_f64()..self.b.to_f64()))
     }
 }
 
@@ -77,11 +77,11 @@ impl<T> Continuous<T> for Uniform<T> where T: Real
     {
         if self.a <= x && x <= self.b
         {
-            return T::one() / (self.b - self.a);
+            T::one() / (self.b - self.a)
         }
         else
         {
-            return T::zero();
+            T::zero()
         }
     }
 
@@ -104,17 +104,17 @@ impl<T> Continuous<T> for Uniform<T> where T: Real
     {
         if x < self.a
         {
-            return T::zero();
+            T::zero()
         }
         else
         {
             if x > self.b
             {
-                return T::one();
+                T::one()
             }
             else
             {
-                return (x - self.a) / (self.b - self.a);
+                (x - self.a) / (self.b - self.a)
             }
         }
     }
@@ -141,7 +141,7 @@ impl<T> Continuous<T> for Uniform<T> where T: Real
             panic!("Quantile q is out of bounds");
         }
 
-        return q * (self.b - self.a) + self.a;
+        q * (self.b - self.a) + self.a
     }
 
     /// Mean
@@ -160,7 +160,7 @@ impl<T> Continuous<T> for Uniform<T> where T: Real
     /// ```
     fn mean(self: &Self) -> T
     {
-        return (self.a + self.b) / T::from_f64(2.0);
+        (self.a + self.b) / T::from_f64(2.0)
     }
 
     /// Variance
@@ -175,7 +175,7 @@ impl<T> Continuous<T> for Uniform<T> where T: Real
     /// ```
     fn variance(self: &Self) -> T
     {
-        return (self.b - self.a) * (self.b - self.a) / T::from_f64(12.0);
+        (self.b - self.a) * (self.b - self.a) / T::from_f64(12.0)
     }
 
     /// Skewness
@@ -191,7 +191,7 @@ impl<T> Continuous<T> for Uniform<T> where T: Real
     /// ```
     fn skewness(self: &Self) -> T
     {
-        return T::zero();
+        T::zero()
     }
 
     /// Median
@@ -210,7 +210,7 @@ impl<T> Continuous<T> for Uniform<T> where T: Real
     /// ```
     fn median(self: &Self) -> T
     {
-        return self.mean();
+        self.mean()
     }
 
     /// Entropy
@@ -229,6 +229,6 @@ impl<T> Continuous<T> for Uniform<T> where T: Real
     /// ```
     fn entropy(self: &Self) -> T
     {
-        return (self.b - self.a).ln();
+        (self.b - self.a).ln()
     }
 }

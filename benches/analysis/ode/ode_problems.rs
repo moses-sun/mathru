@@ -62,9 +62,9 @@ impl Default for ExplicitODE2
 
 impl ExplicitODE<f64> for ExplicitODE2
 {
-    fn func(self: &Self, _t: &f64, x: &Vector<f64>) -> Vector<f64>
+    fn func(self: &Self, _t: f64, x: Vector<f64>) -> Vector<f64>
     {
-        return x.clone().apply(&|e: &f64| -> f64 {
+        return x.apply(&|e: &f64| -> f64 {
                             return e * e + 1.0;
                         });
     }
@@ -100,9 +100,9 @@ impl Default for ExplicitODE3
 
 impl ExplicitODE<f64> for ExplicitODE3
 {
-    fn func(self: &Self, _t: &f64, x: &Vector<f64>) -> Vector<f64>
+    fn func(self: &Self, _t: f64, x: Vector<f64>) -> Vector<f64>
     {
-        return x.clone().apply(&|e: &f64| -> f64 { return e * e });
+        return x.apply(&|e: &f64| -> f64 { return e * e });
     }
 
     fn time_span(self: &Self) -> (f64, f64)
@@ -140,8 +140,14 @@ impl ImplicitODE<f64> for ImplicitODE1
 {
     fn func(self: &Self, _t: f64, x: &Vector<f64>) -> Vector<f64>
     {
-        let result = (x * &-4.0) + 8.0;
+        let result = (x * -4.0) + 8.0;
         return result;
+    }
+
+    fn jacobian(self: &Self, _t: f64, _input: &Vector<f64>) -> Matrix<f64>
+    {
+        let jacobian = matrix![-4.0];
+        return jacobian;
     }
 
     fn time_span(self: &Self) -> (f64, f64)
@@ -152,11 +158,5 @@ impl ImplicitODE<f64> for ImplicitODE1
     fn init_cond(self: &Self) -> Vector<f64>
     {
         return self.init_cond.clone();
-    }
-
-    fn jacobian(self: &Self, _t: f64, _input: &Vector<f64>) -> Matrix<f64>
-    {
-        let jacobian = matrix![-4.0];
-        return jacobian;
     }
 }

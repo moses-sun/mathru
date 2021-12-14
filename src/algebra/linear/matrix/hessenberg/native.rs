@@ -51,6 +51,6 @@ impl<T> Matrix<T> where T: Field + Scalar + Power
             h = &h.clone() * &househ;
         }
 
-        return HessenbergDec::new(q, h);
+        HessenbergDec::new(q, h)
     }
 }

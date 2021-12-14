@@ -60,17 +60,13 @@ impl<T> PartialOrd for Complex<T>
     fn partial_cmp(self: &Self, other: &Self) -> Option<Ordering>
     {
         if self == other {
-            return Some(Ordering::Equal)
-        }
-        else
-        {
+            Some(Ordering::Equal)
+        } else {
             if self.abs().to_f64() > other.abs().to_f64()
             {
-                return Some(Ordering::Greater)
-            }
-            else
-            {
-                return Some(Ordering::Less)
+                Some(Ordering::Greater)
+            } else {
+                Some(Ordering::Less)
             }
         }
     }
@@ -198,7 +194,7 @@ impl<T> Zero for Complex<T>
 {
     fn zero() -> Self
     {
-        return Complex::new(T::zero(), T::zero());
+        Complex::new(T::zero(), T::zero())
     }
 }
 
@@ -243,7 +239,7 @@ impl<T> One for Complex<T> where T: Real
 {
     fn one() -> Self
     {
-        return Complex::new(T::one(), T::zero());
+        Complex::new(T::one(), T::zero())
     }
 }
 
@@ -346,7 +342,7 @@ impl<'a, 'b, T> Div<&'b Complex<T>> for &'a Complex<T>
         }
         let quot: Complex<T> = self * &Complex::new(rhs.re, -rhs.im);
 
-        return Complex::new(quot.re / divisor, quot.im / divisor);
+        Complex::new(quot.re / divisor, quot.im / divisor)
     }
 }
 
@@ -363,7 +359,7 @@ macro_rules! impl_to_primitive {
     ($ty:ty, $to:ident) => {
         fn $to(&self) -> $ty
         {
-            return self.re.$to();
+            self.re.$to()
             //            if self.im == T::zero()
             //            {
             //            	self.re.$to()
@@ -463,7 +459,7 @@ impl<T> Identity<Addition> for Complex<T> where T: Identity<Addition> + Real
 {
     fn id() -> Self
     {
-        return Complex::new(Identity::<Addition>::id(), Identity::<Addition>::id());
+        Complex::new(Identity::<Addition>::id(), Identity::<Addition>::id())
     }
 }
 
@@ -472,7 +468,7 @@ impl<T> Identity<Multiplication> for Complex<T>
 {
     fn id() -> Self
     {
-        return Complex::new(Identity::<Multiplication>::id(), Identity::<Addition>::id());
+        Complex::new(Identity::<Multiplication>::id(), Identity::<Addition>::id())
     }
 }
 
@@ -480,7 +476,7 @@ impl<T> Magma<Addition> for Complex<T> where T: Real
 {
     fn operate(self, rhs: Self) -> Self
     {
-        return Complex::new(self.re + rhs.re, self.im + rhs.im);
+        Complex::new(self.re + rhs.re, self.im + rhs.im)
     }
 }
 
@@ -492,8 +488,7 @@ impl<T> Magma<Multiplication> for Complex<T> where T: Real
 {
     fn operate(self, rhs: Self) -> Self
     {
-        return Complex::new(self.re * rhs.re - self.im * rhs.im,
-                            self.re * rhs.im + self.im * rhs.re);
+        Complex::new(self.re * rhs.re - self.im * rhs.im, self.re * rhs.im + self.im * rhs.re)
     }
 }
 

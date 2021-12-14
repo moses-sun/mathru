@@ -3,7 +3,7 @@ use crate::algebra::abstr::Sign;
 
 /// Power functions
 ///
-///<a href="https://en.wikipedia.org/wiki/Exponentiation#Power_functions">https://en.wikipedia.org/wiki/Exponentiation#Power_functions</a>
+///<https://en.wikipedia.org/wiki/Exponentiation#Power_functions>
 pub trait Power
 {
     fn pow(self: Self, exp: Self) -> Self;
@@ -19,17 +19,17 @@ macro_rules! power_impl {
         {
             fn pow(self: Self, exp: Self) -> Self
             {
-                return self.powf(exp);
+                self.powf(exp)
             }
 
             fn root(self: Self, root: Self) -> Self
             {
-                return self.powf(1.0 / root);
+                self.powf(1.0 / root)
             }
 
             fn sqrt(self: Self) -> Self
             {
-                return self.powf(0.5);
+                self.powf(0.5)
             }
         }
     };
@@ -98,6 +98,7 @@ impl<T> Power for Complex<T>
         let theta: T = r.ln() * exp.im + exp.re * phi;
         let re: T = k * theta.cos();
         let im: T = k * theta.sin();
+
         Complex::new(re, im)
     }
 
@@ -111,6 +112,6 @@ impl<T> Power for Complex<T>
         let arg = self.arg().re * T::from_f64(0.5);
         let abs = self.abs().re.sqrt();
 
-        return Complex::new(abs.clone() * (arg.cos()), abs * (arg.sin()));
+        Complex::new(abs.clone() * (arg.cos()), abs * (arg.sin()))
     }
 }

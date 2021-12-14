@@ -26,7 +26,7 @@ impl<T> QRDec<T>
     /// * `self`
     pub fn q(self: Self) -> Matrix<T>
     {
-        return self.q;
+        self.q
     }
 
     /// Return the r matrix of the qr decomposition
@@ -34,11 +34,11 @@ impl<T> QRDec<T>
     /// # Re
     pub fn r(self: Self) -> Matrix<T>
     {
-        return self.r;
+        self.r
     }
 
     pub fn qr(self: Self) -> (Matrix<T>, Matrix<T>)
     {
-        return (self.q, self.r);
+        (self.q, self.r)
     }
 }

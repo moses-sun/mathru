@@ -13,16 +13,16 @@ use std::clone::Clone;
 
 /// Solves an ODE using the 4th order Runge-Kutta-Dormand-Prince algorithm.
 ///
-///<a href="https://en.wikipedia.org/wiki/Dormand-Prince_method">https://en.wikipedia.org/wiki/Dormand-Prince_method</a>
+///<https://en.wikipedia.org/wiki/Dormand-Prince_method>
 ///
 /// # Example
 ///
-/// For this example, we want to solve the following ordinary differiential
+/// For this example, we want to solve the following ordinary differential
 /// equation:
 /// ```math
 /// \frac{dy}{dt} = ay = f(t, y)
 /// ```
-/// The inial condition is $`y(0) = 0.5`$ and we solve it in the interval
+/// The initial condition is $`y(0) = 0.5`$ and we solve it in the interval
 /// $`\lbrack 0, 2\rbrack`$ The following equation is the closed solution for
 /// this ODE:
 /// ```math
@@ -114,9 +114,9 @@ impl<T> Default for DormandPrince<T> where T: Real
         let b_s: Vec<T> = vec![T::from_f64(5179.0 / 57600.0), T::zero(), T::from_f64(7571.0 / 16695.0), T::from_f64(393.0 / 640.0), T::from_f64(-92097.0 / 339200.0), T::from_f64(187.0 / 2100.0), T::from_f64(1.0 / 40.0)];
         let c: Vec<T> = vec![T::from_f64(1.0 / 5.0), T::from_f64(3.0 / 10.0), T::from_f64(4.0 / 5.0), T::from_f64(8.0 / 9.0), T::one(), T::one()];
 
-        return DormandPrince {
+        DormandPrince {
             butcher: ButcherAdaptiveStepSize::new(a, b, b_s, c),
-        };
+        }
     }
 }
 
@@ -135,6 +135,6 @@ impl<T> ExplicitEmbeddedMethod<T> for DormandPrince<T> where T: Real
 
     fn order(self: &Self) -> (u8, u8)
     {
-        return (5, 4);
+        (5, 4)
     }
 }

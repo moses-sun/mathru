@@ -10,7 +10,7 @@ use serde::{Deserialize, Serialize};
 
 /// Solves an ODE using the Bogacki Shampine algorithm of 2nd order.
 ///
-///<a href="https://en.wikipedia.org/wiki/Bogacki-Shampine_method">https://en.wikipedia.org/wiki/Bogacki-Shampine_method</a>
+///<https://en.wikipedia.org/wiki/Bogacki-Shampine_method>
 ///
 /// # Example
 ///
@@ -91,9 +91,9 @@ impl<T> Default for BogackiShampine23<T> where T: Real
         let b_s: Vec<T> = vec![T::from_f64(7.0/24.0), T::from_f64(1.0/4.0), T::from_f64(1.0/3.0), T::from_f64(1.0/8.0)];
         let c: Vec<T> = vec![T::from_f64(0.5), T::from_f64(3.0/4.0), T::one()];
 
-        return BogackiShampine23 {
+        BogackiShampine23 {
             butcher: ButcherAdaptiveStepSize::new(a, b, b_s, c)
-        };
+        }
     }
 }
 
@@ -112,6 +112,6 @@ impl<T> ExplicitEmbeddedMethod<T> for BogackiShampine23<T> where T: Real
 
     fn order(self: &Self) -> (u8, u8)
     {
-        return (3, 2);
+        (3, 2)
     }
 }

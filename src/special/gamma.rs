@@ -16,7 +16,7 @@ pub trait Gamma
     /// ```
     ///
     /// Fore more information:
-    /// <a href="https://en.wikipedia.org/wiki/Gamma_function">https://en.wikipedia.org/wiki/Gamma_function</a>
+    /// <https://en.wikipedia.org/wiki/Gamma_function>
     ///
     /// # Arguments
     ///
@@ -41,7 +41,7 @@ pub trait Gamma
     /// ln&Gamma;(z)
     //
     /// Fore more information:
-    /// <a href="https://en.wikipedia.org/wiki/Gamma_function#The_log-gamma_function">https://en.wikipedia.org/wiki/Gamma_function#The_log-gamma_function</a>
+    /// <https://en.wikipedia.org/wiki/Gamma_function#The_log-gamma_function>
     ///
     /// # Arguments
     ///
@@ -62,7 +62,7 @@ pub trait Gamma
     /// ```
     ///
     /// Fore more information:
-    /// <a href="https://en.wikipedia.org/wiki/Digamma_function">https://en.wikipedia.org/wiki/Digamma_function</a>
+    /// <https://en.wikipedia.org/wiki/Digamma_function>
     ///
     /// # Arguments
     ///
@@ -85,7 +85,7 @@ pub trait Gamma
     /// ```
     ///
     /// Fore more information:
-    /// <a href="https://en.wikipedia.org/wiki/Incomplete_gamma_function#Upper_incomplete_Gamma_function">https://en.wikipedia.org/wiki/Incomplete_gamma_function#Upper_incomplete_Gamma_function</a>
+    /// <https://en.wikipedia.org/wiki/Incomplete_gamma_function#Upper_incomplete_Gamma_function>
     ///
     /// # Arguments
     ///
@@ -111,10 +111,7 @@ pub trait Gamma
     /// ```
     ///
     /// Fore more information:
-    /// <a href="https://en.wikipedia
-    /// .org/wiki/Incomplete_gamma_function#Regularized_Gamma_functions_and_Poisson_random_variables">https://en
-    /// .wikipedia.org/wiki/Incomplete_gamma_function#
-    /// Regularized_Gamma_functions_and_Poisson_random_variables</a>
+    /// <https://en.wikipedia.org/wiki/Incomplete_gamma_function#Regularized_Gamma_functions_and_Poisson_random_variables>
     ///
     /// # Arguments
     ///
@@ -139,10 +136,7 @@ pub trait Gamma
     /// ```
     ///
     /// Fore more information:
-    /// <a href="https://en.wikipedia
-    /// .org/wiki/Incomplete_gamma_function#Regularized_Gamma_functions_and_Poisson_random_variables">https://en
-    /// .wikipedia.org/wiki/Incomplete_gamma_function#
-    /// Regularized_Gamma_functions_and_Poisson_random_variables</a>
+    /// <https://en.wikipedia.org/wiki/Incomplete_gamma_function#Regularized_Gamma_functions_and_Poisson_random_variables>
     ///
     /// # Arguments
     ///
@@ -167,10 +161,7 @@ pub trait Gamma
     /// ```
     ///
     /// Fore more information:
-    /// <a href="https://en.wikipedia
-    /// .org/wiki/Incomplete_gamma_function#Regularized_Gamma_functions_and_Poisson_random_variables">https://en
-    /// .wikipedia.org/wiki/Incomplete_gamma_function#
-    /// Regularized_Gamma_functions_and_Poisson_random_variables</a>
+    /// <https://en.wikipedia.org/wiki/Incomplete_gamma_function#Regularized_Gamma_functions_and_Poisson_random_variables>
     ///
     /// # Arguments
     ///
@@ -195,10 +186,7 @@ pub trait Gamma
     /// ```
     ///
     /// Fore more information:
-    /// <a href="https://en.wikipedia
-    /// .org/wiki/Incomplete_gamma_function#Regularized_Gamma_functions_and_Poisson_random_variables">https://en
-    /// .wikipedia.org/wiki/Incomplete_gamma_function#
-    /// Regularized_Gamma_functions_and_Poisson_random_variables</a>
+    /// <https://en.wikipedia.org/wiki/Incomplete_gamma_function#Regularized_Gamma_functions_and_Poisson_random_variables>
     ///
     /// # Arguments
     ///
@@ -224,10 +212,7 @@ pub trait Gamma
     /// ```
     ///
     /// Fore more information:
-    /// <a href="https://en.wikipedia
-    /// .org/wiki/Incomplete_gamma_function#Regularized_Gamma_functions_and_Poisson_random_variables">https://en
-    /// .wikipedia.org/wiki/Incomplete_gamma_function#
-    /// Regularized_Gamma_functions_and_Poisson_random_variables</a>
+    /// <https://en.wikipedia.org/wiki/Incomplete_gamma_function#Regularized_Gamma_functions_and_Poisson_random_variables>
     ///
     /// # Arguments
     ///
@@ -329,7 +314,6 @@ macro_rules! impl_gamma
                 }
             }
 
-
             //
             fn digamma(self: Self) -> Self
             {
@@ -339,8 +323,8 @@ macro_rules! impl_gamma
                 //The comparison only compares the real part ot the number
                 while x2 < c
                 {
-                    value = value - 1.0 / x2;
-                    x2 = x2 + 1.0;
+                    value -= 1.0 / x2;
+                    x2 += 1.0;
                 }
                 /*
                   Use Stirling's (actually de Moivre's) expansion
@@ -350,8 +334,7 @@ macro_rules! impl_gamma
 
                 r = r * r;
 
-                value = value
-                        - r
+                value -= r
                           * (1.0 / 12.0
                              - r
                                * (1.0 / 120.0
@@ -407,7 +390,7 @@ macro_rules! impl_gamma
 
                 let ax: Self = self * x.ln() - x - self.ln_gamma();
 
-                if ax < -709.78271289338399
+                if ax < -709.782_712_893_383_99
                 {
                     if self < x
                     {
@@ -518,7 +501,7 @@ macro_rules! impl_gamma
                 }
                 else
                 {
-                    if a < 0.3 && 0.35 <= b && b <= 0.6
+                    if a < 0.3 && (0.35..=0.6).contains(&b)
                     {
                         let t: Self = (-c - b).exp();
                         let u: Self = t * t.exp();
@@ -526,7 +509,7 @@ macro_rules! impl_gamma
                     }
                     else
                     {
-                        if (0.15 <= b && b < 0.35) || (0.35 <= a && 0.15 <= b && b < 0.45)
+                        if (0.15..0.35).contains(&b) || (0.35 <= a && (0.15..0.45).contains(&b))
                         {
                             let y: Self = -b.ln();
                             let v: Self = y - (1.0 - a) * y.ln();
@@ -673,7 +656,7 @@ impl_gamma!(f32, std::f32::consts::PI, std::f32::consts::E);
 /// ```
 ///
 /// Fore more information:
-/// <a href="https://en.wikipedia.org/wiki/Gamma_function">https://en.wikipedia.org/wiki/Gamma_function</a>
+/// <https://en.wikipedia.org/wiki/Gamma_function>
 ///
 /// # Arguments
 ///
@@ -692,11 +675,11 @@ impl_gamma!(f32, std::f32::consts::PI, std::f32::consts::E);
 /// let gamma: f64 = gamma::gamma(z);
 /// ```
 /// The following approximation is implemented
-/// https://en.wikipedia.org/wiki/Lanczos_approximation
+/// <https://en.wikipedia.org/wiki/Lanczos_approximation>
 pub fn gamma<T>(z: T) -> T
     where T: Real + Gamma
 {
-    return z.gamma();
+    z.gamma()
 }
 
 /// Log-gamma function
@@ -704,7 +687,7 @@ pub fn gamma<T>(z: T) -> T
 /// ln&Gamma;(z)
 ///
 /// Fore more information:
-/// <a href="https://en.wikipedia.org/wiki/Gamma_function#The_log-gamma_function">https://en.wikipedia.org/wiki/Gamma_function#The_log-gamma_function</a>
+/// <https://en.wikipedia.org/wiki/Gamma_function#The_log-gamma_function>
 ///
 /// # Arguments
 ///
@@ -721,7 +704,7 @@ pub fn gamma<T>(z: T) -> T
 pub fn ln_gamma<T>(x: T) -> T
     where T: Gamma
 {
-    return x.gamma();
+    x.gamma()
 }
 
 /// Digamma function
@@ -731,7 +714,7 @@ pub fn ln_gamma<T>(x: T) -> T
 /// ```
 ///
 /// Fore more information:
-/// <a href="https://en.wikipedia.org/wiki/Digamma_function">https://en.wikipedia.org/wiki/Digamma_function</a>
+/// <https://en.wikipedia.org/wiki/Digamma_function>
 ///
 /// # Arguments
 ///
@@ -748,7 +731,7 @@ pub fn ln_gamma<T>(x: T) -> T
 pub fn digamma<T>(x: T) -> T
     where T: Gamma
 {
-    return x.digamma();
+    x.digamma()
 }
 
 /// Upper incomplete gamma function
@@ -758,7 +741,7 @@ pub fn digamma<T>(x: T) -> T
 /// ```
 ///
 /// Fore more information:
-/// <a href="https://en.wikipedia.org/wiki/Incomplete_gamma_function#Upper_incomplete_Gamma_function">https://en.wikipedia.org/wiki/Incomplete_gamma_function#Upper_incomplete_Gamma_function</a>
+/// <https://en.wikipedia.org/wiki/Incomplete_gamma_function#Upper_incomplete_Gamma_function>
 ///
 /// # Arguments
 ///
@@ -778,7 +761,7 @@ pub fn digamma<T>(x: T) -> T
 pub fn gamma_u<T>(a: T, x: T) -> T
     where T: Real + Gamma
 {
-    return a.gamma_u(x);
+    a.gamma_u(x)
 }
 
 /// Upper incomplete regularized gamma function
@@ -788,10 +771,7 @@ pub fn gamma_u<T>(a: T, x: T) -> T
 /// ```
 ///
 /// Fore more information:
-/// <a href="https://en.wikipedia
-/// .org/wiki/Incomplete_gamma_function#Regularized_Gamma_functions_and_Poisson_random_variables">https://en
-/// .wikipedia.org/wiki/Incomplete_gamma_function#
-/// Regularized_Gamma_functions_and_Poisson_random_variables</a>
+/// <https://en.wikipedia.org/wiki/Incomplete_gamma_function#Regularized_Gamma_functions_and_Poisson_random_variables>
 ///
 /// # Arguments
 ///
@@ -810,7 +790,7 @@ pub fn gamma_u<T>(a: T, x: T) -> T
 pub fn gamma_ur<T>(a: T, x: T) -> T
     where T: Real + Gamma
 {
-    return a.gamma_ur(x);
+    a.gamma_ur(x)
 }
 
 /// Inverse of the upper incomplete regularized gamma function
@@ -820,10 +800,7 @@ pub fn gamma_ur<T>(a: T, x: T) -> T
 /// ```
 ///
 /// Fore more information:
-/// <a href="https://en.wikipedia
-/// .org/wiki/Incomplete_gamma_function#Regularized_Gamma_functions_and_Poisson_random_variables">https://en
-/// .wikipedia.org/wiki/Incomplete_gamma_function#
-/// Regularized_Gamma_functions_and_Poisson_random_variables</a>
+/// <https://en.wikipedia.org/wiki/Incomplete_gamma_function#Regularized_Gamma_functions_and_Poisson_random_variables>
 ///
 /// # Arguments
 ///
@@ -843,7 +820,7 @@ pub fn gamma_ur<T>(a: T, x: T) -> T
 pub fn gamma_ur_inv<T>(a: T, q: T) -> T
     where T: Real + Gamma
 {
-    return a.gamma_ur_inv(q);
+    a.gamma_ur_inv(q)
 }
 
 /// Lower incomplete gamma function
@@ -853,10 +830,7 @@ pub fn gamma_ur_inv<T>(a: T, q: T) -> T
 /// ```
 ///
 /// Fore more information:
-/// <a href="https://en.wikipedia
-/// .org/wiki/Incomplete_gamma_function#Regularized_Gamma_functions_and_Poisson_random_variables">https://en
-/// .wikipedia.org/wiki/Incomplete_gamma_function#
-/// Regularized_Gamma_functions_and_Poisson_random_variables</a>
+/// <https://en.wikipedia.org/wiki/Incomplete_gamma_function#Regularized_Gamma_functions_and_Poisson_random_variables>
 ///
 /// # Arguments
 ///
@@ -875,7 +849,7 @@ pub fn gamma_ur_inv<T>(a: T, q: T) -> T
 pub fn gamma_l<T>(a: T, x: T) -> T
     where T: Real + Gamma
 {
-    return a.gamma_l(x);
+    a.gamma_l(x)
 }
 
 /// Lower regularized incomplete gamma function
@@ -885,12 +859,9 @@ pub fn gamma_l<T>(a: T, x: T) -> T
 /// ```
 ///
 /// Fore more information:
-/// <a href="https://en.wikipedia
-/// .org/wiki/Incomplete_gamma_function#Regularized_Gamma_functions_and_Poisson_random_variables">https://en
-/// .wikipedia.org/wiki/Incomplete_gamma_function#
-/// Regularized_Gamma_functions_and_Poisson_random_variables</a>
+/// <https://en.wikipedia.org/wiki/Incomplete_gamma_function#Regularized_Gamma_functions_and_Poisson_random_variables>
 ///
-/// https://people.sc.fsu.edu/~jburkardt/c_src/asa239/asa239.c
+/// <https://people.sc.fsu.edu/~jburkardt/c_src/asa239/asa239.c>
 /// # Arguments
 ///
 /// * `a`
@@ -908,7 +879,7 @@ pub fn gamma_l<T>(a: T, x: T) -> T
 pub fn gamma_lr<T>(a: T, x: T) -> T
     where T: Real + Gamma
 {
-    return a.gamma_lr(x);
+    a.gamma_lr(x)
 }
 
 
@@ -920,10 +891,7 @@ pub fn gamma_lr<T>(a: T, x: T) -> T
 /// ```
 ///
 /// Fore more information:
-/// <a href="https://en.wikipedia
-/// .org/wiki/Incomplete_gamma_function#Regularized_Gamma_functions_and_Poisson_random_variables">https://en
-/// .wikipedia.org/wiki/Incomplete_gamma_function#
-/// Regularized_Gamma_functions_and_Poisson_random_variables</a>
+/// <https://en.wikipedia.org/wiki/Incomplete_gamma_function#Regularized_Gamma_functions_and_Poisson_random_variables>
 ///
 /// # Arguments
 ///
@@ -943,5 +911,5 @@ pub fn gamma_lr<T>(a: T, x: T) -> T
 pub fn gamma_lr_inv<T>(a: T, p: T) -> T
     where T: Real + Gamma
 {
-    return a.gamma_lr_inv(p);
+    a.gamma_lr_inv(p)
 }

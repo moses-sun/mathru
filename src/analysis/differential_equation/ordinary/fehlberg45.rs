@@ -16,17 +16,16 @@ use serde::{Deserialize, Serialize};
 /// order \mathcal{O}(h^4) with an error estimator of order \mathcal{O}(h^5)
 /// ```
 ///
-///<a href="https://en.wikipedia.org/wiki/Runge-Kutta-Fehlberg_method">https://en.wikipedia
-/// .org/wiki/Runge-Kutta-Fehlberg_method</a>
+///<https://en.wikipedia.org/wiki/Runge-Kutta-Fehlberg_method>
 ///
 /// # Example
 ///
-/// For this example, we want to solve the following ordinary differiential
+/// For this example, we want to solve the following ordinary differential
 /// equation:
 /// ```math
 /// \frac{dy}{dt} = ay = f(t, y)
 /// ```
-/// The inial condition is $`y(0) = 0.5`$ and we solve it in the interval
+/// The initial condition is $`y(0) = 0.5`$ and we solve it in the interval
 /// $`\lbrack 0, 2\rbrack`$ The following equation is the closed solution for
 /// this ODE:
 /// ```math
@@ -117,9 +116,9 @@ impl<T> Default for Fehlberg45<T> where T: Real
         let b_s: Vec<T> = vec![T::from_f64(25.0/216.0), T::zero(), T::from_f64(1408.0/2565.0), T::from_f64(2197.0/4104.0), T::from_f64(-1.0/5.0), T::zero()];
         let c: Vec<T> = vec![T::from_f64(1.0 /4.0), T::from_f64(3.0/8.0), T::from_f64(12.0/13.0), T::one(), T::from_f64(0.5)];
 
-        return Fehlberg45 {
+        Fehlberg45 {
             butcher: ButcherAdaptiveStepSize::new(a, b, b_s, c),
-        };
+        }
     }
 }
 
@@ -133,11 +132,11 @@ impl<T> ExplicitEmbeddedMethod<T> for Fehlberg45<T> where T: Real
                   -> (Vector<T>, Vector<T>)
         where F: ExplicitODE<T>
     {
-        return self.butcher.do_step(prob, t_n, x_n, h_n);
+        self.butcher.do_step(prob, t_n, x_n, h_n)
     }
 
     fn order(self: &Self) -> (u8, u8)
     {
-        return (5, 4);
+        (5, 4)
     }
 }

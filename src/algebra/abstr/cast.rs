@@ -1,6 +1,6 @@
 //! Cast module
 
-//Copied from https://github.com/rust-num/num-traits/blob/master/src/cast.rs
+//Copied from <https://github.com/rust-num/num-traits/blob/master/src/cast.rs>
 
 /// A generic trait for converting a value to a number.
 pub trait ToPrimitive
@@ -491,7 +491,7 @@ impl_to_primitive_uint!(u128);
 
 macro_rules! impl_to_primitive_float_to_float {
     ($SrcT:ident, $DstT:ident, $slf:expr) => {
-        return $slf as $DstT;
+        return $slf as $DstT
     };
 }
 

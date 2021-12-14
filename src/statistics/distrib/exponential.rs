@@ -8,7 +8,7 @@ use std::clone::Clone;
 /// Exponential distribution
 ///
 /// Fore more information:
-/// <a href="https://en.wikipedia.org/wiki/Exponential_distribution">https://en.wikipedia.org/wiki/Exponential_distribution</a>
+/// <https://en.wikipedia.org/wiki/Exponential_distribution>
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[derive(Clone, Copy, Debug)]
 pub struct Exponential<T>
@@ -45,14 +45,14 @@ impl<T> Exponential<T> where T: Real
         Exponential { lambda }
     }
 
-    pub fn from_data<'a>(data: &'a Vec<T>) -> Self
+    pub fn from_data(data: &Vec<T>) -> Self
     {
         let lambda: T = T::one() / Exponential::calc_mean(data);
 
-        return Exponential::new(lambda);
+        Exponential::new(lambda)
     }
 
-    fn calc_mean<'a>(data: &'a Vec<T>) -> T
+    fn calc_mean(data: &Vec<T>) -> T
     {
         let mut sum: T = T::zero();
 
@@ -61,7 +61,7 @@ impl<T> Exponential<T> where T: Real
             sum += *x;
         }
 
-        return sum / T::from_u64(data.len() as u64);
+        sum / T::from_u64(data.len() as u64)
     }
 }
 
@@ -89,7 +89,7 @@ impl<T> Continuous<T> for Exponential<T> where T: Real
             return T::zero();
         }
 
-        return self.lambda * (-self.lambda * x).exp();
+        self.lambda * (-self.lambda * x).exp()
     }
 
     /// Cumulative distribution function
@@ -114,13 +114,13 @@ impl<T> Continuous<T> for Exponential<T> where T: Real
             return T::zero();
         }
 
-        return T::one() - (-x * self.lambda).exp();
+        T::one() - (-x * self.lambda).exp()
     }
 
     /// Quantile function of inverse cdf
     fn quantile(self: &Self, p: T) -> T
     {
-        return -(T::one() - p).ln() / self.lambda;
+        -(T::one() - p).ln() / self.lambda
     }
 
     /// Expected value
@@ -135,7 +135,7 @@ impl<T> Continuous<T> for Exponential<T> where T: Real
     /// ```
     fn mean(self: &Self) -> T
     {
-        return T::one() / self.lambda;
+        T::one() / self.lambda
     }
 
     /// Variance
@@ -150,25 +150,25 @@ impl<T> Continuous<T> for Exponential<T> where T: Real
     /// ```
     fn variance(self: &Self) -> T
     {
-        return T::one() / self.lambda.pow(T::from_u8(2));
+        T::one() / self.lambda.pow(T::from_u8(2))
     }
 
     ///
     fn skewness(self: &Self) -> T
     {
-        return T::from_f64(2.0);
+        T::from_f64(2.0)
     }
 
     ///
     fn median(self: &Self) -> T
     {
-        return T::from_f64(2.0).ln() / self.lambda;
+        T::from_f64(2.0).ln() / self.lambda
     }
 
     ///
     fn entropy(self: &Self) -> T
     {
-        return T::one() - self.lambda.ln();
+        T::one() - self.lambda.ln()
     }
 }
 
@@ -179,6 +179,6 @@ impl<T> Exponential<T> where T: Real
         let y: T = T::from_f64(rand::random::<f64>());
         let p: T = self.quantile(y);
 
-        return p;
+        p
     }
 }

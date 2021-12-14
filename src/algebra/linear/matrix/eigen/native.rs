@@ -30,7 +30,7 @@ impl<T> Matrix<T> where T: Field + Scalar + Power + AbsDiffEq<Epsilon = T>
         let value: Vector<T> = self.eigenvalue_r();
         let vector: Matrix<T> = self.eigenvector_r(&value);
 
-        return Ok(EigenDec::new(value, vector));
+        Ok(EigenDec::new(value, vector))
     }
 
     pub fn eigenvalue_r(self: &Self) -> Vector<T>
@@ -45,10 +45,10 @@ impl<T> Matrix<T> where T: Field + Scalar + Power + AbsDiffEq<Epsilon = T>
 
         for i in 0..m
         {
-            *eig.get_mut(i) = *t.get(i, i);
+            eig[i] = t[[i, i]];
         }
 
-        return eig;
+        eig
     }
 
     fn francis(mut self: Self) -> (Matrix<T>, Matrix<T>)
@@ -67,21 +67,21 @@ impl<T> Matrix<T> where T: Field + Scalar + Power + AbsDiffEq<Epsilon = T>
             q = p - 1;
 
             // Bulge generating
-            let s: T = *self.get(q - 1, q - 1) + *self.get(p - 1, p - 1);
-            let t: T = *self.get(q - 1, q - 1) * *self.get(p - 1, p - 1)
-                       - *self.get(q - 1, p - 1) * *self.get(p - 1, q - 1);
+            let s: T = self[[q - 1, q - 1]] + self[[p - 1, p - 1]];
+            let t: T = self[[q - 1, q - 1]] * self[[p - 1, p - 1]]
+                       - self[[q - 1, p - 1]] * self[[p - 1, q - 1]];
 
             // compute first 3 elements of first column of M
-            let mut x: T = self.get(0, 0).pow(T::from_f64(2.0))
-                           + *self.get(0, 1) * *self.get(1, 0)
-                           - s * *self.get(0, 0)
+            let mut x: T = self[[0, 0]].pow(T::from_f64(2.0))
+                           + self[[0, 1]] * self[[1, 0]]
+                           - s * self[[0, 0]]
                            + t;
-            let mut y: T = *self.get(1, 0) * (*self.get(0, 0) + *self.get(1, 1) - s);
-            let mut z: T = *self.get(1, 0) * *self.get(2, 1);
+            let mut y: T = self[[1, 0]] * (self[[0, 0]] + self[[1, 1]] - s);
+            let mut z: T = self[[1, 0]] * self[[2, 1]];
 
             for k in 0..(p - 2)
             {
-                let b: Vector<T> = Vector::new_column(3, vec![x, y, z]);
+                let b: Vector<T> = Vector::new_column(vec![x, y, z]);
                 let h: Matrix<T> = Matrix::householder(&b, 0);
 
                 //Determine the Householder reflector P with P [x; y; z] = αe1 ;
@@ -103,11 +103,11 @@ impl<T> Matrix<T> where T: Field + Scalar + Power + AbsDiffEq<Epsilon = T>
                     u = u.set_slice(&temp1, 0, k);
                 }
 
-                x = *self.get(k + 1, k);
-                y = *self.get(k + 2, k);
+                x = self[[k + 1, k]];
+                y = self[[k + 2, k]];
                 if k < (p - 3)
                 {
-                    z = *self.get(k + 3, k);
+                    z = self[[k + 3, k]];
                 }
             }
 
@@ -130,27 +130,27 @@ impl<T> Matrix<T> where T: Field + Scalar + Power + AbsDiffEq<Epsilon = T>
             }
 
             // check for convergence
-            let m: T = self.get(q - 1, q - 1).abs();
-            let n: T = self.get(p - 1, p - 1).abs();
-            if self.get(p - 1, q - 1).abs() < epsilon * (m + n)
+            let m: T = self[[q - 1, q - 1]].abs();
+            let n: T = self[[p - 1, p - 1]].abs();
+            if self[[p - 1, q - 1]].abs() < epsilon * (m + n)
             {
-                *self.get_mut(p - 1, q - 1) = T::zero();
+                self[[p - 1, q - 1]] = T::zero();
                 p = p - 1;
             }
             else
             {
-                let k: T = self.get(q - 2, q - 2).abs();
-                let l: T = self.get(q - 1, q - 1).abs();
-                if self.get(p - 2, q - 2).abs() < epsilon * (k + l)
+                let k: T = self[[q - 2, q - 2]].abs();
+                let l: T = self[[q - 1, q - 1]].abs();
+                if self[[p - 2, q - 2]].abs() < epsilon * (k + l)
                 {
-                    *self.get_mut(p - 2, q - 2) = T::zero();
-                    p = p - 2;
+                    self[[p - 2, q - 2]] = T::zero();
+                    p -= 2;
                 }
             }
-            p = p - 1;
+            p -= 1;
         }
 
-        return (u, self);
+        (u, self)
     }
 
     pub fn eigenvector_r(self: &Self, value: &Vector<T>) -> Matrix<T>
@@ -166,6 +166,6 @@ impl<T> Matrix<T> where T: Field + Scalar + Power + AbsDiffEq<Epsilon = T>
             vectors.set_column(&vec, c);
         }
 
-        return vectors;
+        vectors
     }
 }

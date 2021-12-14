@@ -20,7 +20,7 @@ impl<T> Substitute<Vector<T>> for Matrix<T> where T: Field + Scalar
                  b_data.as_mut_slice(),
                  b_m as i32);
 
-        return Ok(Vector::new_column(b_m, b_data));
+        Ok(Vector::new_column(b_data))
     }
 
     fn substitute_backward(self: &Self, b: Vector<T>) -> Result<Vector<T>, ()>
@@ -39,7 +39,7 @@ impl<T> Substitute<Vector<T>> for Matrix<T> where T: Field + Scalar
                  b_data.as_mut_slice(),
                  b_m as i32);
 
-        return Ok(Vector::new_column(b_m, b_data));
+        Ok(Vector::new_column(b_data))
     }
 }
 
@@ -60,7 +60,7 @@ impl<T> Substitute<Matrix<T>> for Matrix<T> where T: Field + Scalar
                  c.data.as_mut_slice(),
                  c.m as i32);
 
-        return Ok(c);
+        Ok(c)
     }
 
     fn substitute_backward(self: &Self, b: Matrix<T>) -> Result<Matrix<T>, ()>
@@ -78,6 +78,6 @@ impl<T> Substitute<Matrix<T>> for Matrix<T> where T: Field + Scalar
                  c.data.as_mut_slice(),
                  c.m as i32);
 
-        return Ok(c);
+        Ok(c)
     }
 }

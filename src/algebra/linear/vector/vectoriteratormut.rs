@@ -22,6 +22,6 @@ impl<'a, T> Iterator for VectorIteratorMut<'a, T> where T: Field + Scalar
 
     fn next(&mut self) -> Option<Self::Item>
     {
-        return self.iter.next();
+        self.iter.next()
     }
 }

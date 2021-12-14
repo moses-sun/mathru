@@ -6,8 +6,7 @@ use crate::elementary::power::Power;
 
 /// Trigonometric functions
 ///
-///<a href="https://en.wikipedia.org/wiki/Trigonometric_functions">https://en.wikipedia
-/// .org/wiki/Trigonometric_functions</a>
+///<https://en.wikipedia.org/wiki/Trigonometric_functions>
 pub trait Trigonometry
 {
     /// Returns the mathematics constant PI
@@ -122,7 +121,7 @@ macro_rules! trigonometry_impl {
 
             /// Inverse cosine function
             ///
-            /// # Arguemnts
+            /// # Arguments
             ///
             /// -1.0 <= x <= 1.0
             ///
@@ -160,11 +159,11 @@ macro_rules! trigonometry_impl {
 
                 if self > 0.0
                 {
-                    return (1.0 / self).atan();
+                    (1.0 / self).atan()
                 }
                 else
                 {
-                    return (1.0 / self).atan();
+                    (1.0 / self).atan()
                 }
             }
 
@@ -278,7 +277,7 @@ impl<T> Trigonometry for Complex<T>
     /// ```
     fn tan(self: Self) -> Self
     {
-        return self.sin() / self.cos();
+        self.sin() / self.cos()
     }
 
     /// Cotangens function

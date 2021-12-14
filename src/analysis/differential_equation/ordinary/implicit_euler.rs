@@ -16,7 +16,8 @@ use std::clone::Clone;
 
 /// Solves an ODE using backward Euler
 ///
-/// <a href="https://en.wikipedia.org/wiki/Backward_Euler_method">https://en.wikipedia.org/wiki/Backward_Euler_method</a>
+/// <https://en.wikipedia.org/wiki/Backward_Euler_method>
+///
 /// # Example
 ///
 /// For this example, we want to solve the following stiff ordinary
@@ -58,13 +59,13 @@ use std::clone::Clone;
 ///
 /// impl ImplicitODE<f64> for ImplicitODEExample
 /// {
-///     fn func(self: &Self, _t: f64, x: &Vector<f64>) -> Vector<f64>
+///     fn func(self: &Self, _t: &f64, x: &Vector<f64>) -> Vector<f64>
 ///     {
 ///         let result = (x * &-4.0) + 8.0;
 ///         return result;
 ///     }
 ///
-///     fn jacobian(self: &Self, _t: f64, _input: &Vector<f64>) -> Matrix<f64>
+///     fn jacobian(self: &Self, _t: &f64, _input: &Vector<f64>) -> Matrix<f64>
 ///     {
 ///         let jacobian = matrix![-4.0];
 ///         return jacobian;
@@ -106,19 +107,18 @@ impl<T> ImplicitEuler<T> where T: Real
     /// Creates a backward Euler instance
     pub fn new(step_size: T) -> ImplicitEuler<T>
     {
-        return ImplicitEuler { stepper: ImplicitFixedStepper::new(step_size),
-                               root_finder: NewtonRaphson::new(100, T::from_f64(0.00000001)) };
+        ImplicitEuler { stepper: ImplicitFixedStepper::new(step_size), root_finder: NewtonRaphson::new(100, T::from_f64(0.00000001)) }
     }
 
     pub fn solve<F>(self: &Self, prob: &F) -> Result<(Vec<T>, Vec<Vector<T>>), ()>
         where F: ImplicitODE<T>
     {
-        return self.stepper.solve(prob, self);
+        self.stepper.solve(prob, self)
     }
 
     pub fn get_step_size(self: &Self) -> &T
     {
-        return self.stepper.get_step_size();
+        self.stepper.get_step_size()
     }
 
     pub fn set_step_size(self: &mut Self, step_size: T)
@@ -136,13 +136,13 @@ impl<T> ImplicitFixedStepSizeMethod<T> for ImplicitEuler<T> where T: Real
         let ie_helper = ImplicitEulerHelper::new(prob, &t, x_n, h);
         let x_n = self.root_finder.find_root(&ie_helper, x_n).unwrap();
 
-        return x_n;
+        x_n
     }
 
     /// Euler's method is a first order method
     fn order(self: &Self) -> u8
     {
-        return 1;
+        1
     }
 }
 
@@ -168,7 +168,7 @@ impl<'a, T, F> ImplicitEulerHelper<'a, T, F>
                h: &'a T)
                -> ImplicitEulerHelper<'a, T, F>
     {
-        return ImplicitEulerHelper { function, t, x, h };
+        ImplicitEulerHelper { function, t, x, h }
     }
 }
 
@@ -183,8 +183,7 @@ impl<'a, T, F> Function<Vector<T>> for ImplicitEulerHelper<'a, T, F>
     /// g(z) = y(t_n) + hf(t_{n+1}, z) - z)`$
     fn eval(self: &Self, z: &Vector<T>) -> Vector<T>
     {
-        let result = &(self.x + &(&self.function.func(*self.t, z) * self.h)) - z;
-        return result;
+        &(self.x + &(&self.function.func(&self.t, z) * self.h)) - z
     }
 }
 
@@ -197,8 +196,6 @@ impl<'a, T, F> Jacobian<T> for ImplicitEulerHelper<'a, T, F>
     fn jacobian(self: &Self, z: &Vector<T>) -> Matrix<T>
     {
         let (m, _n): (usize, usize) = z.dim();
-        let jacobian: Matrix<T> = self.function.jacobian(*self.t, z) * *self.h - Matrix::one(m);
-
-        return jacobian;
+        self.function.jacobian(&self.t, z) * *self.h - Matrix::one(m)
     }
 }

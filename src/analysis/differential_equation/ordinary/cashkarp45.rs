@@ -15,16 +15,16 @@ use crate::analysis::differential_equation::ordinary::{
 
 /// Solves an ODE using the 4th order Cash-Karp algorithm.
 ///
-///<a href="https://en.wikipedia.org/wiki/Cash-Karp_method">https://en.wikipedia.org/wiki/Cash-Karp_method</a>
+///<https://en.wikipedia.org/wiki/Cash-Karp_method>
 ///
 /// # Example
 ///
-/// For this example, we want to solve the following ordinary differiential
+/// For this example, we want to solve the following ordinary differential
 /// equation:
 /// ```math
 /// \frac{dy}{dt} = ay = f(t, y)
 /// ```
-/// The inial condition is $`y(0) = 0.5`$ and we solve it in the interval
+/// The initial condition is $`y(0) = 0.5`$ and we solve it in the interval
 /// $`\lbrack 0, 2\rbrack`$ The following equation is the closed solution for
 /// this ODE:
 /// ```math
@@ -115,9 +115,9 @@ impl<T> Default for CashKarp45<T> where T: Real
         let b: Vec<T> = vec![T::from_f64(2825.0 / 27648.0), T::zero(), T::from_f64(18575.0 / 48384.0), T::from_f64(13525.0 / 55296.0), T::from_f64(277.0 / 14336.0), T::from_f64(1.0 / 4.0)];
         let c: Vec<T> = vec![T::from_f64(1.0 / 5.0), T::from_f64(3.0 / 10.0), T::from_f64(3.0 / 5.0), T::one(), T::from_f64(7.0 / 8.0)];
 
-        return CashKarp45 {
+        CashKarp45 {
             butcher: ButcherAdaptiveStepSize::new(a, b, b_s, c)
-        };
+        }
     }
 }
 
@@ -136,6 +136,6 @@ impl<T> ExplicitEmbeddedMethod<T> for CashKarp45<T> where T: Real
 
     fn order(self: &Self) -> (u8, u8)
     {
-        return (5, 4);
+        (5, 4)
     }
 }

@@ -11,12 +11,12 @@ use std::clone::Clone;
 /// Adams-Bashforth method
 /// # Example
 ///
-/// For this example, we want to solve the following ordinary differiential
+/// For this example, we want to solve the following ordinary differential
 /// equation:
 /// ```math
 /// \frac{dy}{dt} = ay = f(t, y)
 /// ```
-/// The inial condition is $`y(0) = 0.5`$ and we solve it in the interval
+/// The initial condition is $`y(0) = 0.5`$ and we solve it in the interval
 /// $`\lbrack 0, 2\rbrack`$ The following equation is the closed solution for
 /// this ODE:
 /// ```math
@@ -104,7 +104,7 @@ impl<T> AdamsBashforth<T> where T: Real
             panic!();
         }
 
-        return AdamsBashforth { k, step_size };
+        AdamsBashforth { k, step_size }
     }
 }
 
@@ -154,40 +154,40 @@ impl<T> AdamsBashforth<T> where T: Real
         {
             let h: T = self.step_size.min(t_stop - t_n);
             let x_n = AdamsBashforth::step_s1(prob, &t_vec, &res_vec, h);
-            t_n = t_n + h;
+            t_n += h;
 
             t_vec.push(t_n);
-            res_vec.push(x_n.clone());
+            res_vec.push(x_n);
         }
 
         if self.k >= 3
         {
             let h: T = self.step_size.min(t_stop - t_n);
             let x_n = AdamsBashforth::step_s2(prob, &t_vec, &res_vec, h);
-            t_n = t_n + h;
+            t_n += h;
 
             t_vec.push(t_n);
-            res_vec.push(x_n.clone());
+            res_vec.push(x_n);
         }
 
         if self.k >= 4
         {
             let h: T = self.step_size.min(t_stop - t_n);
             let x_n = AdamsBashforth::step_s3(prob, &t_vec, &res_vec, h);
-            t_n = t_n + h;
+            t_n += h;
 
             t_vec.push(t_n);
-            res_vec.push(x_n.clone());
+            res_vec.push(x_n);
         }
 
         if self.k >= 5
         {
             let h: T = self.step_size.min(t_stop - t_n);
             let x_n = AdamsBashforth::step_s4(prob, &t_vec, &res_vec, h);
-            t_n = t_n + h;
+            t_n += h;
 
             t_vec.push(t_n);
-            res_vec.push(x_n.clone());
+            res_vec.push(x_n);
         }
 
         let step = match self.k
@@ -206,13 +206,13 @@ impl<T> AdamsBashforth<T> where T: Real
             let h: T = self.step_size.min(t_stop - t_n);
 
             x_n = step(prob, &t_vec, &res_vec, h);
-            t_n = t_n + h;
+            t_n += h;
 
             t_vec.push(t_n);
             res_vec.push(x_n.clone());
         }
 
-        return Ok((t_vec, res_vec));
+        Ok((t_vec, res_vec))
     }
 }
 
@@ -224,7 +224,8 @@ impl<T> AdamsBashforth<T> where T: Real
         let n: usize = x.len() - 1;
         let x_n: &Vector<T> = &x[n];
         let t_n: &T = &t[n];
-        return x_n + &(&prob.func(t_n, x_n) * &h);
+
+        x_n + &(&prob.func(t_n, x_n) * &h)
     }
 
     fn step_s2<F>(prob: &F, t: &Vec<T>, x: &Vec<Vector<T>>, h: T) -> Vector<T>
@@ -235,10 +236,9 @@ impl<T> AdamsBashforth<T> where T: Real
         let t_n: &T = &t[n];
         let x_n1: &Vector<T> = &x[n - 1];
         let t_n1: &T = &t[n - 1];
-        return x_n
-               + &((prob.func(t_n, x_n) * T::from_f64(3.0 / 2.0)
+        x_n + &((prob.func(t_n, x_n) * T::from_f64(3.0 / 2.0)
                     + prob.func(&t_n1, x_n1) * T::from_f64(-0.5))
-                   * h);
+                   * h)
     }
 
     fn step_s3<F>(prob: &F, t: &Vec<T>, x: &Vec<Vector<T>>, h: T) -> Vector<T>
@@ -251,11 +251,10 @@ impl<T> AdamsBashforth<T> where T: Real
         let t_n1: &T = &t[n - 1];
         let x_n2: &Vector<T> = &x[n - 2];
         let t_n2: &T = &t[n - 2];
-        return x_n
-               + &((prob.func(t_n, x_n) * T::from_f64(23.0 / 12.0)
+        x_n + &((prob.func(t_n, x_n) * T::from_f64(23.0 / 12.0)
                     + prob.func(t_n1, x_n1) * T::from_f64(-16.0 / 12.0)
                     + prob.func(t_n2, x_n2) * T::from_f64(5.0 / 12.0))
-                   * h);
+                   * h)
     }
 
     fn step_s4<F>(prob: &F, t: &Vec<T>, x: &Vec<Vector<T>>, h: T) -> Vector<T>
@@ -270,12 +269,11 @@ impl<T> AdamsBashforth<T> where T: Real
         let t_n2: &T = &t[n - 2];
         let x_n3: &Vector<T> = &x[n - 3];
         let t_n3: &T = &t[n - 3];
-        return x_n
-               + &((prob.func(t_n, x_n) * T::from_f64(55.0 / 24.0)
+        x_n + &((prob.func(t_n, x_n) * T::from_f64(55.0 / 24.0)
                     + prob.func(t_n1, x_n1) * T::from_f64(-59.0 / 24.0)
                     + prob.func(t_n2, x_n2) * T::from_f64(37.0 / 24.0)
                     + prob.func(t_n3, x_n3) * T::from_f64(-9.0 / 24.0))
-                   * h);
+                   * h)
     }
 
     fn step_s5<F>(prob: &F, t: &Vec<T>, x: &Vec<Vector<T>>, h: T) -> Vector<T>
@@ -292,12 +290,11 @@ impl<T> AdamsBashforth<T> where T: Real
         let t_n3: &T = &t[n - 3];
         let x_n4: &Vector<T> = &x[n - 4];
         let t_n4: &T = &t[n - 4];
-        return x_n
-               + &((prob.func(t_n, x_n) * T::from_f64(1901.0 / 720.0)
+        x_n + &((prob.func(t_n, x_n) * T::from_f64(1901.0 / 720.0)
                     + prob.func(t_n1, x_n1) * T::from_f64(-2774.0 / 720.0)
                     + prob.func(t_n2, x_n2) * T::from_f64(2616.0 / 720.0)
                     + prob.func(t_n3, x_n3) * T::from_f64(-1274.0 / 720.0)
                     + prob.func(t_n4, x_n4) * T::from_f64(251.0 / 720.0))
-                   * h);
+                   * h)
     }
 }

@@ -14,7 +14,7 @@ use std::clone::Clone;
 /// Normal distribution
 ///
 /// Fore more information:
-/// <a href="https://en.wikipedia.org/wiki/Normal_distribution">https://en.wikipedia.org/wiki/Normal_distribution</a>
+/// <https://en.wikipedia.org/wiki/Normal_distribution>
 ///
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[derive(Clone, Copy, Debug)]
@@ -57,7 +57,7 @@ impl<T> Normal<T> where T: Real
     /// It is assumed that data are normal distributed.
     ///
     /// data.len() >= 2
-    pub fn from_data<'a>(data: &'a Vec<T>) -> Self
+    pub fn from_data(data: &Vec<T>) -> Self
     {
         let n: usize = data.len();
         if n < 2
@@ -68,23 +68,23 @@ impl<T> Normal<T> where T: Real
         let mean: T = Normal::calc_mean(data);
         let variance: T = Normal::calc_variance(data, mean);
 
-        return Normal::new(mean, variance);
+        Normal::new(mean, variance)
     }
 
-    fn calc_mean<'a>(data: &'a Vec<T>) -> T
+    fn calc_mean(data: &Vec<T>) -> T
     {
         let n: usize = data.len();
         let mut sum: T = T::zero();
 
         for x in data.iter()
         {
-            sum = sum + *x;
+            sum += *x;
         }
 
-        return sum / T::from_u64(n as u64);
+        sum / T::from_u64(n as u64)
     }
 
-    fn calc_variance<'a>(data: &'a Vec<T>, mean: T) -> T
+    fn calc_variance(data: &Vec<T>, mean: T) -> T
     {
         let n: usize = data.len();
         let mut sum: T = T::zero();
@@ -94,7 +94,7 @@ impl<T> Normal<T> where T: Real
             sum += (*x - mean).pow(T::from_f64(2.0));
         }
 
-        return sum / T::from_u64((n - 1) as u64);
+        sum / T::from_u64((n - 1) as u64)
     }
 }
 
@@ -121,7 +121,7 @@ impl<T> Continuous<T> for Normal<T>
         let z: T = T::from_f64(-0.5) * ((x - self.mean) / self.variance).pow(T::from_f64(2.0));
         let f: T = T::one() / (self.variance * T::from_f64(2.0) * T::pi()).sqrt();
 
-        return f * z.exp();
+        f * z.exp()
     }
 
     /// Cumulative distribution function
@@ -204,7 +204,7 @@ impl<T> Continuous<T> for Normal<T>
             }
         }
 
-        return self.mean + self.variance.sqrt() * ppnd16;
+        self.mean + self.variance.sqrt() * ppnd16
     }
 
     /// Expected value
@@ -222,7 +222,7 @@ impl<T> Continuous<T> for Normal<T>
     /// ```
     fn mean(self: &Self) -> T
     {
-        return self.mean;
+        self.mean
     }
 
     /// Variance
@@ -240,7 +240,7 @@ impl<T> Continuous<T> for Normal<T>
     /// ```
     fn variance(self: &Self) -> T
     {
-        return self.variance;
+        self.variance
     }
 
     /// Skewness
@@ -259,7 +259,7 @@ impl<T> Continuous<T> for Normal<T>
     /// ```
     fn skewness(self: &Self) -> T
     {
-        return T::zero();
+        T::zero()
     }
 
     /// Median
@@ -279,7 +279,7 @@ impl<T> Continuous<T> for Normal<T>
     /// ```
     fn median(self: &Self) -> T
     {
-        return self.mean;
+        self.mean
     }
 
     /// Entropy
@@ -301,7 +301,7 @@ impl<T> Continuous<T> for Normal<T>
     /// ```
     fn entropy(self: &Self) -> T
     {
-        return T::from_f64(2.0) * T::pi() * T::e() * self.variance;
+        T::from_f64(2.0) * T::pi() * T::e() * self.variance
     }
 }
 
@@ -357,7 +357,7 @@ impl<T> Normal<T> where T: Real
                              + 42.313330701600911252)
                             * r
                             + 1.);
-        return T::from_f64(value);
+        T::from_f64(value)
     }
 
     fn r2(t: T) -> T
@@ -389,7 +389,7 @@ impl<T> Normal<T> where T: Real
                             * r
                             + 1.);
 
-        return T::from_f64(value);
+        T::from_f64(value)
     }
 
     fn r3(t: T) -> T
@@ -409,18 +409,18 @@ impl<T> Normal<T> where T: Real
              * r
              + 6.6579046435011037772)
             / (((((((r * 2.04426310338993978564e-15 + 1.4215117583164458887e-7) * r
-                    + 1.8463183175100546818e-5)
+                    + 1.846_318_317_510_054_681_8e-5)
                    * r
-                   + 7.868691311456132591e-4)
+                   + 7.868_691_311_456_132_591e-4)
                   * r
-                  + 0.0148753612908506148525)
+                  + 0.014_875_361_290_850_614_8525)
                  * r
-                 + 0.13692988092273580531)
+                 + 0.136_929_880_922_735_805_31)
                 * r
-                + 0.59983220655588793769)
+                + 0.599_832_206_555_887_937_69)
                * r
                + 1.);
 
-        return T::from_f64(value);
+        T::from_f64(value)
     }
 }

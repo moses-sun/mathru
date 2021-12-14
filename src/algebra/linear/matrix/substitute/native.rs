@@ -10,7 +10,7 @@ impl<T> Substitute<Vector<T>> for Matrix<T> where T: Field + Scalar + AbsDiffEq
         for k in 0..self.n
         {
 
-            if self.get(k, k).abs_diff_eq(&T::zero(), T::default_epsilon())
+            if self[[k, k]].abs_diff_eq(&T::zero(), T::default_epsilon())
             {
                 // free variable
                 // if b.get(k).abs_diff_eq(&T::zero(), T::default_epsilon())
@@ -26,13 +26,13 @@ impl<T> Substitute<Vector<T>> for Matrix<T> where T: Field + Scalar + AbsDiffEq
             {
                 for l in 0..k
                 {
-                    *b.get_mut(k) = *b.get(k) - *self.get(k, l) * *b.get(l);
+                    b[k] = b[k] - self[[k, l]] * b[l];
                 }
-                *b.get_mut(k) = *b.get(k) / *self.get(k, k);
+                b[k] /= self[[k, k]];
             }
         }
 
-        return Ok(b);
+        Ok(b)
     }
 
     fn substitute_backward(self: &Self, c: Vector<T>) -> Result<Vector<T>, ()>
@@ -41,7 +41,7 @@ impl<T> Substitute<Vector<T>> for Matrix<T> where T: Field + Scalar + AbsDiffEq
 
         for k in (0..self.n).rev()
         {
-            if self.get(k, k).abs_diff_eq(&T::zero(), T::default_epsilon())
+            if self[[k, k]].abs_diff_eq(&T::zero(), T::default_epsilon())
             {
                 // free variable
                 // if b.get(k).abs_diff_eq(&T::zero(), T::default_epsilon())
@@ -57,13 +57,13 @@ impl<T> Substitute<Vector<T>> for Matrix<T> where T: Field + Scalar + AbsDiffEq
             {
                 for l in (k + 1..self.n).rev()
                 {
-                    *b.get_mut(k) = *b.get(k) - *self.get(k, l) * *b.get(l);
+                    b[k] = b[k] - self[[k, l]] * b[l];
                 }
-                *b.get_mut(k) = *b.get(k) / *self.get(k, k);
+                b[k] /= self[[k, k]];
             }
         }
 
-        return Ok(b);
+        Ok(b)
     }
 }
 
@@ -75,7 +75,7 @@ impl<T> Substitute<Matrix<T>> for Matrix<T> where T: Field + Scalar + AbsDiffEq
         let min: usize = std::cmp::min( self.m, self.n);
         for k in 0..min
         {
-            if self.get(k, k).abs_diff_eq(&T::zero(), T::default_epsilon())
+            if self[[k, k]].abs_diff_eq(&T::zero(), T::default_epsilon())
             {
                 //free variable
                 // if b.get(k).abs_diff_eq(&T::zero(), T::default_epsilon())
@@ -91,14 +91,14 @@ impl<T> Substitute<Matrix<T>> for Matrix<T> where T: Field + Scalar + AbsDiffEq
             {
                 for l in 0..k
                 {
-                    b.set_row( & (b.get_row(k) - (b.get_row(l) * * self.get(k, l))), k);
+                    b.set_row( & (b.get_row(k) - (b.get_row(l) * self[[k, l]])), k);
                 }
-                b.set_row( & (b.get_row(k) / * self.get(k, k)), k);
+                b.set_row( & (b.get_row(k) / self[[k, k]]), k);
             }
 
         }
 
-        return Ok(b);
+        Ok(b)
     }
 
     fn substitute_backward(self: &Self, a: Matrix<T>) -> Result<Matrix<T>, ()>
@@ -109,7 +109,7 @@ impl<T> Substitute<Matrix<T>> for Matrix<T> where T: Field + Scalar + AbsDiffEq
         for k in (0..min).rev()
         {
 
-            if self.get(k, k).abs_diff_eq(&T::zero(), T::default_epsilon())
+            if self[[k, k]].abs_diff_eq(&T::zero(), T::default_epsilon())
             {
                 //free variable
                 // if b.get(k).abs_diff_eq(&T::zero(), T::default_epsilon())
@@ -127,13 +127,13 @@ impl<T> Substitute<Matrix<T>> for Matrix<T> where T: Field + Scalar + AbsDiffEq
             {
                 for l in (k + 1..min).rev()
                 {
-                    b.set_row(&(b.get_row(k) - (b.get_row(l) * *self.get(k, l))), k);
+                    b.set_row(&(b.get_row(k) - (b.get_row(l) * self[[k, l]])), k);
                 }
 
-                b.set_row(&(b.get_row(k) / *self.get(k, k)), k);
+                b.set_row(&(b.get_row(k) / self[[k, k]]), k);
             }
         }
 
-        return Ok(b);
+        Ok(b)
     }
 }

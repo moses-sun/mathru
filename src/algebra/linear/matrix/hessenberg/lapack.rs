@@ -91,7 +91,7 @@ impl<T> Matrix<T> where T: Field + Scalar + Power
 
         assert_eq!(0, info);
 
-        return HessenbergDec::new(Matrix::new(m, n, q), h);
+        HessenbergDec::new(Matrix::new(m, n, q), h)
     }
 
     fn h(mut self: Self) -> Self
@@ -101,7 +101,7 @@ impl<T> Matrix<T> where T: Field + Scalar + Power
         {
             for k in 0..(i - 1)
             {
-                *self.get_mut(i, k) = T::zero();
+                self[[i, k]] = T::zero();
             }
         }
         self

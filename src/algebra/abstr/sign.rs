@@ -44,17 +44,17 @@ macro_rules! impl_sign
 				{
 					return -*self;
 				}
-				return *self;
+				*self
 			}
 
             fn is_positive(self: &Self) -> bool
             {
-            	return *self > $zero;
+            	*self > $zero
             }
 
             fn is_negative(&self) -> bool
             {
-            	return *self < $zero;
+            	*self < $zero
             }
         }
         )*

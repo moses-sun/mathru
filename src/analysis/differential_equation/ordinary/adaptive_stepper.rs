@@ -62,13 +62,13 @@ impl<T> ProportionalControl<T> where T: Real
                rel_tol: T)
                -> ProportionalControl<T>
     {
-        return ProportionalControl { n_max,
+        ProportionalControl { n_max,
                                  h_0,
                                  fac,
                                  fac_min,
                                  fac_max,
                                  abs_tol,
-                                 rel_tol };
+                                 rel_tol }
     }
 
     /// Returns the absolute tolerance
@@ -172,11 +172,11 @@ impl<T> ProportionalControl<T> where T: Real
 
             if err <= T::one()
             {
-                t_n = t_n + h;
+                t_n += h;
                 x_n = x_n_new;
                 t_vec.push(t_n);
                 res_vec.push(x_n.clone());
-                n = n + 1;
+                n += 1;
             }
 
             if err != T::zero()
@@ -200,7 +200,7 @@ impl<T> ProportionalControl<T> where T: Real
         {
             return Err("Maximum number of iterations reached");
         }
-        return Ok((t_vec, res_vec));
+        Ok((t_vec, res_vec))
     }
 
     fn calc_error(self: &Self, y: &Vector<T>, y_hat: &Vector<T>) -> T
@@ -211,15 +211,14 @@ impl<T> ProportionalControl<T> where T: Real
 
         for i in 0..n
         {
-            let y_i: T = *y.get(i);
-            let y_hat_i: T = *y_hat.get(i);
+            let y_i: T = y[i];
+            let y_hat_i: T = y_hat[i];
             let sc_i: T = self.abs_tol + y_i.abs() * self.rel_tol;
 
             let k: T = (y_i - y_hat_i) / sc_i;
             sum += k * k;
         }
 
-        let p = (sum / T::from_f64(n as f64)).sqrt();
-        return p;
+        (sum / T::from_f64(n as f64)).sqrt()
     }
 }

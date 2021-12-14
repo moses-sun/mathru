@@ -11,7 +11,7 @@ use std::clone::Clone;
 /// Chi-Square distribution
 ///
 /// Fore more information:
-/// <a href="https://en.wikipedia.org/wiki/Chi-square_distribution">https://en.wikipedia.org/wiki/Chi-square_distribution</a>
+/// <https://en.wikipedia.org/wiki/Chi-square_distribution>
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[derive(Clone, Copy, Debug)]
 pub struct ChiSquare<T>
@@ -79,7 +79,7 @@ impl<T> Continuous<T> for ChiSquare<T>
         let t2: T = x.pow(self.k / T::from_f64(2.0) - T::one()) * (-x / T::from_f64(2.0)).exp();
         let chisquare: T = t1 * t2;
 
-        return chisquare;
+        chisquare
     }
 
     /// Cumulative distribution function
@@ -109,8 +109,7 @@ impl<T> Continuous<T> for ChiSquare<T>
             let mut sum: T = T::zero();
             for i in 0..(self.k / T::from_f64(2.0)).to_u32()
             {
-                sum +=
-                    (x / T::from_f64(2.0)).pow(T::from_u32(i)) / gamma::gamma(T::from_u32(i + 1))
+                sum += (x / T::from_f64(2.0)).pow(T::from_u32(i)) / gamma::gamma(T::from_u32(i + 1))
             }
 
             p = T::one() - t1 * sum;
@@ -120,8 +119,7 @@ impl<T> Continuous<T> for ChiSquare<T>
             let mut sum: T = T::zero();
             for i in 0..(self.k / T::from_f64(2.0)).to_u32()
             {
-                sum += (x / T::from_f64(2.0)).pow(T::from_f64((i as f64) + 0.5))
-                       / gamma::gamma(T::from_f64((i as f64) + 1.5));
+                sum += (x / T::from_f64(2.0)).pow(T::from_f64((i as f64) + 0.5)) / gamma::gamma(T::from_f64((i as f64) + 1.5));
             }
 
             p = error::erf((x / T::from_f64(2.0)).sqrt()) - t1 * sum;
@@ -148,7 +146,7 @@ impl<T> Continuous<T> for ChiSquare<T>
     /// ```
     fn mean(self: &Self) -> T
     {
-        return self.k;
+        self.k
     }
 
     /// Variance
@@ -163,14 +161,14 @@ impl<T> Continuous<T> for ChiSquare<T>
     /// ```
     fn variance(self: &Self) -> T
     {
-        return T::from_f64(2.0) * self.k;
+        T::from_f64(2.0) * self.k
     }
 
     /// Skewness is a measure of the asymmetry of the probability distribution
     /// of a real-valued random variable about its mean
     fn skewness(self: &Self) -> T
     {
-        return (T::from_f64(8.0) / self.k).sqrt();
+        (T::from_f64(8.0) / self.k).sqrt()
     }
 
     /// Median is the value separating the higher half from the lower half of a
@@ -179,13 +177,13 @@ impl<T> Continuous<T> for ChiSquare<T>
     {
         let t: T = T::one() - T::from_f64(2.0 / 9.0) / self.k;
 
-        return self.k * t * t * t;
+        self.k * t * t * t
     }
 
     ///
     fn entropy(self: &Self) -> T
     {
         let d: T = T::from_f64(2.0) / self.k;
-        return d + (T::from_f64(2.0) * gamma::gamma(d)).ln() + (T::one() - d) * gamma::digamma(d);
+        d + (T::from_f64(2.0) * gamma::gamma(d)).ln() + (T::one() - d) * gamma::digamma(d)
     }
 }

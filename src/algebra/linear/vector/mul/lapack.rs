@@ -22,14 +22,14 @@ impl<'a, 'b, T> Mul<&'b Matrix<T>> for &'a Vector<T>
 
     fn mul(self: Self, rhs: &'b Matrix<T>) -> Self::Output
     {
-        let (rhs_m, rhs_n): (usize, usize) = rhs.dim();
+        let (rhs_m, _): (usize, usize) = rhs.dim();
         let (_m, n): (usize, usize) = self.dim();
 
         if n != rhs_m
         {
             panic!("Vector and matrix dimensions do not match");
         }
-        return Vector::new_row(rhs_n, (&self.data * rhs).convert_to_vec());
+        Vector::new_row( (&self.data * rhs).convert_to_vec())
     }
 }
 
@@ -45,8 +45,8 @@ impl<T> Mul<T> for Vector<T>
     /// ```
     /// use mathru::algebra::linear::Vector;
     ///
-    /// let a: Vector<f64> = Vector::new_column(4, vec![1.0, 2.0, 3.0, 4.0]);
-    /// let res_ref: Vector<f64> = Vector::new_column(4, vec![-5.0, -10.0, -15.0, -20.0]);
+    /// let a: Vector<f64> = Vector::new_column(vec![1.0, 2.0, 3.0, 4.0]);
+    /// let res_ref: Vector<f64> = Vector::new_column(vec![-5.0, -10.0, -15.0, -20.0]);
     ///
     /// assert_eq!(res_ref, a * -5.0)
     /// ```
@@ -68,13 +68,37 @@ impl<'a, T> Mul<&T> for &'a Vector<T>
     /// ```
     /// use mathru::algebra::linear::Vector;
     ///
-    /// let a: Vector<f64> = Vector::new_column(4, vec![1.0, 2.0, 3.0, 4.0]);
-    /// let res_ref: Vector<f64> = Vector::new_column(4, vec![5.0, 10.0, 15.0, 20.0]);
+    /// let a: Vector<f64> = Vector::new_column(vec![1.0, 2.0, 3.0, 4.0]);
+    /// let res_ref: Vector<f64> = Vector::new_column(vec![5.0, 10.0, 15.0, 20.0]);
     ///
     /// assert_eq!(res_ref, a * 5.0)
     /// ```
     fn mul(self: Self, rhs: &T) -> Self::Output
     {
         Vector { data: &self.data * rhs }
+    }
+}
+
+impl<'a, 'b, T> Mul<&'b T> for &'a mut Vector<T>
+    where T: Field + Scalar
+{
+    type Output = &'a mut Vector<T>;
+
+    /// Multiplies the vector elements with the scalar value
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// use mathru::algebra::linear::Vector;
+    ///
+    /// let mut a: Vector<f64> = Vector::new_column(vec![1.0, 2.0, 3.0, 4.0]);
+    /// let res_ref: Vector<f64> = Vector::new_column(vec![5.0, 10.0, 15.0, 20.0]);
+    ///
+    /// assert_eq!(res_ref, *(&mut a * &5.0))
+    /// ```
+    fn mul(self: Self, rhs: &'b T) -> Self::Output
+    {
+        let _ = &mut self.data * rhs;
+        self
     }
 }

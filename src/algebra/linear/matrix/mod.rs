@@ -22,14 +22,19 @@ mod qr;
 pub use self::qr::QRDec;
 
 mod add;
+mod add_assign;
+mod sub;
+mod sub_assign;
 mod div;
 mod inverse;
 mod mul;
-mod sub;
+mod mul_assign;
+
 mod det;
 mod singular;
 mod cholesky;
 pub use self::cholesky::CholeskyDec;
+mod index;
 
 mod solve;
 mod substitute;

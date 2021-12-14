@@ -20,16 +20,16 @@ impl<T> HessenbergDec<T>
 
     pub fn q(self: Self) -> Matrix<T>
     {
-        return self.q;
+        self.q
     }
 
     pub fn h(self: Self) -> Matrix<T>
     {
-        return self.h;
+        self.h
     }
 
     pub fn qh(self: Self) -> (Matrix<T>, Matrix<T>)
     {
-        return (self.q, self.h);
+        (self.q, self.h)
     }
 }

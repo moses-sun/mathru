@@ -29,8 +29,7 @@ impl<T> NewtonRaphson<T>
     /// * 'iters': Number of iterations
     pub fn new(iters: u64, tolerance_abs: T) -> NewtonRaphson<T>
     {
-        NewtonRaphson { iters,
-                        tolerance_abs }
+        NewtonRaphson { iters, tolerance_abs }
     }
 }
 
@@ -38,7 +37,7 @@ impl<T> Default for NewtonRaphson<T> where T: Real
 {
     fn default() -> NewtonRaphson<T>
     {
-        return NewtonRaphson::new(1000, T::from_f64(10e-7));
+        NewtonRaphson::new(1000, T::from_f64(10e-7))
     }
 }
 
@@ -66,6 +65,6 @@ impl<T> NewtonRaphson<T> where T: Real
             x = x_current;
         }
 
-        return Err("Maximum number of iterations reached");
+        Err("Maximum number of iterations reached")
     }
 }
