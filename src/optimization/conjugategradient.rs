@@ -39,46 +39,44 @@ use std::clone::Clone;
 /// use mathru::optimization::{Optim, ConjugateGradient};
 ///
 /// struct LinearEquation
-/// 	{
-/// 		a: Matrix<f64>,
-/// 		b: Vector<f64>,
-/// 	}
+/// {
+/// 	a: Matrix<f64>,
+/// 	b: Vector<f64>,
+/// }
 ///
-/// 	//Ax = b
-/// 	impl LinearEquation
+/// //Ax = b
+/// impl LinearEquation
+/// {
+/// 	pub fn new() -> LinearEquation
 /// 	{
-/// 		pub fn new() -> LinearEquation
+/// 	    LinearEquation
 /// 		{
-/// 		    LinearEquation
-/// 			{
-/// 				a: matrix![1.0, 3.0; 3.0, 5.0],
-/// 				b: vector![-7.0; 7.0]
-/// 			}
+/// 			a: matrix![1.0, 3.0; 3.0, 5.0],
+/// 			b: vector![-7.0; 7.0]
 /// 		}
 /// 	}
+/// }
 ///
-/// 	impl Optim<f64> for LinearEquation
-/// 	{
-///
+/// impl Optim<f64> for LinearEquation
+/// {
 ///     // A
-/// 		fn jacobian(&self, _input: &Vector<f64>) -> Matrix<f64>
-/// 		{
-/// 			return self.a.clone();
-/// 		}
+///		fn jacobian(&self, _input: &Vector<f64>) -> Matrix<f64>
+///		{
+///			return self.a.clone();
+///		}
 ///
-/// 		// f = b-Ax
-/// 		fn eval(&self, x: &Vector<f64>) -> Vector<f64>
-/// 		{
-/// 			return self.b.clone() - self.a.clone() * x.clone()
-/// 		}
+///		// f = b-Ax
+///		fn eval(&self, x: &Vector<f64>) -> Vector<f64>
+///		{
+///			return self.b.clone() - self.a.clone() * x.clone()
+///		}
 ///
 ///     //Computes the Hessian at the given value x
 ///     fn hessian(&self, _x: &Vector<f64>) -> Matrix<f64>
 ///     {
 ///         unimplemented!();
 ///     }
-///
-/// 	}
+/// }
 ///
 /// //create optimizer instance
 /// let optim: ConjugateGradient<f64> = ConjugateGradient::new(10, 0.01);
@@ -86,10 +84,10 @@ use std::clone::Clone;
 /// let leq: LinearEquation = LinearEquation::new();
 ///
 /// // Initial approximation
-/// 	let x_0: Vector<f64> = vector![1.0; 1.0];
+/// let x_0: Vector<f64> = vector![1.0; 1.0];
 ///
 /// // Minimize function
-/// 	let x_min: Vector<f64> = optim.minimize(&leq, &x_0).arg();
+/// let x_min: Vector<f64> = optim.minimize(&leq, &x_0).arg();
 /// ```
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[derive(Clone, Copy, Debug)]
@@ -129,7 +127,6 @@ impl<T> ConjugateGradient<T> where T: Real
         where F: Optim<T>
     {
         let mut x_n: Vector<T> = x_0.clone();
-
         let mut d_n: Vector<T> = func.eval(&x_n);
         let mut r_n: Vector<T> = d_n.clone();
 
@@ -141,7 +138,7 @@ impl<T> ConjugateGradient<T> where T: Real
 
             let alpha_n: T = r_n.dotp(&r_n) / temp.transpose().dotp(&d_n);
 
-            x_n = x_n + d_n.clone() * alpha_n;
+            x_n += d_n.clone() * alpha_n;
 
             let r_n_1: Vector<T> = r_n.clone() - jacobian * d_n.clone() * alpha_n;
 
@@ -157,6 +154,6 @@ impl<T> ConjugateGradient<T> where T: Real
             r_n = r_n_1
         }
 
-        return OptimResult::new(x_n);
+        OptimResult::new(x_n)
     }
 }

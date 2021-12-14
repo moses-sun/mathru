@@ -7,7 +7,7 @@ use std::clone::Clone;
 /// Gamma distribution
 ///
 /// Fore more information:
-/// <a href="https://en.wikipedia.org/wiki/Gamma_distribution">https://en.wikipedia.org/wiki/Gamma_distribution</a>
+/// <https://en.wikipedia.org/wiki/Gamma_distribution>
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[derive(Clone, Copy, Debug)]
 pub struct Gamma<T>
@@ -74,9 +74,7 @@ impl<T> Continuous<T> for Gamma<T>
         {
             panic!();
         }
-        self.beta.pow(self.alpha) / gamma::gamma(self.alpha)
-        * x.pow(self.alpha - T::one())
-        * (-self.beta * x).exp()
+        self.beta.pow(self.alpha) / gamma::gamma(self.alpha) * x.pow(self.alpha - T::one()) * (-self.beta * x).exp()
     }
 
     /// Cumulative distribution function
@@ -100,7 +98,7 @@ impl<T> Continuous<T> for Gamma<T>
         {
             return T::zero();
         }
-        return gamma::gamma_lr(self.alpha, self.beta * x);
+        gamma::gamma_lr(self.alpha, self.beta * x)
     }
 
     /// Quantile function of inverse cdf
@@ -112,7 +110,7 @@ impl<T> Continuous<T> for Gamma<T>
     /// Expected value
     fn mean(self: &Self) -> T
     {
-        return self.alpha / self.beta;
+        self.alpha / self.beta
     }
 
     /// Variance
@@ -127,13 +125,13 @@ impl<T> Continuous<T> for Gamma<T>
     /// ```
     fn variance(self: &Self) -> T
     {
-        return self.alpha / self.beta.pow(T::from_f64(2.0));
+        self.alpha / self.beta.pow(T::from_f64(2.0))
     }
 
     ///
     fn skewness(self: &Self) -> T
     {
-        return T::from_f64(2.0) / self.alpha.sqrt();
+        T::from_f64(2.0) / self.alpha.sqrt()
     }
 
     /// Median is the value separating the higher half from the lower half of a
@@ -146,8 +144,6 @@ impl<T> Continuous<T> for Gamma<T>
     ///
     fn entropy(self: &Self) -> T
     {
-        return self.alpha - self.beta.ln()
-               + gamma::gamma(self.alpha).ln()
-               + (T::one() - self.alpha) * gamma::digamma(self.alpha);
+        self.alpha - self.beta.ln() + gamma::gamma(self.alpha).ln() + (T::one() - self.alpha) * gamma::digamma(self.alpha)
     }
 }

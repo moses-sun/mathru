@@ -49,7 +49,7 @@ fn zeros()
     {
         for k in 0..cols
         {
-            assert_relative_eq!(*(m_zero.get(i, k)), 0.0);
+            assert_relative_eq!(m_zero[[i, k]], 0.0);
         }
     }
 }
@@ -68,11 +68,11 @@ fn one()
         {
             if i == k
             {
-                assert_relative_eq!(*m_ones.get(i, k), 1.0);
+                assert_relative_eq!(m_ones[[i, k]], 1.0);
             }
             else
             {
-                assert_relative_eq!(*m_ones.get(i, k), 0.0);
+                assert_relative_eq!(m_ones[[i, k]], 0.0);
             }
         }
     }
@@ -100,11 +100,11 @@ fn get_column()
 
     let x: Vector<f32> = a.get_column(0);
 
-    let x_ref: Vector<f32> = Vector::new_column(4, vec![4.0, 1.0, -2.0, 2.0]);
+    let x_ref: Vector<f32> = Vector::new_column(vec![4.0, 1.0, -2.0, 2.0]);
 
     for i in 0..4
     {
-        assert_relative_eq!(*x.get(i), *x_ref.get(i));
+        assert_relative_eq!(x[i], x_ref[i]);
     }
 }
 
@@ -117,11 +117,11 @@ fn get_row()
                                     2.0, 3.0, -2.0, -1.0];
 
     let x: Vector<f64> = a.get_row(1);
-    let x_ref: Vector<f64> = Vector::new_row(4, vec![1.0, 2.0, 3.0, 1.0]);
+    let x_ref: Vector<f64> = Vector::new_row( vec![1.0, 2.0, 3.0, 1.0]);
 
     for i in 0..4
     {
-        assert_relative_eq!(*(x.get(i)), *(x_ref.get(i)));
+        assert_relative_eq!(x[i], x_ref[i]);
     }
 }
 
@@ -137,11 +137,11 @@ fn givens()
 
     let givens: Matrix<f32> = Matrix::givens(m, i, j, c, s);
 
-    assert_relative_eq!(*(givens.get(0, 0)), 1.0);
-    assert_relative_eq!(*(givens.get(i, i)), c);
-    assert_relative_eq!(*(givens.get(j, j)), c);
-    assert_relative_eq!(*(givens.get(j, i)), -s);
-    assert_relative_eq!(*(givens.get(i, j)), s);
+    assert_relative_eq!(givens[[0, 0]], 1.0);
+    assert_relative_eq!(givens[[i, i]], c);
+    assert_relative_eq!(givens[[j, j]], c);
+    assert_relative_eq!(givens[[j, i]], -s);
+    assert_relative_eq!(givens[[i, j]], s);
 }
 
 #[cfg(feature = "native")]
@@ -204,7 +204,7 @@ fn trace_2()
 #[test]
 fn householder_0()
 {
-    let v: Vector<f64> = Vector::new_column(3, vec![1.0, 2.0, 3.0]);
+    let v: Vector<f64> = Vector::new_column(vec![1.0, 2.0, 3.0]);
     let h: Matrix<f64> = Matrix::householder(&v, 0);
 
     let h_ref: Matrix<f64> = matrix![   -0.2672612419124243, -0.5345224838248488, -0.8017837257372731;
@@ -217,7 +217,7 @@ fn householder_0()
 #[test]
 fn householder_1()
 {
-    let v: Vector<f64> = Vector::new_column(3, vec![1.0, 2.0, 3.0]);
+    let v: Vector<f64> = Vector::new_column(vec![1.0, 2.0, 3.0]);
     let h: Matrix<f64> = Matrix::householder(&v, 1);
 
     let h_ref: Matrix<f64> = matrix![   1.0, 0.0, 0.0;
@@ -230,7 +230,7 @@ fn householder_1()
 #[test]
 fn householder_2()
 {
-    let v: Vector<f64> = Vector::new_column(3, vec![1.0, 2.0, 3.0]);
+    let v: Vector<f64> = Vector::new_column(vec![1.0, 2.0, 3.0]);
     let h: Matrix<f64> = Matrix::householder(&v, 2);
 
     let h_ref: Matrix<f64> = matrix![   1.0, 0.0, 0.0;

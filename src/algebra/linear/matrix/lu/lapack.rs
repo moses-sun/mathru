@@ -56,7 +56,7 @@ impl<T> Matrix<T> where T: Field + Scalar
         let u: Matrix<T> = Matrix::u(mat.clone());
         let p: Matrix<T> = Matrix::p(ipiv);
 
-        return Ok(LUDec::new(l, u, p));
+        Ok(LUDec::new(l, u, p))
     }
 
     fn l(mut mat: Matrix<T>) -> Self
@@ -68,14 +68,14 @@ impl<T> Matrix<T> where T: Field + Scalar
         {
             for k in i..n
             {
-                *mat.get_mut(i, k) = T::zero();
+                mat[[i, k]] = T::zero();
             }
         }
 
         //set diagonal to 1
         for i in 0..m
         {
-            *mat.get_mut(i, i) = T::one();
+            mat[[i, i]] = T::one();
         }
 
         mat
@@ -90,7 +90,7 @@ impl<T> Matrix<T> where T: Field + Scalar
         {
             for k in 0..i
             {
-                *mat.get_mut(i, k) = T::zero();
+                mat[[i, k]] = T::zero();
             }
         }
 
@@ -121,7 +121,7 @@ impl<T> Matrix<T> where T: Field + Scalar
         for i in 0..length
         {
             let k = perm[i];
-            *p.get_mut(i, k) = T::one();
+            p[[i, k]] = T::one();
         }
 
         p

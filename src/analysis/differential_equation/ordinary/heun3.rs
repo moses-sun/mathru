@@ -11,16 +11,16 @@ use std::clone::Clone;
 
 /// Solves an ODE using Heun's 3rd order method.
 ///
-/// <a href="https://en.wikipedia.org/wiki/Heun's_method">https://en.wikipedia.org/wiki/Heun's_method</a>
+/// <https://en.wikipedia.org/wiki/Heun's_method>
 ///
 /// # Example
 ///
-/// For this example, we want to solve the following ordinary differiential
+/// For this example, we want to solve the following ordinary differential
 /// equation:
 /// ```math
 /// \frac{dy}{dt} = ay = f(t, y)
 /// ```
-/// The inial condition is $`y(0) = 0.5`$ and we solve it in the interval
+/// The initial condition is $`y(0) = 0.5`$ and we solve it in the interval
 /// $`\lbrack 0, 2\rbrack`$ The following equation is the closed solution for
 /// this ODE:
 /// ```math
@@ -103,9 +103,9 @@ impl<T> Default for Heun3<T> where T: Real
         let b: Vec<T> = vec![T::from_f64(1.0 / 4.0), T::zero(), T::from_f64(3.0 / 4.0)];
         let c: Vec<T> = vec![T::from_f64(1.0 / 3.0), T::from_f64(2.0 / 3.0)];
 
-        return Heun3 {
+        Heun3 {
             butcher: ButcherFixedStepSize::new(a, b, c)
-        };
+        }
     }
 }
 
@@ -114,12 +114,11 @@ impl<'a, T> ExplicitMethod<T> for Heun3<T> where T: Real
     fn do_step<F>(self: &Self, prob: &F, t_n: &T, x_n: &Vector<T>, h: &T) -> Vector<T>
         where F: ExplicitODE<T>
     {
-        return self.butcher.do_step(prob, t_n, x_n, h);
+        self.butcher.do_step(prob, t_n, x_n, h)
     }
-
 
     fn order(self: &Self) -> u8
     {
-        return 3;
+        3
     }
 }

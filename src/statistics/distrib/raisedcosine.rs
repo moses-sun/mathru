@@ -6,7 +6,7 @@ use std::clone::Clone;
 /// Raised Cosine distribution
 ///
 /// Fore more information:
-/// <a href="https://en.wikipedia.org/wiki/Raised_cosine_distribution">https://en.wikipedia.org/wiki/Raised_cosine_distribution</a>
+/// <https://en.wikipedia.org/wiki/Raised_cosine_distribution>
 ///
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[derive(Clone, Copy, Debug)]
@@ -78,7 +78,7 @@ impl<T> Continuous<T> for RaisedCosine<T> where T: Real
                    / (T::from_f64(2.0) * self.s);
         }
 
-        return T::zero();
+        T::zero()
     }
 
     /// Cumulative distribution function
@@ -101,17 +101,13 @@ impl<T> Continuous<T> for RaisedCosine<T> where T: Real
         if (self.mu - self.s) <= x && x <= (self.mu + self.s)
         {
             let k: T = (x - self.mu) / self.s;
-            return (T::one() + k + T::one() / T::pi() * (k * T::pi()).sin()) / T::from_f64(2.0);
-        }
-        else
-        {
+            (T::one() + k + T::one() / T::pi() * (k * T::pi()).sin()) / T::from_f64(2.0)
+        } else {
             if x < (self.mu - self.s)
             {
-                return T::zero();
-            }
-            else
-            {
-                return T::one();
+                T::zero()
+            } else {
+                T::one()
             }
         }
     }
@@ -134,7 +130,7 @@ impl<T> Continuous<T> for RaisedCosine<T> where T: Real
     /// ```
     fn mean(self: & Self) -> T
     {
-        return self.mu;
+        self.mu
     }
 
     /// Variance
@@ -150,20 +146,20 @@ impl<T> Continuous<T> for RaisedCosine<T> where T: Real
     /// ```
     fn variance(self: &Self) -> T
     {
-        return self.s * self.s * (T::from_f64(1.0 / 3.0) - T::from_f64(2.0) / (T::pi() * T::pi()));
+        self.s * self.s * (T::from_f64(1.0 / 3.0) - T::from_f64(2.0) / (T::pi() * T::pi()))
     }
 
     ///
     fn skewness(self: &Self) -> T
     {
-        return T::zero();
+        T::zero()
     }
 
     /// Median is the value separating the higher half from the lower half of a
     /// probability distribution.
     fn median(self: &Self) -> T
     {
-        return self.mu;
+        self.mu
     }
 
     ///

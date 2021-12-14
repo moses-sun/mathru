@@ -23,29 +23,29 @@ impl<T> LUDec<T>
 {
     pub(super) fn new(l: Matrix<T>, u: Matrix<T>, p: Matrix<T>) -> LUDec<T>
     {
-        return LUDec { l, u, p };
+        LUDec { l, u, p }
     }
 
     /// Return l Matrix of LU decomposition
     pub fn l(self: Self) -> Matrix<T>
     {
-        return self.l;
+        self.l
     }
 
     pub fn u(self: Self) -> Matrix<T>
     {
-        return self.u;
+        self.u
     }
 
     pub fn p(self: Self) -> Matrix<T>
     {
-        return self.p;
+        self.p
     }
 
     /// Return l, u, and p matrix of the LU decomposition
     pub fn lup(self: Self) -> (Matrix<T>, Matrix<T>, Matrix<T>)
     {
-        return (self.l, self.u, self.p);
+        (self.l, self.u, self.p)
     }
 }
 
@@ -57,7 +57,7 @@ impl<T> Solve<Vector<T>> for LUDec<T> where T: Field + Scalar + AbsDiffEq
     {
         let b_hat: Vector<T> = &self.p * rhs;
         let y: Vector<T> = self.l.substitute_forward(b_hat)?;
-        return self.u.substitute_backward(y);
+        self.u.substitute_backward(y)
     }
 }
 
@@ -84,7 +84,7 @@ impl<T> Inverse<T> for LUDec<T>
     {
         let b = Matrix::one(self.p.nrows());
         let x: Matrix<T> = self.solve(&b)?;
-        return Ok(x);
+        Ok(x)
     }
 }
 
@@ -97,6 +97,6 @@ impl<T> Solve<Matrix<T>> for LUDec<T>
         let b_hat: Matrix<T> = &self.p * rhs;
 
         let y: Matrix<T> = self.l.substitute_forward(b_hat)?;
-        return  self.u.substitute_backward(y);
+        self.u.substitute_backward(y)
     }
 }

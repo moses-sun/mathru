@@ -4,7 +4,8 @@ use crate::algebra::{
 };
 use std::ops::Add;
 
-impl<T> Add<Self> for Matrix<T> where T: Field + Scalar
+impl<T> Add<Self> for Matrix<T>
+    where T: Field + Scalar
 {
     type Output = Matrix<T>;
 
@@ -20,14 +21,16 @@ impl<T> Add<Self> for Matrix<T> where T: Field + Scalar
     ///
     /// let c: Matrix<f64> = a + b;
     /// ```
-    fn add(self: Self, rhs: Self) -> Self::Output
+    fn add(mut self: Self, rhs: Self) -> Self::Output
     {
-        (&self).add(&rhs)
+        let _ = (&mut self).add(&rhs);
+        self
     }
 }
 
 ///Adds two matrices
-impl<'a, 'b, T> Add<&'b Matrix<T>> for &'a Matrix<T> where T: Field + Scalar
+impl<'a, 'b, T> Add<&'b Matrix<T>> for &'a Matrix<T>
+    where T: Field + Scalar
 {
     type Output = Matrix<T>;
 
@@ -45,7 +48,7 @@ impl<'a, 'b, T> Add<&'b Matrix<T>> for &'a Matrix<T> where T: Field + Scalar
     /// ```
     fn add(self: Self, rhs: &'b Matrix<T>) -> Self::Output
     {
-        assert_eq!(self.dim(), rhs.dim());
+        // assert_eq!(self.dim(), rhs.dim());
         let (m, n) = self.dim();
         Matrix { m,
                  n,
@@ -57,31 +60,35 @@ impl<'a, 'b, T> Add<&'b Matrix<T>> for &'a Matrix<T> where T: Field + Scalar
     }
 }
 
-///
-/// Add scalar to matrix
-impl<'a, 'b, T> Add<&'b T> for &'a Matrix<T> where T: Field + Scalar
+///Adds two matrices
+impl<'a, 'b, T> Add<&'b Matrix<T>> for &'a mut Matrix<T>
+    where T: Field + Scalar
 {
-    type Output = Matrix<T>;
+    type Output = &'a mut Matrix<T>;
 
-    /// Add a scalar to the matrix
+    /// Adds two matrices
     ///
     /// # Example
     ///
     /// ```
     /// use mathru::algebra::linear::Matrix;
     ///
-    /// let a: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
-    /// let b: Matrix<f64> = &a + &-4.0;
+    /// let mut a: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
+    /// let b: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
+    ///
+    /// let _ = &mut a + &b;
     /// ```
-    fn add(self: Self, rhs: &T) -> Self::Output
+    fn add(self: Self, rhs: &'b Matrix<T>) -> Self::Output
     {
-        return self.apply(&|x: &T| -> T { x.clone() + rhs.clone() });
+        // assert_eq!(self.dim(), rhs.dim());
+        self.data.iter_mut().zip(rhs.data.iter()).for_each(|(x, y)| *x += *y);
+        self
     }
 }
 
-///
 /// Add scalar to matrix
-impl<T> Add<T> for Matrix<T> where T: Field + Scalar
+impl<T> Add<T> for Matrix<T>
+    where T: Field + Scalar
 {
     type Output = Matrix<T>;
 
@@ -95,8 +102,56 @@ impl<T> Add<T> for Matrix<T> where T: Field + Scalar
     /// let a: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
     /// let b: Matrix<f64> = a + -4.0;
     /// ```
-    fn add(self: Self, rhs: T) -> Self::Output
+    fn add(mut self: Self, rhs: T) -> Self::Output
     {
-        return (&self).add(&rhs);
+        let _ = (&mut self).add(&rhs);
+        self
+    }
+}
+
+/// Add scalar to matrix
+impl<'a, 'b, T> Add<&'a T> for &'a Matrix<T>
+    where T: Field + Scalar
+{
+    type Output = Matrix<T>;
+
+    /// Add a scalar to the matrix
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// use mathru::algebra::linear::Matrix;
+    ///
+    /// let a: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
+    /// &a + &-4.0;
+    /// ```
+    fn add(self: Self, rhs: &'a T) -> Self::Output
+    {
+        let mut a: Matrix<T> = self.clone();
+        let _ = &mut a + rhs;
+        a
+    }
+}
+
+/// Add scalar to matrix
+impl<'a, 'b, T> Add<&'a T> for &'a mut Matrix<T>
+    where T: Field + Scalar
+{
+    type Output = &'a mut Matrix<T>;
+
+    /// Add a scalar to the matrix
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// use mathru::algebra::linear::Matrix;
+    ///
+    /// let mut a: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
+    /// &mut a + &-4.0;
+    /// ```
+    fn add(self: Self, rhs: &'a T) -> Self::Output
+    {
+        let _ = self.data.iter_mut().for_each(&|x: &mut T| *x += *rhs);
+        self
     }
 }

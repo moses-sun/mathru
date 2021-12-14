@@ -1,4 +1,4 @@
-//! Explicit Ordinary Differential Equation
+//! Implicit Ordinary Differential Equation
 
 use crate::algebra::{
     abstr::Real,
@@ -9,9 +9,9 @@ use crate::algebra::{
 pub trait ImplicitODE<T>
     where T: Real
 {
-    fn func(self: &Self, t: T, x: &Vector<T>) -> Vector<T>;
+    fn func(self: &Self, t: &T, x: &Vector<T>) -> Vector<T>;
 
-    fn jacobian(self: &Self, t: T, x: &Vector<T>) -> Matrix<T>;
+    fn jacobian(self: &Self, t: &T, x: &Vector<T>) -> Matrix<T>;
 
     fn time_span(self: &Self) -> (T, T)
     {

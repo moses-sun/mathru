@@ -13,7 +13,7 @@ use std::clone::Clone;
 /// Chi-Square Test
 ///
 /// Fore more information:
-/// <a href="https://en.wikipedia.org/wiki/Chi-square_test">https://en.wikipedia.org/wiki/Chi-square_test</a>
+/// <https://en.wikipedia.org/wiki/Chi-square_test>
 ///
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[derive(Clone, Copy, Debug)]
@@ -61,17 +61,17 @@ impl<T> ChiSquare<T> where T: Real
                 if k == 0
                 {
                     n_jk = x[j];
-                    for l in 0..m
+                    for l in x.iter().take(m)
                     {
-                        n_k += x[l];
+                        n_k += *l;
                     }
                 }
                 else
                 {
                     n_jk = y[j];
-                    for l in 0..m
+                    for l in y.iter().take(m)
                     {
-                        n_k += y[l];
+                        n_k += *l
                     }
                 }
 

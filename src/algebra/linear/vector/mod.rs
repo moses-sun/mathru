@@ -4,10 +4,15 @@ pub mod vectorintoiterator;
 pub mod vectoriterator;
 pub mod vectoriteratormut;
 
-mod mul;
+
 mod add;
+mod add_assign;
 mod sub;
+mod sub_assign;
+mod mul;
+mod mul_assign;
 mod div;
+mod index;
 
 pub use self::{
     vector::Vector, vectorintoiterator::VectorIntoIterator, vectoriterator::VectorIterator,

@@ -10,7 +10,7 @@ use std::clone::Clone;
 /// Binomial distribution
 ///
 /// Fore more information:
-/// <a href="https://en.wikipedia.org/wiki/Binomial_distribution">https://en.wikipedia.org/wiki/Binomial_distribution</a>
+/// <https://en.wikipedia.org/wiki/Binomial_distribution>
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[derive(Clone, Copy, Debug)]
 pub struct Binomial<T>
@@ -62,7 +62,7 @@ impl<T> Discrete<T, u32, T> for Binomial<T> where T: Real
     /// let x: u32 = 0;
     /// let p: f64 = distrib.pmf(x);
     /// ```
-    fn pmf<'a>(self: &'a Self, x: u32) -> T
+    fn pmf(self: &Self, x: u32) -> T
     {
         if x > self.n
         {
@@ -70,8 +70,8 @@ impl<T> Discrete<T, u32, T> for Binomial<T> where T: Real
         }
         let f: T = T::from_u32(combins::binom(self.n, x));
         let diff: i32 = (self.n as i32) - (x as i32);
-        let pdf: T =
-            f * (self.p.pow(T::from_u32(x))) * ((T::one() - self.p).pow(T::from_i32(diff)));
+        let pdf: T = f * (self.p.pow(T::from_u32(x))) * ((T::one() - self.p).pow(T::from_i32(diff)));
+
         pdf
     }
 
@@ -90,7 +90,7 @@ impl<T> Discrete<T, u32, T> for Binomial<T> where T: Real
     /// let x: f64 = 0.4;
     /// let p: f64 = distrib.cdf(x);
     /// ```
-    fn cdf<'a>(self: &'a Self, x: T) -> T
+    fn cdf(self: &Self, x: T) -> T
     {
         let x_supremum: u32 = x.floor().to_u32();
         let mut prob: T = T::zero();
@@ -99,7 +99,7 @@ impl<T> Discrete<T, u32, T> for Binomial<T> where T: Real
         {
             prob += self.pmf(k);
         }
-        return prob;
+        prob
     }
 
     /// Expected value
@@ -112,9 +112,9 @@ impl<T> Discrete<T, u32, T> for Binomial<T> where T: Real
     /// let distrib: Binomial<f64> = Binomial::new(5, 0.3);
     /// let mean: f64 = distrib.mean();
     /// ```
-    fn mean<'a>(self: &'a Self) -> T
+    fn mean(self: &Self) -> T
     {
-        return T::from_u32(self.n) * self.p;
+        T::from_u32(self.n) * self.p
     }
 
     /// Variance
@@ -127,8 +127,8 @@ impl<T> Discrete<T, u32, T> for Binomial<T> where T: Real
     /// let distrib: Binomial<f64> = Binomial::new(5, 0.3);
     /// let var: f64 = distrib.variance();
     /// ```
-    fn variance<'a>(self: &'a Self) -> T
+    fn variance(self: &Self) -> T
     {
-        return self.mean() * (T::one() - self.p);
+        self.mean() * (T::one() - self.p)
     }
 }

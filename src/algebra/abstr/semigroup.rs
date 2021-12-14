@@ -17,7 +17,7 @@ pub trait Semigroup<O: Operator + Copy>: Magma<O>
 {
     fn is_associative(self: Self, y: Self, z: Self) -> bool
     {
-        return self.clone().operate(y.clone()).operate(z.clone()) == self.operate(y.operate(z));
+        self.clone().operate(y.clone()).operate(z.clone()) == self.operate(y.operate(z))
     }
 }
 

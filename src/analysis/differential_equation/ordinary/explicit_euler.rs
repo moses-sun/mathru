@@ -10,16 +10,16 @@ use crate::analysis::differential_equation::ordinary::ButcherFixedStepSize;
 
 /// Solves an ODE using Euler's method.
 ///
-/// <a href="https://en.wikipedia.org/wiki/Euler_method">https://en.wikipedia.org/wiki/Euler_method</a>
+/// <https://en.wikipedia.org/wiki/Euler_method>
 ///
 /// # Example
 ///
-/// For this example, we want to solve the following ordinary differiential
+/// For this example, we want to solve the following ordinary differential
 /// equation:
 /// ```math
 /// \frac{dy}{dt} = ay = f(t, y)
 /// ```
-/// The inial condition is $`y(0) = 0.5`$ and we solve it in the interval
+/// The initial condition is $`y(0) = 0.5`$ and we solve it in the interval
 /// $`\lbrack 0, 2\rbrack`$ The following equation is the closed solution for
 /// this ODE:
 /// ```math
@@ -80,7 +80,7 @@ use crate::analysis::differential_equation::ordinary::ButcherFixedStepSize;
 /// let problem: ExplicitODE1 = ExplicitODE1::default();
 ///
 /// // Solve the ODE
-/// let (t, y): (Vec<f64>, Vec<Vector<f64>>) = solver.solve(&problem, &ExplicitEuler::default()).unwrap();
+/// let (t, y): (Vec<f64>, Vec<Vector<f64>>) = solver.solve(&problem, &mut ExplicitEuler::default()).unwrap();
 /// # }
 /// ```
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
@@ -99,9 +99,9 @@ impl<T> Default for ExplicitEuler<T> where T: Real
         let b: Vec<T> = vec![T::from_f64(1.0)];
         let c: Vec<T> = vec![];
 
-        return ExplicitEuler {
+        ExplicitEuler {
             butcher: ButcherFixedStepSize::new(a, b, c)
-        };
+        }
     }
 }
 
@@ -110,12 +110,12 @@ impl<T> ExplicitMethod<T> for ExplicitEuler<T> where T: Real
     fn do_step<F>(self: &Self, prob: &F, t_n: &T, x_n: &Vector<T>, h: &T) -> Vector<T>
         where F: ExplicitODE<T>
     {
-        return self.butcher.do_step(prob, t_n, x_n, h);
+        self.butcher.do_step(prob, t_n, x_n, h)
     }
 
     /// Euler's method is a first order method
     fn order(self: &Self) -> u8
     {
-        return 1;
+        1
     }
 }

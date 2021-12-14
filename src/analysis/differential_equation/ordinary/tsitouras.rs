@@ -11,7 +11,7 @@ use serde::{Deserialize, Serialize};
 
 /// Solves an ordinary differential equation using the 4th order Tsitouras algorithm
 ///
-///<a href="http://users.uoa.gr/~tsitourasc/RK54_new_v2.pdf">http://users.uoa.gr/~tsitourasc/RK54_new_v2.pdf</a>
+///<http://users.uoa.gr/~tsitourasc/RK54_new_v2.pdf>
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[derive(Clone, Debug)]
 pub struct Tsitouras<T>
@@ -34,9 +34,9 @@ impl<T> Default for Tsitouras<T> where T: Real
         let b_s: Vec<T> = vec![T::from_f64(0.001780011052226), T::from_f64(0.000816434459657), T::from_f64(-0.007880878010262), T::from_f64(0.144711007173263), T::from_f64(-0.582357165452555), T::from_f64(0.458082105929187), T::from_f64(1.0 / 66.0)];
         let c: Vec<T> = vec![T::from_f64(0.161), T::from_f64(0.327), T::from_f64(0.9), T::from_f64(0.9800255409045097), T::one(), T::one()];
 
-        return Tsitouras {
+        Tsitouras {
             butcher: ButcherAdaptiveStepSize::new(a, b, b_s, c),
-        };
+        }
     }
 }
 
@@ -52,6 +52,6 @@ impl<T> ExplicitEmbeddedMethod<T> for Tsitouras<T>
 
     fn order(self: &Self) -> (u8, u8)
     {
-        return (5, 4);
+        (5, 4)
     }
 }

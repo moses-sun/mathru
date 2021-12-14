@@ -12,7 +12,8 @@ use serde::{Deserialize, Serialize};
 
 /// Solves an ODE using the 4th order 3/8-rule Runge-Kutta algorithm.
 ///
-///<a href="https://en.wikipedia.org/wiki/Runge-Kutta_methods">https://en.wikipedia.org/wiki/Rung-Kutta_methods</a>
+///<https://en.wikipedia.org/wiki/Rung-Kutta_methods>
+///
 /// # Example
 ///
 /// For this example, we want to solve the following ordinary differiential
@@ -103,9 +104,9 @@ impl<T> Default for Kutta38<T> where T: Real
         let b: Vec<T> = vec![T::from_f64(1.0/8.0), T::from_f64(3.0/8.0), T::from_f64(3.0/8.0), T::from_f64(1.0/8.0)];
         let c: Vec<T> = vec![T::from_f64(1.0/3.0), T::from_f64(2.0/3.0), T::one()];
 
-        return Kutta38 {
+        Kutta38 {
             butcher: ButcherFixedStepSize::new(a, b, c)
-        };
+        }
     }
 }
 
@@ -114,12 +115,12 @@ impl<T> ExplicitMethod<T> for Kutta38<T> where T: Real
     fn do_step<F>(self: &Self, prob: &F, t_n: &T, x_n: &Vector<T>, h: &T) -> Vector<T>
         where F: ExplicitODE<T>
     {
-        return self.butcher.do_step(prob, t_n, x_n, h);
+        self.butcher.do_step(prob, t_n, x_n, h)
     }
 
     /// Kutta's method is a 4th order method
     fn order(self: &Self) -> u8
     {
-        return 4;
+        4
     }
 }

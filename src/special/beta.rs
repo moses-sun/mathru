@@ -12,7 +12,7 @@ pub trait Beta
     /// ```
     ///
     /// Fore more information:
-    /// <a href="https://en.wikipedia.org/wiki/Beta_function">Wikipedia Beta function</a>
+    /// <https://en.wikipedia.org/wiki/Beta_function>
     ///
     /// # Arguments
     ///
@@ -42,7 +42,7 @@ pub trait Beta
     /// ```
     ///
     /// Fore more information:
-    /// <a href="https://en.wikipedia.org/wiki/Beta_function">Wikipedia Beta function</a>
+    /// <https://en.wikipedia.org/wiki/Beta_function>
     ///
     /// # Arguments
     ///
@@ -74,7 +74,7 @@ pub trait Beta
     /// ```
     ///
     /// Fore more information:
-    /// <a href="https://en.wikipedia.org/wiki/Beta_function#Incomplete_beta_function">Wikipedia Beta function</a>
+    /// <https://en.wikipedia.org/wiki/Beta_function#Incomplete_beta_function>
     ///
     /// # Arguments
     ///
@@ -108,16 +108,16 @@ macro_rules! impl_beta
         {
             fn beta(self: Self, y: Self) -> Self
             {
-                return self.gamma() * y.gamma() / (self + y).gamma();
+                self.gamma() * y.gamma() / (self + y).gamma()
             }
 
             fn beta_inc(self: Self, a: Self, b: Self) -> Self
             {
-                return a.beta(b) * self.beta_inc_reg(a, b);
+                a.beta(b) * self.beta_inc_reg(a, b)
             }
 
             /// The code from the following C code was ported to Rust
-            /// <a href="http://people.sc.fsu.edu/~jburkardt/c_src/asa109/asa109.c">C implementation</a>
+            /// <http://people.sc.fsu.edu/~jburkardt/c_src/asa109/asa109.c>
             fn beta_inc_reg(self: Self, a: Self, b: Self) -> Self
             {
                 let acu: Self = 0.1E-14;
@@ -130,7 +130,7 @@ macro_rules! impl_beta
                     panic!();
                 }
 
-                if 0.0 > self || self > 1.0
+                if !(0.0..=1.0).contains(&self)
                 {
                     panic!();
                 }
@@ -188,7 +188,7 @@ macro_rules! impl_beta
                 loop
                 {
                     term = term * temp * rx / (pp + ai);
-                    value = value + term;
+                    value += term;
                     temp = term.abs();
 
                     if temp <= acu && temp <= acu * value
@@ -202,8 +202,8 @@ macro_rules! impl_beta
                         break;
                     }
 
-                    ai = ai + 1.0;
-                    ns = ns - 1;
+                    ai += 1.0;
+                    ns -= 1;
 
                     if 0 <= ns
                     {
@@ -216,11 +216,11 @@ macro_rules! impl_beta
                     else
                     {
                         temp = psq;
-                        psq = psq + 1.0;
+                        psq += 1.0;
                     }
                 }
 
-                return value;
+                value
             }
         }
     };
@@ -260,7 +260,7 @@ impl_beta!(f64);
 pub fn beta<T>(x: T, y: T) -> T
     where T: Real + Beta
 {
-    return x.beta(y);
+    x.beta(y)
 }
 
 /// Incomplete beta function
@@ -296,7 +296,7 @@ pub fn beta<T>(x: T, y: T) -> T
 pub fn beta_inc<T>(x: T, a: T, b: T) -> T
     where T: Real + Beta
 {
-    return x.beta_inc(a, b);
+    x.beta_inc(a, b)
 }
 
 
@@ -333,5 +333,5 @@ pub fn beta_inc<T>(x: T, a: T, b: T) -> T
 pub fn beta_inc_reg<T>(x: T, a: T, b: T) -> T
     where T: Real + Beta
 {
-    return x.beta_inc_reg(a, b);
+    x.beta_inc_reg(a, b)
 }

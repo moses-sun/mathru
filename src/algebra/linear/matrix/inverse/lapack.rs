@@ -18,7 +18,7 @@ impl<T> Inverse<T> for Matrix<T> where T: Field + Scalar
     /// ```
     fn inv(self: &Self) -> Result<Matrix<T>, ()>
     {
-        return self.inv_r();
+        self.inv_r()
     }
 }
 
@@ -74,6 +74,6 @@ impl<T> Matrix<T> where T: Field + Scalar
 
         let self_inv: Matrix<T> = Matrix::new(n, m, self_data);
 
-        return Ok(self_inv.transpose());
+        Ok(self_inv.transpose())
     }
 }

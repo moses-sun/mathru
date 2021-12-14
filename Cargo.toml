@@ -14,12 +14,8 @@ documentation = "https://docs.rs/crate/mathru/latest/"
 autobenches = false
 edition = "2018"
 
-
-[package.metadata.docs.rs]
-rustdoc-args = [
-    "--html-in-header",
-    "katex.html",
-]
+#[package.metadata.docs.rs]
+#rustdoc-args = ["--html-in-header katex.html"]
 
 [lib]
 name = "mathru"
@@ -91,7 +87,7 @@ optional = true
 version = "^1.0"
 
 [dev-dependencies.criterion]
-version = "^0.3"
+version = "0.3.5"
 
 [dev-dependencies.nalgebra]
 version = "0.29.0"

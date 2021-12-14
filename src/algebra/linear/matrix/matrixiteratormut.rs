@@ -18,6 +18,6 @@ impl<'a, T> Iterator for MatrixIteratorMut<'a, T>
 
     fn next(&mut self) -> Option<Self::Item>
     {
-        return self.iter.next();
+        self.iter.next()
     }
 }

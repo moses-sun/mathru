@@ -11,7 +11,7 @@ use serde::{Deserialize, Serialize};
 
 /// Solves an ODE using Ralston's 4th order method.
 ///
-/// <a href="https://en.wikipedia.org/wiki/List_of_Runge-Kutta_methods">https://en.wikipedia.org/wiki/List_of_Runge-Kutta_methods</a>
+/// <https://en.wikipedia.org/wiki/List_of_Runge-Kutta_methods>
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[derive(Clone, Debug)]
 pub struct Ralston4<T>
@@ -31,9 +31,9 @@ impl<T> Default for Ralston4<T> where T: Real
         let b: Vec<T> = vec![T::from_f64((263.0 + 24.0 * SQRT5) / 1812.0), T::from_f64((125.0 - 1000.0 * SQRT5) / 3828.0), T::from_f64(1024.0 * (3356.0 + 1623.0 * SQRT5) / 5924787.0), T::from_f64((30.0 - 4.0 * SQRT5) / 123.0)];
         let c: Vec<T> = vec![T::from_f64(0.4), T::from_f64((14.0 - 3.0 * SQRT5) / 16.0), T::one()];
 
-        return Ralston4 {
+        Ralston4 {
             butcher: ButcherFixedStepSize::new(a, b, c)
-        };
+        }
     }
 }
 
@@ -42,12 +42,12 @@ impl<T> ExplicitMethod<T> for Ralston4<T> where T: Real
     fn do_step<F>(self: &Self, prob: &F, t_n: &T, x_n: &Vector<T>, h: &T) -> Vector<T>
         where F: ExplicitODE<T>
     {
-        return self.butcher.do_step(prob, t_n, x_n, h);
+        self.butcher.do_step(prob, t_n, x_n, h)
     }
 
     // Ralston's method is a 4th order method
     fn order(self: &Self) -> u8
     {
-        return 4;
+        4
     }
 }

@@ -8,7 +8,7 @@ use std::clone::Clone;
 /// Log-Normal distribution
 ///
 /// Fore more information:
-/// <a href="https://en.wikipedia.org/wiki/Log-normal_distribution">https://en.wikipedia.org/wiki/Log-normal_distribution</a>
+/// <https://en.wikipedia.org/wiki/Log-normal_distribution>
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[derive(Clone, Copy, Debug)]
 pub struct LogNormal<T>
@@ -50,7 +50,7 @@ impl<T> LogNormal<T> where T: Real
     /// It is assumed that data are normal distributed.
     ///
     /// data.len() >= 2
-    pub fn from_data<'a>(_data: &'a Vec<T>) -> Self
+    pub fn from_data(_data: &Vec<T>) -> Self
     {
         unimplemented!()
     }
@@ -83,7 +83,7 @@ impl<T> Continuous<T> for LogNormal<T> where T: Real + Error + Gamma
         let z: T = T::from_f64(-0.5) * (x.ln() - self.mu).pow(T::from_f64(2.0)) / self.sigma_squared;
         let f: T = T::one() / (x * (self.sigma_squared * T::from_f64(2.0) * T::pi()).sqrt());
 
-        return f * z.exp();
+        f * z.exp()
     }
 
     /// Cumulative distribution function
@@ -108,7 +108,7 @@ impl<T> Continuous<T> for LogNormal<T> where T: Real + Error + Gamma
             return T::zero();
         }
         let p: T = (x.ln() - self.mu) / (T::from_f64(2.0) * self.sigma_squared).sqrt();
-        return T::from_f64(0.5) + T::from_f64(0.5) * p.erf();
+        T::from_f64(0.5) + T::from_f64(0.5) * p.erf()
     }
 
     /// Quantile: function of inverse cdf
@@ -123,7 +123,7 @@ impl<T> Continuous<T> for LogNormal<T> where T: Real + Error + Gamma
             panic!()
         }
         let std_distrib: Normal<T> = Normal::new(T::zero(), T::one());
-        return (self.mu + std_distrib.quantile(p) * self.sigma_squared.sqrt()).exp();
+        (self.mu + std_distrib.quantile(p) * self.sigma_squared.sqrt()).exp()
     }
 
     /// Expected value
@@ -141,7 +141,7 @@ impl<T> Continuous<T> for LogNormal<T> where T: Real + Error + Gamma
     /// ```
     fn mean(self: &Self) -> T
     {
-        return (self.mu + self.sigma_squared / T::from_f64(2.0)).exp()
+        (self.mu + self.sigma_squared / T::from_f64(2.0)).exp()
     }
 
     /// Variance
@@ -161,7 +161,25 @@ impl<T> Continuous<T> for LogNormal<T> where T: Real + Error + Gamma
     /// ```
     fn variance(self: &Self) -> T
     {
-        return (self.sigma_squared.exp() - T::one()) * (T::from_f64(2.0) * self.mu + self.sigma_squared).exp()
+        (self.sigma_squared.exp() - T::one()) * (T::from_f64(2.0) * self.mu + self.sigma_squared).exp()
+    }
+
+    /// Skewness
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// use mathru::{
+    ///     self,
+    ///     statistics::distrib::{Continuous, LogNormal},
+    /// };
+    /// let mu: f64 = 1.0;
+    /// let sigma_squared: f64 = 0.5;
+    /// let distrib: LogNormal<f64> = LogNormal::new(mu, sigma_squared);
+    /// ```
+    fn skewness(self: &Self) -> T
+    {
+        (self.sigma_squared.exp() + T::from_f64(2.0)) * (self.sigma_squared.exp() - T::one()).sqrt()
     }
 
     /// Median
@@ -182,25 +200,7 @@ impl<T> Continuous<T> for LogNormal<T> where T: Real + Error + Gamma
     /// ```
     fn median(self: &Self) -> T
     {
-        return self.mu.exp();
-    }
-
-    /// Skewness
-    ///
-    /// # Example
-    ///
-    /// ```
-    /// use mathru::{
-    ///     self,
-    ///     statistics::distrib::{Continuous, LogNormal},
-    /// };
-    /// let mu: f64 = 1.0;
-    /// let sigma_squared: f64 = 0.5;
-    /// let distrib: LogNormal<f64> = LogNormal::new(mu, sigma_squared);
-    /// ```
-    fn skewness(self: &Self) -> T
-    {
-        return (self.sigma_squared.exp() + T::from_f64(2.0)) * (self.sigma_squared.exp() - T::one()).sqrt()
+        self.mu.exp()
     }
 
     /// Entropy
@@ -221,7 +221,7 @@ impl<T> Continuous<T> for LogNormal<T> where T: Real + Error + Gamma
     fn entropy(self: &Self) -> T
     {
         let k: T = self.sigma_squared.sqrt() * (self.mu + T::from_f64(0.5)).exp() * T::from_f64((2.0 * PI).sqrt());
-        return k.ln() / (T::from_f64(2.0)).ln()
+        k.ln() / (T::from_f64(2.0)).ln()
     }
 }
 

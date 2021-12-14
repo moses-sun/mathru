@@ -12,6 +12,6 @@ impl<T> OptimResult<T>
 
     pub fn arg(self) -> T
     {
-        return self.arg;
+        self.arg
     }
 }

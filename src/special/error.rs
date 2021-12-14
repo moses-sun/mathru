@@ -75,15 +75,15 @@ impl Error for f64
         {
             return self;
         }
-        return  self.sign() * (1.0f64 - gamma::gamma_u(0.5f64, self * self) / Self::pi().sqrt());
+        self.sign() * (1.0f64 - gamma::gamma_u(0.5f64, self * self) / Self::pi().sqrt())
     }
 
     fn erfc(self: Self) -> Self
     {
-        return 1.0 - self.erf();
+        1.0 - self.erf()
     }
 
-    /// https://en.wikipedia.org/wiki/Error_function#Inverse_functions.
+    /// <https://en.wikipedia.org/wiki/Error_function#Inverse_functions>
     /// Using the rational approximations tabulated in:
     ///J. M. Blair, C. A. Edwards, and J. H. Johnson,
     /// "Rational Chebyshev approximations for the inverse of the error function",
@@ -148,20 +148,20 @@ impl Error for f64
         {
             if self == 1.0
             {
-                return f64::INFINITY
+                return f64::INFINITY;
             }
             else
             {
                 if self == -1.0
                 {
-                    return f64::NEG_INFINITY
+                    return f64::NEG_INFINITY;
                 }
             }
             panic!("|self| has to be <= 1.0")
         }
         else
         {
-            return if a <= 0.75
+            if a <= 0.75
             {
                 let t: f64 = self * self - 0.5625;
 
@@ -187,7 +187,7 @@ impl Error for f64
         {
             panic!("self is > 2.0 or < 0.0");
         }
-        return (1.0 - self).erfinv();
+        (1.0 - self).erfinv()
     }
 }
 
@@ -199,12 +199,12 @@ impl Error for f32
         {
             return self;
         }
-        return self.sign() * (1.0f32 - gamma::gamma_u(0.5f32, self * self) / Self::pi().sqrt());
+        self.sign() * (1.0f32 - gamma::gamma_u(0.5f32, self * self) / Self::pi().sqrt())
     }
 
     fn erfc(self: Self) -> Self
     {
-        return 1.0 - self.erf();
+        1.0 - self.erf()
     }
 
     fn erfinv(self: Self) -> Self
@@ -253,7 +253,7 @@ impl Error for f32
             }
             panic!("|self| has to be <= 1.0")
         } else {
-            return if a <= 0.75
+            if a <= 0.75
             {
                 let t: f32 = self * self - 0.5625;
 
@@ -275,11 +275,11 @@ impl Error for f32
 
     fn erfcinv(self: Self) -> Self
     {
-        if (self < 0.0f32) || (self > 2.0f32)
+        if !(0.0f32..=2.0f32).contains(&self)
         {
             panic!("self is > 2.0 or < 0.0");
         }
-        return (1.0 - self).erfinv();
+        (1.0 - self).erfinv()
     }
 }
 
@@ -302,7 +302,7 @@ impl Error for f32
 pub fn erf<T>(x: T) -> T
     where T: Real + Error + Gamma
 {
-    return x.erf();
+    x.erf()
 }
 
 /// Complementary error function
@@ -325,7 +325,7 @@ pub fn erf<T>(x: T) -> T
 pub fn erfc<T>(x: T) -> T
     where T: Real + Error + Gamma
 {
-    return x.erfc();
+    x.erfc()
 }
 
 /// Inverse error function
@@ -353,7 +353,7 @@ pub fn erfc<T>(x: T) -> T
 pub fn erfinv<T>(x: T) -> T
     where T: Real + Error
 {
-    return x.erfinv();
+    x.erfinv()
 }
 
 fn horner<T>(x: T, c: &[T]) -> T
@@ -367,7 +367,7 @@ fn horner<T>(x: T, c: &[T]) -> T
         f = (f + c[i]) * x;
     }
 
-    return f + c[0]
+    f + c[0]
 }
 
 fn copysign<T>(a: T, b: T) -> T
@@ -379,7 +379,7 @@ fn copysign<T>(a: T, b: T) -> T
     {
         return -a;
     }
-    return a;
+    a
 }
 
 
@@ -407,5 +407,5 @@ fn copysign<T>(a: T, b: T) -> T
 pub fn erfcinv<T>(x: T) -> T
     where T: Real + Error
 {
-    return x.erfcinv();
+    x.erfcinv()
 }

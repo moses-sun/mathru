@@ -7,7 +7,7 @@ use std::clone::Clone;
 /// Beta distribution
 ///
 /// Fore more information:
-/// <a href="https://en.wikipedia.org/wiki/Beta_distribution">https://en.wikipedia.org/wiki/Beta_distribution</a>
+/// <https://en.wikipedia.org/wiki/Beta_distribution>
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[derive(Clone, Copy, Debug)]
 pub struct Beta<T>
@@ -72,8 +72,7 @@ impl<T> Continuous<T> for Beta<T> where T: Real + beta::Beta
         {
             return T::one();
         }
-        return x.pow(self.p - T::one()) * (T::one() - x).pow(self.q - T::one())
-               / special::beta::beta(self.p, self.q);
+        x.pow(self.p - T::one()) * (T::one() - x).pow(self.q - T::one()) / special::beta::beta(self.p, self.q)
     }
 
     /// Cumulative distribution function
@@ -144,8 +143,8 @@ impl<T> Continuous<T> for Beta<T> where T: Real + beta::Beta
     /// ```
     fn skewness(self: &Self) -> T
     {
-        return T::from_f64(2.0) * (self.q - self.p) * (self.p + self.q + T::one()).sqrt()
-               / ((self.p + self.q + T::from_f64(2.0)) * (self.q * self.p).sqrt());
+        T::from_f64(2.0) * (self.q - self.p) * (self.p + self.q + T::one()).sqrt()
+               / ((self.p + self.q + T::from_f64(2.0)) * (self.q * self.p).sqrt())
     }
 
     fn median(self: &Self) -> T

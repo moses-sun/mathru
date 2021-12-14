@@ -26,6 +26,6 @@ impl<T> CholeskyDec<T>
     /// Return the l matrix
     pub fn l(self: Self) -> Matrix<T>
     {
-        return self.l;
+        self.l
     }
 }

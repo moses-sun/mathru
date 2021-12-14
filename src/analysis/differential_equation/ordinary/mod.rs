@@ -1,8 +1,8 @@
 //! Ordinary differential equation
 //!
 //! Fore more information:<br>
-//! <a href="https://en.wikipedia.org/wiki/Ordinary_differential_equation">https://en.wikipedia.org/wiki/Ordinary_differential_equation</a>
-
+//! <https://en.wikipedia.org/wiki/Ordinary_differential_equation>
+//!
 //! Because ODE higher order can always be reduced to a system of first order
 //! ODEs,  the implemented algorithms only support to solve first order ODEs.
 //!
@@ -22,15 +22,13 @@ mod kutta38;
 mod rungekutta4;
 mod ralston4;
 
-// mod heuneuler;
 mod fehlberg12;
-
 mod implicit_euler;
 mod fehlberg45;
 // mod tsitouras;
 mod adamsbashforth;
 mod adaptive_stepper;
-mod explicit_method;
+pub mod explicit_method;
 mod explicit_ode;
 mod fixed_stepper;
 mod implicit_method;
@@ -56,7 +54,6 @@ pub use ralston3::Ralston3;
 pub use ssprk3::Ssprk3;
 pub use rungekutta4::RungeKutta4;
 pub use ralston4::Ralston4;
-
 pub use fehlberg12::Fehlberg12;
 pub use fehlberg45::Fehlberg45;
 pub use bdf::BDF;

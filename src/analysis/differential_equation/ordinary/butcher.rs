@@ -2,9 +2,7 @@
 use crate::analysis::differential_equation::ordinary::ExplicitODE;
 use crate::algebra::linear::Vector;
 use crate::algebra::abstr::Real;
-
 use std::fmt::Debug;
-
 #[cfg(feature = "serde")]
 use serde::{Deserialize, Serialize};
 
@@ -25,6 +23,7 @@ pub struct ButcherFixedStepSize<T>
 }
 
 impl<T> ButcherFixedStepSize<T>
+    where T: Real
 {
     pub fn new(a: Vec<T>, b: Vec<T>, c: Vec<T>) -> ButcherFixedStepSize<T>
     {
@@ -32,7 +31,8 @@ impl<T> ButcherFixedStepSize<T>
         {
             a,
             b,
-            c
+            c,
+
         }
     }
 }
@@ -40,11 +40,10 @@ impl<T> ButcherFixedStepSize<T>
 impl<T> ButcherFixedStepSize<T>
     where T: Real
 {
-    pub fn do_step<F>(self: &Self, prob: &F, t_n: &T, x_n: &Vector<T>, h: &T) -> Vector<T>
+    pub fn do_step<'a, F>(self: &Self, prob: &F, t_n: &T, x_n: &Vector<T>, h: &T) -> Vector<T>
         where F: ExplicitODE<T>,
     {
         let mut k: Vec<Vector<T>> = Vec::with_capacity(self.b.len());
-        let (rows, _columns): (usize, usize) = x_n.dim();
 
         k.push(prob.func(t_n, x_n));
 
@@ -53,13 +52,12 @@ impl<T> ButcherFixedStepSize<T>
             let i_b = (j - 1) * j / 2;
             let i_e = i_b + j;
 
-            let sum= self.a[i_b..i_e].iter().zip(k.iter()).map(|(a_jl, k_l)| k_l * a_jl).fold(Vector::zero(rows),  | a, b| a + b);
+            let sum= self.a[i_b..i_e].iter().zip(k.iter()).map(|(a_jl, k_l)| k_l * a_jl * *h).fold(x_n.clone(),  | a, b| a + b);
 
-            k.push(prob.func(&(*t_n + self.c[j - 1] * *h), &(x_n + &(&sum * h))));
+            k.push(prob.func(&(*t_n + self.c[j - 1] * *h), &sum));
         }
 
-        let sum: Vector<T> = self.b.iter().zip(k.iter()).map(|(b, k_j)|  k_j * b).fold(Vector::zero(rows), |a, b| a + b);
-        x_n + &(&sum * h)
+        self.b.iter().zip(k.iter()).map(|(b, k_j)|  k_j * &(*b * *h)).fold(x_n.clone(), |a, b| a + b)
     }
 }
 

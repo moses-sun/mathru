@@ -85,20 +85,20 @@ impl<T> Gradient<T> where T: Real
             {
                 let anti_grad_alpha: Vector<T> = &anti_grad * &alpha_k;
                 let r: Vector<T> = &x_k + &anti_grad_alpha;
-                let f_r: T = *func.eval(&r).get(0);
+                let f_r: T = func.eval(&r)[0];
                 let b: T = self.sigma * anti_grad_alpha.dotp(&anti_grad);
 
-                let f_x_k: T = *func.eval(&x_k).get(0);
+                let f_x_k: T = func.eval(&x_k)[0];
 
                 if f_r <= f_x_k - b
                 {
                     break;
                 }
-                alpha_k = alpha_k / T::from_f64(2.0);
+                alpha_k /= T::from_f64(2.0);
             }
             //Make step
-            x_k = x_k + anti_grad * alpha_k;
+            x_k += anti_grad * alpha_k;
         }
-        return OptimResult::new(x_k);
+        OptimResult::new(x_k)
     }
 }

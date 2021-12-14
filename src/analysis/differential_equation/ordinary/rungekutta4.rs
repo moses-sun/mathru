@@ -12,7 +12,7 @@ use serde::{Deserialize, Serialize};
 
 /// Solves an ODE using the 4th order Runge-Kutta algorithm.
 ///
-///<a href="https://en.wikipedia.org/wiki/Runge%E2%80%93Kutta_methods">https://en.wikipedia.org/wiki/Rung-Kutta_methods</a>
+///<https://en.wikipedia.org/wiki/Rung-Kutta_methods>
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[derive(Clone, Debug)]
 pub struct RungeKutta4<T>
@@ -31,9 +31,9 @@ impl<T> Default for RungeKutta4<T> where T: Real
         let b: Vec<T> = vec![T::from_f64(1.0 / 6.0), T::from_f64(1.0 / 3.0), T::from_f64(1.0 / 3.0), T::from_f64(1.0 / 6.0)];
         let c: Vec<T> = vec![T::from_f64(0.5), T::from_f64(0.5), T::one()];
 
-        return RungeKutta4 {
+        RungeKutta4 {
             butcher: ButcherFixedStepSize::new(a, b, c)
-        };
+        }
     }
 }
 
@@ -42,12 +42,12 @@ impl<T> ExplicitMethod<T> for RungeKutta4<T> where T: Real
     fn do_step<F>(self: &Self, prob: &F, t_n: &T, x_n: &Vector<T>, h: &T) -> Vector<T>
         where F: ExplicitODE<T>
     {
-        return self.butcher.do_step(prob, t_n, x_n, h);
+        self.butcher.do_step(prob, t_n, x_n, h)
     }
 
     // Runge-Kutta 4 is a fourth order method
     fn order(self: &Self) -> u8
     {
-        return 4;
+        4
     }
 }

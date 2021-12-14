@@ -6,7 +6,7 @@ use crate::algebra::abstr::Real;
 /// Multinomial distribution
 ///
 /// Fore more information:
-/// <a href="https://en.wikipedia.org/wiki/Multinomial_distribution">https://en.wikipedia.org/wiki/Multinomial_distribution</a>
+/// <https://en.wikipedia.org/wiki/Multinomial_distribution>
 ///
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[derive(Clone, Copy, Debug)]
@@ -68,7 +68,7 @@ impl<T> Discrete<T, Vector<u32>, Vector<T>> for Multinomial<T>
     /// let x: Vector<u32> = vector![1; 2];
     /// let p: f64 = distrib.pmf(x);
     /// ```
-	fn pmf<'a>(self: &'a Self, x: Vector<u32>) -> T
+	fn pmf(self: &Self, x: Vector<u32>) -> T
     {
         assert_eq!(self.p.dim(), x.dim());
         let (m, _n) = x.dim();
@@ -77,8 +77,8 @@ impl<T> Discrete<T, Vector<u32>, Vector<T>> for Multinomial<T>
         let mut n: u32 = 0;
         for k in 0..m
         {
-            let p_k: T = *self.p.get(k);
-            let n_k: u32 = *x.get(k);
+            let p_k: T = self.p[k];
+            let n_k: u32 = x[k];
             n = n + n_k;
             prod = prod * p_k.pow(&T::from_u32(n_k).unwrap()) / T::from_u64(combins::factorial(n_k)).unwrap();
         }
@@ -100,7 +100,7 @@ impl<T> Discrete<T, Vector<u32>, Vector<T>> for Multinomial<T>
     /// let x: f64 = 0.4;
     /// let p: f64 = distrib.cdf(x);
     /// ```
-	fn cdf<'a>(self: &'a Self, _x: Vector<T>) -> T
+	fn cdf(self: &Self, _x: Vector<T>) -> T
     {
     /*
         let x_supremum : u32 = x.floor() as u32;
@@ -125,7 +125,7 @@ impl<T> Discrete<T, Vector<u32>, Vector<T>> for Multinomial<T>
     /// let distrib: Binomial<f64> = Binomial::new(5, 0.3);
     /// let mean: f64 = distrib.mean();
     /// ```
-	fn mean<'a>(self: &'a Self) -> T
+	fn mean(self: &Self) -> T
     {
         unimplemented!();
         //return &(self.n as f64) * &self.p
@@ -138,10 +138,10 @@ impl<T> Discrete<T, Vector<u32>, Vector<T>> for Multinomial<T>
     /// ```
     /// use mathru::statistics::distrib::{Discrete, Binomial};
     ///
-/// let distrib: Binomial<f64> = Binomial::new(5, pi0.3);
+    /// let distrib: Binomial<f64> = Binomial::new(5, pi0.3);
     /// let var: f64 = distrib.variance();
     /// ```
-	fn variance<'a>(self: &'a Self) -> T
+	fn variance(self: &Self) -> T
     {
         unimplemented!();
         //return self.mean() * (1.0 - self.p)

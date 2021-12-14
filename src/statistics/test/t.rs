@@ -17,7 +17,7 @@ use serde::{Deserialize, Serialize};
 /// T-Test
 ///
 /// Fore more information:
-/// <a href="https://en.wikipedia.org/wiki/Student%27s_t-test">https://en.wikipedia.org/wiki/Student%27s_t-test</a>
+/// <https://en.wikipedia.org/wiki/Student%27s_t-test>
 ///
 /// # Example
 /// ```
@@ -73,19 +73,19 @@ impl<K> Test<K> for T<K> where K: Real
     ///Test value
     fn value(self: &Self) -> K
     {
-        return self.t;
+        self.t
     }
 
     /// Degree of freedom
     fn df(self: &Self) -> u32
     {
-        return 0;
+        0
     }
 
     ///
     fn p_value(self: &Self) -> K
     {
-        return self.p;
+        self.p
     }
 }
 
@@ -119,8 +119,8 @@ impl<K> T<K> where K: Real + Gamma + Beta + Error + Hypergeometric
         let n_x: usize = x.len();
         let n_y: usize = y.len();
 
-        let x_dist: Normal<K> = Normal::from_data(&x);
-        let y_dist: Normal<K> = Normal::from_data(&y);
+        let x_dist: Normal<K> = Normal::from_data(x);
+        let y_dist: Normal<K> = Normal::from_data(y);
 
         let mean_x: K = x_dist.mean();
         let mean_y: K = y_dist.mean();
@@ -151,8 +151,8 @@ impl<K> T<K> where K: Real + Gamma + Beta + Error + Hypergeometric
         let n_x: usize = x.len();
         let n_y: usize = y.len();
 
-        let x_dist: Normal<K> = Normal::from_data(&x);
-        let y_dist: Normal<K> = Normal::from_data(&y);
+        let x_dist: Normal<K> = Normal::from_data(x);
+        let y_dist: Normal<K> = Normal::from_data(y);
 
         let mean_x: K = x_dist.mean();
         let mean_y: K = y_dist.mean();
