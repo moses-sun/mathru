@@ -12,7 +12,7 @@ homepage = "https://matthiaseiholzer.gitlab.io/mathru"
 repository = "https://gitlab.com/matthiaseiholzer/mathru"
 documentation = "https://docs.rs/crate/mathru/latest/"
 autobenches = false
-edition = "2018"
+edition = "2021"
 
 #[package.metadata.docs.rs]
 #rustdoc-args = ["--html-in-header katex.html"]
