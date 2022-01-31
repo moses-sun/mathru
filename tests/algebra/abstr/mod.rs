@@ -16,7 +16,7 @@ mod semigroup;
 //mod natural;
 //mod integer;
 //mod real;
-//mod complex;
+mod complex;
 //
 //pub use self::semiring::{Semiring, Zero, One};
 //pub use self::ring::{Ring};

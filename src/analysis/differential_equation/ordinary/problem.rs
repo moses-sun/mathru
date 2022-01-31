@@ -38,7 +38,7 @@ impl<T> Default for Euler<T> where T: Real
 
 impl<T> ExplicitODE<T> for Euler<T> where T: Real
 {
-    fn func(self: &Self, x: &T, y: &Vector<T>) -> Vector<T>
+    fn func(&self, x: &T, y: &Vector<T>) -> Vector<T>
     {
         let y_1s: T = ((self.i2 - self.i3) / self.i1) * (y[1] * y[2]);
         let y_2s: T = ((self.i3 - self.i1) / self.i2) * (y[2] * y[0]);
@@ -57,12 +57,12 @@ impl<T> ExplicitODE<T> for Euler<T> where T: Real
         vector![y_1s; y_2s; y_3s]
     }
 
-    fn time_span(self: &Self) -> (T, T)
+    fn time_span(&self) -> (T, T)
     {
         self.time_span
     }
 
-    fn init_cond(self: &Self) -> Vector<T>
+    fn init_cond(&self) -> Vector<T>
     {
         self.init_cond.clone()
     }
@@ -70,7 +70,7 @@ impl<T> ExplicitODE<T> for Euler<T> where T: Real
 
 impl<T> ImplicitODE<T> for Euler<T> where T: Real
 {
-    fn func(self: &Self, x: &T, y: &Vector<T>) -> Vector<T>
+    fn func(&self, x: &T, y: &Vector<T>) -> Vector<T>
     {
         let a: T = (self.i2 - self.i3) / self.i1;
         let b: T = (self.i3 - self.i1) / self.i2;
@@ -92,7 +92,7 @@ impl<T> ImplicitODE<T> for Euler<T> where T: Real
         vector![y_1s; y_2s; y_3s]
     }
 
-    fn jacobian(self: &Self, _x: &T, y: &Vector<T>) -> Matrix<T>
+    fn jacobian(&self, _x: &T, y: &Vector<T>) -> Matrix<T>
     {
         let a: T = (self.i2 - self.i3) / self.i1;
         let b: T = (self.i3 - self.i1) / self.i2;
@@ -103,12 +103,12 @@ impl<T> ImplicitODE<T> for Euler<T> where T: Real
                         c * y[1], c * y[0], T::zero()]
     }
 
-    fn time_span(self: &Self) -> (T, T)
+    fn time_span(&self) -> (T, T)
     {
         self.time_span
     }
 
-    fn init_cond(self: &Self) -> Vector<T>
+    fn init_cond(&self) -> Vector<T>
     {
         self.init_cond.clone()
     }
@@ -144,17 +144,17 @@ impl<T> Default for VanDerPolOsc<T> where T: Real
 }
 /// Implicit ordinary differential equation
 ///
-/// $`0 = f(t, x(t), x^{'}(t), \dots, x^{n}(t))`$
+/// $0 = f(t, x(t), x^{'}(t), \dots, x^{n}(t))$
 impl<T> ImplicitODE<T> for VanDerPolOsc<T> where T: Real
 {
-    fn func(self: &Self, _t: &T, x: &Vector<T>) -> Vector<T>
+    fn func(&self, _t: &T, x: &Vector<T>) -> Vector<T>
     {
         let x_1 = x[0];
         let x_2 = x[1];
         vector![x_2; self.epsilon * (T::one() - (x_1 * x_1)) * x_2 - x_1]
     }
 
-    fn jacobian(self: &Self, _t: &T, x: &Vector<T>) -> Matrix<T>
+    fn jacobian(&self, _t: &T, x: &Vector<T>) -> Matrix<T>
     {
         let x_1 = x[0];
         let x_2 = x[1];
@@ -162,12 +162,12 @@ impl<T> ImplicitODE<T> for VanDerPolOsc<T> where T: Real
 		x_1) * self.epsilon]
     }
 
-    fn time_span(self: &Self) -> (T, T)
+    fn time_span(&self) -> (T, T)
     {
         self.time_span
     }
 
-    fn init_cond(self: &Self) -> Vector<T>
+    fn init_cond(&self) -> Vector<T>
     {
         self.init_cond.clone()
     }

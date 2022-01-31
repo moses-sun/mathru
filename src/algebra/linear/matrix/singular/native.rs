@@ -26,7 +26,7 @@ impl<T> Matrix<T>
     ///
     /// let (u, s, v): (Matrix<f64>, Matrix<f64>, Matrix<f64>) = a.dec_sv();
     /// ```
-    pub fn dec_sv(self: &Self) -> (Self, Self, Self)
+    pub fn dec_sv(&self) -> (Self, Self, Self)
     {
         let (mut u, mut b, mut v): (Matrix<T>, Matrix<T>, Matrix<T>) = self.householder_bidiag();
 
@@ -151,7 +151,7 @@ impl<T> Matrix<T>
     /// U \in T^{m \times n}
     /// B \in T^{n \times n}
     /// V \in T^{n \times n}
-    pub fn householder_bidiag(self: &Self) -> (Self, Self, Self)
+    pub fn householder_bidiag(&self) -> (Self, Self, Self)
     {
         let (m, n): (usize, usize) = self.dim();
         if m < n

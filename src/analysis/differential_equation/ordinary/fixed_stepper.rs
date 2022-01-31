@@ -38,7 +38,7 @@ impl<T> FixedStepper<T>
         FixedStepper { step_size }
     }
 
-    pub fn solve<F, M>(self: &Self, prob: &F, method: &M) -> Result<(Vec<T>, Vec<Vector<T>>), ()>
+    pub fn solve<F, M>(&self, prob: &F, method: &M) -> Result<(Vec<T>, Vec<Vector<T>>), ()>
         where F: ExplicitODE<T>,
               M: ExplicitMethod<T>
     {
@@ -52,7 +52,7 @@ impl<T> FixedStepper<T>
             panic!()
         }
 
-        let mut x_n: Vector<T> = init.clone();
+        let mut x_n: Vector<T> = init;
 
         let mut t_n: T = t_start;
 
@@ -66,7 +66,7 @@ impl<T> FixedStepper<T>
         {
             let h: T = self.step_size.min(t_stop - t_n);
 
-            t_vec.push(t_n.clone());
+            t_vec.push(t_n);
             res_vec.push(x_n.clone());
 
             x_n = method.do_step(prob, &t_n, &x_n, &h);
@@ -76,12 +76,12 @@ impl<T> FixedStepper<T>
         Ok((t_vec, res_vec))
     }
 
-    pub fn get_step_size(self: &Self) -> &T
+    pub fn get_step_size(&self) -> &T
     {
         &self.step_size
     }
 
-    pub fn set_step_size(mut self: &mut Self, step_size: T)
+    pub fn set_step_size(&mut self, step_size: T)
     {
         self.step_size = step_size;
     }
@@ -114,10 +114,10 @@ impl<T> ImplicitFixedStepper<T>
         {
             panic!();
         }
-        return ImplicitFixedStepper { step_size };
+        ImplicitFixedStepper { step_size }
     }
 
-    pub fn solve<F, M>(self: &Self, prob: &F, method: &M) -> Result<(Vec<T>, Vec<Vector<T>>), ()>
+    pub fn solve<F, M>(&self, prob: &F, method: &M) -> Result<(Vec<T>, Vec<Vector<T>>), ()>
         where F: ImplicitODE<T>,
               M: ImplicitFixedStepSizeMethod<T>
     {
@@ -131,7 +131,7 @@ impl<T> ImplicitFixedStepper<T>
             panic!()
         }
 
-        let mut x_n: Vector<T> = init.clone();
+        let mut x_n: Vector<T> = init;
 
         let mut t_n: T = t_start;
 
@@ -157,12 +157,12 @@ impl<T> ImplicitFixedStepper<T>
         Ok((t_vec, res_vec))
     }
 
-    pub fn get_step_size(self: &Self) -> &T
+    pub fn get_step_size(&self) -> &T
     {
         &self.step_size
     }
 
-    pub fn set_step_size(mut self: &mut Self, step_size: T)
+    pub fn set_step_size(&mut self, step_size: T)
     {
         self.step_size = step_size;
     }

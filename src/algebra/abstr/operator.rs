@@ -6,7 +6,7 @@ pub trait Operator: Copy
     fn operator() -> Self;
 }
 
-/// The addition operator, commonly symbolized by $`+`$.
+/// The addition operator, commonly symbolized by $+$.
 #[derive(Copy, Clone)]
 pub struct Addition;
 
@@ -18,7 +18,7 @@ impl Operator for Addition
     }
 }
 
-/// The multiplication operator, commonly symbolized by $`*`$.
+/// The multiplication operator, commonly symbolized by $*$.
 #[derive(Copy, Clone)]
 pub struct Multiplication;
 

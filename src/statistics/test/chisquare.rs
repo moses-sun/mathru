@@ -89,17 +89,17 @@ impl<T> ChiSquare<T> where T: Real
 impl<T> Test<T> for ChiSquare<T>
     where T: Real + Gamma + Error
 {
-    fn df(self: &Self) -> u32
+    fn df(&self) -> u32
     {
         self.df
     }
 
-    fn value(self: &Self) -> T
+    fn value(&self) -> T
     {
         self.chi_square
     }
 
-    fn p_value(self: &Self) -> T
+    fn p_value(&self) -> T
     {
         let distrib: ChiSquareDistrib<T> = ChiSquareDistrib::new(self.df);
         T::one() - distrib.cdf(self.chi_square)

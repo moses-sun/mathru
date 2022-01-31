@@ -22,9 +22,9 @@ use serde::{Deserialize, Serialize};
 /// };
 ///
 /// // Define ODE
-/// // $`y^{'} = ay = f(x, y) `$
-/// // $`y = C a e^{at}`$
-/// // $'y(t_{s}) = C a e^{at_s} => C = \frac{y(t_s)}{ae^{at_s}}`$
+/// // $y^{'} = ay = f(x, y) $
+/// // $y = C a e^{at}$
+/// // $'y(t_{s}) = C a e^{at_s} => C = \frac{y(t_s)}{ae^{at_s}}$
 /// pub struct ExplicitODEProblem
 /// {
 ///     time_span: (f64, f64),
@@ -42,17 +42,17 @@ use serde::{Deserialize, Serialize};
 ///
 /// impl ExplicitODE<f64> for ExplicitODEProblem
 /// {
-///     fn func(self: &Self, t: &f64, x: &Vector<f64>) -> Vector<f64>
+///     fn func(&self, t: &f64, x: &Vector<f64>) -> Vector<f64>
 ///     {
 ///         return x * &2.0f64;
 ///     }
 ///
-///     fn time_span(self: &Self) -> (f64, f64)
+///     fn time_span(&self) -> (f64, f64)
 ///     {
 ///         return self.time_span;
 ///     }
 ///
-///     fn init_cond(self: &Self) -> Vector<f64>
+///     fn init_cond(&self) -> Vector<f64>
 ///     {
 ///         return self.init_cond.clone();
 ///     }
@@ -99,7 +99,7 @@ impl<T> Default for BogackiShampine23<T> where T: Real
 
 impl<T> ExplicitEmbeddedMethod<T> for BogackiShampine23<T> where T: Real
 {
-    fn do_step<F>(self: &Self,
+    fn do_step<F>(&self,
                   prob: &F,
                   t_n: &T,
                   x_n: &Vector<T>,
@@ -107,10 +107,10 @@ impl<T> ExplicitEmbeddedMethod<T> for BogackiShampine23<T> where T: Real
                   -> (Vector<T>, Vector<T>)
         where F: ExplicitODE<T>
     {
-        return self.butcher.do_step(prob, t_n, x_n, h_n);
+        self.butcher.do_step(prob, t_n, x_n, h_n)
     }
 
-    fn order(self: &Self) -> (u8, u8)
+    fn order(&self) -> (u8, u8)
     {
         (3, 2)
     }

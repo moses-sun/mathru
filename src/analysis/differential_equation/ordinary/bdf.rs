@@ -16,8 +16,8 @@ use std::clone::Clone;
 /// ```math
 /// 0 = -4(y(t) -2) - y(t)^{'} = f(t, y, y^{'})
 /// ```
-/// The initial condition is $`y(0) = 1.0`$ and we solve it in the interval
-/// $`\lbrack 0, 2\rbrack`$.\ The following equation is the closed solution for
+/// The initial condition is $y(0) = 1.0$ and we solve it in the interval
+/// $\lbrack 0, 2\rbrack$. The following equation is the closed solution for
 /// this ODE:
 /// ```math
 /// y(t) = 2 - e^{-t}
@@ -49,23 +49,23 @@ use std::clone::Clone;
 ///
 /// impl ImplicitODE<f64> for ODEProblem
 /// {
-///     fn func(self: &Self, _t: &f64, x: &Vector<f64>) -> Vector<f64>
+///     fn func(&self, _t: &f64, x: &Vector<f64>) -> Vector<f64>
 ///     {
 ///         let result = (x * &-4.0) + 8.0;
 ///         return result;
 ///     }
 ///
-///     fn time_span(self: &Self) -> (f64, f64)
+///     fn time_span(&self) -> (f64, f64)
 ///     {
 ///         return self.time_span;
 ///     }
 ///
-///     fn init_cond(self: &Self) -> Vector<f64>
+///     fn init_cond(&self) -> Vector<f64>
 ///     {
 ///         return self.init_cond.clone();
 ///     }
 ///
-///     fn jacobian(self: &Self, _t: &f64, _input: &Vector<f64>) -> Matrix<f64>
+///     fn jacobian(&self, _t: &f64, _input: &Vector<f64>) -> Matrix<f64>
 ///     {
 ///         let jacobian = matrix![-4.0];
 ///         return jacobian;
@@ -125,7 +125,7 @@ impl<T> BDF<T> where T: Real
     /// # Panic
     ///
     /// if t_span.0 > t_span.1
-    pub fn solve<F>(self: &Self, prob: &F) -> Result<(Vec<T>, Vec<Vector<T>>), ()>
+    pub fn solve<F>(&self, prob: &F) -> Result<(Vec<T>, Vec<Vector<T>>), ()>
         where F: ImplicitODE<T>
     {
         let t_span: (T, T) = prob.time_span();

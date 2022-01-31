@@ -68,7 +68,7 @@ impl<T> Continuous<T> for Gamma<T>
     /// let x: f64 = 5.0;
     /// let p: f64 = distrib.pdf(x);
     /// ```
-    fn pdf(self: &Self, x: T) -> T
+    fn pdf(&self, x: T) -> T
     {
         if x <= T::zero()
         {
@@ -92,7 +92,7 @@ impl<T> Continuous<T> for Gamma<T>
     /// let x: f64 = 0.4;
     /// let p: f64 = distrib.cdf(x);
     /// ```
-    fn cdf(self: &Self, x: T) -> T
+    fn cdf(&self, x: T) -> T
     {
         if x == T::zero()
         {
@@ -102,13 +102,13 @@ impl<T> Continuous<T> for Gamma<T>
     }
 
     /// Quantile function of inverse cdf
-    fn quantile(self: &Self, _p: T) -> T
+    fn quantile(&self, _p: T) -> T
     {
         unimplemented!();
     }
 
     /// Expected value
-    fn mean(self: &Self) -> T
+    fn mean(&self) -> T
     {
         self.alpha / self.beta
     }
@@ -123,26 +123,26 @@ impl<T> Continuous<T> for Gamma<T>
     /// let distrib: Gamma<f64> = Gamma::new(0.2, 0.5);
     /// let var: f64 = distrib.variance();
     /// ```
-    fn variance(self: &Self) -> T
+    fn variance(&self) -> T
     {
         self.alpha / self.beta.pow(T::from_f64(2.0))
     }
 
     ///
-    fn skewness(self: &Self) -> T
+    fn skewness(&self) -> T
     {
         T::from_f64(2.0) / self.alpha.sqrt()
     }
 
     /// Median is the value separating the higher half from the lower half of a
     /// probability distribution.
-    fn median(self: &Self) -> T
+    fn median(&self) -> T
     {
         unimplemented!();
     }
 
     ///
-    fn entropy(self: &Self) -> T
+    fn entropy(&self) -> T
     {
         self.alpha - self.beta.ln() + gamma::gamma(self.alpha).ln() + (T::one() - self.alpha) * gamma::digamma(self.alpha)
     }

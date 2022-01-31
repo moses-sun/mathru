@@ -40,7 +40,7 @@ impl<T> ButcherFixedStepSize<T>
 impl<T> ButcherFixedStepSize<T>
     where T: Real
 {
-    pub fn do_step<'a, F>(self: &Self, prob: &F, t_n: &T, x_n: &Vector<T>, h: &T) -> Vector<T>
+    pub fn do_step<F>(&self, prob: &F, t_n: &T, x_n: &Vector<T>, h: &T) -> Vector<T>
         where F: ExplicitODE<T>,
     {
         let mut k: Vec<Vector<T>> = Vec::with_capacity(self.b.len());
@@ -93,7 +93,7 @@ impl<T: Debug> ButcherAdaptiveStepSize<T>
 impl<T> ButcherAdaptiveStepSize<T>
     where T: Real + Debug
 {
-    pub fn do_step<F>(self: &Self, prob: &F, t_n: &T, x_n: &Vector<T>, h: &T) -> (Vector<T>, Vector<T>)
+    pub fn do_step<F>(&self, prob: &F, t_n: &T, x_n: &Vector<T>, h: &T) -> (Vector<T>, Vector<T>)
         where F: ExplicitODE<T>,
     {
         let mut k: Vec<Vector<T>> = Vec::with_capacity(self.b.len());

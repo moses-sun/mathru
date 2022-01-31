@@ -16,7 +16,7 @@ impl<T> Matrix<T>
     /// let det: f64 = a.det();
     /// assert_eq!(det, -1.0)
     /// ```
-    pub fn det(self: &Self) -> T
+    pub fn det(&self) -> T
     {
         assert_eq!(self.m, self.n);
 

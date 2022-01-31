@@ -4,7 +4,7 @@ use crate::algebra::abstr::{Field, Scalar, AbsDiffEq};
 
 impl<T> Substitute<Vector<T>> for Matrix<T> where T: Field + Scalar + AbsDiffEq
 {
-    fn substitute_forward(self: &Self, a: Vector<T>) -> Result<Vector<T>, ()>
+    fn substitute_forward(&self, a: Vector<T>) -> Result<Vector<T>, ()>
     {
         let mut b: Vector<T> = a;
         for k in 0..self.n
@@ -35,7 +35,7 @@ impl<T> Substitute<Vector<T>> for Matrix<T> where T: Field + Scalar + AbsDiffEq
         Ok(b)
     }
 
-    fn substitute_backward(self: &Self, c: Vector<T>) -> Result<Vector<T>, ()>
+    fn substitute_backward(&self, c: Vector<T>) -> Result<Vector<T>, ()>
     {
         let mut b: Vector<T> = c;
 
@@ -69,7 +69,7 @@ impl<T> Substitute<Vector<T>> for Matrix<T> where T: Field + Scalar + AbsDiffEq
 
 impl<T> Substitute<Matrix<T>> for Matrix<T> where T: Field + Scalar + AbsDiffEq
 {
-    fn substitute_forward(self: &Self, a: Matrix<T>) -> Result<Matrix<T>, ()>
+    fn substitute_forward(&self, a: Matrix<T>) -> Result<Matrix<T>, ()>
     {
         let mut b: Matrix<T> = a;
         let min: usize = std::cmp::min( self.m, self.n);
@@ -101,7 +101,7 @@ impl<T> Substitute<Matrix<T>> for Matrix<T> where T: Field + Scalar + AbsDiffEq
         Ok(b)
     }
 
-    fn substitute_backward(self: &Self, a: Matrix<T>) -> Result<Matrix<T>, ()>
+    fn substitute_backward(&self, a: Matrix<T>) -> Result<Matrix<T>, ()>
     {
         let mut b: Matrix<T> = a;
         let min = std::cmp::min(self.m, self.n);

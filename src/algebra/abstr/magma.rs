@@ -5,8 +5,8 @@ use std::{
 };
 
 
-/// A Magma is a pair $`(\mathbb{M}, \circ)`$, composed by a set $`\mathbb{M}`$
-/// and a binary inner operation $`\circ`$:
+/// A Magma is a pair $(\mathbb{M}, \circ)$, composed by a set $\mathbb{M}$
+/// and a binary inner operation $\circ$:
 ///
 /// ```math
 /// \circ: \mathbb{M} \times \mathbb{M} \rightarrow \mathbb{M} ,\\\\ (x, y) \mapsto x \circ y

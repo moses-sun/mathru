@@ -66,7 +66,7 @@ impl<T> IntoIterator for Vector<T> where T: Field + Scalar
     type Item = T;
     type IntoIter = VectorIntoIterator<T>;
 
-    fn into_iter(self: Self) -> Self::IntoIter
+    fn into_iter(self) -> Self::IntoIter
     {
         VectorIntoIterator::new(self.data.into_iter() )
     }
@@ -81,12 +81,12 @@ impl<T> IntoIterator for Vector<T> where T: Field + Scalar
 
 impl<T> Vector<T>
 {
-    pub fn iter(self: &Self) -> VectorIterator<T>
+    pub fn iter(&self) -> VectorIterator<T>
     {
         VectorIterator::new(self.data.iter())
     }
 
-    pub fn iter_mut(self: &mut Self) -> VectorIteratorMut<T>
+    pub fn iter_mut(&mut self) -> VectorIteratorMut<T>
     {
         VectorIteratorMut::new(self.data.iter_mut())
     }
@@ -116,7 +116,7 @@ impl<T> Vector<T> where T: Field + Scalar + Power
     ///
     /// assert_eq!(norm_ref, norm);
     /// ```
-    pub fn p_norm(self: &Self, p: &T) -> T
+    pub fn p_norm(&self, p: &T) -> T
     {
         assert!(*p >= T::one());
 
@@ -136,7 +136,7 @@ impl<T> Neg for Vector<T> where T: Field + Scalar
 {
     type Output = Vector<T>;
 
-    fn neg(self: Self) -> Self::Output
+    fn neg(self) -> Self::Output
     {
         self.apply(&|&x| -x)
     }
@@ -144,7 +144,7 @@ impl<T> Neg for Vector<T> where T: Field + Scalar
 
 impl<T> Vector<T>
 {
-    pub fn convert_to_vec(self: Self) -> Vec<T>
+    pub fn convert_to_vec(self) -> Vec<T>
     {
         self.data.convert_to_vec()
     }
@@ -166,7 +166,7 @@ impl<T> Vector<T>
     ///
     /// assert_eq!(norm_ref, norm);
     /// ```
-    pub fn eucl_norm(self: &Self) -> T
+    pub fn eucl_norm(&self) -> T
     {
         let exp: T = T::from_f64(2.0);
 
@@ -255,7 +255,7 @@ impl<T> Vector<T>
     /// let a: Vector<f64> = Vector::new_column(vec![1.0, 0.0, 3.0, -2.0]);
     /// let b: Vector<f64> = a.transpose();
     /// ```
-    pub fn transpose(mut self: Self) -> Self
+    pub fn transpose(mut self) -> Self
     {
         self.data = self.data.transpose();
 
@@ -281,7 +281,7 @@ impl<T> Vector<T>
     ///
     /// assert_eq!(dotp_ref, dotp);
     /// ```
-    pub fn dotp(self: &Self, rhs: &Self) -> T
+    pub fn dotp(&self, rhs: &Self) -> T
     {
         let (lhs_m, lhs_n) = self.dim();
         let (rhs_m, rhs_n) = rhs.dim();
@@ -309,7 +309,7 @@ impl<T> Vector<T>
     /// let idx = a.argmax();
     /// assert_eq!(idx, 3);
     /// ```
-    pub fn argmax(self: &Self) -> usize
+    pub fn argmax(&self) -> usize
     {
         let (m, n) = self.dim();
 
@@ -386,7 +386,7 @@ impl<T> Vector<T>
     ///
     /// let m: Matrix<f64> = a.dyadp(&b);
     /// ```
-    pub fn dyadp(self: &Self, rhs: &Self) -> Matrix<T>
+    pub fn dyadp(&self, rhs: &Self) -> Matrix<T>
     {
         let (x_m, _x_n): (usize, usize) = self.dim();
         let (y_m, _y_n): (usize, usize) = rhs.dim();
@@ -396,7 +396,7 @@ impl<T> Vector<T>
         {
             for j in 0..y_m
             {
-                c[[i, j]] = self[i].clone() * rhs[j];
+                c[[i, j]] = self[i] * rhs[j];
             }
         }
         c
@@ -406,7 +406,7 @@ impl<T> Vector<T>
 impl<T> Vector<T>
     where T: Field + Scalar + Power
 {
-    pub fn reflector(self: &Self) -> Vector<T>
+    pub fn reflector(&self) -> Vector<T>
     {
         let two = T::one() + T::one();
         let mut x_temp: Vector<T> = self.clone();
@@ -519,7 +519,7 @@ impl<T> Vector<T>
     ///
     /// assert_eq!(a_ref, a);
     /// ```
-    pub fn get_slice(self: &Self, s: usize, e: usize) -> Vector<T>
+    pub fn get_slice(&self, s: usize, e: usize) -> Vector<T>
     {
         let (m, n): (usize, usize) = self.dim();
         if m == 1
@@ -564,7 +564,7 @@ impl<T> Vector<T>
     ///
     /// assert_eq!(a_ref, a);
     /// ```
-    pub fn set_slice(self: &mut Self, rhs: &Self, s: usize)
+    pub fn set_slice(&mut self, rhs: &Self, s: usize)
     {
         let (m, _n): (usize, usize) = self.dim();
         let (s_m, _s_n): (usize, usize) = rhs.dim();
@@ -591,7 +591,7 @@ impl<T> PartialEq<Self> for Vector<T> where T: Scalar
     ///
     /// assert_eq!(true, a.eq(&b))
     /// ```
-    fn eq(self: &Self, other: &Self) -> bool
+    fn eq(&self, other: &Self) -> bool
     {
         if self.data == other.data
         {
@@ -603,7 +603,7 @@ impl<T> PartialEq<Self> for Vector<T> where T: Scalar
 
 impl<T> Display for Vector<T> where T: Display
 {
-    fn fmt(self: &Self, f: &mut fmt::Formatter) -> fmt::Result
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result
     {
         self.data.fmt(f)
     }
@@ -612,17 +612,17 @@ impl<T> Display for Vector<T> where T: Display
 
 impl<T> Sign for Vector<T> where T: Field + Scalar
 {
-    fn sign(self: &Self) -> Self
+    fn sign(&self) -> Self
     {
         (self.clone()).apply(&|x: &T| x.sign())
     }
 
-    fn abs(self: &Self) -> Self
+    fn abs(&self) -> Self
     {
         (self.clone()).apply(&|x: &T| x.abs())
     }
 
-    fn is_positive(self: &Self) -> bool
+    fn is_positive(&self) -> bool
     {
         unimplemented!();
     }

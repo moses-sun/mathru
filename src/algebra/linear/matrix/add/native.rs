@@ -21,7 +21,7 @@ impl<T> Add<Self> for Matrix<T>
     ///
     /// let c: Matrix<f64> = a + b;
     /// ```
-    fn add(mut self: Self, rhs: Self) -> Self::Output
+    fn add(mut self, rhs: Self) -> Self::Output
     {
         let _ = (&mut self).add(&rhs);
         self
@@ -46,7 +46,7 @@ impl<'a, 'b, T> Add<&'b Matrix<T>> for &'a Matrix<T>
     ///
     /// let c: Matrix<f64> = &b + &a;
     /// ```
-    fn add(self: Self, rhs: &'b Matrix<T>) -> Self::Output
+    fn add(self, rhs: &'b Matrix<T>) -> Self::Output
     {
         // assert_eq!(self.dim(), rhs.dim());
         let (m, n) = self.dim();
@@ -78,7 +78,7 @@ impl<'a, 'b, T> Add<&'b Matrix<T>> for &'a mut Matrix<T>
     ///
     /// let _ = &mut a + &b;
     /// ```
-    fn add(self: Self, rhs: &'b Matrix<T>) -> Self::Output
+    fn add(self, rhs: &'b Matrix<T>) -> Self::Output
     {
         // assert_eq!(self.dim(), rhs.dim());
         self.data.iter_mut().zip(rhs.data.iter()).for_each(|(x, y)| *x += *y);
@@ -102,7 +102,7 @@ impl<T> Add<T> for Matrix<T>
     /// let a: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
     /// let b: Matrix<f64> = a + -4.0;
     /// ```
-    fn add(mut self: Self, rhs: T) -> Self::Output
+    fn add(mut self, rhs: T) -> Self::Output
     {
         let _ = (&mut self).add(&rhs);
         self
@@ -125,7 +125,7 @@ impl<'a, 'b, T> Add<&'a T> for &'a Matrix<T>
     /// let a: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
     /// &a + &-4.0;
     /// ```
-    fn add(self: Self, rhs: &'a T) -> Self::Output
+    fn add(self, rhs: &'a T) -> Self::Output
     {
         let mut a: Matrix<T> = self.clone();
         let _ = &mut a + rhs;
@@ -149,7 +149,7 @@ impl<'a, 'b, T> Add<&'a T> for &'a mut Matrix<T>
     /// let mut a: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
     /// &mut a + &-4.0;
     /// ```
-    fn add(self: Self, rhs: &'a T) -> Self::Output
+    fn add(self, rhs: &'a T) -> Self::Output
     {
         let _ = self.data.iter_mut().for_each(&|x: &mut T| *x += *rhs);
         self

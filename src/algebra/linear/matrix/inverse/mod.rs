@@ -17,5 +17,5 @@ pub trait Inverse<T>
     /// let a: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
     /// let b_inv: Matrix<f64> = a.inv().unwrap();
     /// ```
-    fn inv(self: &Self) -> Result<Matrix<T>, ()>;
+    fn inv(&self) -> Result<Matrix<T>, ()>;
 }

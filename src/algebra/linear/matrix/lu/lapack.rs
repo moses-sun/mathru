@@ -23,7 +23,7 @@ impl<T> Matrix<T> where T: Field + Scalar
     ///
     /// let (l, u, p): (Matrix<f64>, Matrix<f64>, Matrix<f64>) = a.dec_lu().unwrap().lup();
     /// ```
-    pub fn dec_lu(self: &Self) -> Result<LUDec<T>, ()>
+    pub fn dec_lu(&self) -> Result<LUDec<T>, ()>
     {
         let (m, n): (usize, usize) = self.dim();
         assert_eq!(m, n);

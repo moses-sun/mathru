@@ -30,7 +30,7 @@ impl<T> Matrix<T> where T: Field + Scalar + Power
     /// let a: Matrix<f64> = Matrix::new(3, 3, vec![1.0, 5.0, 3.0, 1.0, 0.0, -7.0, 3.0, 8.0, 9.0]);
     /// let (q, h): (Matrix<f64>, Matrix<f64>) = a.dec_hessenberg().qh();
     /// ```
-    pub fn dec_hessenberg(self: &Self) -> HessenbergDec<T>
+    pub fn dec_hessenberg(&self) -> HessenbergDec<T>
     {
         let (m, n): (usize, usize) = self.dim();
         assert_eq!(m, n, "Unable to compute the hessenberg decomposition of a non-square matrix");

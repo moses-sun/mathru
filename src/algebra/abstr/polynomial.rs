@@ -179,7 +179,7 @@ impl<T> Polynomial<T>
     ///
     /// assert_eq!(17.0, a.eval(2.0));
     /// ```
-    pub fn eval(self: &Self, x: T) -> T
+    pub fn eval(&self, x: T) -> T
     {
         let mut s: T = T::zero();
 
@@ -214,7 +214,7 @@ impl<T> Add<Polynomial<T>> for Polynomial<T>
     ///
     /// assert_eq!(c, a + b);
     /// ```
-    fn add(self: Self, rhs: Polynomial<T>) -> Self::Output
+    fn add(self, rhs: Polynomial<T>) -> Self::Output
     {
         (&self).add(&rhs)
     }
@@ -242,7 +242,7 @@ impl<'a, 'b, T> Add<&'b Polynomial<T>> for &'a Polynomial<T>
     ///
     /// assert_eq!(c, &a + &b);
     /// ```
-    fn add(self: Self, rhs: &'b Polynomial<T>) -> Self::Output
+    fn add(self, rhs: &'b Polynomial<T>) -> Self::Output
     {
         let mut sum = if self.coef.len() > rhs.coef.len()
         {
@@ -264,7 +264,7 @@ impl<'a, 'b, T> Add<&'b Polynomial<T>> for &'a Polynomial<T>
 impl<T> AddAssign for Polynomial<T>
     where T: MagmaAdd + Scalar
 {
-    fn add_assign(self: &mut Self, rhs: Self)
+    fn add_assign(&mut self, rhs: Self)
     {
         *self = (*self).clone().add(rhs)
     }
@@ -292,7 +292,7 @@ impl<T> Sub<Polynomial<T>> for Polynomial<T>
     ///
     /// assert_eq!(c, a - b);
     /// ```
-    fn sub(self: Self, rhs: Polynomial<T>) -> Self::Output
+    fn sub(self, rhs: Polynomial<T>) -> Self::Output
     {
         (&self).sub(&rhs)
     }
@@ -320,7 +320,7 @@ impl<'a, 'b, T> Sub<&'b Polynomial<T>> for &'a Polynomial<T>
     ///
     /// assert_eq!(c, &a - &b);
     /// ```
-    fn sub(self: Self, rhs: &'b Polynomial<T>) -> Self::Output
+    fn sub(self, rhs: &'b Polynomial<T>) -> Self::Output
     {
         let mut sum = if self.coef.len() > rhs.coef.len()
         {
@@ -342,7 +342,7 @@ impl<'a, 'b, T> Sub<&'b Polynomial<T>> for &'a Polynomial<T>
 impl<T> SubAssign for Polynomial<T>
     where T: Sub<Output = T> + Scalar
 {
-    fn sub_assign(self: &mut Self, rhs: Self)
+    fn sub_assign(&mut self, rhs: Self)
     {
         *self = self.clone().sub(rhs)
     }
@@ -460,7 +460,7 @@ impl<T> Mul<Polynomial<T>> for Polynomial<T>
     ///
     /// assert_eq!(c, a * b)
     /// ```
-    fn mul(self: Self, rhs: Polynomial<T>) -> Self::Output
+    fn mul(self, rhs: Polynomial<T>) -> Self::Output
     {
         (&self).mul(&rhs)
     }
@@ -493,7 +493,7 @@ impl<'a, 'b, T> Mul<&'b Polynomial<T>> for &'a Polynomial<T>
     ///
     /// assert_eq!(c, &a * &b)
     /// ```
-    fn mul(self: Self, rhs: &'b Polynomial<T>) -> Self::Output
+    fn mul(self, rhs: &'b Polynomial<T>) -> Self::Output
     {
 
         let deg_lhs = self.degree();
@@ -517,7 +517,7 @@ impl<'a, 'b, T> Mul<&'b Polynomial<T>> for &'a Polynomial<T>
 impl<T> MulAssign for Polynomial<T>
     where T: MagmaMul + MonoidAdd + Scalar
 {
-    fn mul_assign(self: &mut Self, rhs: Self)
+    fn mul_assign(&mut self, rhs: Self)
     {
         *self = (*self).clone().mul(rhs)
     }
@@ -547,7 +547,7 @@ impl<'a, 'b, T> Div<&'b Polynomial<T>> for &'a Polynomial<T>
     /// assert_eq!(b, (&c / &a).0);
     /// assert_eq!(Polynomial::zero(), (&c / &a).1)
     /// ```
-    fn div(self: Self, rhs: &'b Polynomial<T>) -> Self::Output
+    fn div(self, rhs: &'b Polynomial<T>) -> Self::Output
     {
         if rhs.degree() > self.degree()
         {
@@ -595,7 +595,7 @@ impl<T> Polynomial<T>
         coef
     }
 
-    pub fn reduce(self: Self) -> Self
+    pub fn reduce(self) -> Self
     {
        Polynomial::from_coef(Polynomial::reduce_coef(self.coef))
     }
@@ -624,7 +624,7 @@ impl<T> Polynomial<T>
     ///
     /// assert_eq!(c_s, c.differentiate());
     /// ```
-    pub fn differentiate(self: &Self) -> Polynomial<T>
+    pub fn differentiate(&self) -> Polynomial<T>
     {
         if self.degree() == 0
         {
@@ -660,7 +660,7 @@ impl<T> Polynomial<T>
     ///
     /// assert_eq!(c_s, c.integrate());
     /// ```
-    pub fn integrate(self: &Self) -> Polynomial<T>
+    pub fn integrate(&self) -> Polynomial<T>
     {
         let mut coef_int = Vec::with_capacity(self.degree() + 1);
         coef_int.push(T::zero());

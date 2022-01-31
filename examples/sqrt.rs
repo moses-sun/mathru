@@ -47,7 +47,7 @@ impl Sqrt
 
 impl Jacobian<f64> for Sqrt
 {
-    fn jacobian(self: &Self, x: &Vector<f64>) -> Matrix<f64>
+    fn jacobian(&self, x: &Vector<f64>) -> Matrix<f64>
     {
         return Matrix::from(x.clone().transpose()) * 2.0;
     }
@@ -56,7 +56,7 @@ impl Jacobian<f64> for Sqrt
 impl Function<Vector<f64>> for Sqrt
 {
     type Codomain = Vector<f64>;
-    fn eval(self: &Self, x: &Vector<f64>) -> Self::Codomain
+    fn eval(&self, x: &Vector<f64>) -> Self::Codomain
     {
         return x.clone().apply(&|x: &f64|-> f64 { return x * x - self.y});
     }

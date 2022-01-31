@@ -68,7 +68,7 @@ impl<T> Discrete<T, Vector<u32>, Vector<T>> for Multinomial<T>
     /// let x: Vector<u32> = vector![1; 2];
     /// let p: f64 = distrib.pmf(x);
     /// ```
-	fn pmf(self: &Self, x: Vector<u32>) -> T
+	fn pmf(&self, x: Vector<u32>) -> T
     {
         assert_eq!(self.p.dim(), x.dim());
         let (m, _n) = x.dim();
@@ -100,7 +100,7 @@ impl<T> Discrete<T, Vector<u32>, Vector<T>> for Multinomial<T>
     /// let x: f64 = 0.4;
     /// let p: f64 = distrib.cdf(x);
     /// ```
-	fn cdf(self: &Self, _x: Vector<T>) -> T
+	fn cdf(&self, _x: Vector<T>) -> T
     {
     /*
         let x_supremum : u32 = x.floor() as u32;
@@ -125,7 +125,7 @@ impl<T> Discrete<T, Vector<u32>, Vector<T>> for Multinomial<T>
     /// let distrib: Binomial<f64> = Binomial::new(5, 0.3);
     /// let mean: f64 = distrib.mean();
     /// ```
-	fn mean(self: &Self) -> T
+	fn mean(&self) -> T
     {
         unimplemented!();
         //return &(self.n as f64) * &self.p
@@ -141,7 +141,7 @@ impl<T> Discrete<T, Vector<u32>, Vector<T>> for Multinomial<T>
     /// let distrib: Binomial<f64> = Binomial::new(5, pi0.3);
     /// let var: f64 = distrib.variance();
     /// ```
-	fn variance(self: &Self) -> T
+	fn variance(&self) -> T
     {
         unimplemented!();
         //return self.mean() * (1.0 - self.p)

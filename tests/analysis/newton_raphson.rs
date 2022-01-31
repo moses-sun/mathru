@@ -2,7 +2,7 @@ use mathru::algebra::linear::{Vector, Matrix};
 use mathru::analysis::NewtonRaphson;
 use mathru::analysis::{Function, Jacobian};
 
-/// $` f(x) = x^2 -2 `$
+/// $ f(x) = x^2 -2 $
 struct Func1
 {
 
@@ -23,7 +23,7 @@ impl Function<Vector<f64>> for Func1
 {
 	type Codomain = Vector<f64>;
 
-	fn eval(self: &Self, input: &Vector<f64>) -> Vector<f64>
+	fn eval(&self, input: &Vector<f64>) -> Vector<f64>
 	{
 		let x: f64 = input[0];
 		return 	vector![x * x - 2.0];
@@ -32,7 +32,7 @@ impl Function<Vector<f64>> for Func1
 
 impl Jacobian<f64> for Func1
 {
-	fn jacobian(self: &Self, input: &Vector<f64>) -> Matrix<f64>
+	fn jacobian(&self, input: &Vector<f64>) -> Matrix<f64>
 	{
 		let x: f64 = input[0];
 

@@ -1,11 +1,11 @@
 pub trait Test<T>
 {
     ///Test value
-    fn value(self: &Self) -> T;
+    fn value(&self) -> T;
 
     /// Degree of freedom
-    fn df(self: &Self) -> u32;
+    fn df(&self) -> u32;
 
     ///
-    fn p_value(self: &Self) -> T;
+    fn p_value(&self) -> T;
 }

@@ -29,7 +29,7 @@ impl<T> Sub for Matrix<T>
     ///
     /// let c: Matrix<f64> = a - b;
     /// ```
-    fn sub(self: Self, rhs: Self) -> Self::Output
+    fn sub(self, rhs: Self) -> Self::Output
     {
         assert_eq!(self.dim(), rhs.dim());
 
@@ -48,7 +48,7 @@ impl<'a, 'b, T> Sub<&'b Matrix<T>> for &'a Matrix<T>
 {
     type Output = Matrix<T>;
 
-    fn sub(self: Self, rhs: &'b Matrix<T>) -> Self::Output
+    fn sub(self, rhs: &'b Matrix<T>) -> Self::Output
     {
         assert_eq!(self.dim(), rhs.dim());
 
@@ -67,7 +67,7 @@ impl<'a, 'b, T> Sub<&'b Matrix<T>> for &'a mut Matrix<T>
 {
     type Output = &'a mut Matrix<T>;
 
-    fn sub(self: Self, rhs: &'b Matrix<T>) -> Self::Output
+    fn sub(self, rhs: &'b Matrix<T>) -> Self::Output
     {
         assert_eq!(self.dim(), rhs.dim());
 
@@ -95,7 +95,7 @@ impl<T> Sub<T> for Matrix<T> where T: Field + Scalar
     /// let a: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
     /// let b: Matrix<f64> = a - -4.0;
     /// ```
-    fn sub(self: Self, rhs: T) -> Self::Output
+    fn sub(self, rhs: T) -> Self::Output
     {
         self.apply_mut(&|x: &T| -> T { *x - rhs})
     }
@@ -118,7 +118,7 @@ impl<'a, 'b, T> Sub<&'b T> for &'a Matrix<T>
     /// let a: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
     /// let b: Matrix<f64> = &a - &-4.0;
     /// ```
-    fn sub(self: Self, rhs: &T) -> Self::Output
+    fn sub(self, rhs: &T) -> Self::Output
     {
         self.apply(&|x: &T| -> T { x.clone() - rhs.clone() })
     }
@@ -141,7 +141,7 @@ impl<'a, 'b, T> Sub<&'b T> for &'a mut Matrix<T>
     /// let a: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
     /// let b: Matrix<f64> = &a - &-4.0;
     /// ```
-    fn sub(self: Self, rhs: &T) -> Self::Output
+    fn sub(self, rhs: &T) -> Self::Output
     {
         self.data.iter_mut().for_each(|x: &mut T| *x -= *rhs);
         self

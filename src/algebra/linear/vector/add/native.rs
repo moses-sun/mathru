@@ -22,7 +22,7 @@ impl<T> Add<Self> for Vector<T>
     ///
     /// assert_eq!(res_ref, a + b)
     /// ```
-    fn add(self: Self, rhs: Self) -> Self::Output
+    fn add(self, rhs: Self) -> Self::Output
     {
         &self + &rhs
     }
@@ -47,7 +47,7 @@ impl<'a, 'b, T> Add<&'b Vector<T>> for &'a Vector<T>
     ///
     /// assert_eq!(res_ref, &a + &b)
     /// ```
-    fn add(self: Self, rhs: &'b Vector<T>) -> Self::Output
+    fn add(self, rhs: &'b Vector<T>) -> Self::Output
     {
         Vector { data: (&self.data).add(&rhs.data) }
     }
@@ -72,7 +72,7 @@ impl<'a, 'b, T> Add<&'b Vector<T>> for &'a mut Vector<T>
     ///
     /// assert_eq!(res_ref, *(&mut a + &b))
     /// ```
-    fn add(self: Self, rhs: &'b Vector<T>) -> Self::Output
+    fn add(self, rhs: &'b Vector<T>) -> Self::Output
     {
         let _ = &mut self.data + &rhs.data;
         self
@@ -96,7 +96,7 @@ impl<T> Add<T> for Vector<T>
     ///
     /// assert_eq!(res_ref, a + -5.0)
     /// ```
-    fn add(mut self: Self, rhs: T) -> Self::Output
+    fn add(mut self, rhs: T) -> Self::Output
     {
         let _ = &mut self.data + &rhs;
         self
@@ -120,7 +120,7 @@ impl<'a, 'b, T> Add<&'b T> for &'a Vector<T>
     ///
     /// assert_eq!(res_ref, &a + &-5.0)
     /// ```
-    fn add(self: Self, rhs: &'b T) -> Self::Output
+    fn add(self, rhs: &'b T) -> Self::Output
     {
         let mut res: Vector<T> = self.clone();
         let _ = &mut res + rhs;
@@ -145,7 +145,7 @@ impl<'a, 'b, T> Add<&'b T> for &'a mut Vector<T>
     ///
     /// assert_eq!(res_ref, *(&mut a + &-5.0))
     /// ```
-    fn add(self: Self, rhs: &'b T) -> Self::Output
+    fn add(self, rhs: &'b T) -> Self::Output
     {
         let _ = &mut self.data + rhs;
         self

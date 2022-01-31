@@ -71,7 +71,7 @@ impl<K> Continuous<K> for T<K> where K: Real + Beta + Hypergeometric + Gamma
     /// let x: f64 = 0.5;
     /// let p: f64 = distrib.pdf(x);
     /// ```
-    fn pdf(self: &Self, x: K) -> K
+    fn pdf(&self, x: K) -> K
     {
         gamma::gamma((self.n + K::one()) / K::from_f64(2.0)) * (K::one() + x * x / self.n).pow(-((self.n + K::one()) / K::from_f64(2.0)))
         / ((self.n * K::pi()).sqrt() * gamma::gamma(self.n / K::from_f64(2.0)))
@@ -92,7 +92,7 @@ impl<K> Continuous<K> for T<K> where K: Real + Beta + Hypergeometric + Gamma
     /// let x: f64 = 0.4;
     /// let p: f64 = distrib.cdf(x);
     /// ```
-    fn cdf(self: &Self, x: K) -> K
+    fn cdf(&self, x: K) -> K
     {
         let k: K = (self.n + K::one()) / K::from_f64(2.0);
         let f21: K = hypergeometric::f21(K::from_f64(0.5),
@@ -103,7 +103,7 @@ impl<K> Continuous<K> for T<K> where K: Real + Beta + Hypergeometric + Gamma
     }
 
     /// Quantile function of inverse cdf
-    fn quantile(self: &Self, _p: K) -> K
+    fn quantile(&self, _p: K) -> K
     {
         unimplemented!();
     }
@@ -122,7 +122,7 @@ impl<K> Continuous<K> for T<K> where K: Real + Beta + Hypergeometric + Gamma
     /// let distrib: T<f64> = T::new(1.2);
     /// let mean: f64 = distrib.mean();
     /// ```
-    fn mean(self: &Self) -> K
+    fn mean(&self) -> K
     {
         if self.n > K::one()
         {
@@ -141,7 +141,7 @@ impl<K> Continuous<K> for T<K> where K: Real + Beta + Hypergeometric + Gamma
     /// let distrib: T<f64> = T::new(2.2);
     /// let var: f64 = distrib.variance();
     /// ```
-    fn variance(self: &Self) -> K
+    fn variance(&self) -> K
     {
         if self.n > K::from_f64(2.0)
         {
@@ -161,7 +161,7 @@ impl<K> Continuous<K> for T<K> where K: Real + Beta + Hypergeometric + Gamma
     /// # Panics
     ///
     /// if self.n <= 3
-    fn skewness(self: &Self) -> K
+    fn skewness(&self) -> K
     {
         if self.n <= K::from_f64(3.0)
         {
@@ -172,13 +172,13 @@ impl<K> Continuous<K> for T<K> where K: Real + Beta + Hypergeometric + Gamma
 
     /// Median is the value separating the higher half from the lower half of a
     /// probability distribution.
-    fn median(self: &Self) -> K
+    fn median(&self) -> K
     {
         K::zero()
     }
 
     ///
-    fn entropy(self: &Self) -> K
+    fn entropy(&self) -> K
     {
         let a: K = (self.n + K::one()) / K::from_f64(2.0);
         let b: K = self.n / K::from_f64(2.0);

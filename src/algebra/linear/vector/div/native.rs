@@ -21,7 +21,7 @@ impl<T> Div<T> for Vector<T>
     ///
     /// assert_eq!(res_ref, a / -5.0)
     /// ```
-    fn div(self: Self, rhs: T) -> Self::Output
+    fn div(self, rhs: T) -> Self::Output
     {
         Vector { data: &self.data / (&rhs) }
     }
@@ -44,7 +44,7 @@ impl<'a, T> Div<&T> for &'a Vector<T>
     ///
     /// assert_eq!(res_ref, a / 5.0)
     /// ```
-    fn div(self: Self, rhs: &T) -> Self::Output
+    fn div(self, rhs: &T) -> Self::Output
     {
         Vector { data: (&self.data).div(rhs) }
     }

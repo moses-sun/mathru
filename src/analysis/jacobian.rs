@@ -6,5 +6,5 @@ use crate::algebra::{
 pub trait Jacobian<T>
     where T: Real
 {
-    fn jacobian(self: &Self, input: &Vector<T>) -> Matrix<T>;
+    fn jacobian(&self, input: &Vector<T>) -> Matrix<T>;
 }

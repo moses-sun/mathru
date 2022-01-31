@@ -62,7 +62,7 @@ impl<T> Discrete<T, u32, T> for Binomial<T> where T: Real
     /// let x: u32 = 0;
     /// let p: f64 = distrib.pmf(x);
     /// ```
-    fn pmf(self: &Self, x: u32) -> T
+    fn pmf(&self, x: u32) -> T
     {
         if x > self.n
         {
@@ -90,7 +90,7 @@ impl<T> Discrete<T, u32, T> for Binomial<T> where T: Real
     /// let x: f64 = 0.4;
     /// let p: f64 = distrib.cdf(x);
     /// ```
-    fn cdf(self: &Self, x: T) -> T
+    fn cdf(&self, x: T) -> T
     {
         let x_supremum: u32 = x.floor().to_u32();
         let mut prob: T = T::zero();
@@ -112,7 +112,7 @@ impl<T> Discrete<T, u32, T> for Binomial<T> where T: Real
     /// let distrib: Binomial<f64> = Binomial::new(5, 0.3);
     /// let mean: f64 = distrib.mean();
     /// ```
-    fn mean(self: &Self) -> T
+    fn mean(&self) -> T
     {
         T::from_u32(self.n) * self.p
     }
@@ -127,7 +127,7 @@ impl<T> Discrete<T, u32, T> for Binomial<T> where T: Real
     /// let distrib: Binomial<f64> = Binomial::new(5, 0.3);
     /// let var: f64 = distrib.variance();
     /// ```
-    fn variance(self: &Self) -> T
+    fn variance(&self) -> T
     {
         self.mean() * (T::one() - self.p)
     }

@@ -15,7 +15,7 @@ impl Rosenbrock
 
 impl Optim<f64> for Rosenbrock
 {
-    fn eval(self: &Self, input: &Vector<f64>) -> Vector<f64>
+    fn eval(&self, input: &Vector<f64>) -> Vector<f64>
     {
         let x_1: f64 = input[0];
         let x_2: f64 = input[1];
@@ -24,7 +24,7 @@ impl Optim<f64> for Rosenbrock
                         f64::sqrt(200.0) * (x_2 - x_1 * x_1)];
     }
 
-    fn jacobian(self: &Self, input: &Vector<f64>) -> Matrix<f64>
+    fn jacobian(&self, input: &Vector<f64>) -> Matrix<f64>
     {
         return matrix![	-f64::sqrt(2.0), 0.0;
                         -f64::sqrt(2.0) * input[0] * f64::sqrt(200.0), f64::sqrt(200.0)];

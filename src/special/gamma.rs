@@ -34,7 +34,7 @@ pub trait Gamma
     /// let z: f64 = 0.3_f64;
     /// let gamma: f64 = z.gamma();
     /// ```
-    fn gamma(self: Self) -> Self;
+    fn gamma(self) -> Self;
 
     /// Log-gamma function
     ///
@@ -53,7 +53,7 @@ pub trait Gamma
     /// let x: f64 = 0.3_f64;
     /// let ln_gamma: f64 = x.ln_gamma();
     /// ```
-    fn ln_gamma(self: Self) -> Self;
+    fn ln_gamma(self) -> Self;
 
     /// Digamma function
     ///
@@ -76,7 +76,7 @@ pub trait Gamma
     /// let x: f64 = 0.3_f64;
     /// let digamma: f64 = x.digamma();
     /// ```
-    fn digamma(self: Self) -> Self;
+    fn digamma(self) -> Self;
 
     /// Upper incomplete gamma function
     ///
@@ -102,7 +102,7 @@ pub trait Gamma
     ///
     /// let gamma_u: f64 = a.gamma_u(x);
     /// ```
-    fn gamma_u(self: Self, x: Self) -> Self;
+    fn gamma_u(self, x: Self) -> Self;
 
     /// Upper incomplete regularized gamma function
     ///
@@ -127,7 +127,7 @@ pub trait Gamma
     /// let x: f64 = 0.3_f64;
     /// let gamma_ur: f64 = a.gamma_ur(x);
     /// ```
-    fn gamma_ur(self: Self, x: Self) -> Self;
+    fn gamma_ur(self, x: Self) -> Self;
 
     /// Lower incomplete gamma function
     ///
@@ -152,7 +152,7 @@ pub trait Gamma
     /// let x: f64 = 0.3_f64;
     /// let gamma_l: f64 = a.gamma_l(x);
     /// ```
-    fn gamma_l(self: Self, x: Self) -> Self;
+    fn gamma_l(self, x: Self) -> Self;
 
     /// Lower regularized incomplete gamma function
     ///
@@ -177,7 +177,7 @@ pub trait Gamma
     /// let x: f64 = 0.3_f64;
     /// let gamma_lr: f64 = a.gamma_lr(x);
     /// ```
-    fn gamma_lr(self: Self, x: Self) -> Self;
+    fn gamma_lr(self, x: Self) -> Self;
 
     /// Inverse of the upper incomplete regularized gamma function
     ///
@@ -203,7 +203,7 @@ pub trait Gamma
     /// let q = gamma::gamma_ur(a, x);
     /// let x_s: f64 = gamma::gamma_ur_inv(a, q);
     /// ```
-    fn gamma_ur_inv(self: Self, p: Self) -> Self;
+    fn gamma_ur_inv(self, p: Self) -> Self;
 
     /// Inverse of the lower incomplete regularized gamma function
     ///
@@ -229,7 +229,7 @@ pub trait Gamma
     /// let p = gamma::gamma_lr(a, x);
     /// let x_s: f64 = gamma::gamma_lr_inv(a, p);
     /// ```
-    fn gamma_lr_inv(self: Self, p: Self) -> Self;
+    fn gamma_lr_inv(self, p: Self) -> Self;
 }
 
 macro_rules! impl_gamma
@@ -238,7 +238,7 @@ macro_rules! impl_gamma
     {
         impl Gamma for $t
         {
-            fn gamma(self: Self) -> Self
+            fn gamma(self) -> Self
             {
                 if self == 0.0
                 {
@@ -266,7 +266,7 @@ macro_rules! impl_gamma
                     * x;
             }
 
-            fn ln_gamma(self: Self) -> Self
+            fn ln_gamma(self) -> Self
             {
                 // Auxiliary variable when evaluating the `gamma_ln` function
                 let gamma_r: Self = 10.900511;
@@ -315,7 +315,7 @@ macro_rules! impl_gamma
             }
 
             //
-            fn digamma(self: Self) -> Self
+            fn digamma(self) -> Self
             {
                 let c: Self = 8.5;
                 let mut value: Self = 0.0;
@@ -351,22 +351,22 @@ macro_rules! impl_gamma
                 return value;
             }
 
-            fn gamma_u(self: Self, x: Self) -> Self
+            fn gamma_u(self, x: Self) -> Self
             {
                 return self.gamma_ur(x) * self.gamma();
             }
 
-            fn gamma_ur(self: Self, x: Self) -> Self
+            fn gamma_ur(self, x: Self) -> Self
             {
                 return 1.0 - self.gamma_lr(x);
             }
 
-            fn gamma_l(self: Self, x: Self) -> Self
+            fn gamma_l(self, x: Self) -> Self
             {
                 return self.gamma_lr(x)  * self.gamma();
             }
 
-            fn gamma_lr(self: Self, x: Self) -> Self
+            fn gamma_lr(self, x: Self) -> Self
             {
 
                 if x <= 0.0
@@ -470,7 +470,7 @@ macro_rules! impl_gamma
             /// Computation of the Incomplete Gamma Function Ratios and their Inverse
             /// ARMIDO R. DIDONATO and ALFRED H. MORRIS, JR. U.S. Naval Surface Weapons Center
             /// ACM Transactions on Mathematical Software, Vol. 12, No. 4, December 1986
-            fn gamma_ur_inv(self: Self, q: Self) -> Self
+            fn gamma_ur_inv(self, q: Self) -> Self
             {
                 let a: Self = self;
                 let c: Self = 0.5772156649015328606065;
@@ -637,7 +637,7 @@ macro_rules! impl_gamma
                 }
             }
 
-            fn gamma_lr_inv(self: Self, q: Self) -> Self
+            fn gamma_lr_inv(self, q: Self) -> Self
             {
                 1.0 - self.gamma_ur_inv(q)
             }

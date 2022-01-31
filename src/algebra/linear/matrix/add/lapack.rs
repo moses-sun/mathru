@@ -20,7 +20,7 @@ impl<T> Add<Matrix<T>> for Matrix<T>
     /// let b: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
     /// let c = a + b;
     /// ```
-    fn add(self: Self, rhs: Self) -> Self::Output
+    fn add(self, rhs: Self) -> Self::Output
     {
         assert_eq!(self.dim(), rhs.dim());
 
@@ -51,7 +51,7 @@ impl<'a, 'b, T> Add<&'b Matrix<T>> for &'a Matrix<T>
     /// let a: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
     /// let b: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
     /// ```
-    fn add(self: Self, rhs: &'b Matrix<T>) -> Self::Output
+    fn add(self, rhs: &'b Matrix<T>) -> Self::Output
     {
         assert_eq!(self.dim(), rhs.dim());
 
@@ -83,7 +83,7 @@ impl<'a, 'b, T> Add<&'b Matrix<T>> for &'a mut Matrix<T>
     /// let b: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
     /// let _ = &mut a + & b;
     /// ```
-    fn add(self: Self, rhs: &'b Matrix<T>) -> Self::Output
+    fn add(self, rhs: &'b Matrix<T>) -> Self::Output
     {
         assert_eq!(self.dim(), rhs.dim());
 
@@ -113,7 +113,7 @@ impl<T> Add<T> for Matrix<T>
     /// let b: Matrix<f64> = Matrix::new(2, 2, vec![-3.0, -4.0, -1.0, -11.0]);
     ///
     /// ```
-    fn add(mut self: Self, rhs: T) -> Self::Output
+    fn add(mut self, rhs: T) -> Self::Output
     {
         let _ = &mut self + &rhs;
         self
@@ -137,7 +137,7 @@ impl<'a, 'b, T> Add<&'b T> for &'a Matrix<T>
     /// let a: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
     /// let b: Matrix<f64> = Matrix::new(2, 2, vec![-3.0, -4.0, -1.0, -11.0]);
     /// ```
-    fn add(self: Self, rhs: &T) -> Self::Output
+    fn add(self, rhs: &T) -> Self::Output
     {
         let mut a: Matrix<T> = self.clone();
         let _ = &mut a + rhs;
@@ -162,7 +162,7 @@ impl<'a, 'b, T> Add<&'b T> for &'a mut Matrix<T>
     /// let a: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
     /// let b: Matrix<f64> = Matrix::new(2, 2, vec![-3.0, -4.0, -1.0, -11.0]);
     /// ```
-    fn add(self: Self, rhs: &T) -> Self::Output
+    fn add(self, rhs: &T) -> Self::Output
     {
         self.data.iter_mut().for_each(|x: &mut T| *x += *rhs);
         self

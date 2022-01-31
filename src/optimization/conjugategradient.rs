@@ -16,20 +16,20 @@ use std::clone::Clone;
 /// with a symmetric and positive-definite matrix. Ax = b where A is a symmetric
 /// and positive-definite matrix
 ///
-/// input: $`A \in  \mathbb{R}^{n \times n}`$ and $` b \in \mathbb{R}^{n} `$ and
-/// initial approximation $`x_{0} \in \mathbb{R}^{n} `$
+/// input: $A \in  \mathbb{R}^{n \times n}$ and $ b \in \mathbb{R}^{n} $ and
+/// initial approximation $x_{0} \in \mathbb{R}^{n} $
 ///
-/// output: $` x_k `$
+/// output: $ x_k $
 ///
-/// 1. $` d_{0} = r_{0} := b - Ax_{0} `$ and set $` k := 0 `$
-/// 2. $` \alpha_{k} := \frac{\lvert \lvert r_{k} \rvert
-/// \rvert_{2}^{2}}{d_{k}^{T}Ad_{k}} `$ <br>     $` x_{k+1} := x_{k} +
-/// \alpha_{j}d_{k} `$ <br>     $` r_{k+1} := r_{k} - \alpha_{k}Ad_{k} `$ <br>
-///     $` \beta_{k} := \frac{\lvert \lvert r_{k+1} \rvert
-/// \rvert_{2}^{2}}{\lvert \lvert r_{k} \rvert \rvert_{2}^{2}} `$ <br>
-///     $` d_{k+1} := r_{k+1} + \beta_{k}d_{k} `$ <br>
-/// 3. if $` \lvert \lvert r_{k+ 1} \rvert \rvert_{2} > \epsilon `$ increase
-/// $`k:= k + 1`$ and goto 2.
+/// 1. $ d_{0} = r_{0} := b - Ax_{0} $ and set $ k := 0 $
+/// 2. $ \alpha_{k} := \frac{\lvert \lvert r_{k} \rvert
+/// \rvert_{2}^{2}}{d_{k}^{T}Ad_{k}} $ <br>     $ x_{k+1} := x_{k} +
+/// \alpha_{j}d_{k} $ <br>     $ r_{k+1} := r_{k} - \alpha_{k}Ad_{k} $ <br>
+///     $ \beta_{k} := \frac{\lvert \lvert r_{k+1} \rvert
+/// \rvert_{2}^{2}}{\lvert \lvert r_{k} \rvert \rvert_{2}^{2}} $ <br>
+///     $ d_{k+1} := r_{k+1} + \beta_{k}d_{k} $ <br>
+/// 3. if $ \lvert \lvert r_{k+ 1} \rvert \rvert_{2} > \epsilon $ increase
+/// $k:= k + 1$ and goto 2.
 ///
 /// # Example
 ///
@@ -39,22 +39,22 @@ use std::clone::Clone;
 /// use mathru::optimization::{Optim, ConjugateGradient};
 ///
 /// struct LinearEquation
-/// {
-/// 	a: Matrix<f64>,
-/// 	b: Vector<f64>,
+/// { ///
+///     a: Matrix<f64>,
+///     b: Vector<f64>,
 /// }
 ///
 /// //Ax = b
 /// impl LinearEquation
 /// {
-/// 	pub fn new() -> LinearEquation
-/// 	{
-/// 	    LinearEquation
-/// 		{
-/// 			a: matrix![1.0, 3.0; 3.0, 5.0],
-/// 			b: vector![-7.0; 7.0]
-/// 		}
-/// 	}
+///     pub fn new() -> LinearEquation
+///     {
+///         LinearEquation
+///         {
+///             a: matrix![1.0, 3.0; 3.0, 5.0],
+///             b: vector![-7.0; 7.0]
+///         }
+///     }
 /// }
 ///
 /// impl Optim<f64> for LinearEquation
@@ -63,9 +63,9 @@ use std::clone::Clone;
 ///		fn jacobian(&self, _input: &Vector<f64>) -> Matrix<f64>
 ///		{
 ///			return self.a.clone();
-///		}
+///		}///
 ///
-///		// f = b-Ax
+///     // f = b-Ax
 ///		fn eval(&self, x: &Vector<f64>) -> Vector<f64>
 ///		{
 ///			return self.b.clone() - self.a.clone() * x.clone()
@@ -123,7 +123,7 @@ impl<T> ConjugateGradient<T> where T: Real
     /// # Return
     ///
     /// local minimum
-    pub fn minimize<F>(self: &Self, func: &F, x_0: &Vector<T>) -> OptimResult<Vector<T>>
+    pub fn minimize<F>(&self, func: &F, x_0: &Vector<T>) -> OptimResult<Vector<T>>
         where F: Optim<T>
     {
         let mut x_n: Vector<T> = x_0.clone();

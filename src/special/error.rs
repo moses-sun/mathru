@@ -20,7 +20,7 @@ pub trait Error
     ///
     /// self:
     ///
-    fn erf(self: Self) -> Self;
+    fn erf(self) -> Self;
 
     /// Complementary error function
     ///
@@ -30,7 +30,7 @@ pub trait Error
     /// # Arguments
     ///
     /// self
-    fn erfc(self: Self) -> Self;
+    fn erfc(self) -> Self;
 
     /// Inverse error function
     ///
@@ -48,7 +48,7 @@ pub trait Error
     ///
     /// if x < -1.0 or x > 1.0
     ///
-    fn erfinv(self: Self) -> Self;
+    fn erfinv(self) -> Self;
 
     /// Inverse complementary error function
     ///
@@ -63,13 +63,13 @@ pub trait Error
     ///
     /// if x < 0.0 or x > 2.0
     ///
-    fn erfcinv(self: Self) -> Self;
+    fn erfcinv(self) -> Self;
 }
 
 
 impl Error for f64
 {
-    fn erf(self: Self) -> Self
+    fn erf(self) -> Self
     {
         if self == 0.0
         {
@@ -78,7 +78,7 @@ impl Error for f64
         self.sign() * (1.0f64 - gamma::gamma_u(0.5f64, self * self) / Self::pi().sqrt())
     }
 
-    fn erfc(self: Self) -> Self
+    fn erfc(self) -> Self
     {
         1.0 - self.erf()
     }
@@ -87,7 +87,7 @@ impl Error for f64
     /// Using the rational approximations tabulated in:
     ///J. M. Blair, C. A. Edwards, and J. H. Johnson,
     /// "Rational Chebyshev approximations for the inverse of the error function",
-    fn erfinv(self: Self) -> Self
+    fn erfinv(self) -> Self
     {
         let factors_leq075_p: [f64; 7] = [0.16030_49558_44066_229311e2,
             -0.90784_95926_29603_26650e2,
@@ -181,7 +181,7 @@ impl Error for f64
         }
     }
 
-    fn erfcinv(self: Self) -> Self
+    fn erfcinv(self) -> Self
     {
         if (self < 0.0f64) || (self > 2.0f64)
         {
@@ -193,7 +193,7 @@ impl Error for f64
 
 impl Error for f32
 {
-    fn erf(self: Self) -> Self
+    fn erf(self) -> Self
     {
         if self == 0.0
         {
@@ -202,12 +202,12 @@ impl Error for f32
         self.sign() * (1.0f32 - gamma::gamma_u(0.5f32, self * self) / Self::pi().sqrt())
     }
 
-    fn erfc(self: Self) -> Self
+    fn erfc(self) -> Self
     {
         1.0 - self.erf()
     }
 
-    fn erfinv(self: Self) -> Self
+    fn erfinv(self) -> Self
     {
         let factors_leq075_p: [f32; 3] = [-0.13095_99674_222e2,
             0.26785_22576_022,
@@ -273,7 +273,7 @@ impl Error for f32
         }
     }
 
-    fn erfcinv(self: Self) -> Self
+    fn erfcinv(self) -> Self
     {
         if !(0.0f32..=2.0f32).contains(&self)
         {
