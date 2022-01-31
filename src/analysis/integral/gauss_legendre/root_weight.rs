@@ -70,7 +70,7 @@ impl<T> RootWeight<T>
 
     fn idx_n_even(it: &Self) -> usize
     {
-        return if it.i <= it.k
+        if it.i <= it.k
         {
             (it.i % it.k) as usize
         }
@@ -82,7 +82,7 @@ impl<T> RootWeight<T>
 
     fn idx_n_odd(it: &Self) -> usize
     {
-        return (it.i - it.k).abs() as usize
+        (it.i - it.k).abs() as usize
     }
 }
 

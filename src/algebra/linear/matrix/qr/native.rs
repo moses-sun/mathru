@@ -29,7 +29,7 @@ impl<T> Matrix<T>
     ///
     /// let (q, r): (Matrix<f64>, Matrix<f64>) = a.dec_qr().unwrap().qr();
     /// ```
-    pub fn dec_qr(self: &Self) -> Result<QRDec<T>, ()>
+    pub fn dec_qr(&self) -> Result<QRDec<T>, ()>
     {
         let (m, n) = self.dim();
         assert!(m >= n);

@@ -70,7 +70,7 @@ impl<T> Continuous<T> for RaisedCosine<T> where T: Real
     /// let x: f64 = 5.0;
     /// let p: f64 = distrib.pdf(x);
     /// ```
-    fn pdf(self: &Self, x: T) -> T
+    fn pdf(&self, x: T) -> T
     {
         if (self.mu - self.s) <= x && x < (self.mu + self.s)
         {
@@ -96,7 +96,7 @@ impl<T> Continuous<T> for RaisedCosine<T> where T: Real
     /// let x: f64 = PI / 2.0;
     /// let p: f64 = distrib.cdf(x);
     /// ```
-    fn cdf(self: &Self, x: T) -> T
+    fn cdf(&self, x: T) -> T
     {
         if (self.mu - self.s) <= x && x <= (self.mu + self.s)
         {
@@ -113,7 +113,7 @@ impl<T> Continuous<T> for RaisedCosine<T> where T: Real
     }
 
     /// Quantile function of inverse cdf
-    fn quantile(self: &Self, _p: T) -> T
+    fn quantile(&self, _p: T) -> T
     {
         unimplemented!();
     }
@@ -128,7 +128,7 @@ impl<T> Continuous<T> for RaisedCosine<T> where T: Real
     /// let distrib: RaisedCosine<f64> = RaisedCosine::new(-2.0, 0.5);
     /// let mean: f64 = distrib.mean();
     /// ```
-    fn mean(self: & Self) -> T
+    fn mean(&self) -> T
     {
         self.mu
     }
@@ -144,26 +144,26 @@ impl<T> Continuous<T> for RaisedCosine<T> where T: Real
     /// let distrib: RaisedCosine<f64> = RaisedCosine::new(2.0, PI);
     /// let var: f64 = distrib.variance();
     /// ```
-    fn variance(self: &Self) -> T
+    fn variance(&self) -> T
     {
         self.s * self.s * (T::from_f64(1.0 / 3.0) - T::from_f64(2.0) / (T::pi() * T::pi()))
     }
 
     ///
-    fn skewness(self: &Self) -> T
+    fn skewness(&self) -> T
     {
         T::zero()
     }
 
     /// Median is the value separating the higher half from the lower half of a
     /// probability distribution.
-    fn median(self: &Self) -> T
+    fn median(&self) -> T
     {
         self.mu
     }
 
     ///
-    fn entropy(self: &Self) -> T
+    fn entropy(&self) -> T
     {
         unimplemented!();
     }

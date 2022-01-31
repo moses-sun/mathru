@@ -99,43 +99,43 @@ impl<T> IntoIterator for Matrix<T> where T: Field + Scalar
 
 impl<T> Matrix<T>
 {
-    pub fn iter(self: &Self) -> MatrixIterator<T>
+    pub fn iter(&self) -> MatrixIterator<T>
     {
         MatrixIterator::new( self.data.iter() )
     }
 
-    pub fn iter_mut(self: &mut Self) -> MatrixIteratorMut<T>
+    pub fn iter_mut(&mut self) -> MatrixIteratorMut<T>
     {
         MatrixIteratorMut::new(self.data.iter_mut())
     }
 
-    pub fn row_into_iter(self: &Self) -> MatrixRowIntoIterator<T>
+    pub fn row_into_iter(&self) -> MatrixRowIntoIterator<T>
     {
         MatrixRowIntoIterator::new(self)
     }
-    // pub fn row_iter(self: &Self) -> MatrixRowIterator<T>
+    // pub fn row_iter(&self) -> MatrixRowIterator<T>
     //     where T: Zero
     // {
     //     MatrixRowIterator::new(self.data.iter())
     // }
 
-    // pub fn row_iter_mut(self: &mut Self) -> MatrixRowIteratorMut<T>
+    // pub fn row_iter_mut(&mut self) -> MatrixRowIteratorMut<T>
     //     where T: Zero
     // {
     //     MatrixRowIteratorMut::new(self.data.iter_mut())
     // }
 
-    pub fn column_into_iter(self: &Self) -> MatrixColumnIntoIterator<T>
+    pub fn column_into_iter(&self) -> MatrixColumnIntoIterator<T>
     {
          MatrixColumnIntoIterator::new(self)
     }
 
-    // pub fn column_iter(self: &Self) -> MatrixColumnIterator<T>
+    // pub fn column_iter(&self) -> MatrixColumnIterator<T>
     // {
     //     MatrixColumnIterator::new(self.data.iter())
     // }
 
-    // pub fn column_iter_mut(self: &mut Self) -> MatrixColumnIteratorMut<T>
+    // pub fn column_iter_mut(&mut self) -> MatrixColumnIteratorMut<T>
     // {
     //     MatrixColumnIteratorMut::new(self.data.iter_mut())
     // }
@@ -184,7 +184,7 @@ impl<T> Matrix<T>
     ///
     /// assert_eq!(-6.0, tr);
     /// ```
-    pub fn trace(self: &Self) -> T
+    pub fn trace(&self) -> T
         where T: Field + Scalar
     {
         let (m, n): (usize, usize) = self.dim();
@@ -206,7 +206,7 @@ impl<T> Matrix<T>
 #[cfg(feature = "native")]
 impl<T> Matrix<T> where T: Scalar
 {
-    pub(super) fn swap_rows(self: &mut Self, i: usize, j: usize)
+    pub(super) fn swap_rows(&mut self, i: usize, j: usize)
     {
         for k in 0..self.n
         {
@@ -220,7 +220,7 @@ impl<T> Matrix<T> where T: Scalar
 impl<T> Matrix<T> where T: Field + Scalar
 {
     // returns column vector
-    pub fn get_column(self: &Self, i: usize) -> Vector<T>
+    pub fn get_column(&self, i: usize) -> Vector<T>
     {
         assert!(i < self.n);
 
@@ -237,7 +237,7 @@ impl<T> Matrix<T> where T: Field + Scalar
     /// return row vector
     ///
     /// i: row
-    pub fn get_row(self: &Self, i: usize) -> Vector<T>
+    pub fn get_row(&self, i: usize) -> Vector<T>
     {
         assert!(i < self.m);
 
@@ -253,7 +253,7 @@ impl<T> Matrix<T> where T: Field + Scalar
     }
 
     /// set column
-    pub fn set_column(self: &mut Self, column: &Vector<T>, i: usize)
+    pub fn set_column(&mut self, column: &Vector<T>, i: usize)
     {
         let (m, _n) = column.dim();
         if m != self.m
@@ -274,7 +274,7 @@ impl<T> Matrix<T> where T: Field + Scalar
     /// * 'i'
     ///
     /// # Panics
-    pub fn set_row(self: &mut Self, row: &Vector<T>, i: usize)
+    pub fn set_row(&mut self, row: &Vector<T>, i: usize)
     {
         let (_m, n): (usize, usize) = row.dim();
         if n != self.n
@@ -460,7 +460,7 @@ impl<T> Matrix<T>
     /// assert_eq!(a_ref, a);
     /// # }
     /// ```
-    pub fn get_slice(self: &Self,
+    pub fn get_slice(&self,
                      row_s: usize,
                      row_e: usize,
                      column_s: usize,
@@ -512,7 +512,7 @@ impl<T> Matrix<T>
     /// assert_eq!(a_updated, a);
     /// # }
     /// ```
-    pub fn set_slice(mut self: Self, slice: &Self, row: usize, column: usize) -> Matrix<T>
+    pub fn set_slice(mut self, slice: &Self, row: usize, column: usize) -> Matrix<T>
     {
         let (s_m, s_n): (usize, usize) = slice.dim();
         let (m, n): (usize, usize) = self.dim();
@@ -533,7 +533,7 @@ impl<T> Matrix<T>
 impl<T> Display for Matrix<T>
     where T: Display
 {
-    fn fmt(self: &Self, f: &mut fmt::Formatter) -> fmt::Result
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result
     {
         write!(f, "\n").unwrap();
         for i in 0..self.m
@@ -565,7 +565,7 @@ impl<T> PartialEq for Matrix<T>
     ///
     /// assert_eq!(true, a == b);
     /// ```
-    fn eq(self: &Self, other: &Self) -> bool
+    fn eq(&self, other: &Self) -> bool
     {
         if self.dim() != other.dim()
         {
@@ -702,7 +702,7 @@ impl<T> Matrix<T>
     /// Calculates the pseudo inverse matrix
     ///
     /// A^+ = (A^TA)^-1A^T
-    pub fn pinv(self: &Self) -> Result<Matrix<T>, ()>
+    pub fn pinv(&self) -> Result<Matrix<T>, ()>
     {
         let r: Matrix<T> = self.dec_qr()?.r();
         let x: Matrix<T> = r.clone()
@@ -743,7 +743,7 @@ impl<T> Matrix<T>
     /// let m: usize = a.nrows();
     ///
     /// assert_eq!(4, m);
-    pub fn nrows(self: &Self) -> usize
+    pub fn nrows(&self) -> usize
     {
         self.m
     }
@@ -760,7 +760,7 @@ impl<T> Matrix<T>
     ///
     /// assert_eq!(2, n);
     /// ```
-    pub fn ncols(self: &Self) -> usize
+    pub fn ncols(&self) -> usize
     {
         self.n
     }

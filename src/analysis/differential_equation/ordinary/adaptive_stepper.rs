@@ -35,13 +35,13 @@ impl<T> Default for ProportionalControl<T> where T: Real
 {
     fn default() -> ProportionalControl<T>
     {
-        return ProportionalControl::new(1000,
+        ProportionalControl::new(1000,
                                     T::from_f64(0.02),
                                     T::from_f64(0.8),
                                     T::from_f64(0.001),
                                     T::from_f64(3.0),
                                     T::from_f64(10e-6),
-                                    T::from_f64(10e-3));
+                                    T::from_f64(10e-3))
     }
 }
 
@@ -72,15 +72,15 @@ impl<T> ProportionalControl<T> where T: Real
     }
 
     /// Returns the absolute tolerance
-    pub fn get_abs_tol(self: &Self) -> &T
+    pub fn get_abs_tol(&self) -> &T
     {
-        return &self.abs_tol;
+        &self.abs_tol
     }
 
     /// Returns the relative tolerance
-    pub fn get_rel_tol(self: &Self) -> &T
+    pub fn get_rel_tol(&self) -> &T
     {
-        return &self.rel_tol;
+        &self.rel_tol
     }
 
     /// Sets the absolute tolerance
@@ -91,7 +91,7 @@ impl<T> ProportionalControl<T> where T: Real
     /// # Panics
     ///
     /// if 'abs_tol' < 0.0
-    pub fn set_abs_tol(self: &mut Self, abs_tol: T)
+    pub fn set_abs_tol(&mut self, abs_tol: T)
     {
         if abs_tol < T::zero()
         {
@@ -108,7 +108,7 @@ impl<T> ProportionalControl<T> where T: Real
     /// # Panics
     ///
     /// if 'rel_tol' < 0.0
-    pub fn set_rel_tol(self: &mut Self, rel_tol: T)
+    pub fn set_rel_tol(&mut self, rel_tol: T)
     {
         if rel_tol < T::zero()
         {
@@ -133,7 +133,7 @@ impl<T> ProportionalControl<T> where T: Real
     /// # Panic
     ///
     /// if t_span.0 > t_span.1
-    pub fn solve<F, M>(self: &Self,
+    pub fn solve<F, M>(&self,
                        prob: &F,
                        method: &M)
                        -> Result<(Vec<T>, Vec<Vector<T>>), &'static str>
@@ -155,11 +155,9 @@ impl<T> ProportionalControl<T> where T: Real
         let mut t_n: T = t_start;
         let mut h: T = self.h_0;
 
-        let mut t_vec: Vec<T> = Vec::new();
-        t_vec.push(t_n);
+        let mut t_vec: Vec<T> = vec![t_n];
 
-        let mut res_vec: Vec<Vector<T>> = Vec::new();
-        res_vec.push(x_n.clone());
+        let mut res_vec: Vec<Vector<T>> = vec![x_n.clone()];
 
         let mut n: u32 = 0;
 
@@ -203,7 +201,7 @@ impl<T> ProportionalControl<T> where T: Real
         Ok((t_vec, res_vec))
     }
 
-    fn calc_error(self: &Self, y: &Vector<T>, y_hat: &Vector<T>) -> T
+    fn calc_error(&self, y: &Vector<T>, y_hat: &Vector<T>) -> T
     {
         let (_m, n) = y.dim();
 

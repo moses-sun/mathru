@@ -12,75 +12,75 @@ pub trait Trigonometry
     /// Returns the mathematics constant PI
     fn pi() -> Self;
 
-    /// Sinus function
-    fn sin(self: Self) -> Self;
+    /// sine function
+    fn sin(self) -> Self;
 
-    /// Cosinus function
-    fn cos(self: Self) -> Self;
+    /// Cosine function
+    fn cos(self) -> Self;
 
-    /// Tangens function
-    fn tan(self: Self) -> Self;
+    /// tangents function
+    fn tan(self) -> Self;
 
     /// Cotangens function
-    fn cot(self: Self) -> Self;
+    fn cot(self) -> Self;
 
     /// Secant function
-    fn sec(self: Self) -> Self;
+    fn sec(self) -> Self;
 
     /// Cosecant function
-    fn csc(self: Self) -> Self;
+    fn csc(self) -> Self;
 
     /// Inverse sinus function
-    fn arcsin(self: Self) -> Self;
+    fn arcsin(self) -> Self;
 
     /// Inverse cosinus function
-    fn arccos(self: Self) -> Self;
+    fn arccos(self) -> Self;
 
     /// Inverse tangens function
-    fn arctan(self: Self) -> Self;
+    fn arctan(self) -> Self;
 
-    fn arctan2(self: Self, other: Self) -> Self;
+    fn arctan2(self, other: Self) -> Self;
 
     /// Inverse cosecant function
-    fn arccot(self: Self) -> Self;
+    fn arccot(self) -> Self;
 
     /// Inverse secant function
-    fn arcsec(self: Self) -> Self;
+    fn arcsec(self) -> Self;
 
     // Inverse cosecant function
-    fn arccsc(self: Self) -> Self;
+    fn arccsc(self) -> Self;
 }
 
 macro_rules! trigonometry_impl {
     ($t:ty, $pi: expr) => {
         impl Trigonometry for $t
         {
-            /// Returns the mathematic constant PI
+            /// Returns the mathematical constant PI
             fn pi() -> Self
             {
                 $pi
             }
 
-            /// Sinus
-            fn sin(self: Self) -> Self
+            /// sine
+            fn sin(self) -> Self
             {
                 self.sin()
             }
 
-            /// Cosinus
-            fn cos(self: Self) -> Self
+            /// Cosine
+            fn cos(self) -> Self
             {
                 self.cos()
             }
 
-            ///Tangens
-            fn tan(self: Self) -> Self
+            ///tangents
+            fn tan(self) -> Self
             {
                 self.tan()
             }
 
             //
-            fn cot(self: Self) -> Self
+            fn cot(self) -> Self
             {
                 1.0 / self.tan()
             }
@@ -90,26 +90,26 @@ macro_rules! trigonometry_impl {
             /// # Panics
             ///
             /// self = n pi + pi/2 n \in Z
-            fn sec(self: Self) -> Self
+            fn sec(self) -> Self
             {
                 1.0 / self.cos()
             }
 
-            fn csc(self: Self) -> Self
+            fn csc(self) -> Self
             {
                 1.0 / self.sin()
             }
 
             /// Inverse sine function
             ///
-            /// # Arguemnts
+            /// # Arguments
             ///
             /// -1.0 <= x <= 1.0
             ///
             /// # Panics
             ///
             /// |x| > 1.0
-            fn arcsin(self: Self) -> Self
+            fn arcsin(self) -> Self
             {
                 if self.abs() > 1.0
                 {
@@ -128,7 +128,7 @@ macro_rules! trigonometry_impl {
             /// # Panics
             ///
             /// |x| > 1.0
-            fn arccos(self: Self) -> Self
+            fn arccos(self) -> Self
             {
                 if self.abs() > 1.0
                 {
@@ -139,18 +139,18 @@ macro_rules! trigonometry_impl {
             }
 
             /// Computes the arctangent of a number
-            fn arctan(self: Self) -> Self
+            fn arctan(self) -> Self
             {
                 self.atan()
             }
 
             /// Computes the arctangent
-            fn arctan2(self: Self, other: Self) -> Self
+            fn arctan2(self, other: Self) -> Self
             {
                 self.atan2(other)
             }
 
-            fn arccot(self: Self) -> Self
+            fn arccot(self) -> Self
             {
                 if self == 0.0
                 {
@@ -167,12 +167,12 @@ macro_rules! trigonometry_impl {
                 }
             }
 
-            fn arcsec(self: Self) -> Self
+            fn arcsec(self) -> Self
             {
                 (1.0 / self).acos()
             }
 
-            fn arccsc(self: Self) -> Self
+            fn arccsc(self) -> Self
             {
                 (1.0 / self).asin()
             }
@@ -193,7 +193,7 @@ impl<T> Trigonometry for Complex<T>
             im: T::zero() }
     }
 
-    /// Sinus function
+    /// sine function
     ///
     /// # Example
     ///
@@ -212,7 +212,7 @@ impl<T> Trigonometry for Complex<T>
     ///
     /// assert_eq!(refer, uut);
     /// ```
-    fn sin(self: Self) -> Self
+    fn sin(self) -> Self
     {
         let a: Complex<T> = Complex::new(-self.im, self.re);
         let b: Complex<T> = Complex::new(self.im, -self.re);
@@ -221,7 +221,7 @@ impl<T> Trigonometry for Complex<T>
         (a.exp() - b.exp()) / c
     }
 
-    /// Cosinus function
+    /// Cosine function
     ///
     /// # Example
     ///
@@ -240,7 +240,7 @@ impl<T> Trigonometry for Complex<T>
     ///
     /// assert_eq!(refer, uut);
     /// ```
-    fn cos(self: Self) -> Self
+    fn cos(self) -> Self
     {
         let a: Complex<T> = Complex::new(-self.im, self.re);
         let b: Complex<T> = Complex::new(self.im, -self.re);
@@ -249,7 +249,7 @@ impl<T> Trigonometry for Complex<T>
         (a.exp() + b.exp()) / c
     }
 
-    /// Tangens function
+    /// tangents function
     ///
     /// # Arguments
     ///
@@ -275,7 +275,7 @@ impl<T> Trigonometry for Complex<T>
     ///
     /// assert_eq!(refer, uut);
     /// ```
-    fn tan(self: Self) -> Self
+    fn tan(self) -> Self
     {
         self.sin() / self.cos()
     }
@@ -296,7 +296,7 @@ impl<T> Trigonometry for Complex<T>
     ///
     /// assert_eq!(refer, a.cot());
     /// ```
-    fn cot(self: Self) -> Self
+    fn cot(self) -> Self
     {
         Complex::one() / self.tan()
     }
@@ -317,7 +317,7 @@ impl<T> Trigonometry for Complex<T>
     ///
     /// assert_eq!(refer, a.sec());
     /// ```
-    fn sec(self: Self) -> Self
+    fn sec(self) -> Self
     {
         Complex::one() / self.cos()
     }
@@ -338,7 +338,7 @@ impl<T> Trigonometry for Complex<T>
     ///
     /// assert_eq!(refer, a.csc());
     /// ```
-    fn csc(self: Self) -> Self
+    fn csc(self) -> Self
     {
         Complex::one() / self.sin()
     }
@@ -361,7 +361,7 @@ impl<T> Trigonometry for Complex<T>
     ///
     /// assert_eq!(refer, a.arcsin());
     /// ```
-    fn arcsin(self: Self) -> Self
+    fn arcsin(self) -> Self
     {
         let mi: Complex<T> = Complex::new(T::zero(), -T::one());
         let iz: Complex<T> = Complex::new(-self.im, self.re);
@@ -387,7 +387,7 @@ impl<T> Trigonometry for Complex<T>
     ///
     /// assert_eq!(refer, a.arccos());
     /// ```
-    fn arccos(self: Self) -> Self
+    fn arccos(self) -> Self
     {
         Complex::new(T::pi() / (T::one() + T::one()), T::zero()) - self.arcsin()
     }
@@ -414,7 +414,7 @@ impl<T> Trigonometry for Complex<T>
     ///
     /// assert_eq!(refer, a.arctan());
     /// ```
-    fn arctan(self: Self) -> Self
+    fn arctan(self) -> Self
     {
         //		let iz: Complex<T> = Complex::new(-self.im, self.re);
         //		let f: Complex<T> = Complex::new(T::zero(), T::one() / (T::one() + T::one()));
@@ -467,7 +467,7 @@ impl<T> Trigonometry for Complex<T>
         Complex::new(re, im)
     }
 
-    fn arctan2(self: Self, _other: Self) -> Self
+    fn arctan2(self, _other: Self) -> Self
     {
         unimplemented!()
     }
@@ -492,14 +492,11 @@ impl<T> Trigonometry for Complex<T>
     ///
     /// assert_eq!(refer, a.arccot());
     /// ```
-    fn arccot(self: Self) -> Self
+    fn arccot(self) -> Self
     {
-        if self.re == T::zero()
+        if self.re == T::zero() && (self.im == T::one() || self.im == -T::one())
         {
-            if self.im == T::one() || self.im == -T::one()
-            {
-                panic!()
-            }
+            panic!()
         }
         (Complex::one() / self).arctan()
     }
@@ -524,14 +521,11 @@ impl<T> Trigonometry for Complex<T>
     ///
     /// assert_eq!(refer, a.arcsec());
     /// ```
-    fn arcsec(self: Self) -> Self
+    fn arcsec(self) -> Self
     {
-        if self.im == T::zero()
+        if self.im == T::zero() && (self.re == -T::one() || self.re == T::zero() || self.re == T::one())
         {
-            if self.re == -T::one() || self.re == T::zero() || self.re == T::one()
-            {
-                panic!()
-            }
+            panic!()
         }
 
         (Complex::one() / self).arccos()
@@ -555,7 +549,7 @@ impl<T> Trigonometry for Complex<T>
     ///
     /// assert_eq!(refer, a.arccsc());
     /// ```
-    fn arccsc(self: Self) -> Self
+    fn arccsc(self) -> Self
     {
         (Complex::one() / self).arcsin()
     }

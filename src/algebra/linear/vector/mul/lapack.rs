@@ -9,7 +9,7 @@ impl<T> Mul<Matrix<T>> for Vector<T>
 {
     type Output = Vector<T>;
 
-    fn mul(self: Self, rhs: Matrix<T>) -> Self::Output
+    fn mul(self, rhs: Matrix<T>) -> Self::Output
     {
         &self * &rhs
     }
@@ -20,7 +20,7 @@ impl<'a, 'b, T> Mul<&'b Matrix<T>> for &'a Vector<T>
 {
     type Output = Vector<T>;
 
-    fn mul(self: Self, rhs: &'b Matrix<T>) -> Self::Output
+    fn mul(self, rhs: &'b Matrix<T>) -> Self::Output
     {
         let (rhs_m, _): (usize, usize) = rhs.dim();
         let (_m, n): (usize, usize) = self.dim();
@@ -50,7 +50,7 @@ impl<T> Mul<T> for Vector<T>
     ///
     /// assert_eq!(res_ref, a * -5.0)
     /// ```
-    fn mul(self: Self, rhs: T) -> Self::Output
+    fn mul(self, rhs: T) -> Self::Output
     {
         Vector { data: &self.data * (&rhs) }
     }
@@ -73,7 +73,7 @@ impl<'a, T> Mul<&T> for &'a Vector<T>
     ///
     /// assert_eq!(res_ref, a * 5.0)
     /// ```
-    fn mul(self: Self, rhs: &T) -> Self::Output
+    fn mul(self, rhs: &T) -> Self::Output
     {
         Vector { data: &self.data * rhs }
     }
@@ -96,7 +96,7 @@ impl<'a, 'b, T> Mul<&'b T> for &'a mut Vector<T>
     ///
     /// assert_eq!(res_ref, *(&mut a * &5.0))
     /// ```
-    fn mul(self: Self, rhs: &'b T) -> Self::Output
+    fn mul(self, rhs: &'b T) -> Self::Output
     {
         let _ = &mut self.data * rhs;
         self

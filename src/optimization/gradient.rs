@@ -10,30 +10,30 @@ use std::clone::Clone;
 
 /// Gradient method
 ///
-/// It is assumed that $`f \colon D \in \mathbb{R}^n \to \mathbb{R}`$
+/// It is assumed that $f \colon D \in \mathbb{R}^n \to \mathbb{R}$
 /// The idea is, that in every iteration a step is made in direction of
 /// the anti gradient.
 ///
 /// ```math
 /// x_{k + 1} := x_{k} - \alpha_{k} \nabla f(x_{k})
 /// ```
-/// in order that $` f(x_{k + 1}) < f(x_{k}) `$.
+/// in order that $ f(x_{k + 1}) < f(x_{k}) $.
 ///
-/// input: Function $` f: \mathbb{R}^n \to \mathbb{R} `$, and initial
-/// approximation $` x_{0} \in \mathbb{R}^{n} `$
+/// input: Function $ f: \mathbb{R}^n \to \mathbb{R} $, and initial
+/// approximation $ x_{0} \in \mathbb{R}^{n} $
 ///
-/// output: $` x_{k} `$
+/// output: $ x_{k} $
 ///
-/// 1. Initialization: choose $`\sigma \in (0, 1) `$
+/// 1. Initialization: choose $\sigma \in (0, 1) $
 ///
-///     set  $`k := 0 `$
-/// 2. calculate antigradient $`d_{k} := -\nabla f(x_{k}) `$
+///     set  $k := 0 $
+/// 2. calculate antigradient $d_{k} := -\nabla f(x_{k}) $
 ///
-///     set $` \alpha_{k} := 1 `$
-/// 3. while $`f(x_{k} + \alpha_{k} d_{k}) > f(x_k) + \sigma \alpha_{k} \lvert
-/// \lvert d_{k} \rvert \rvert_{2}^{2} `$     set  $` \alpha_{k} := \alpha_{k}
-/// /2 `$ 4. $` x_{k + 1} := x_{k} + \alpha_{k} d_{k} `$
-/// 5. $` k := k + 1 `$ go to 2.
+///     set $ \alpha_{k} := 1 $
+/// 3. while $f(x_{k} + \alpha_{k} d_{k}) > f(x_k) + \sigma \alpha_{k} \lvert
+/// \lvert d_{k} \rvert \rvert_{2}^{2} $     set  $ \alpha_{k} := \alpha_{k}
+/// /2 $ 4. $ x_{k + 1} := x_{k} + \alpha_{k} d_{k} $
+/// 5. $ k := k + 1 $ go to 2.
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[derive(Clone, Copy, Debug)]
 pub struct Gradient<T>
@@ -69,7 +69,7 @@ impl<T> Gradient<T> where T: Real
 
 impl<T> Gradient<T> where T: Real
 {
-    pub fn minimize<F>(self: &Self, func: &F, x_0: &Vector<T>) -> OptimResult<Vector<T>>
+    pub fn minimize<F>(&self, func: &F, x_0: &Vector<T>) -> OptimResult<Vector<T>>
         where F: Optim<T>
     {
         let mut x_k: Vector<T> = x_0.clone();

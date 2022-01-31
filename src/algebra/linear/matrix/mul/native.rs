@@ -21,7 +21,7 @@ impl<T> Mul<Matrix<T>> for Matrix<T>
     /// let res_ref: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 0.0, -18.0, 49.0]);
     /// assert_eq!(res_ref, a * b);
     /// ```
-    fn mul(mut self: Self, rhs: Self) -> Self::Output
+    fn mul(mut self, rhs: Self) -> Self::Output
     {
         let _ = &mut self * &rhs;
         self
@@ -45,7 +45,7 @@ impl<'a, 'b, T> Mul<&'b Matrix<T>> for &'a Matrix<T>
     /// let res_ref: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 0.0, -18.0, 49.0]);
     /// assert_eq!(res_ref, &a * &b);
     /// ```
-    fn mul(self: Self, rhs: &'b Matrix<T>) -> Self::Output
+    fn mul(self, rhs: &'b Matrix<T>) -> Self::Output
     {
         let (l_rows, l_cols) = self.dim();
         let (_r_rows, r_cols): (usize, usize) = rhs.dim();
@@ -86,7 +86,7 @@ impl<'a, 'b, T> Mul<&'b Matrix<T>> for &'a mut Matrix<T>
     /// let res_ref: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 0.0, -18.0, 49.0]);
     /// assert_eq!(res_ref, *(&mut a * &b));
     /// ```
-    fn mul(self: Self, rhs: &'b Matrix<T>) -> Self::Output
+    fn mul(self, rhs: &'b Matrix<T>) -> Self::Output
     {
         let (l_rows, l_cols) = self.dim();
         let (_r_rows, r_cols): (usize, usize) = rhs.dim();
@@ -200,7 +200,7 @@ impl<'a, 'b, T> Mul<&'b T> for &'a Matrix<T>
     ///
     /// assert_eq!(res_ref, &a * &4.0);
     /// ```
-    fn mul(self: Self, k: &'b T) -> Matrix<T>
+    fn mul(self, k: &'b T) -> Matrix<T>
     {
         let (m, n) = self.dim();
         Matrix { m,
@@ -229,7 +229,7 @@ impl<'a, 'b, T> Mul<&'b T> for &'a mut Matrix<T>
     /// let a: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
     /// let b: Matrix<f64> = &a * &-4.0;
     /// ```
-    fn mul(self: Self, rhs: &'b T) -> Self::Output
+    fn mul(self, rhs: &'b T) -> Self::Output
     {
         let _ = self.data.iter_mut().for_each(&|a: &mut T| *a *= *rhs );
         self

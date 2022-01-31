@@ -4,9 +4,9 @@ use std::iter;
 pub trait Distribution<T>
     where T: Real
 {
-    fn random(self: &Self) -> T;
+    fn random(&self) -> T;
 
-    fn random_sequence(self: &Self, size: u32) -> Vec<T>
+    fn random_sequence(&self, size: u32) -> Vec<T>
     {
         let mut v: Vec<T> = Vec::new();
         v.extend(iter::repeat_with(&|| self.random()).take(size as usize));
@@ -24,34 +24,34 @@ pub trait Continuous<T>
     /// # Arguments
     ///
     /// *`x`:
-    fn pdf(self: &Self, x: T) -> T;
+    fn pdf(&self, x: T) -> T;
 
     /// Cumulative distribution function
     ///
     /// # Arguments
     ///
     /// *`x`:
-    fn cdf(self: &Self, x: T) -> T;
+    fn cdf(&self, x: T) -> T;
 
     /// Quantile function, inverse cdf
-    fn quantile(self: &Self, p: T) -> T;
+    fn quantile(&self, p: T) -> T;
 
     /// Mean
-    fn mean(self: &Self) -> T;
+    fn mean(&self) -> T;
 
     /// Variance
-    fn variance(self: &Self) -> T;
+    fn variance(&self) -> T;
 
     /// Skewness is a measure of the asymmetry of the probability distribution
     /// of a real-valued random variable about its mean
-    fn skewness(self: &Self) -> T;
+    fn skewness(&self) -> T;
 
     /// Median is the value separating the higher half from the lower half of a
     /// probability distribution.
-    fn median(self: &Self) -> T;
+    fn median(&self) -> T;
 
     ///
-    fn entropy(self: &Self) -> T;
+    fn entropy(&self) -> T;
 }
 
 /// Discrete distribution
@@ -62,17 +62,17 @@ pub trait Discrete<T, A, B>
     /// # Arguments
     ///
     /// *`x`:
-    fn pmf(self: &Self, x: A) -> T;
+    fn pmf(&self, x: A) -> T;
 
     ///Cumulative distribution function
     ///
     /// # Arguments
     ///
     /// * `x`:
-    fn cdf(self: &Self, x: B) -> T;
+    fn cdf(&self, x: B) -> T;
 
     /// Mean
-    fn mean(self: &Self) -> T;
+    fn mean(&self) -> T;
 
     /// Variance
     fn variance(self: & Self) -> T;

@@ -10,12 +10,12 @@ macro_rules! impl_real
         impl Real for $t
         {
 
-			fn ceil(self: &Self) -> Self
+			fn ceil(&self) -> Self
 			{
 				(*self).ceil()
 			}
 
-			fn floor(self: &Self) -> Self
+			fn floor(&self) -> Self
 			{
 				(*self).floor()
 			}
@@ -47,12 +47,12 @@ impl_real!(f32, f32; f64, f64);
 pub trait Real: Field + Scalar + Exponential + Trigonometry + Power + Hyperbolic + AbsDiffEq<Epsilon = Self> + RelativeEq
 {
     /// Returns the smallest integer greater than or equal to a number.
-    fn ceil(self: &Self) -> Self;
+    fn ceil(&self) -> Self;
 
     /// Returns the largest integer less than or equal to a number.
-    fn floor(self: &Self) -> Self;
+    fn floor(&self) -> Self;
 
-    fn min(self: Self, a: Self) -> Self
+    fn min(self, a: Self) -> Self
     {
         if self <= a
         {
@@ -64,7 +64,7 @@ pub trait Real: Field + Scalar + Exponential + Trigonometry + Power + Hyperbolic
         }
     }
 
-    fn max(self: Self, a: Self) -> Self
+    fn max(self, a: Self) -> Self
     {
         if self >= a
         {

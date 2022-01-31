@@ -34,14 +34,14 @@ impl Example
 impl Optim<f64> for Example
 {
     // y(x_i) - f(x_i)
-    fn eval(self: &Self, beta: &Vector<f64>) -> Vector<f64>
+    fn eval(&self, beta: &Vector<f64>) -> Vector<f64>
     {
         let f_x = self.x.clone().apply(&|x: &f64| Example::function(*x, beta));
         let r: Vector<f64> = &self.y - &f_x;
         return vector![r.dotp(&r)];
     }
 
-    fn jacobian(self: &Self, beta: &Vector<f64>) -> Matrix<f64>
+    fn jacobian(&self, beta: &Vector<f64>) -> Matrix<f64>
     {
         let (x_m, _x_n) = self.x.dim();
         let (beta_m, _beta_n) = beta.dim();

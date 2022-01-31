@@ -67,7 +67,7 @@ impl<T> Discrete<T, u8, T> for Bernoulli<T> where T: Real
     /// let x: u8 = 0;
     /// let p: f64 = distrib.pmf(x);
     /// ```
-    fn pmf(self: &Self, x: u8) -> T
+    fn pmf(&self, x: u8) -> T
     {
         if (x == 1) || (x == 0)
         {
@@ -99,7 +99,7 @@ impl<T> Discrete<T, u8, T> for Bernoulli<T> where T: Real
     /// let x: f64 = 0.4;
     /// let p: f64 = distrib.cdf(x);
     /// ```
-    fn cdf(self: &Self, x: T) -> T
+    fn cdf(&self, x: T) -> T
     {
         if x >= T::one()
         {
@@ -124,7 +124,7 @@ impl<T> Discrete<T, u8, T> for Bernoulli<T> where T: Real
     /// let distrib: Bernoulli<f64> = Bernoulli::new(0.2);
     /// let mean: f64 = distrib.mean();
     /// ```
-    fn mean(self: &Self) -> T
+    fn mean(&self) -> T
     {
         self.p
     }
@@ -139,7 +139,7 @@ impl<T> Discrete<T, u8, T> for Bernoulli<T> where T: Real
     /// let distrib: Bernoulli<f64> = Bernoulli::new(0.2);
     /// let var: f64 = distrib.variance();
     /// ```
-    fn variance(self: &Self) -> T
+    fn variance(&self) -> T
     {
         self.p * (T::one() - self.p)
     }

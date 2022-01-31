@@ -5,14 +5,14 @@ use super::{Addition, Identity, Magma, Multiplication, Operator};
 /// A quasigroup is a magma which has the divisibility property (or Latin square
 /// property). Divisibility is a weak form of right and left invertibility.
 ///
-/// $`\forall a, b \in \mathbb{Q}, \exists! r, l \in \mathbb{Q}`$ such that $`l
-/// ∘ a = b`$  and $`a ∘ r = b`$
+/// $\forall a, b \in \mathbb{Q}, \exists! r, l \in \mathbb{Q}$ such that $l
+/// ∘ a = b$  and $a ∘ r = b$
 ///
-/// The solutions for $`r`$ and $`l`$ are:
+/// The solutions for $r$ and $l$ are:
 ///
-/// $`r = a \ b`$ and $`l = b / a`$
+/// $r = a \backslash b$ and $l = b / a$
 ///
-/// where $`\`$ is the left and $`/`$ is th right division.
+/// where $\backslash$ is the left and $/$ is th right division.
 pub trait Quasigroup<O: Operator>: Magma<O> + Identity<O> + PartialEq
 {
 

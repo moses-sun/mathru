@@ -1,20 +1,19 @@
-/// Exponential function and its inverse
-///
-///<https://en.wikipedia.org/wiki/Exponential_function>
-
 use std::{f32, f64};
 use crate::algebra::abstr::{Complex, Real, Sign};
 
+/// Exponential function and its inverse
+///
+///<https://en.wikipedia.org/wiki/Exponential_function>
 pub trait Exponential
 {
     /// Euler's number
     fn e() -> Self;
 
     ///Exponential function
-    fn exp(self: Self) -> Self;
+    fn exp(self) -> Self;
 
-    /// Natural logiarithm function
-    fn ln(self: Self) -> Self;
+    /// Natural logarithm function
+    fn ln(self) -> Self;
 }
 
 macro_rules! exponential_impl {
@@ -28,13 +27,13 @@ macro_rules! exponential_impl {
             }
 
             ///Exponential function
-            fn exp(self: Self) -> Self
+            fn exp(self) -> Self
             {
                 self.exp()
             }
 
             ///Logarithm function
-            fn ln(self: Self) -> Self
+            fn ln(self) -> Self
             {
                 self.ln()
             }
@@ -66,7 +65,7 @@ impl<T> Exponential for Complex<T>
     /// let z: Complex<f64> = Complex::new(1.0, 2.0);
     /// let a: Complex<f64> = z.exp();
     /// ```
-    fn exp(self: Self) -> Self
+    fn exp(self) -> Self
     {
         let k: T = self.re.exp();
         Complex { re: k * self.im.cos(), im: k * self.im.sin() }
@@ -85,7 +84,7 @@ impl<T> Exponential for Complex<T>
     ///
     /// assert_eq!(refer, a.ln());
     /// ```
-    fn ln(self: Self) -> Self
+    fn ln(self) -> Self
     {
         Complex { re: self.abs().re.ln(), im: self.arg().re }
     }
@@ -111,7 +110,7 @@ impl<T> Exponential for Complex<T>
     /// let z: Complex<f64> = Complex::new(1.0, 2.0);
     /// let a: Complex<f64> = z.exp();
     /// ```
-    fn exp(self: Self) -> Self
+    fn exp(self) -> Self
     {
         let k: T = self.re.exp();
         Complex { re: k * self.im.cos(), im: k * self.im.sin() }
@@ -129,7 +128,7 @@ impl<T> Exponential for Complex<T>
     ///
     /// assert_eq!(refer, a.ln());
     /// ```
-    fn ln(self: Self) -> Self
+    fn ln(self) -> Self
     {
         Complex { re: self.abs().re.ln(), im: self.arg().re }
     }

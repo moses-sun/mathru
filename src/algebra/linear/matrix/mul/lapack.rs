@@ -10,7 +10,7 @@ impl<'a, 'b, T> Mul<&'b Vector<T>> for &'a Matrix<T>
 {
     type Output = Vector<T>;
 
-    fn mul(self: Self, v: &'b Vector<T>) -> Vector<T>
+    fn mul(self, v: &'b Vector<T>) -> Vector<T>
     {
         let (_self_m, self_n): (usize, usize) = self.dim();
         let (v_m, _v_n): (usize, usize) = v.dim();
@@ -65,7 +65,7 @@ impl<T> Mul<Matrix<T>> for Matrix<T>
     /// let res_ref: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 0.0, -18.0, 49.0]);
     /// assert_eq!(res_ref, a * b);
     /// ```
-    fn mul(self: Self, rhs: Self) -> Self::Output
+    fn mul(self, rhs: Self) -> Self::Output
     {
         (&self).mul(&rhs)
     }
@@ -88,7 +88,7 @@ impl<'a, 'b, T> Mul<&'b Matrix<T>> for &'a Matrix<T>
     /// let res_ref: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 0.0, -18.0, 49.0]);
     /// assert_eq!(res_ref, &a * &b);
     /// ```
-    fn mul(self: Self, rhs: &'b Matrix<T>) -> Self::Output
+    fn mul(self, rhs: &'b Matrix<T>) -> Self::Output
     {
         let (self_rows, self_cols) = self.dim();
         let (rhs_rows, rhs_cols) = rhs.dim();
@@ -135,7 +135,7 @@ impl<'a, 'b, T> Mul<&'b Matrix<T>> for &'a mut Matrix<T>
     /// let res_ref: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 0.0, -18.0, 49.0]);
     /// assert_eq!(res_ref, *(&mut a * &b));
     /// ```
-    fn mul(self: Self, rhs: &'b Matrix<T>) -> Self::Output
+    fn mul(self, rhs: &'b Matrix<T>) -> Self::Output
     {
         let (self_rows, self_cols) = self.dim();
         let (rhs_rows, rhs_cols) = rhs.dim();
@@ -167,7 +167,7 @@ impl<'a, 'b, T> Mul<&'b Matrix<T>> for &'a mut Matrix<T>
 impl<'a, 'b, T> Matrix<T>
     where T: Field + Scalar
 {
-    fn mul_scalar(mut self: Self, s: &'b T) -> Matrix<T>
+    fn mul_scalar(mut self, s: &'b T) -> Matrix<T>
     {
         let (rows, cols): (usize, usize) = self.dim();
         //
@@ -222,7 +222,7 @@ impl<'a, 'b, T> Mul<&'b T> for &'a Matrix<T>
     ///
     /// assert_eq!(res_ref, &a * &4.0);
     /// ```
-    fn mul(self: Self, m: &'b T) -> Matrix<T>
+    fn mul(self, m: &'b T) -> Matrix<T>
     {
         return self.clone().mul_scalar(m);
     }
@@ -246,7 +246,7 @@ impl<'a, 'b, T> Mul<&'b T> for &'a mut Matrix<T>
     ///
     /// assert_eq!(res_ref, *(&mut a * &4.0));
     /// ```
-    fn mul(self: Self, m: &'b T) -> Self::Output
+    fn mul(self, m: &'b T) -> Self::Output
     {
         let _ = self.data.iter_mut().for_each(&|a: &mut T| *a *= *m );
         self

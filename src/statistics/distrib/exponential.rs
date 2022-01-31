@@ -82,7 +82,7 @@ impl<T> Continuous<T> for Exponential<T> where T: Real
     /// let x: f64 = 5.0;
     /// let p: f64 = distrib.pdf(x);
     /// ```
-    fn pdf(self: &Self, x: T) -> T
+    fn pdf(&self, x: T) -> T
     {
         if x < T::zero()
         {
@@ -107,7 +107,7 @@ impl<T> Continuous<T> for Exponential<T> where T: Real
     /// let x: f64 = 0.4;
     /// let p: f64 = distrib.cdf(x);
     /// ```
-    fn cdf(self: &Self, x: T) -> T
+    fn cdf(&self, x: T) -> T
     {
         if x < T::zero()
         {
@@ -118,7 +118,7 @@ impl<T> Continuous<T> for Exponential<T> where T: Real
     }
 
     /// Quantile function of inverse cdf
-    fn quantile(self: &Self, p: T) -> T
+    fn quantile(&self, p: T) -> T
     {
         -(T::one() - p).ln() / self.lambda
     }
@@ -133,7 +133,7 @@ impl<T> Continuous<T> for Exponential<T> where T: Real
     /// let distrib: Exponential<f64> = Exponential::new(0.2);
     /// let mean: f64 = distrib.mean();
     /// ```
-    fn mean(self: &Self) -> T
+    fn mean(&self) -> T
     {
         T::one() / self.lambda
     }
@@ -148,25 +148,25 @@ impl<T> Continuous<T> for Exponential<T> where T: Real
     /// let distrib: Exponential<f64> = Exponential::new(0.2);
     /// let var: f64 = distrib.variance();
     /// ```
-    fn variance(self: &Self) -> T
+    fn variance(&self) -> T
     {
         T::one() / self.lambda.pow(T::from_u8(2))
     }
 
     ///
-    fn skewness(self: &Self) -> T
+    fn skewness(&self) -> T
     {
         T::from_f64(2.0)
     }
 
     ///
-    fn median(self: &Self) -> T
+    fn median(&self) -> T
     {
         T::from_f64(2.0).ln() / self.lambda
     }
 
     ///
-    fn entropy(self: &Self) -> T
+    fn entropy(&self) -> T
     {
         T::one() - self.lambda.ln()
     }
@@ -174,7 +174,7 @@ impl<T> Continuous<T> for Exponential<T> where T: Real
 
 impl<T> Exponential<T> where T: Real
 {
-    pub fn random(self: &Self) -> T
+    pub fn random(&self) -> T
     {
         let y: T = T::from_f64(rand::random::<f64>());
         let p: T = self.quantile(y);

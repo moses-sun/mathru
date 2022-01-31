@@ -67,7 +67,7 @@ impl<T> Continuous<T> for ChiSquare<T>
     /// let x: f64 = 5.0;
     /// let p: f64 = distrib.pdf(x);
     /// ```
-    fn pdf(self: &Self, x: T) -> T
+    fn pdf(&self, x: T) -> T
     {
         if x < T::zero()
         {
@@ -97,7 +97,7 @@ impl<T> Continuous<T> for ChiSquare<T>
     /// let x: f64 = 0.4;
     /// let p: f64 = distrib.cdf(x);
     /// ```
-    fn cdf(self: &Self, x: T) -> T
+    fn cdf(&self, x: T) -> T
     {
         let t1: T = (-x / T::from_f64(2.0)).exp();
 
@@ -129,7 +129,7 @@ impl<T> Continuous<T> for ChiSquare<T>
     }
 
     /// Quantile function or inverse cdf
-    fn quantile(self: &Self, p: T) -> T
+    fn quantile(&self, p: T) -> T
     {
         T::from_f64(2.0) * (self.k / T::from_f64(2.0)).gamma_ur_inv(T::from_f64(1.0) - p)
     }
@@ -144,7 +144,7 @@ impl<T> Continuous<T> for ChiSquare<T>
     /// let distrib: ChiSquare<f64> = ChiSquare::new(2);
     /// let mean: f64 = distrib.mean();
     /// ```
-    fn mean(self: &Self) -> T
+    fn mean(&self) -> T
     {
         self.k
     }
@@ -159,21 +159,21 @@ impl<T> Continuous<T> for ChiSquare<T>
     /// let distrib: ChiSquare<f64> = ChiSquare::new(2);
     /// let var: f64 = distrib.variance();
     /// ```
-    fn variance(self: &Self) -> T
+    fn variance(&self) -> T
     {
         T::from_f64(2.0) * self.k
     }
 
     /// Skewness is a measure of the asymmetry of the probability distribution
     /// of a real-valued random variable about its mean
-    fn skewness(self: &Self) -> T
+    fn skewness(&self) -> T
     {
         (T::from_f64(8.0) / self.k).sqrt()
     }
 
     /// Median is the value separating the higher half from the lower half of a
     /// probability distribution.
-    fn median(self: &Self) -> T
+    fn median(&self) -> T
     {
         let t: T = T::one() - T::from_f64(2.0 / 9.0) / self.k;
 
@@ -181,7 +181,7 @@ impl<T> Continuous<T> for ChiSquare<T>
     }
 
     ///
-    fn entropy(self: &Self) -> T
+    fn entropy(&self) -> T
     {
         let d: T = T::from_f64(2.0) / self.k;
         d + (T::from_f64(2.0) * gamma::gamma(d)).ln() + (T::one() - d) * gamma::digamma(d)

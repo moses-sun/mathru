@@ -4,9 +4,10 @@ use crate::analysis::integral::gauss_legendre::root_weight::RootWeight;
 #[cfg(feature = "serde")]
 use serde::{Deserialize, Serialize};
 
+/// Gauss Legendre quadrature
 ///
 /// ```math
-/// \int_{a}^{b}f(x)\,dx = \frac{b - a}{2}\sum_{i=1}^{n}f(\frac{b - a}{2}x_i + \frac{a + b}{2})a_i
+/// \int_{a}^{b}f(x)\,dx \approx \frac{b - a}{2}\sum_{i=1}^{n}f(\frac{b - a}{2}x_i + \frac{a + b}{2})\alpha_i
 /// ```
 ///
 /// <https://en.wikipedia.org/wiki/Gaussian_quadrature#Gauss-Legendre_quadrature>
@@ -47,26 +48,23 @@ impl<T> GaussLegendre<T>
     /// ```
     pub fn new(n: u8) -> GaussLegendre<T>
     {
-        if n < 1 || n > 9
+        if !(1..=9).contains(&n)
         {
             panic!("n is not within the limits");
         }
 
-        return GaussLegendre{
+        GaussLegendre{
             root_weight: RootWeight::new(n)
         }
     }
 
-    ///
-    /// ```math
-    /// \int_{a}^{b}f(x)\,dx = \frac{b - a}{2}\sum_{i=1}^{n}f(\frac{b - a}{2}x_i + \frac{a + b}{2})a_i
-    /// ```
+
+    /// Integrate function f from lower bound a to upper bound b
     ///
     /// # Arguments
-    /// * a
-    /// * b
-    /// #
-    pub fn integrate<F>(self: &Self, f: F, a: T, b: T) -> T
+    /// * a: lower bound of the definite integral
+    /// * b: upper bound of the definite integral
+    pub fn integrate<F>(&self, f: F, a: T, b: T) -> T
         where
             F: Fn(T) -> T,
     {

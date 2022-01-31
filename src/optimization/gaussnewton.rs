@@ -40,7 +40,7 @@ impl<T> GaussNewton<T> where T: Real
     /// # Return
     ///
     /// local minimum
-    pub fn minimize<F>(self: &Self, func: &F, x_0: &Vector<T>) -> Result<OptimResult<Vector<T>>, ()>
+    pub fn minimize<F>(&self, func: &F, x_0: &Vector<T>) -> Result<OptimResult<Vector<T>>, ()>
         where F: Optim<T>
     {
         let mut x_n: Vector<T> = x_0.clone();

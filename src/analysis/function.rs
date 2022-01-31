@@ -1,5 +1,5 @@
 pub trait Function<Domain>
 {
     type Codomain;
-    fn eval(self: &Self, input: &Domain) -> Self::Codomain;
+    fn eval(&self, input: &Domain) -> Self::Codomain;
 }

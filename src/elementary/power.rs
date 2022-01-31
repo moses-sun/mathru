@@ -6,28 +6,28 @@ use crate::algebra::abstr::Sign;
 ///<https://en.wikipedia.org/wiki/Exponentiation#Power_functions>
 pub trait Power
 {
-    fn pow(self: Self, exp: Self) -> Self;
+    fn pow(self, exp: Self) -> Self;
 
-    fn root(self: Self, root: Self) -> Self;
+    fn root(self, root: Self) -> Self;
 
-    fn sqrt(self: Self) -> Self;
+    fn sqrt(self) -> Self;
 }
 
 macro_rules! power_impl {
     ($t:ty) => {
         impl Power for $t
         {
-            fn pow(self: Self, exp: Self) -> Self
+            fn pow(self, exp: Self) -> Self
             {
                 self.powf(exp)
             }
 
-            fn root(self: Self, root: Self) -> Self
+            fn root(self, root: Self) -> Self
             {
                 self.powf(1.0 / root)
             }
 
-            fn sqrt(self: Self) -> Self
+            fn sqrt(self) -> Self
             {
                 self.powf(0.5)
             }
@@ -42,17 +42,17 @@ macro_rules! power_impl_integer {
     ($t:ty) => {
         impl Power for $t
         {
-            fn pow(self: Self, _exp: Self) -> Self
+            fn pow(self, _exp: Self) -> Self
             {
                 unimplemented!();
             }
 
-            fn root(self: Self, _root: Self) -> Self
+            fn root(self, _root: Self) -> Self
             {
                 unimplemented!();
             }
 
-            fn sqrt(self: Self) -> Self
+            fn sqrt(self) -> Self
             {
                 unimplemented!();
             }
@@ -90,7 +90,7 @@ impl<T> Power for Complex<T>
     ///
     /// assert_eq!(refer, a.pow(b));
     /// ```
-    fn pow(self: Self, exp: Self) -> Self
+    fn pow(self, exp: Self) -> Self
     {
         let r: T = self.abs().re;
         let phi: T = self.arg().re;
@@ -102,16 +102,16 @@ impl<T> Power for Complex<T>
         Complex::new(re, im)
     }
 
-    fn root(self: Self, _root: Self) -> Self
+    fn root(self, _root: Self) -> Self
     {
         unimplemented!();
     }
 
-    fn sqrt(self: Self) -> Self
+    fn sqrt(self) -> Self
     {
         let arg = self.arg().re * T::from_f64(0.5);
         let abs = self.abs().re.sqrt();
 
-        Complex::new(abs.clone() * (arg.cos()), abs * (arg.sin()))
+        Complex::new(abs * (arg.cos()), abs * (arg.sin()))
     }
 }

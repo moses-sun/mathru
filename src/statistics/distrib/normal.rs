@@ -116,7 +116,7 @@ impl<T> Continuous<T> for Normal<T>
     /// let x: f64 = 5.0;
     /// let p: f64 = distrib.pdf(x);
     /// ```
-    fn pdf(self: &Self, x: T) -> T
+    fn pdf(&self, x: T) -> T
     {
         let z: T = T::from_f64(-0.5) * ((x - self.mean) / self.variance).pow(T::from_f64(2.0));
         let f: T = T::one() / (self.variance * T::from_f64(2.0) * T::pi()).sqrt();
@@ -139,7 +139,7 @@ impl<T> Continuous<T> for Normal<T>
     /// let x: f64 = 0.4;
     /// let p: f64 = distrib.cdf(x);
     /// ```
-    fn cdf(self: &Self, x: T) -> T
+    fn cdf(&self, x: T) -> T
     {
         let k: T = (x - self.mean) / ((T::from_f64(2.0) * self.variance).sqrt());
         let prob: T = T::from_f64(0.5) * (T::one() + error::erf(k));
@@ -157,7 +157,7 @@ impl<T> Continuous<T> for Normal<T>
     /// # Panics
     ///
     /// if  p <= 0.0 || p >= 1.0
-    fn quantile(self: &Self, p: T) -> T
+    fn quantile(&self, p: T) -> T
     {
         if p <= T::zero() || p >= T::one()
         {
@@ -220,7 +220,7 @@ impl<T> Continuous<T> for Normal<T>
     /// let distrib: Normal<f64> = Normal::new(0.0, 0.2);
     /// let mean: f64 = distrib.mean();
     /// ```
-    fn mean(self: &Self) -> T
+    fn mean(&self) -> T
     {
         self.mean
     }
@@ -238,7 +238,7 @@ impl<T> Continuous<T> for Normal<T>
     /// let distrib: Normal<f64> = Normal::new(0.0, 0.2);
     /// let var: f64 = distrib.variance();
     /// ```
-    fn variance(self: &Self) -> T
+    fn variance(&self) -> T
     {
         self.variance
     }
@@ -257,7 +257,7 @@ impl<T> Continuous<T> for Normal<T>
     /// let distrib: Normal<f64> = Normal::new(mean, variance);
     /// assert_eq!(0.0, distrib.skewness());
     /// ```
-    fn skewness(self: &Self) -> T
+    fn skewness(&self) -> T
     {
         T::zero()
     }
@@ -277,7 +277,7 @@ impl<T> Continuous<T> for Normal<T>
     /// let distrib: Normal<f64> = Normal::new(mean, 0.2);
     /// let median: f64 = distrib.median();
     /// ```
-    fn median(self: &Self) -> T
+    fn median(&self) -> T
     {
         self.mean
     }
@@ -299,7 +299,7 @@ impl<T> Continuous<T> for Normal<T>
     ///
     /// let entropy: f64 =  distrib.entropy();
     /// ```
-    fn entropy(self: &Self) -> T
+    fn entropy(&self) -> T
     {
         T::from_f64(2.0) * T::pi() * T::e() * self.variance
     }
@@ -309,7 +309,7 @@ impl<T> Distribution<T> for Normal<T> where T: Real
 {
     ///
     ///  See Knuth The Art of Computer Programming Vol 2 3.4.1 C Algorithm P
-    fn random(self: &Self) -> T
+    fn random(&self) -> T
     {
         let mut s: T = T::one();
         let mut v1: T = T::one();

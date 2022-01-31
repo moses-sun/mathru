@@ -19,17 +19,17 @@ impl<T> Matrix<T>
         n
     }
 
-    fn gather(self: &Self, i: usize, j: usize, b: usize) -> usize
+    fn gather(&self, i: usize, j: usize, b: usize) -> usize
     {
         (i + (j / b)) % self.m
     }
 
-    fn gather_sa(self: &Self, i: usize, j: usize, a: usize) -> usize
+    fn gather_sa(&self, i: usize, j: usize, a: usize) -> usize
     {
         (j + i * self.n - i / a) % self.m
     }
 
-    fn scatter_da(self: &Self, i: usize, j: usize, b: usize) -> usize
+    fn scatter_da(&self, i: usize, j: usize, b: usize) -> usize
     {
         (((i + j / b) % self.m) + j * self.m) % self.n
     }
@@ -61,13 +61,11 @@ impl<T> Transpose for Matrix<T>
     /// assert_relative_eq!(refer, uut);
     /// # }
     /// ```
-    fn transpose(mut self: Self) -> Matrix<T>
+    fn transpose(mut self) -> Matrix<T>
     {
         let gcdiv: usize = Matrix::<T>::gcd(self.m, self.n);
 
-        let temp_m: usize = self.m;
-        self.m = self.n;
-        self.n = temp_m;
+        std::mem::swap(&mut self.m, &mut self.n);
 
         let a: usize = self.m / gcdiv;
         let b: usize = self.n / gcdiv;

@@ -43,7 +43,7 @@ impl<T> Default for NewtonRaphson<T> where T: Real
 
 impl<T> NewtonRaphson<T> where T: Real
 {
-    pub fn find_root<F>(self: &Self, func: &F, x_0: &Vector<T>) -> Result<Vector<T>, &'static str>
+    pub fn find_root<F>(&self, func: &F, x_0: &Vector<T>) -> Result<Vector<T>, &'static str>
         where F: Function<Vector<T>, Codomain = Vector<T>> + Jacobian<T>
     {
         let mut x = x_0.clone();

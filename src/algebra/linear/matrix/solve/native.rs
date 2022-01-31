@@ -10,7 +10,7 @@ impl<T> Solve<Vector<T>> for Matrix<T>
 {
     /// Solves Ax = y
     /// where A \in R^{m * n}, x \in R^n, y \in R^m
-    fn solve(self: &Self, rhs: &Vector<T>) -> Result<Vector<T>, ()>
+    fn solve(&self, rhs: &Vector<T>) -> Result<Vector<T>, ()>
     {
         self.dec_lu()?.solve(rhs)
     }
@@ -19,7 +19,7 @@ impl<T> Solve<Vector<T>> for Matrix<T>
 impl<T> Solve<Matrix<T>> for Matrix<T>
     where T: Field + Scalar + AbsDiffEq
 {
-    fn solve(self: &Self, rhs: &Matrix<T>) -> Result<Matrix<T>, ()>
+    fn solve(&self, rhs: &Matrix<T>) -> Result<Matrix<T>, ()>
     {
         self.dec_lu()?.solve(rhs)
     }

@@ -37,7 +37,7 @@ impl<T> Iterator for ClosedFixedIntervalIterator<T>
 
         self.next = ret_val + self.h;
 
-        return if ret_val > self.upper {
+        if ret_val > self.upper {
             None
         } else {
             Some(ret_val)

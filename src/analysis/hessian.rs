@@ -6,5 +6,5 @@ use crate::algebra::{
 pub trait Hessian<T>
     where T: Real
 {
-    fn hessian(self: &Self, input: &Vector<T>) -> Matrix<T>;
+    fn hessian(&self, input: &Vector<T>) -> Matrix<T>;
 }

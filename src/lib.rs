@@ -1,38 +1,6 @@
-#![doc(html_favicon_url = "\">
-<script defer src=\"https://cdn.jsdelivr.net/npm/katex@0.10.1/dist/katex.min.js\" integrity=\"sha384-2BKqo+exmr9su6dir+qCw08N2ZKRucY4PrGQPPWU1A7FtlCGjmEGFqXCv5nyM5Ij\" crossorigin=\"anonymous\"></script>
-<script>
-document.addEventListener(\"DOMContentLoaded\", function () {
-	let to_do = [];
-	for (let e of document.getElementsByTagName(\"code\")) {
-		if (e.classList.contains(\"language-math\")) {
-			to_do.push(function () {
-				let x = document.createElement('p');
-				katex.render(e.innerText, x, {displayMode: true, throwOnError: false});
-				e.parentNode.parentNode.replaceChild(x, e.parentNode);
-			});
-		} else {
-			let n = e.nextSibling; let p = e.previousSibling;
-			if (n && p && /^\\$/.test(n.data) && /\\$$/.test(p.data)) {
-				to_do.push(function () {
-					let n = e.nextSibling; let p = e.previousSibling;
-					let x = document.createElement('span');
-					katex.render(e.innerText, x, {throwOnError: false});
-					e.parentNode.replaceChild(x, e);
-					n.splitText(1); n.remove();
-					p.splitText(p.data.length - 1).remove();
-				});
-			}
-		}
-	}
-	for (let f of to_do) f();
-});
-</script>
-<link rel=\"stylesheet\" href=\"https://cdn.jsdelivr.net/npm/katex@0.10.1/dist/katex.min.css\" integrity=\"sha384-dbVIfZGuN1Yq7/1Ocstc1lUEm+AT+/rCkibIcC/OmWo5f0EA48Vf8CytHzGrSwbQ\" crossorigin=\"anonymous")]
-
 //! # mathru
 //!
 //! A crate that provides  mathematics functions implemented entirely in Rust.
-//!
 //!
 //! ## Usage
 //!
@@ -44,7 +12,7 @@ document.addEventListener(\"DOMContentLoaded\", function () {
 //!
 //! ```toml
 //! [dependencies]
-//! mathru = "0.10"
+//! mathru = "0.11"
 //! ```
 //!
 //! Then it is ready to be used:
@@ -74,7 +42,7 @@ document.addEventListener(\"DOMContentLoaded\", function () {
 //! ```
 //!
 //!```
-//! use mathru::*;
+//! use mathru::vector;
 //! use mathru::algebra::linear::{Vector, Matrix};
 //! use mathru::statistics::distrib::{Distribution, Normal};
 //! use mathru::optimization::{Optim, LevenbergMarquardt};
@@ -112,14 +80,14 @@ document.addEventListener(\"DOMContentLoaded\", function () {
 //! impl Optim<f64> for Example
 //! {
 //!     // y(x_i) - f(x_i)
-//!     fn eval(self: &Self, beta: &Vector<f64>) -> Vector<f64>
+//!     fn eval(&self, beta: &Vector<f64>) -> Vector<f64>
 //!     {
 //!         let f_x = self.x.clone().apply(&|x: &f64| Example::function(*x, beta));
 //!         let r: Vector<f64> = &self.y - &f_x;
 //!         return vector![r.dotp(&r)];
 //!     }
 //!
-//!     fn jacobian(self: &Self, beta: &Vector<f64>) -> Matrix<f64>
+//!     fn jacobian(&self, beta: &Vector<f64>) -> Matrix<f64>
 //!     {
 //!         let (x_m, _x_n) = self.x.dim();
 //!         let (beta_m, _beta_n) = beta.dim();

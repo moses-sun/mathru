@@ -25,8 +25,8 @@ use std::clone::Clone;
 /// ```math
 /// 0 = -4(y(t) -2) - y(t)^{'} = f(t, y, y^{'})
 /// ```
-/// The initial condition is $`y(0) = 1.0`$ and we solve it in the interval
-/// $`\lbrack 0, 2\rbrack`$.\ The following equation is the closed solution for
+/// The initial condition is $y(0) = 1.0$ and we solve it in the interval
+/// $\lbrack 0, 2\rbrack$.\ The following equation is the closed solution for
 /// this ODE:
 /// ```math
 /// y(t) = 2 - e^{-t}
@@ -59,24 +59,24 @@ use std::clone::Clone;
 ///
 /// impl ImplicitODE<f64> for ImplicitODEExample
 /// {
-///     fn func(self: &Self, _t: &f64, x: &Vector<f64>) -> Vector<f64>
+///     fn func(&self, _t: &f64, x: &Vector<f64>) -> Vector<f64>
 ///     {
 ///         let result = (x * &-4.0) + 8.0;
 ///         return result;
 ///     }
 ///
-///     fn jacobian(self: &Self, _t: &f64, _input: &Vector<f64>) -> Matrix<f64>
+///     fn jacobian(&self, _t: &f64, _input: &Vector<f64>) -> Matrix<f64>
 ///     {
 ///         let jacobian = matrix![-4.0];
 ///         return jacobian;
 ///     }
 ///
-///     fn time_span(self: &Self) -> (f64, f64)
+///     fn time_span(&self) -> (f64, f64)
 ///     {
 ///         return self.time_span;
 ///     }
 ///
-///     fn init_cond(self: &Self) -> Vector<f64>
+///     fn init_cond(&self) -> Vector<f64>
 ///     {
 ///         return self.init_cond.clone();
 ///     }
@@ -110,18 +110,18 @@ impl<T> ImplicitEuler<T> where T: Real
         ImplicitEuler { stepper: ImplicitFixedStepper::new(step_size), root_finder: NewtonRaphson::new(100, T::from_f64(0.00000001)) }
     }
 
-    pub fn solve<F>(self: &Self, prob: &F) -> Result<(Vec<T>, Vec<Vector<T>>), ()>
+    pub fn solve<F>(&self, prob: &F) -> Result<(Vec<T>, Vec<Vector<T>>), ()>
         where F: ImplicitODE<T>
     {
         self.stepper.solve(prob, self)
     }
 
-    pub fn get_step_size(self: &Self) -> &T
+    pub fn get_step_size(&self) -> &T
     {
         self.stepper.get_step_size()
     }
 
-    pub fn set_step_size(self: &mut Self, step_size: T)
+    pub fn set_step_size(&mut self, step_size: T)
     {
         self.stepper.set_step_size(step_size)
     }
@@ -129,7 +129,7 @@ impl<T> ImplicitEuler<T> where T: Real
 
 impl<T> ImplicitFixedStepSizeMethod<T> for ImplicitEuler<T> where T: Real
 {
-    fn do_step<F>(self: &Self, prob: &F, t_n: &T, x_n: &Vector<T>, h: &T) -> Vector<T>
+    fn do_step<F>(&self, prob: &F, t_n: &T, x_n: &Vector<T>, h: &T) -> Vector<T>
         where F: ImplicitODE<T>
     {
         let t: T = *t_n + *h;
@@ -140,7 +140,7 @@ impl<T> ImplicitFixedStepSizeMethod<T> for ImplicitEuler<T> where T: Real
     }
 
     /// Euler's method is a first order method
-    fn order(self: &Self) -> u8
+    fn order(&self) -> u8
     {
         1
     }
@@ -178,12 +178,12 @@ impl<'a, T, F> Function<Vector<T>> for ImplicitEulerHelper<'a, T, F>
 {
     type Codomain = Vector<T>;
 
-    ///$`x(t_{n+1}) = y(t_n) + hf(t_{n+1}, x(t_{n+1})`$
+    ///$x(t_{n+1}) = y(t_n) + hf(t_{n+1}, x(t_{n+1})$
     ///
-    /// g(z) = y(t_n) + hf(t_{n+1}, z) - z)`$
-    fn eval(self: &Self, z: &Vector<T>) -> Vector<T>
+    /// g(z) = y(t_n) + hf(t_{n+1}, z) - z)$
+    fn eval(&self, z: &Vector<T>) -> Vector<T>
     {
-        &(self.x + &(&self.function.func(&self.t, z) * self.h)) - z
+        &(self.x + &(&self.function.func(self.t, z) * self.h)) - z
     }
 }
 
@@ -191,9 +191,9 @@ impl<'a, T, F> Jacobian<T> for ImplicitEulerHelper<'a, T, F>
     where T: Real,
           F: ImplicitODE<T>
 {
-    /// $` \frac{\partial g(z)}{\partial z} = h \frac{\partial f(t_{n+1},
-    /// z)}{\partial z} - I`$
-    fn jacobian(self: &Self, z: &Vector<T>) -> Matrix<T>
+    /// $ \frac{\partial g(z)}{\partial z} = h \frac{\partial f(t_{n+1},
+    /// z)}{\partial z} - I$
+    fn jacobian(&self, z: &Vector<T>) -> Matrix<T>
     {
         let (m, _n): (usize, usize) = z.dim();
         self.function.jacobian(&self.t, z) * *self.h - Matrix::one(m)

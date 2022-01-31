@@ -12,20 +12,20 @@ use std::clone::Clone;
 
 /// Levenberg-Marquardt method
 ///
-/// input: $` f \colon \mathbb{R}^{n} \to \mathbb{R} `$ with initial
-/// approximation $` x_{0} \in \mathbb{R}^{n} `$
+/// input: $ f \colon \mathbb{R}^{n} \to \mathbb{R} $ with initial
+/// approximation $ x_{0} \in \mathbb{R}^{n} $
 ///
-/// output: $` x_{k} `$
+/// output: $ x_{k} $
 ///
-/// 1. Initialization: $`0 \leq \rho^{-} < \rho^{+} \leq 1 `$, set $` k := 0 `$
+/// 1. Initialization: $0 \leq \rho^{-} < \rho^{+} \leq 1 $, set $ k := 0 $
 /// 2. Solve the equation
-/// 3. $`\rho = \frac{\lvert \lvert f(x_{k}) \rvert \rvert_{2}^{2} - \lvert
+/// 3. $\rho = \frac{\lvert \lvert f(x_{k}) \rvert \rvert_{2}^{2} - \lvert
 /// \lvert f(x_{k+1}) \rvert \rvert_{2}^{2}}{2d_{k}^{T}(f^{'}(x_{k})
-/// )^T f(x_{k})}`$
-/// 4. if $`\rho_{k} > \rho^{-} `$ than $` x_{k + 1} := x_{k} + d_{k}`$, else
-/// $`\Delta_{k + 1} := \Delta_{k}/2`$ and go to 2. 5. if $`\rho_{k} > \rho^{+}
-/// `$ than $` \Delta_{k + 1} := 2\Delta_{k}`$, else $`\Delta_{k + 1} :=
-/// \Delta_{k}`$ 6. set $` k:= k + 1 `$, go to 2.
+/// )^T f(x_{k})}$
+/// 4. if $\rho_{k} > \rho^{-} $ than $ x_{k + 1} := x_{k} + d_{k}$, else
+/// $\Delta_{k + 1} := \Delta_{k}/2$ and go to 2. 5. if $\rho_{k} > \rho^{+}
+/// $ than $ \Delta_{k + 1} := 2\Delta_{k}$, else $\Delta_{k + 1} :=
+/// \Delta_{k}$ 6. set $ k:= k + 1 $, go to 2.
 ///
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[derive(Clone, Copy, Debug)]
@@ -58,7 +58,7 @@ impl<T> LevenbergMarquardt<T> where T: Real
     /// # Return
     ///
     /// local minimum
-    pub fn minimize<F>(self: &Self, func: &F, x_0: &Vector<T>) -> Result<OptimResult<Vector<T>>, ()>
+    pub fn minimize<F>(&self, func: &F, x_0: &Vector<T>) -> Result<OptimResult<Vector<T>>, ()>
         where F: Optim<T>
     {
         let mut x_n: Vector<T> = x_0.clone();

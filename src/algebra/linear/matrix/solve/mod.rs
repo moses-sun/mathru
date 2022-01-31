@@ -6,7 +6,7 @@ pub mod native;
 pub trait Solve<T>
 {
     /// A * x = b
-    fn solve(self: &Self, rhs: &T) -> Result<T, ()>;
+    fn solve(&self, rhs: &T) -> Result<T, ()>;
 }
 // #[cfg(feature = "lapack")]
 // pub use self::lapack::Solve;

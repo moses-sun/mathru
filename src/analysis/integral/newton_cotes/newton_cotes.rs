@@ -51,7 +51,7 @@ impl<T> NewtonCotes<T>
     /// ```
     pub fn new(n: u8) -> NewtonCotes<T>
     {
-        if n < 1 || n > 5
+        if !(1..=5).contains(&n)
         {
             panic!("'n' is out of bounds");
         }
@@ -78,7 +78,7 @@ impl<T> NewtonCotes<T>
     /// * 'b'
     ///  num_subintervals: \[a,b\] into smaller subintervals,
     /// #
-    pub fn integrate<F>(self: &Self, f: F, a: T, b: T, num_subintervals: u32) -> T
+    pub fn integrate<F>(&self, f: F, a: T, b: T, num_subintervals: u32) -> T
         where
             F: Fn(T) -> T,
     {
@@ -99,7 +99,7 @@ impl<T> NewtonCotes<T>
                                      |a, b| a + b
                                  ) * h;
 
-            sum = sum + sum_i;
+            sum += sum_i;
 
             lower_bound = x_i;
         }

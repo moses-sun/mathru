@@ -42,7 +42,7 @@ impl<T> Neg for Complex<T> where T: Real
 {
     type Output = Complex<T>;
 
-    fn neg(self: Self) -> Complex<T>
+    fn neg(self) -> Complex<T>
     {
         Complex { re: -self.re,
                   im: -self.im }
@@ -57,7 +57,7 @@ impl<T> Neg for Complex<T> where T: Real
 impl<T> PartialOrd for Complex<T>
     where T: Real
 {
-    fn partial_cmp(self: &Self, other: &Self) -> Option<Ordering>
+    fn partial_cmp(&self, other: &Self) -> Option<Ordering>
     {
         if self == other {
             Some(Ordering::Equal)
@@ -78,14 +78,14 @@ impl<T> Complex<T>
 {
     /// Returns the complex conjugate
     /// conj(self) = Re(self) - i Im(self)
-    pub fn conj(self: Self) -> Complex<T>
+    pub fn conj(self) -> Complex<T>
     {
         Complex { re: self.re,
                   im: -self.im }
     }
 
     /// Returns the argument of the complex number
-    pub fn arg(self: Self) -> Self
+    pub fn arg(self) -> Self
     {
         Complex { re: self.im.arctan2(self.re),
                   im: T::zero() }
@@ -98,14 +98,14 @@ impl<T> Complex<T>
 {
     /// Returns the complex conjugate
     /// conj(self) = Re(self) - i Im(self)
-    pub fn conj(self: Self) -> Complex<T>
+    pub fn conj(self) -> Complex<T>
     {
         Complex { re: self.re,
             im: -self.im }
     }
 
     /// Returns the argument of the complex number
-    pub fn arg(self: Self) -> Self
+    pub fn arg(self) -> Self
     {
         Complex { re: self.im.arctan2(self.re),
             im: T::zero() }
@@ -115,7 +115,7 @@ impl<T> Complex<T>
 impl<T> Sign for Complex<T>
     where T: Real
 {
-    fn sign(self: &Self) -> Self
+    fn sign(&self) -> Self
     {
         unimplemented!()
     }
@@ -133,14 +133,14 @@ impl<T> Sign for Complex<T>
     /// let refer: f64 = (5.0_f64).sqrt();
     /// assert_eq!(refer, a.abs().to_f64());
     /// ```
-    fn abs(self: &Self) -> Self
+    fn abs(&self) -> Self
     {
         let root: T = T::from_f64(2.0);
         Complex { re: (self.re * self.re + self.im * self.im).root(root),
                   im: T::zero() }
     }
 
-    fn is_positive(self: &Self) -> bool
+    fn is_positive(&self) -> bool
     {
         unimplemented!();
     }
@@ -169,7 +169,7 @@ impl<T> Sign for Complex<T>
 impl<T> PartialEq for Complex<T>
     where T: Real
 {
-    fn eq(self: &Self, rhs: &Self) -> bool
+    fn eq(&self, rhs: &Self) -> bool
     {
         if self.re == rhs.re && self.im == rhs.im
         {
@@ -218,7 +218,7 @@ impl<'a, 'b, T> Add<&'b Complex<T>> for &'a Complex<T>
 {
     type Output = Complex<T>;
 
-    fn add(self: Self, rhs: &'b Complex<T>) -> Self::Output
+    fn add(self, rhs: &'b Complex<T>) -> Self::Output
     {
         Complex { re: self.re + rhs.re,
                   im: self.im + rhs.im }
@@ -227,7 +227,7 @@ impl<'a, 'b, T> Add<&'b Complex<T>> for &'a Complex<T>
 
 impl<T> AddAssign for Complex<T> where T: Real /* AddAssign */
 {
-    fn add_assign(self: &mut Self, other: Self)
+    fn add_assign(&mut self, other: Self)
     {
         self.re += other.re;
         self.im += other.im;
@@ -251,7 +251,7 @@ impl<T> Mul for Complex<T>
 {
     type Output = Complex<T>;
 
-    fn mul(self: Self, other: Self) -> Self::Output
+    fn mul(self, other: Self) -> Self::Output
     {
         Complex { re: self.re * other.re - self.im * other.im,
                   im: self.im * other.re + self.re * other.im }
@@ -263,7 +263,7 @@ impl<'a, 'b, T> Mul<&'b Complex<T>> for &'a Complex<T>
 {
     type Output = Complex<T>;
 
-    fn mul(self: Self, rhs: &'b Complex<T>) -> Self::Output
+    fn mul(self, rhs: &'b Complex<T>) -> Self::Output
     {
         Complex { re: self.re * rhs.re - self.im * rhs.im,
                   im: self.im * rhs.re + self.re * rhs.im }
@@ -273,7 +273,7 @@ impl<'a, 'b, T> Mul<&'b Complex<T>> for &'a Complex<T>
 impl<T> MulAssign for Complex<T>
     where T: Real
 {
-    fn mul_assign(self: &mut Self, other: Self)
+    fn mul_assign(&mut self, other: Self)
     {
         let temp: Complex<T> = *self;
         self.re = temp.re * other.re - temp.im * other.im;
@@ -288,7 +288,7 @@ impl<T> Sub for Complex<T> where T: Real
 {
     type Output = Complex<T>;
 
-    fn sub(self: Self, rhs: Self) -> Self::Output
+    fn sub(self, rhs: Self) -> Self::Output
     {
         &self - &rhs
     }
@@ -299,7 +299,7 @@ impl<'a, 'b, T> Sub<&'b Complex<T>> for &'a Complex<T>
 {
     type Output = Complex<T>;
 
-    fn sub(self: Self, rhs: &'b Complex<T>) -> Self::Output
+    fn sub(self, rhs: &'b Complex<T>) -> Self::Output
     {
         Complex { re: self.re - rhs.re,
                   im: self.im - rhs.im }
@@ -308,7 +308,7 @@ impl<'a, 'b, T> Sub<&'b Complex<T>> for &'a Complex<T>
 
 impl<T> SubAssign for Complex<T> where T: Real
 {
-    fn sub_assign(self: &mut Self, other: Self)
+    fn sub_assign(&mut self, other: Self)
     {
         self.re -= other.re;
         self.im -= other.im;
@@ -321,7 +321,7 @@ impl<T> Div for Complex<T>
 {
     type Output = Complex<T>;
 
-    fn div(self: Self, rhs: Self) -> Self::Output
+    fn div(self, rhs: Self) -> Self::Output
     {
         &self / &rhs
     }
@@ -332,7 +332,7 @@ impl<'a, 'b, T> Div<&'b Complex<T>> for &'a Complex<T>
 {
     type Output = Complex<T>;
 
-    fn div(self: Self, rhs: &'b Complex<T>) -> Self::Output
+    fn div(self, rhs: &'b Complex<T>) -> Self::Output
     {
         let divisor: T = rhs.re * rhs.re + rhs.im * rhs.im;
 
@@ -349,7 +349,7 @@ impl<'a, 'b, T> Div<&'b Complex<T>> for &'a Complex<T>
 impl<T> DivAssign for Complex<T>
     where T: Real
 {
-    fn div_assign(self: &mut Self, other: Self)
+    fn div_assign(&mut self, other: Self)
     {
         *self = *self / other;
     }

@@ -33,7 +33,7 @@ pub trait Beta
     ///
     /// let beta: f64 = x.beta(y);
     /// ```
-    fn beta(self: Self, y: Self) -> Self;
+    fn beta(self, y: Self) -> Self;
 
     /// Incomplete beta function
     ///
@@ -65,7 +65,7 @@ pub trait Beta
     ///
     /// let beta: f64 = x.beta_inc(a, b);
     /// ```
-    fn beta_inc(self: Self, a: Self, b: Self) -> Self;
+    fn beta_inc(self, a: Self, b: Self) -> Self;
 
     /// Incomplete regularized beta function
     ///
@@ -97,7 +97,7 @@ pub trait Beta
     ///
     /// let beta: f64 = x.beta_inc_reg(a, b);
     /// ```
-    fn beta_inc_reg(self: Self, a: Self, b: Self) -> Self;
+    fn beta_inc_reg(self, a: Self, b: Self) -> Self;
 }
 
 macro_rules! impl_beta
@@ -106,19 +106,19 @@ macro_rules! impl_beta
     {
         impl Beta for $t
         {
-            fn beta(self: Self, y: Self) -> Self
+            fn beta(self, y: Self) -> Self
             {
                 self.gamma() * y.gamma() / (self + y).gamma()
             }
 
-            fn beta_inc(self: Self, a: Self, b: Self) -> Self
+            fn beta_inc(self, a: Self, b: Self) -> Self
             {
                 a.beta(b) * self.beta_inc_reg(a, b)
             }
 
             /// The code from the following C code was ported to Rust
             /// <http://people.sc.fsu.edu/~jburkardt/c_src/asa109/asa109.c>
-            fn beta_inc_reg(self: Self, a: Self, b: Self) -> Self
+            fn beta_inc_reg(self, a: Self, b: Self) -> Self
             {
                 let acu: Self = 0.1E-14;
 

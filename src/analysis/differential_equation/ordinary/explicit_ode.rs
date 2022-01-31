@@ -7,7 +7,7 @@ use crate::algebra::linear::Vector;
 /// and explicit ODE solving algorithm.
 pub trait ExplicitODE<T>
 {
-    fn func<'a>(self: &Self, t: &T, x: &Vector<T>) -> Vector<T>;
-    fn time_span(self: &Self) -> (T, T);
-    fn init_cond(self: &Self) -> Vector<T>;
+    fn func(&self, t: &T, x: &Vector<T>) -> Vector<T>;
+    fn time_span(&self) -> (T, T);
+    fn init_cond(&self) -> Vector<T>;
 }

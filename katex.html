@@ -1,8 +1,19 @@
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/katex.min.css" integrity="sha384-9eLZqc9ds8eNjO3TmqPeYcDj8n+Qfa4nuSiGYa6DjLNcv9BtN69ZIulL9+8CqC9Y" crossorigin="anonymous">
-<script src="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/katex.min.js"                  integrity="sha384-K3vbOmF2BtaVai+Qk37uypf7VrgBubhQreNQe9aGsz9lB63dIFiQVlJbr92dw2Lx" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/contrib/auto-render.min.js"    integrity="sha384-kmZOZB5ObwgQnS/DuDg6TScgOiWWBiVt0plIRkZCmE6rDZGrEOQeHM5PcHi+nyqe" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/katex.min.js" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
+    document.addEventListener("DOMContentLoaded", function () {
+        let to_do = [];
+        for (let e of document.getElementsByTagName("code")) {
+            if (e.parentElement.className === "language-math") {
+                to_do.push(function () {
+                    let x = document.createElement('p');
+                    katex.render(e.innerText, x, {displayMode: true, throwOnError: false});
+                    e.parentNode.parentNode.replaceChild(x, e.parentNode);
+                });
+            }
+        }
+        for (let f of to_do) f();
+
         renderMathInElement(document.body, {
             delimiters: [
                 {left: "$$", right: "$$", display: true},
@@ -13,3 +24,4 @@
         });
     });
 </script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/katex.min.css" crossorigin="anonymous">

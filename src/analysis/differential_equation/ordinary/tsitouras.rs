@@ -44,13 +44,13 @@ impl<T> ExplicitEmbeddedMethod<T> for Tsitouras<T>
     where T: Real
 {
 
-    fn do_step<F>(self: &Self, prob: &F, t_n: &T, x_n: &Vector<T>, h: &T) -> (Vector<T>, Vector<T>)
+    fn do_step<F>(&self, prob: &F, t_n: &T, x_n: &Vector<T>, h: &T) -> (Vector<T>, Vector<T>)
         where F: ExplicitODE<T>
     {
         self.butcher.do_step(prob, t_n, x_n, h)
     }
 
-    fn order(self: &Self) -> (u8, u8)
+    fn order(&self) -> (u8, u8)
     {
         (5, 4)
     }

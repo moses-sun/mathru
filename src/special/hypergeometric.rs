@@ -6,7 +6,7 @@ use crate::special::gamma::Gamma;
 
 pub trait Hypergeometric
 {
-    fn f21(self: Self, b: Self, c: Self, z: Self) -> Self;
+    fn f21(self, b: Self, c: Self, z: Self) -> Self;
 }
 
 macro_rules! impl_hypergeometric
@@ -37,7 +37,7 @@ macro_rules! impl_hypergeometric
 
         impl Hypergeometric for $t
         {
-            fn f21(self: Self, b: Self, c: Self, z: Self) -> Self
+            fn f21(self, b: Self, c: Self, z: Self) -> Self
             {
                 if self <= 0.0 || b <= 0.0 || c <= 0.0 || z > 1.0
                 {

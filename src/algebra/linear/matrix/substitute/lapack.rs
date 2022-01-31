@@ -4,7 +4,7 @@ use crate::algebra::abstr::{Field, Scalar};
 
 impl<T> Substitute<Vector<T>> for Matrix<T> where T: Field + Scalar
 {
-    fn substitute_forward(self: &Self, b: Vector<T>) -> Result<Vector<T>, ()>
+    fn substitute_forward(&self, b: Vector<T>) -> Result<Vector<T>, ()>
     {
         let (b_m, b_n): (usize, usize) = b.dim();
         let mut b_data = b.convert_to_vec();
@@ -23,7 +23,7 @@ impl<T> Substitute<Vector<T>> for Matrix<T> where T: Field + Scalar
         Ok(Vector::new_column(b_data))
     }
 
-    fn substitute_backward(self: &Self, b: Vector<T>) -> Result<Vector<T>, ()>
+    fn substitute_backward(&self, b: Vector<T>) -> Result<Vector<T>, ()>
     {
         let (b_m, b_n): (usize, usize) = b.dim();
         let mut b_data = b.convert_to_vec();
@@ -45,7 +45,7 @@ impl<T> Substitute<Vector<T>> for Matrix<T> where T: Field + Scalar
 
 impl<T> Substitute<Matrix<T>> for Matrix<T> where T: Field + Scalar
 {
-    fn substitute_forward(self: &Self, b: Matrix<T>) -> Result<Matrix<T>, ()>
+    fn substitute_forward(&self, b: Matrix<T>) -> Result<Matrix<T>, ()>
     {
         let mut c: Matrix<T> = b;
         T::xtrsm('L',
@@ -63,7 +63,7 @@ impl<T> Substitute<Matrix<T>> for Matrix<T> where T: Field + Scalar
         Ok(c)
     }
 
-    fn substitute_backward(self: &Self, b: Matrix<T>) -> Result<Matrix<T>, ()>
+    fn substitute_backward(&self, b: Matrix<T>) -> Result<Matrix<T>, ()>
     {
         let mut c: Matrix<T> = b;
         T::xtrsm('L',

@@ -37,7 +37,7 @@ impl<T> Matrix<T>
     /// let l: (Matrix<f64>) = a.dec_cholesky().unwrap().l();
     /// # }
     /// ```
-    pub fn dec_cholesky(self: &Self) -> Result<CholeskyDec<T>, ()>
+    pub fn dec_cholesky(&self) -> Result<CholeskyDec<T>, ()>
     {
         let (m, n): (usize, usize) = self.dim();
         assert_eq!(m, n);
@@ -99,7 +99,7 @@ impl<T> Matrix<Complex<T>>
     /// let l: (Matrix<f64>) = a.dec_cholesky().unwrap().l();
     /// # }
     /// ```
-    pub fn dec_cholesky(self: &Self) -> Result<CholeskyDec<Complex<T>>, ()>
+    pub fn dec_cholesky(&self) -> Result<CholeskyDec<Complex<T>>, ()>
     {
         let (m, n): (usize, usize) = self.dim();
         assert_eq!(m, n);

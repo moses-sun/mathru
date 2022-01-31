@@ -12,13 +12,13 @@ pub trait Sign: Sized + Neg<Output = Self>
     /// -1 if self < 0
     /// 0 if self = 0
     /// 1 if self > 0
-    fn sign(self: &Self) -> Self;
+    fn sign(&self) -> Self;
 
-    fn abs(self: &Self) -> Self;
+    fn abs(&self) -> Self;
 
-    fn is_positive(self: &Self) -> bool;
+    fn is_positive(&self) -> bool;
 
-    fn is_negative(self: &Self) -> bool;
+    fn is_negative(&self) -> bool;
 }
 
 macro_rules! impl_sign
@@ -28,7 +28,7 @@ macro_rules! impl_sign
         $(
         impl Sign for $t
         {
-			fn sign(self: &Self) -> Self
+			fn sign(&self) -> Self
 			{
  				match *self
  				{
@@ -38,7 +38,7 @@ macro_rules! impl_sign
                 }
 			}
 
-			fn abs(self: &Self) -> Self
+			fn abs(&self) -> Self
 			{
 				if self.is_negative()
 				{
@@ -47,7 +47,7 @@ macro_rules! impl_sign
 				*self
 			}
 
-            fn is_positive(self: &Self) -> bool
+            fn is_positive(&self) -> bool
             {
             	*self > $zero
             }

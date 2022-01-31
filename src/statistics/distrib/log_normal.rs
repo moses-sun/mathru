@@ -74,7 +74,7 @@ impl<T> Continuous<T> for LogNormal<T> where T: Real + Error + Gamma
     /// let x: f64 = 5.0;
     /// let p: f64 = distrib.pdf(x);
     /// ```
-    fn pdf(self: &Self, x: T) -> T
+    fn pdf(&self, x: T) -> T
     {
         if x < T::zero()
         {
@@ -101,7 +101,7 @@ impl<T> Continuous<T> for LogNormal<T> where T: Real + Error + Gamma
     /// let x: f64 = 0.4;
     /// let p: f64 = distrib.cdf(x);
     /// ```
-    fn cdf(self: &Self, x: T) -> T
+    fn cdf(&self, x: T) -> T
     {
         if x <= T::zero()
         {
@@ -116,7 +116,7 @@ impl<T> Continuous<T> for LogNormal<T> where T: Real + Error + Gamma
     /// # Panics
     ///
     /// if  p <= 0.0 || p >= 1.0
-    fn quantile(self: &Self, p: T) -> T
+    fn quantile(&self, p: T) -> T
     {
         if p <= T::zero() || p >= T::one()
         {
@@ -139,7 +139,7 @@ impl<T> Continuous<T> for LogNormal<T> where T: Real + Error + Gamma
     /// let distrib: LogNormal<f64> = LogNormal::new(0.0, 0.2);
     /// let mean: f64 = distrib.mean();
     /// ```
-    fn mean(self: &Self) -> T
+    fn mean(&self) -> T
     {
         (self.mu + self.sigma_squared / T::from_f64(2.0)).exp()
     }
@@ -159,7 +159,7 @@ impl<T> Continuous<T> for LogNormal<T> where T: Real + Error + Gamma
     /// let var: f64 = distrib.variance();
     /// assert_eq!((sigma_squared.exp() - 1.0) * sigma_squared.exp(),  var )
     /// ```
-    fn variance(self: &Self) -> T
+    fn variance(&self) -> T
     {
         (self.sigma_squared.exp() - T::one()) * (T::from_f64(2.0) * self.mu + self.sigma_squared).exp()
     }
@@ -177,7 +177,7 @@ impl<T> Continuous<T> for LogNormal<T> where T: Real + Error + Gamma
     /// let sigma_squared: f64 = 0.5;
     /// let distrib: LogNormal<f64> = LogNormal::new(mu, sigma_squared);
     /// ```
-    fn skewness(self: &Self) -> T
+    fn skewness(&self) -> T
     {
         (self.sigma_squared.exp() + T::from_f64(2.0)) * (self.sigma_squared.exp() - T::one()).sqrt()
     }
@@ -198,7 +198,7 @@ impl<T> Continuous<T> for LogNormal<T> where T: Real + Error + Gamma
     /// let median: f64 = distrib.median();
     /// assert_eq!(median, 1.0);
     /// ```
-    fn median(self: &Self) -> T
+    fn median(&self) -> T
     {
         self.mu.exp()
     }
@@ -218,7 +218,7 @@ impl<T> Continuous<T> for LogNormal<T> where T: Real + Error + Gamma
     /// let distrib: LogNormal<f64> = LogNormal::new(mu, sigma_squared);
     ///
     /// ```
-    fn entropy(self: &Self) -> T
+    fn entropy(&self) -> T
     {
         let k: T = self.sigma_squared.sqrt() * (self.mu + T::from_f64(0.5)).exp() * T::from_f64((2.0 * PI).sqrt());
         k.ln() / (T::from_f64(2.0)).ln()
@@ -227,7 +227,7 @@ impl<T> Continuous<T> for LogNormal<T> where T: Real + Error + Gamma
 
 impl<T> Distribution<T> for LogNormal<T> where T: Real
 {
-    fn random(self: &Self) -> T
+    fn random(&self) -> T
     {
         unimplemented!()
     }

@@ -23,17 +23,17 @@ impl Default for ExplicitODE1
 
 impl ExplicitODE<f64> for ExplicitODE1
 {
-    fn func(self: &Self, _t: f64, x: Vector<f64>) -> Vector<f64>
+    fn func(&self, _t: f64, x: Vector<f64>) -> Vector<f64>
     {
         x * 2.0f64
     }
 
-    fn time_span(self: &Self) -> (f64, f64)
+    fn time_span(&self) -> (f64, f64)
     {
         self.time_span
     }
 
-    fn init_cond(self: &Self) -> Vector<f64>
+    fn init_cond(&self) -> Vector<f64>
     {
         self.init_cond.clone()
     }

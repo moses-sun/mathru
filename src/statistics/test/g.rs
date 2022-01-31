@@ -66,17 +66,17 @@ impl<T> G<T> where T: Real + Gamma + Error
             g: T::from_f64(2.0) * g }
     }
 
-    pub fn df(self: &Self) -> u32
+    pub fn df(&self) -> u32
     {
         self.df
     }
 
-    pub fn g(self: &Self) -> T
+    pub fn g(&self) -> T
     {
         self.g
     }
 
-    pub fn p_value(self: &Self) -> T
+    pub fn p_value(&self) -> T
     {
         let distrib: ChiSquare<T> = ChiSquare::new(self.df);
         T::one() - distrib.cdf(self.g)

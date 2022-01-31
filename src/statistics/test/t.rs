@@ -71,19 +71,19 @@ pub struct T<K>
 impl<K> Test<K> for T<K> where K: Real
 {
     ///Test value
-    fn value(self: &Self) -> K
+    fn value(&self) -> K
     {
         self.t
     }
 
     /// Degree of freedom
-    fn df(self: &Self) -> u32
+    fn df(&self) -> u32
     {
         0
     }
 
     ///
-    fn p_value(self: &Self) -> K
+    fn p_value(&self) -> K
     {
         self.p
     }

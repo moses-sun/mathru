@@ -10,7 +10,7 @@ impl<T> Iterator for MatrixIntoIterator<T> where T: Field + Scalar
 {
     type Item = T;
 
-    fn next(self: &mut Self) -> Option<Self::Item>
+    fn next(&mut self) -> Option<Self::Item>
     {
         self.iter.next()
     }

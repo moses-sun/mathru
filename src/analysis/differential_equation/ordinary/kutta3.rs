@@ -21,18 +21,18 @@ use serde::{Deserialize, Serialize};
 /// ```math
 /// \frac{dy}{dt} = ay = f(t, y)
 /// ```
-/// The inial condition is $`y(0) = 0.5`$ and we solve it in the interval
-/// $`\lbrack 0, 2\rbrack`$ The following equation is the closed solution for
+/// The inial condition is $y(0) = 0.5$ and we solve it in the interval
+/// $\lbrack 0, 2\rbrack$ The following equation is the closed solution for
 /// this ODE:
 /// ```math
 /// y(t) = C a e^{at}
 /// ```
-/// $`C`$ is a parameter and depends on the initial condition $`y(t_{0})`$
+/// $C$ is a parameter and depends on the initial condition $y(t_{0})$
 /// ```math
 /// C = \frac{y(t_{0})}{ae^{at_{0}}}
 /// ```
 ///
-/// In this example, we set $`a=2`$
+/// In this example, we set $a=2$
 /// ```
 /// # #[macro_use]
 /// # extern crate mathru;
@@ -60,17 +60,17 @@ use serde::{Deserialize, Serialize};
 ///
 /// impl ExplicitODE<f64> for ExplicitODE1
 /// {
-///     fn func(self: &Self, _t: &f64, x: &Vector<f64>) -> Vector<f64>
+///     fn func(&self, _t: &f64, x: &Vector<f64>) -> Vector<f64>
 ///     {
 ///         return x * &2.0f64;
 ///     }
 ///
-///     fn time_span(self: &Self) -> (f64, f64)
+///     fn time_span(&self) -> (f64, f64)
 ///     {
 ///         return self.time_span;
 ///     }
 ///
-///     fn init_cond(self: &Self) -> Vector<f64>
+///     fn init_cond(&self) -> Vector<f64>
 ///     {
 ///         return self.init_cond.clone();
 ///     }
@@ -109,14 +109,14 @@ impl<T> Default for Kutta3<T> where T: Real
 
 impl<T> ExplicitMethod<T> for Kutta3<T> where T: Real
 {
-    fn do_step<F>(self: &Self, prob: &F, t_n: &T, x_n: &Vector<T>, h: &T) -> Vector<T>
+    fn do_step<F>(&self, prob: &F, t_n: &T, x_n: &Vector<T>, h: &T) -> Vector<T>
         where F: ExplicitODE<T>
     {
         self.butcher.do_step(prob, t_n, x_n, h)
     }
 
     /// Kutta's method is a 3rd order method
-    fn order(self: &Self) -> u8
+    fn order(&self) -> u8
     {
         3
     }

@@ -27,7 +27,7 @@ impl<T> Matrix<T> where T: Field + Scalar + Power
     ///
     /// let (q, r): (Matrix<f64>, Matrix<f64>) = a.dec_qr().unwrap().qr();
     /// ```
-    pub fn dec_qr(self: &Self) -> Result<QRDec<T>, ()>
+    pub fn dec_qr(&self) -> Result<QRDec<T>, ()>
     {
         let (m, n) = self.dim();
         assert!(m >= n);
@@ -111,7 +111,7 @@ impl<T> Matrix<T> where T: Field + Scalar + Power
         Ok(QRDec::new(q, r))
     }
 
-    fn r(mut self: Self) -> Self
+    fn r(mut self) -> Self
     {
         for i in 1..self.m
         {

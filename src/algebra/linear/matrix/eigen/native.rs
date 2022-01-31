@@ -21,7 +21,7 @@ impl<T> Matrix<T> where T: Field + Scalar + Power + AbsDiffEq<Epsilon = T>
     /// let a: Matrix<f64> = Matrix::new(3, 3, vec![1.0, -3.0, 3.0, 3.0, -5.0, 3.0, 6.0, -6.0, 4.0]);
     /// let eigen: EigenDec<f64> = a.dec_eigen().unwrap();
     /// ```
-    pub fn dec_eigen(self: Self) -> Result<EigenDec<T>, ()>
+    pub fn dec_eigen(self) -> Result<EigenDec<T>, ()>
     {
         let (m, n): (usize, usize) = self.dim();
         assert_eq!(m, n, "Unable to compute the eigen value of a non-square matrix");
@@ -33,7 +33,7 @@ impl<T> Matrix<T> where T: Field + Scalar + Power + AbsDiffEq<Epsilon = T>
         Ok(EigenDec::new(value, vector))
     }
 
-    pub fn eigenvalue_r(self: &Self) -> Vector<T>
+    pub fn eigenvalue_r(&self) -> Vector<T>
     {
         let (m, _n): (usize, usize) = self.dim();
 
@@ -51,7 +51,7 @@ impl<T> Matrix<T> where T: Field + Scalar + Power + AbsDiffEq<Epsilon = T>
         eig
     }
 
-    fn francis(mut self: Self) -> (Matrix<T>, Matrix<T>)
+    fn francis(mut self) -> (Matrix<T>, Matrix<T>)
     {
         let epsilon: T = T::default_epsilon();
 
@@ -135,7 +135,7 @@ impl<T> Matrix<T> where T: Field + Scalar + Power + AbsDiffEq<Epsilon = T>
             if self[[p - 1, q - 1]].abs() < epsilon * (m + n)
             {
                 self[[p - 1, q - 1]] = T::zero();
-                p = p - 1;
+                p -= 1;
             }
             else
             {
@@ -153,7 +153,7 @@ impl<T> Matrix<T> where T: Field + Scalar + Power + AbsDiffEq<Epsilon = T>
         (u, self)
     }
 
-    pub fn eigenvector_r(self: &Self, value: &Vector<T>) -> Matrix<T>
+    pub fn eigenvector_r(&self, value: &Vector<T>) -> Matrix<T>
     {
         let eye: Matrix<T> = Matrix::one(self.m);
         let zero_vector: Vector<T> = Vector::zero(self.m);
