@@ -8,7 +8,3 @@ pub trait Solve<T>
     /// A * x = b
     fn solve(&self, rhs: &T) -> Result<T, ()>;
 }
-// #[cfg(feature = "lapack")]
-// pub use self::lapack::Solve;
-// #[cfg(feature = "native")]
-// pub use self::native::Solve;

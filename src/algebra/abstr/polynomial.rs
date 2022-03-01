@@ -21,7 +21,6 @@ pub struct Polynomial<T> {
 }
 
 impl<T> Polynomial<T>
-
 {
     /// Creates a new polynomial with the given coefficients
     ///
@@ -110,7 +109,99 @@ impl<T> Polynomial<T>
 
         Polynomial::from_coef(coef)
     }
+
+    /// Creates a Legendre polynomial with the given degree
+    ///
+    /// <https://en.wikipedia.org/wiki/Legendre_polynomials>
+    /// 
+    /// # Arguments
+    /// * `n`: Degree of the Legendre polynomial
+    /// 
+    /// # Example
+    /// ```
+    /// use mathru::algebra::abstr::Polynomial;
+    /// 
+    /// let p = Polynomial::from_legendre(2);
+    /// let p_ref = Polynomial::from_coef(vec![-0.5, 0.0, 1.5]);
+    /// 
+    /// assert_eq!(p_ref, p)
+    /// ```
+    pub fn from_legendre(n: u32) -> Polynomial<T>
+        where T: Field + Scalar + AbsDiffEq<Epsilon = T>
+    {
+        let n_f64 = n as f64;
+
+        return match n {
+            0 => Polynomial::from_coef(vec![T::one()]),      
+            1 => Polynomial::from_coef(vec![T::zero(), T::one()]), 
+            _ => {
+                let p_1 = Polynomial::from_coef(vec![T::zero(), T::from_f64(2.0f64 * n_f64 - 1.0f64)]);
+                (( p_1 * Polynomial::from_legendre(n - 1)
+                    - Polynomial::from_coef(vec![T::from_f64(n_f64 - 1.0f64)]) * Polynomial::from_legendre(n - 2)) / (Polynomial::from_coef(vec![T::from_f64(n_f64)]))).0
+            }
+        }
+    }
+
+    /// Creates a Chebyshev polynomial of first kind with the given degree
+    ///
+    /// <https://en.wikipedia.org/wiki/Chebyshev_polynomials>
+    /// 
+    /// # Arguments
+    /// * `n`: Degree of the Chebyshev polynomial
+    /// 
+    /// # Example
+    /// ```
+    /// use mathru::algebra::abstr::Polynomial;
+    /// 
+    /// let p = Polynomial::from_chebyshev_t(2);
+    /// let p_ref = Polynomial::from_coef(vec![-1.0, 0.0, 2.0]);
+    /// 
+    /// assert_eq!(p_ref, p)
+    /// ```
+    pub fn from_chebyshev_t(n: u32) -> Polynomial<T>
+        where T: Field + Scalar + AbsDiffEq<Epsilon = T>
+    {
+        return match n {
+            0 => Polynomial::from_coef(vec![T::one()]),      
+            1 => Polynomial::from_coef(vec![T::zero(), T::one()]), 
+            _ => {
+                let p_1 = Polynomial::from_coef(vec![T::zero(), T::from_f64(2.0f64)]);
+                p_1 * Polynomial::from_chebyshev_t(n - 1) -  Polynomial::from_chebyshev_t(n - 2)
+            }
+        }
+    }
+
+    /// Creates a Chebyshev polynomial of second kind with the given degree
+    ///
+    /// <https://en.wikipedia.org/wiki/Chebyshev_polynomials>
+    /// 
+    /// # Arguments
+    /// * `n`: Degree of the Chebyshev polynomial
+    /// 
+    /// # Example
+    /// ```
+    /// use mathru::algebra::abstr::Polynomial;
+    /// 
+    /// let p = Polynomial::from_chebyshev_u(2);
+    /// let p_ref = Polynomial::from_coef(vec![-1.0, 0.0, 4.0]);
+    /// 
+    /// assert_eq!(p_ref, p)
+    /// ```
+    pub fn from_chebyshev_u(n: u32) -> Polynomial<T>
+        where T: Field + Scalar + AbsDiffEq<Epsilon = T>
+    {
+        return match n {
+            0 => Polynomial::from_coef(vec![T::one()]),      
+            1 => Polynomial::from_coef(vec![T::zero(), T::from_f64(2.0)]), 
+            _ => {
+                let p_1 = Polynomial::from_coef(vec![T::zero(), T::from_f64(2.0f64)]);
+                p_1 * Polynomial::from_chebyshev_u(n - 1) -  Polynomial::from_chebyshev_u(n - 2)
+            }
+        }
+    }
 }
+
+
 
 impl<T> Display for Polynomial<T>
     where T: Display + Real
@@ -520,6 +611,36 @@ impl<T> MulAssign for Polynomial<T>
     fn mul_assign(&mut self, rhs: Self)
     {
         *self = (*self).clone().mul(rhs)
+    }
+}
+
+impl<T> Div<Polynomial<T>> for Polynomial<T>
+    where T: Field + Scalar + AbsDiffEq<Epsilon = T>
+{
+    type Output = (Polynomial<T>, Polynomial<T>);
+
+    /// Divides two polynomials
+    ///
+    /// # Example
+    ///
+    /// ```math
+    /// (3x^3 + 5x^2 + 3x + 1) / (3x^2 + 2x + 1) = (x + 1)
+    /// ```
+    ///
+    /// ```
+    /// use mathru::algebra::abstr::Polynomial;
+    /// use crate::mathru::algebra::abstr::Zero;
+    ///
+    /// let a: Polynomial<f64> = Polynomial::from_coef(vec![1.0, 2.0, 3.0]);
+    /// let b: Polynomial<f64> = Polynomial::from_coef(vec![1.0, 1.0]);
+    /// let c: Polynomial<f64> = Polynomial::from_coef(vec![1.0, 3.0, 5.0, 3.0]);
+    ///
+    /// assert_eq!(b, (c.clone() / a.clone()).0);
+    /// assert_eq!(Polynomial::zero(), (c / a).1)
+    /// ```
+    fn div(self, rhs: Polynomial<T>) -> Self::Output
+    {
+        (&self).div(&rhs)
     }
 }
 

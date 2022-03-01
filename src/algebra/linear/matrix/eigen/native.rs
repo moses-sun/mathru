@@ -7,7 +7,8 @@ use crate::algebra::{
 use crate::algebra::abstr::{Field, Scalar, AbsDiffEq};
 use crate::elementary::Power;
 
-impl<T> Matrix<T> where T: Field + Scalar + Power + AbsDiffEq<Epsilon = T>
+impl<T> Matrix<T>
+    where T: Field + Scalar + Power + AbsDiffEq<Epsilon = T>
 {
     /// Computes the eigenvalues of a real matrix
     ///

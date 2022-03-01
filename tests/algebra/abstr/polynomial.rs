@@ -206,6 +206,16 @@ fn div_2()
 }
 
 #[test]
+fn div_own()
+{
+    let a: Polynomial<f64> = Polynomial::from_coef(vec![1.0, 2.0, 3.0]);
+    let b: Polynomial<f64> = Polynomial::from_coef(vec![1.0, 1.0]);
+
+    assert_eq!(Polynomial::from_coef(vec![0.0]), (b.clone() / a.clone()).0);
+    assert_eq!(b.clone(), (b / a).1);
+}
+
+#[test]
 fn div_with_remainder()
 {
     let a: Polynomial<f64> = Polynomial::from_coef(vec![1.0, 2.0, 3.0]);
@@ -268,4 +278,85 @@ fn integrate_general()
     let c_s: Polynomial<f64> = Polynomial::from_coef(vec![0.0, 1.0, 1.0, 1.0]);
 
     assert_eq!(c_s, c.integrate());
+}
+
+#[test]
+fn from_legendre_degree0()
+{
+    let p: Polynomial<f64> = Polynomial::from_legendre(0);
+    let p_ref = Polynomial::from_coef(vec![1.0f64]);
+
+    assert_eq!(p_ref, p);
+}
+
+#[test]
+fn from_legendre_degree1()
+{
+    let p: Polynomial<f64> = Polynomial::from_legendre(1);
+    let p_ref = Polynomial::from_coef(vec![0.0f64, 1.0f64]);
+
+    assert_eq!(p_ref, p);
+}
+
+#[test]
+fn from_legendre_degree2()
+{
+    let p: Polynomial<f64> = Polynomial::from_legendre(2);
+    let p_ref = Polynomial::from_coef(vec![-0.5f64, 0.0f64, 1.5f64]);
+
+    assert_eq!(p_ref, p);
+}
+
+#[test]
+fn from_chebyshev_t_0()
+{
+    let p: Polynomial<f64> = Polynomial::from_chebyshev_t(0);
+    let p_ref = Polynomial::from_coef(vec![1.0]);
+
+    assert_eq!(p_ref, p);
+}
+
+#[test]
+fn from_chebyshev_t_1()
+{
+    let p: Polynomial<f64> = Polynomial::from_chebyshev_t(1);
+    let p_ref = Polynomial::from_coef(vec![0.0, 1.0]);
+
+    assert_eq!(p_ref, p);
+}
+
+#[test]
+fn from_chebyshev_t_2()
+{
+    let p: Polynomial<f64> = Polynomial::from_chebyshev_t(2);
+    let p_ref = Polynomial::from_coef(vec![-1.0, 0.0, 2.0]);
+
+    assert_eq!(p_ref, p);
+}
+
+#[test]
+fn from_chebyshev_u_0()
+{
+    let p: Polynomial<f64> = Polynomial::from_chebyshev_u(0);
+    let p_ref = Polynomial::from_coef(vec![1.0]);
+
+    assert_eq!(p_ref, p);
+}
+
+#[test]
+fn from_chebyshev_u_1()
+{
+    let p: Polynomial<f64> = Polynomial::from_chebyshev_u(1);
+    let p_ref = Polynomial::from_coef(vec![0.0, 2.0]);
+
+    assert_eq!(p_ref, p);
+}
+
+#[test]
+fn from_chebyshev_u_2()
+{
+    let p: Polynomial<f64> = Polynomial::from_chebyshev_u(2);
+    let p_ref = Polynomial::from_coef(vec![-1.0, 0.0, 4.0]);
+
+    assert_eq!(p_ref, p);
 }
