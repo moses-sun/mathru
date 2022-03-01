@@ -1,5 +1,6 @@
 //! Often used ODEs
 use mathru::{
+    vector,
     algebra::linear::{Matrix, Vector},
     analysis::differential_equation::ordinary::{ExplicitODE, ImplicitODE},
 };
