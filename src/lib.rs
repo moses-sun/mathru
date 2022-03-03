@@ -41,7 +41,7 @@
 //! # }
 //! ```
 //!
-//!```
+//! ```
 //! use mathru::vector;
 //! use mathru::algebra::linear::{Vector, Matrix};
 //! use mathru::statistics::distrib::{Distribution, Normal};

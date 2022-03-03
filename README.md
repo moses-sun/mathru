@@ -6,13 +6,15 @@
 ![maintenance](https://img.shields.io/badge/maintenance-actively--developed-brightgreen.svg)
 [![pipeline status](https://gitlab.com/matthiaseiholzer/mathru/badges/main/pipeline.svg)](https://gitlab.com/matthiaseiholzer/mathru/-/commits/main)
 ------------
-Mathru is a numeric library containing algorithms for linear algebra, analysis and statistics written in pure Rust with BLAS/LAPACK support.
+Mathru is a numeric library containing algorithms for linear algebra, analysis ,statistics and optimization written in pure Rust with optional BLAS/LAPACK as backend.
 
 ## Features
 The following features are implemented in this create:
 * [Algebra](https://matthiaseiholzer.gitlab.io/mathru/documentation/algebra/)
     * [Abstract](https://matthiaseiholzer.gitlab.io/mathru/documentation/algebra/abstract/)
         * [Polynomial](https://matthiaseiholzer.gitlab.io/mathru/documentation/algebra/abstract/polynomial/)
+            * Legendre polynomial
+            * Chebyshev polynomial first & second kind
     * [Linear algebra](https://matthiaseiholzer.gitlab.io/mathru/documentation/algebra/linear/)
         * [Vector](https://matthiaseiholzer.gitlab.io/mathru/documentation/algebra/linear/vector/)
         * [Matrix](https://matthiaseiholzer.gitlab.io/mathru/documentation/algebra/linear/matrix/)
@@ -84,8 +86,10 @@ The following features are implemented in this create:
     * trigonometric functions
     * hyperbolic functions
     * exponential functions
+    * power functions
+    * trigonometric functions
 
-* [special functions](https://matthiaseiholzer.gitlab.io/mathru/documentation/special)
+* [Special functions](https://matthiaseiholzer.gitlab.io/mathru/documentation/special)
     * [gamma functions](https://matthiaseiholzer.gitlab.io/mathru/documentation/special/gamma/)
         * gamma function
         * log-gamma function
@@ -119,7 +123,7 @@ Add the following lines to 'Cargo.toml' if the openblas library should be used:
 
 ```toml
 [dependencies.mathru]
-version = "0.10"
+version = "0.11"
 default-features = false
 features = "openblas"
 ```
