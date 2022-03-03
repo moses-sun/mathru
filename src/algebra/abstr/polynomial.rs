@@ -35,21 +35,21 @@ impl<T> Polynomial<T>
     /// # Example
     ///
     /// ```math
-    /// (1 + 2x + 3x^2)
+    /// (3x^2 + 2x + 1)
     /// ```
     ///
     /// ```
     /// use mathru::algebra::abstr::Polynomial;
     ///
-    /// let a: Polynomial<f64> = Polynomial::from_coef(vec![1.0, 2.0, 3.0]);
+    /// let a: Polynomial<f64> = Polynomial::from_coef(vec![3.0, 2.0, 1.0]);
     /// ```
-    pub fn from_coef(coef: Vec<T>) -> Polynomial<T>
+    pub fn from_coef(mut coef: Vec<T>) -> Polynomial<T>
     {
         if coef.is_empty()
         {
             panic!()
         }
-
+        coef.reverse();
         Polynomial
         {
             coef
@@ -79,7 +79,7 @@ impl<T> Polynomial<T>
     ///
     /// let a: Polynomial<f64> = Polynomial::from_root(vec![1.0, 2.0, 3.0]);
     ///
-    /// let b: Polynomial<f64> = Polynomial::from_coef(vec![-6.0, 11.0, -6.0, 1.0]);
+    /// let b: Polynomial<f64> = Polynomial::from_coef(vec![1.0, -6.0, 11.0, -6.0]);
     ///
     /// assert_eq!(b, a);
     /// ```
@@ -107,7 +107,7 @@ impl<T> Polynomial<T>
             }
         }
 
-        Polynomial::from_coef(coef)
+        Polynomial{coef}
     }
 
     /// Creates a Legendre polynomial with the given degree
@@ -122,7 +122,7 @@ impl<T> Polynomial<T>
     /// use mathru::algebra::abstr::Polynomial;
     /// 
     /// let p = Polynomial::from_legendre(2);
-    /// let p_ref = Polynomial::from_coef(vec![-0.5, 0.0, 1.5]);
+    /// let p_ref = Polynomial::from_coef(vec![1.5, 0.0, -0.5]);
     /// 
     /// assert_eq!(p_ref, p)
     /// ```
@@ -132,12 +132,12 @@ impl<T> Polynomial<T>
         let n_f64 = n as f64;
 
         return match n {
-            0 => Polynomial::from_coef(vec![T::one()]),      
-            1 => Polynomial::from_coef(vec![T::zero(), T::one()]), 
+            0 => Polynomial{coef: vec![T::one()]},      
+            1 => Polynomial{coef: vec![T::zero(), T::one()]}, 
             _ => {
-                let p_1 = Polynomial::from_coef(vec![T::zero(), T::from_f64(2.0f64 * n_f64 - 1.0f64)]);
+                let p_1 = Polynomial{coef: vec![T::zero(), T::from_f64(2.0f64 * n_f64 - 1.0f64)]};
                 (( p_1 * Polynomial::from_legendre(n - 1)
-                    - Polynomial::from_coef(vec![T::from_f64(n_f64 - 1.0f64)]) * Polynomial::from_legendre(n - 2)) / (Polynomial::from_coef(vec![T::from_f64(n_f64)]))).0
+                    - Polynomial{coef: vec![T::from_f64(n_f64 - 1.0f64)]} * Polynomial::from_legendre(n - 2)) / (Polynomial{coef: vec![T::from_f64(n_f64)]})).0
             }
         }
     }
@@ -154,7 +154,7 @@ impl<T> Polynomial<T>
     /// use mathru::algebra::abstr::Polynomial;
     /// 
     /// let p = Polynomial::from_chebyshev_t(2);
-    /// let p_ref = Polynomial::from_coef(vec![-1.0, 0.0, 2.0]);
+    /// let p_ref = Polynomial::from_coef(vec![2.0, 0.0, -1.0]);
     /// 
     /// assert_eq!(p_ref, p)
     /// ```
@@ -162,10 +162,10 @@ impl<T> Polynomial<T>
         where T: Field + Scalar + AbsDiffEq<Epsilon = T>
     {
         return match n {
-            0 => Polynomial::from_coef(vec![T::one()]),      
-            1 => Polynomial::from_coef(vec![T::zero(), T::one()]), 
+            0 => Polynomial{ coef: vec![T::one()]},      
+            1 => Polynomial{ coef: vec![T::zero(), T::one()]}, 
             _ => {
-                let p_1 = Polynomial::from_coef(vec![T::zero(), T::from_f64(2.0f64)]);
+                let p_1 = Polynomial{ coef: vec![T::zero(), T::from_f64(2.0f64)]};
                 p_1 * Polynomial::from_chebyshev_t(n - 1) -  Polynomial::from_chebyshev_t(n - 2)
             }
         }
@@ -183,7 +183,7 @@ impl<T> Polynomial<T>
     /// use mathru::algebra::abstr::Polynomial;
     /// 
     /// let p = Polynomial::from_chebyshev_u(2);
-    /// let p_ref = Polynomial::from_coef(vec![-1.0, 0.0, 4.0]);
+    /// let p_ref = Polynomial::from_coef(vec![4.0, 0.0, -1.0]);
     /// 
     /// assert_eq!(p_ref, p)
     /// ```
@@ -191,10 +191,10 @@ impl<T> Polynomial<T>
         where T: Field + Scalar + AbsDiffEq<Epsilon = T>
     {
         return match n {
-            0 => Polynomial::from_coef(vec![T::one()]),      
-            1 => Polynomial::from_coef(vec![T::zero(), T::from_f64(2.0)]), 
+            0 => Polynomial{coef: vec![T::one()]},      
+            1 => Polynomial{coef: vec![T::zero(), T::from_f64(2.0)]}, 
             _ => {
-                let p_1 = Polynomial::from_coef(vec![T::zero(), T::from_f64(2.0f64)]);
+                let p_1 = Polynomial{coef: vec![T::zero(), T::from_f64(2.0f64)]};
                 p_1 * Polynomial::from_chebyshev_u(n - 1) -  Polynomial::from_chebyshev_u(n - 2)
             }
         }
@@ -266,7 +266,7 @@ impl<T> Polynomial<T>
     /// ```
     /// use mathru::algebra::abstr::Polynomial;
     ///
-    /// let a: Polynomial<f64> = Polynomial::from_coef(vec![1.0, 2.0, 3.0]);
+    /// let a: Polynomial<f64> = Polynomial::from_coef(vec![3.0, 2.0, 1.0]);
     ///
     /// assert_eq!(17.0, a.eval(2.0));
     /// ```
@@ -293,15 +293,15 @@ impl<T> Add<Polynomial<T>> for Polynomial<T>
     /// # Example
     ///
     /// ```math
-    /// (1 + 2x + 3x^2) + (1 + 2x) = 2 + 4x + 3x^2
+    /// (3x^2 + 2x + 1) + (2x + 1) = 3x^2 + 4x + 2
     /// ```
     ///
     /// ```
     /// use mathru::algebra::abstr::Polynomial;
     ///
-    /// let a: Polynomial<f64> = Polynomial::from_coef(vec![1.0, 2.0, 3.0]);
-    /// let b: Polynomial<f64> = Polynomial::from_coef(vec![1.0, 2.0]);
-    /// let c: Polynomial<f64> = Polynomial::from_coef(vec![2.0, 4.0, 3.0]);
+    /// let a: Polynomial<f64> = Polynomial::from_coef(vec![3.0, 2.0, 1.0]);
+    /// let b: Polynomial<f64> = Polynomial::from_coef(vec![2.0, 1.0]);
+    /// let c: Polynomial<f64> = Polynomial::from_coef(vec![3.0, 4.0, 2.0]);
     ///
     /// assert_eq!(c, a + b);
     /// ```
@@ -321,15 +321,15 @@ impl<'a, 'b, T> Add<&'b Polynomial<T>> for &'a Polynomial<T>
     /// # Example
     ///
     /// ```math
-    /// (1 + 2x + 3x^2) + (1 + 2x) = 2 + 4x + 3x^2
+    /// (3x^2 + 2x + 1) + (2x + 1) = 3x^2 + 4x + 2
     /// ```
     ///
     /// ```
     /// use mathru::algebra::abstr::Polynomial;
     ///
-    /// let a: Polynomial<f64> = Polynomial::from_coef(vec![1.0, 2.0, 3.0]);
-    /// let b: Polynomial<f64> = Polynomial::from_coef(vec![1.0, 2.0]);
-    /// let c: Polynomial<f64> = Polynomial::from_coef(vec![2.0, 4.0, 3.0]);
+    /// let a: Polynomial<f64> = Polynomial::from_coef(vec![3.0, 2.0, 1.0]);
+    /// let b: Polynomial<f64> = Polynomial::from_coef(vec![2.0, 1.0]);
+    /// let c: Polynomial<f64> = Polynomial::from_coef(vec![3.0, 4.0, 2.0]);
     ///
     /// assert_eq!(c, &a + &b);
     /// ```
@@ -348,7 +348,9 @@ impl<'a, 'b, T> Add<&'b Polynomial<T>> for &'a Polynomial<T>
             sum[i] = *a_i + *b_i
         }
 
-        Polynomial::from_coef(sum)
+        Polynomial {
+            coef: sum
+        }
     }
 }
 
@@ -371,15 +373,15 @@ impl<T> Sub<Polynomial<T>> for Polynomial<T>
     /// # Example
     ///
     /// ```math
-    /// (1 + 2x + 3x^2) + (1 + 2x) = 2 + 4x + 3x^2
+    /// (3x^2 + 2x + 1) + (2x + 1) = 3x^2 + 4x + 1
     /// ```
     ///
     /// ```
     /// use mathru::algebra::abstr::Polynomial;
     ///
-    /// let a: Polynomial<f64> = Polynomial::from_coef(vec![1.0, 2.0, 3.0]);
-    /// let b: Polynomial<f64> = Polynomial::from_coef(vec![1.0, 2.0]);
-    /// let c: Polynomial<f64> = Polynomial::from_coef(vec![0.0, 0.0, 3.0]);
+    /// let a: Polynomial<f64> = Polynomial::from_coef(vec![3.0, 2.0, 1.0]);
+    /// let b: Polynomial<f64> = Polynomial::from_coef(vec![2.0, 1.0]);
+    /// let c: Polynomial<f64> = Polynomial::from_coef(vec![3.0, 0.0, 0.0]);
     ///
     /// assert_eq!(c, a - b);
     /// ```
@@ -399,34 +401,36 @@ impl<'a, 'b, T> Sub<&'b Polynomial<T>> for &'a Polynomial<T>
     /// # Example
     ///
     /// ```math
-    /// (1 + 2x + 3x^2) - (1 + 2x) = 3x^2
+    /// (3x^2 + 2x + 1) - (2x + 21) = 3x^2
     /// ```
     ///
     /// ```
     /// use mathru::algebra::abstr::Polynomial;
     ///
-    /// let a: Polynomial<f64> = Polynomial::from_coef(vec![1.0, 2.0, 3.0]);
-    /// let b: Polynomial<f64> = Polynomial::from_coef(vec![1.0, 2.0]);
-    /// let c: Polynomial<f64> = Polynomial::from_coef(vec![0.0, 0.0, 3.0]);
+    /// let a: Polynomial<f64> = Polynomial::from_coef(vec![3.0, 2.0, 1.0]);
+    /// let b: Polynomial<f64> = Polynomial::from_coef(vec![2.0, 1.0]);
+    /// let c: Polynomial<f64> = Polynomial::from_coef(vec![3.0, 0.0, 0.0]);
     ///
     /// assert_eq!(c, &a - &b);
     /// ```
     fn sub(self, rhs: &'b Polynomial<T>) -> Self::Output
     {
-        let mut sum = if self.coef.len() > rhs.coef.len()
+        let mut diff = if self.coef.len() > rhs.coef.len()
         {
             self.coef.clone()
         }
         else {
-            rhs.coef.clone()
+            (-rhs).coef.clone()
         };
 
         for (i, (a_i, b_i)) in self.coef.iter().zip(rhs.coef.iter()).enumerate()
         {
-            sum[i] = *a_i - *b_i
+            diff[i] = *a_i - *b_i
         }
 
-        Polynomial::from_coef(sum)
+        Polynomial {
+            coef: diff
+        }
     }
 }
 
@@ -459,21 +463,21 @@ impl<'a, T> Neg for &'a Polynomial<T>
     /// # Example
     ///
     /// ```math
-    /// -(1 + 2x) = -1 - 2x
+    /// -(2x + 1) = -2x - 1
     /// ```
     /// ```
     /// use mathru::algebra::abstr::Polynomial;
     ///
-    /// let a: Polynomial<f64> = Polynomial::from_coef(vec![1.0, 2.0]);
+    /// let a: Polynomial<f64> = Polynomial::from_coef(vec![2.0, 1.0]);
     ///
-    /// assert_eq!(Polynomial::from_coef(vec![-1.0, -2.0]), -a);
+    /// assert_eq!(Polynomial::from_coef(vec![-2.0, -1.0]), -a);
     /// ```
     ///
     fn neg(self) -> Self::Output
     {
-        Polynomial::from_coef(
-            self.coef.clone().into_iter().map(|x| -x).collect::<Vec<T>>()
-        )
+        Polynomial {
+            coef: self.coef.clone().into_iter().map(|x| -x).collect::<Vec<T>>()
+        }
     }
 }
 
@@ -495,9 +499,9 @@ impl<T> Neg for Polynomial<T>
     /// ```
     fn neg(self) -> Self::Output
     {
-        Polynomial::from_coef(
-            self.coef.into_iter().map(|x| -x).collect::<Vec<T>>()
-        )
+        Polynomial {
+            coef: self.coef.into_iter().map(|x| -x).collect::<Vec<T>>()
+        }
     }
 }
 
@@ -572,21 +576,20 @@ impl<'a, 'b, T> Mul<&'b Polynomial<T>> for &'a Polynomial<T>
     /// # Example
     ///
     /// ```math
-    /// (1 + 2x + 3x^2)(1 + x) = (1 + 3x + 5x^2 + 3x^3)
+    /// (3x^2 + 2x + 1)(x + 1) = (3x^3 + 5x^2 + 3x + 1)
     /// ```
     ///
     /// ```
     /// use mathru::algebra::abstr::Polynomial;
     ///
-    /// let a: Polynomial<f64> = Polynomial::from_coef(vec![1.0, 2.0, 3.0]);
+    /// let a: Polynomial<f64> = Polynomial::from_coef(vec![3.0, 2.0, 1.0]);
     /// let b: Polynomial<f64> = Polynomial::from_coef(vec![1.0, 1.0]);
-    /// let c: Polynomial<f64> = Polynomial::from_coef(vec![1.0, 3.0, 5.0, 3.0]);
+    /// let c: Polynomial<f64> = Polynomial::from_coef(vec![3.0, 5.0, 3.0, 1.0]);
     ///
     /// assert_eq!(c, &a * &b)
     /// ```
     fn mul(self, rhs: &'b Polynomial<T>) -> Self::Output
     {
-
         let deg_lhs = self.degree();
         let deg_rhs = rhs.degree();
 
@@ -601,7 +604,7 @@ impl<'a, 'b, T> Mul<&'b Polynomial<T>> for &'a Polynomial<T>
             }
         }
 
-        Polynomial::from_coef(res)
+        Polynomial{coef: res}
     }
 }
 
@@ -691,7 +694,7 @@ impl<'a, 'b, T> Div<&'b Polynomial<T>> for &'a Polynomial<T>
             }
         }
 
-        (Polynomial::from_coef(quotient), Polynomial::from_coef(Polynomial::reduce_coef(remainder)))
+        (Polynomial{coef: quotient}, Polynomial{coef: Polynomial::reduce_coef(remainder)})
     }
 }
 
@@ -718,7 +721,7 @@ impl<T> Polynomial<T>
 
     pub fn reduce(self) -> Self
     {
-       Polynomial::from_coef(Polynomial::reduce_coef(self.coef))
+       Polynomial{coef: Polynomial::reduce_coef(self.coef)}
     }
 }
 
@@ -730,7 +733,7 @@ impl<T> Polynomial<T>
     /// # Example
     ///
     /// ```math
-    /// p(x) = 3x^2 + 5x^2 + 3x + 1
+    /// p(x) = 3x^3 + 5x^2 + 3x + 1
     /// ```
     ///
     /// ```math
@@ -740,8 +743,8 @@ impl<T> Polynomial<T>
     /// ```
     /// use mathru::algebra::abstr::Polynomial;
     ///
-    /// let c: Polynomial<f64> = Polynomial::from_coef(vec![1.0, 3.0, 5.0, 3.0]);
-    /// let c_s: Polynomial<f64> = Polynomial::from_coef(vec![3.0, 10.0, 9.0]);
+    /// let c: Polynomial<f64> = Polynomial::from_coef(vec![3.0, 5.0, 3.0, 1.0]);
+    /// let c_s: Polynomial<f64> = Polynomial::from_coef(vec![9.0, 10.0, 3.0]);
     ///
     /// assert_eq!(c_s, c.differentiate());
     /// ```
@@ -758,7 +761,7 @@ impl<T> Polynomial<T>
             coef_diff.push(T::from_f64((i + 1) as f64) * *a_i);
         }
 
-        Polynomial::from_coef(Polynomial::reduce_coef(coef_diff))
+        Polynomial{coef: Polynomial::reduce_coef(coef_diff)}
     }
 
     /// Integrate polynomial
@@ -766,7 +769,7 @@ impl<T> Polynomial<T>
     /// # Example
     ///
     /// ```math
-    /// p(x) = 1 + 2x + 3x^2
+    /// p(x) = 3x^2 + 2x + 1
     /// ```
     ///
     /// ```math
@@ -776,8 +779,8 @@ impl<T> Polynomial<T>
     /// ```
     /// use mathru::algebra::abstr::Polynomial;
     ///
-    /// let c: Polynomial<f64> = Polynomial::from_coef(vec![1.0, 2.0, 3.0]);
-    /// let c_s: Polynomial<f64> = Polynomial::from_coef(vec![0.0, 1.0, 1.0, 1.0]);
+    /// let c: Polynomial<f64> = Polynomial::from_coef(vec![3.0, 2.0, 1.0]);
+    /// let c_s: Polynomial<f64> = Polynomial::from_coef(vec![1.0, 1.0, 1.0, 0.0]);
     ///
     /// assert_eq!(c_s, c.integrate());
     /// ```
@@ -791,7 +794,7 @@ impl<T> Polynomial<T>
             coef_int.push(*a_i / T::from_f64((i + 1) as f64));
         }
 
-        Polynomial::from_coef(Polynomial::reduce_coef(coef_int))
+        Polynomial{coef: Polynomial::reduce_coef(coef_int)}
     }
 }
 
@@ -841,7 +844,7 @@ impl<T> Identity<Addition> for Polynomial<T>
 {
     fn id() -> Self
     {
-        Polynomial::from_coef(vec![T::id()])
+        Polynomial{coef: vec![T::id()]}
     }
 }
 

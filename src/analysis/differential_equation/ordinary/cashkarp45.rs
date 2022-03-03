@@ -15,7 +15,7 @@ use crate::analysis::differential_equation::ordinary::{
 
 /// Solves an ODE using the 4th order Cash-Karp algorithm.
 ///
-///<https://en.wikipedia.org/wiki/Cash-Karp_method>
+/// <https://en.wikipedia.org/wiki/Cash-Karp_method>
 ///
 /// # Example
 ///
