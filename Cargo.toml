@@ -1,6 +1,6 @@
 [package]
 name = "mathru"
-version = "0.11.2"
+version = "0.11.3"
 description = "Mathematics library written in Rust"
 authors = ["Matthias Eiholzer <matthias.eiholzer@gmail.com>"]
 exclude = ["literature/*", "tests/*", ".gitignore"]
@@ -15,7 +15,7 @@ autobenches = false
 edition = "2021"
 
 [package.metadata.docs.rs]
-rustdoc-args = ["--html-in-header katex.html"]
+rustdoc-args = ["--html-in-header", "katex.html"]
 
 [lib]
 name = "mathru" 
