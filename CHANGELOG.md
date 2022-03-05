@@ -1,6 +1,9 @@
 # Change Log
 All notable changes starting with the version 0.6.9 are documented here.
 
+## [0.11.3]
+- Fix failing docs.rs build
+
 ## [0.11.2]
 - Legendre polynomials
 - Chebyshev polynomials first & second kind
