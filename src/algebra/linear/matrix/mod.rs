@@ -40,6 +40,9 @@ mod solve;
 mod substitute;
 mod transpose;
 
+#[cfg(feature = "convert-mint")]
+mod mint;
+
 pub use self::{
     inverse::Inverse,
     matrix::Matrix,
@@ -54,5 +57,4 @@ pub use self::{
     matrixrowintoiterator::MatrixRowIntoIterator,
     solve::Solve,
     substitute::Substitute, transpose::Transpose
-
 };

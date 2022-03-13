@@ -1,6 +1,9 @@
 # Change Log
 All notable changes starting with the version 0.6.9 are documented here.
 
+## [0.12.0]
+- Implement convert-mint feature that can be enabled to convert from and to types of the mint crate.
+
 ## [0.11.3]
 - Fix failing docs.rs build
 

@@ -14,6 +14,9 @@ mod mul_assign;
 mod div;
 mod index;
 
+#[cfg(feature = "convert-mint")]
+mod mint;
+
 pub use self::{
     vector::Vector, vectorintoiterator::VectorIntoIterator, vectoriterator::VectorIterator,
     vectoriteratormut::VectorIteratorMut,

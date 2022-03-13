@@ -16,3 +16,6 @@ mod iterator;
 mod solve;
 mod det;
 mod singular;
+
+#[cfg(feature = "mint")]
+mod mint;
