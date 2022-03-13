@@ -1,6 +1,6 @@
 [package]
 name = "mathru"
-version = "0.11.3"
+version = "0.12.0"
 description = "Mathematics library written in Rust"
 authors = ["Matthias Eiholzer <matthias.eiholzer@gmail.com>"]
 exclude = ["literature/*", "tests/*", ".gitignore"]
