@@ -92,7 +92,8 @@ impl<T> Vector<T>
     }
 }
 
-impl<T> Vector<T> where T: Field + Scalar + Power
+impl<T> Vector<T> 
+    where T: Field + Scalar + Power
 {
     /// Computes the p norm
     ///

@@ -7,3 +7,6 @@ mod mul;
 mod mul_assign;
 
 mod transpose;
+
+#[cfg(feature = "convert-mint")]
+mod mint;
