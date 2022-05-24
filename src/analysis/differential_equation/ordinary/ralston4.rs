@@ -24,7 +24,7 @@ impl<T> Default for Ralston4<T> where T: Real
     /// Creates a Ralston4 instance
     fn default() -> Ralston4<T>
     {
-        const SQRT5: f64 = 2.236067977499789694091736687312762;
+        const SQRT5: f64 = 2.236_067_977_499_79;
         let a: Vec<T> = vec![T::from_f64(0.4),
                              T::from_f64((-2889.0 + 1428.0 * SQRT5) / 1024.0), T::from_f64((3785.0 - 1620.0 * SQRT5) / 1024.0),
                              T::from_f64((-3365.0 + 2094.0 * SQRT5) / 6040.0), T::from_f64((-975.0 - 3046.0 * SQRT5) / 2552.0), T::from_f64((467040.0 + 203968.0 * SQRT5) / 240845.0)];
