@@ -6,6 +6,8 @@
 mod chisquare;
 mod g;
 mod t;
+
+#[allow(clippy::module_inception)]
 mod test;
 
 pub use self::{chisquare::ChiSquare, g::G, t::T, test::Test};

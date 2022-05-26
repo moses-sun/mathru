@@ -131,7 +131,7 @@ impl<T> Polynomial<T>
     {
         let n_f64 = n as f64;
 
-        return match n {
+        match n {
             0 => Polynomial{coef: vec![T::one()]},      
             1 => Polynomial{coef: vec![T::zero(), T::one()]}, 
             _ => {
@@ -161,7 +161,7 @@ impl<T> Polynomial<T>
     pub fn from_chebyshev_t(n: u32) -> Polynomial<T>
         where T: Field + Scalar + AbsDiffEq<Epsilon = T>
     {
-        return match n {
+        match n {
             0 => Polynomial{ coef: vec![T::one()]},      
             1 => Polynomial{ coef: vec![T::zero(), T::one()]}, 
             _ => {
@@ -190,7 +190,7 @@ impl<T> Polynomial<T>
     pub fn from_chebyshev_u(n: u32) -> Polynomial<T>
         where T: Field + Scalar + AbsDiffEq<Epsilon = T>
     {
-        return match n {
+        match n {
             0 => Polynomial{coef: vec![T::one()]},      
             1 => Polynomial{coef: vec![T::zero(), T::from_f64(2.0)]}, 
             _ => {
@@ -420,7 +420,7 @@ impl<'a, 'b, T> Sub<&'b Polynomial<T>> for &'a Polynomial<T>
             self.coef.clone()
         }
         else {
-            (-rhs).coef.clone()
+            (-rhs).coef
         };
 
         for (i, (a_i, b_i)) in self.coef.iter().zip(rhs.coef.iter()).enumerate()

@@ -22,7 +22,7 @@ macro_rules! impl_real
 
 			fn euler_gamma() -> Self
 			{
-                0.5772156649015328606065
+                0.577_215_664_901_532_9
 			}
 
 			fn infinity() -> Self
