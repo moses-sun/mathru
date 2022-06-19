@@ -3,9 +3,10 @@ use mathru::{algebra::linear::Vector, analysis::differential_equation::ordinary:
 use std::{default::Default, f64};
 
 /// Define ODE
-/// $y^{'} = ay = f(x, y) $
-/// $y = C a e^{at}$
-/// $'y(t_{s}) = C a e^{at_s} => C = \frac{y(t_s)}{ae^{at_s}}$
+/// $x^{'}(t) = 2x(t) = f(t, x)$
+/// $x(t) = C e^{at}$
+/// $x^'(t) = a x(t) $ 
+/// $x(t_{s}) = C e^{at_s} => C = \frac{y(t_s)}{e^{at_s}}$
 pub struct ExplicitODE1
 {
     time_span: (f64, f64),
@@ -17,7 +18,7 @@ impl Default for ExplicitODE1
     fn default() -> ExplicitODE1
     {
         ExplicitODE1 { time_span: (0.0, 2.0),
-                       init_cond: vector![0.5] }
+                       init_cond: vector![0.5; 2.0] }
     }
 }
 
@@ -40,8 +41,8 @@ impl ExplicitODE<f64> for ExplicitODE1
 }
 
 /// Define ODE
-/// $y^{'} = y^2 + 1 = f(x, y) $
-/// $y = tan(c+x)$
+/// $x^{'}(t) = x^2 + 1 = f(t, x) $
+/// $x(t) = tan(c+t)$
 pub struct ExplicitODE2
 {
     time_span: (f64, f64),
@@ -78,8 +79,8 @@ impl ExplicitODE<f64> for ExplicitODE2
 }
 
 /// Define ODE
-/// $y^{'} = y^2 = f(x, y) $
-/// $y(x) = 1/(c-x)$
+/// $x^{'}(t)xy = x^2 = f(t, x) $
+/// $x(t) = 1/(c-t)$
 pub struct ExplicitODE3
 {
     time_span: (f64, f64),

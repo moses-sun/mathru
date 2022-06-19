@@ -1,6 +1,10 @@
 # Change Log
 All notable changes starting with the version 0.6.9 are documented here.
 
+## 0.13.0
+- Fix bug as reported in [Issue #8](https://gitlab.com/matthiaseiholzer/mathru/-/issues/8) and [Issue #12](https://gitlab.com/matthiaseiholzer/mathru/-/issues/12)
+- Code refactoring
+
 ## [0.12.0]
 - Implement convert-mint feature that can be enabled to convert from and to types of the mint crate.
 

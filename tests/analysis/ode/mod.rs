@@ -1,21 +1,26 @@
+
 mod bdf;
-mod bogackishampine23;
-mod cashkarp45;
-mod dormandprince;
-mod fehlberg45;
+mod adamsbashforth;
+mod problem;
+
+mod adaptive_stepper;
+mod bogackishampine32;
+mod cashkarp54;
+mod dormandprince54;
+mod fehlberg54;
+mod fehlberg21;
+// mod tsitouras54;
+
 mod explicit_euler;
 mod heun2;
-mod heun3;
-mod ssprk3;
-mod implicit_euler;
-mod kutta3;
-mod kutta38;
 mod midpoint;
-mod problem;
+mod heun3;
+mod kutta3;
+mod ssprk3;
+mod kutta38;
 mod ralston2;
 mod ralston3;
 mod rungekutta4;
 mod ralston4;
-mod fehlberg12;
-// mod tsitouras;
-mod adamsbashforth;
+
+mod implicit_euler;

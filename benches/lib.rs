@@ -22,7 +22,7 @@ criterion_main!(
 
     // analysis::vector_bench::euler,
 
-    analysis::dormandprince::dormandprince
+    analysis::ode::dormandprince::dormandprince,
+    algebra::linear::matrix::matrix,
+    analysis::ode::ode,
 );
-
-// criterion_main!(algebra::linear::matrix::matrix, analysis::ode::ode,);

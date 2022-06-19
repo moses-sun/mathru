@@ -117,13 +117,13 @@ Add this to your `Cargo.toml` for the native Rust implementation:
 
 ```toml
 [dependencies.mathru]
-version = "0.11"
+version = "0.13"
 ```
 Add the following lines to 'Cargo.toml' if the openblas library should be used:
 
 ```toml
 [dependencies.mathru]
-version = "0.11"
+version = "0.13"
 default-features = false
 features = "openblas"
 ```

@@ -1,13 +1,13 @@
 use mathru::{
     algebra::linear::Vector,
-    analysis::differential_equation::ordinary::{problem, ImplicitEuler, ImplicitODE},
+    analysis::differential_equation::ordinary::{problem::Euler, solver::runge_kutta::implicit::ImplicitEuler, ImplicitODE},
 };
 use plotters::prelude::*;
 
 fn main()
 {
     // Create an ODE instance
-    let problem: problem::Euler<f64> = problem::Euler::default();
+    let problem: Euler<f64> = Euler::default();
     let solver: ImplicitEuler<f64> = ImplicitEuler::new(0.0001);
 
     let (x, y): (Vec<f64>, Vec<Vector<f64>>) = solver.solve(&problem).unwrap();

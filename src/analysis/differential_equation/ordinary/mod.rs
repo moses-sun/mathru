@@ -9,59 +9,97 @@
 //! ```math
 //! \frac{dy}{dt}=f(t, y)
 //! ```
+//! 
+//! 
+//! Solves an ODE using the Runge-Kutta-Dormand-Prince algorithm.
+//!
+//!<https://en.wikipedia.org/wiki/Dormand-Prince_method>
+//!
+//! # Example
+//!
+//! For this example, we want to solve the following ordinary differential
+//! equation:
+//! ```math
+//! \frac{dy}{dt} = ay = f(t, y)
+//! ```
+//! The initial condition is $y(0) = 0.5$ and we solve it in the interval
+//! $\lbrack 0, 2\rbrack$ The following equation is the closed solution for
+//! this ODE:
+//! ```math
+//! y(t) = C a e^{at}
+//! ```
+//! $C$ is a parameter and depends on the initial condition $y(t_{0})$
+//! ```math
+//! C = \frac{y(t_{0})}{ae^{at_{0}}}
+//! ```
+//!
+//! In this example, we set $a=2$
+//! ```
+//! # #[macro_use]
+//! # extern crate mathru;
+//! # fn main()
+//! # {
+//! use mathru::{
+//!     algebra::linear::Vector,
+//!     analysis::differential_equation::ordinary::{solver::runge_kutta::{DormandPrince54, ProportionalControl}, ExplicitODE},
+//! };
+//!
+//! pub struct ExplicitODE1
+//! {
+//!     time_span: (f64, f64),
+//!     init_cond: Vector<f64>,
+//! }
+//!
+//! impl Default for ExplicitODE1
+//! {
+//!     fn default() -> ExplicitODE1
+//!     {
+//!         ExplicitODE1 { time_span: (0.0, 2.0),
+//!                        init_cond: vector![0.5] }
+//!     }
+//! }
+//!
+//! impl ExplicitODE<f64> for ExplicitODE1
+//! {
+//!     fn func(&self, _t: &f64, x: &Vector<f64>) -> Vector<f64>
+//!     {
+//!         return x * &2.0f64;
+//!     }
+//!
+//!     fn time_span(&self) -> (f64, f64)
+//!     {
+//!         return self.time_span;
+//!     }
+//!
+//!     fn init_cond(&self) -> Vector<f64>
+//!     {
+//!         return self.init_cond.clone();
+//!     }
+//! }
+//!
+//! let h_0: f64 = 0.1;
+//! let fac: f64 = 0.9;
+//! let fac_min: f64 = 0.01;
+//! let fac_max: f64 = 2.0;
+//! let n_max: u32 = 500;
+//! let abs_tol: f64 = 10e-8;
+//! let rel_tol: f64 = 10e-6;
+//!
+//! let solver: ProportionalControl<f64> = ProportionalControl::new(n_max, h_0, fac, fac_min, fac_max, abs_tol, rel_tol);
+//! let problem: ExplicitODE1 = ExplicitODE1::default();
+//!
+//! // Solve the ODE
+//! let (t, y): (Vec<f64>, Vec<Vector<f64>>) = solver.solve(&problem, &DormandPrince54::default()).unwrap();
+//!
+//! # }
+//! ```
 
-mod explicit_euler;
-mod heun2;
-mod midpoint;
-mod ralston2;
-mod heun3;
-mod ralston3;
-mod ssprk3;
-mod kutta3;
-mod kutta38;
-mod rungekutta4;
-mod ralston4;
-
-mod fehlberg12;
-mod implicit_euler;
-mod fehlberg45;
-// mod tsitouras;
-mod adamsbashforth;
-mod adaptive_stepper;
-pub mod explicit_method;
-mod explicit_ode;
-mod fixed_stepper;
-mod implicit_method;
-mod implicit_ode;
+pub mod solver;
 pub mod problem;
-pub mod butcher;
-mod bdf;
-mod bogackishampine23;
-mod cashkarp45;
-mod dormandprince;
 
-pub use explicit_euler::ExplicitEuler;
-pub use bogackishampine23::BogackiShampine23;
-pub use cashkarp45::CashKarp45;
-pub use dormandprince::DormandPrince;
-pub use heun2::Heun2;
-pub use heun3::Heun3;
-pub use kutta3::Kutta3;
-pub use kutta38::Kutta38;
-pub use midpoint::Midpoint;
-pub use ralston2::Ralston2;
-pub use ralston3::Ralston3;
-pub use ssprk3::Ssprk3;
-pub use rungekutta4::RungeKutta4;
-pub use ralston4::Ralston4;
-pub use fehlberg12::Fehlberg12;
-pub use fehlberg45::Fehlberg45;
-pub use bdf::BDF;
-pub use implicit_euler::ImplicitEuler;
-pub use adamsbashforth::AdamsBashforth;
-// pub use tsitouras::Tsitouras;
-pub use explicit_ode::ExplicitODE;
+mod explicit_ode;
+mod implicit_ode;
+
 pub use implicit_ode::ImplicitODE;
-pub use butcher::ButcherFixedStepSize;
-pub use fixed_stepper::FixedStepper;
-pub use adaptive_stepper::ProportionalControl;
+pub use explicit_ode::ExplicitODE;
+
