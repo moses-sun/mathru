@@ -1,37 +1,26 @@
+use super::problem::{ExplicitODE2};
 use mathru::{
     algebra::linear::Vector,
-    analysis::differential_equation::ordinary::{ExplicitODE, FixedStepper, Kutta3},
+    analysis::differential_equation::ordinary::solver::runge_kutta::{Kutta3, ExplicitRKMethod},
+    elementary::Trigonometry
 };
 
-use super::problem::{ExplicitODE1, ExplicitODE2};
 
 #[test]
-fn fn1()
-{
-    let problem: ExplicitODE1 = ExplicitODE1::default();
-    let solver: FixedStepper<f64> = FixedStepper::new(0.01);
-    let (t, y): (Vec<f64>, Vec<Vector<f64>>) = solver.solve(&problem, &Kutta3::default()).unwrap();
-
-    let len: usize = y.len();
-
-    let time_span: (f64, f64) = problem.time_span();
-    let init_cond: Vector<f64> = problem.init_cond();
-
-    assert_relative_eq!(time_span.1, t[len - 1], epsilon=0.000000001);
-    assert_relative_eq!(init_cond[0] * (2.0 * time_span.1).exp(), y[len - 1][0], epsilon=0.00004);
-}
-
-#[test]
-fn fn2()
+fn test_1()
 {
     let problem: ExplicitODE2 = ExplicitODE2::default();
-    let solver: FixedStepper<f64> = FixedStepper::new(0.1);
-    let (t, y): (Vec<f64>, Vec<Vector<f64>>) = solver.solve(&problem, &Kutta3::default()).unwrap();
 
-    let len: usize = y.len();
+    let rk = Kutta3::default();
+    let t_0 = 0.9;
+    let h = 0.1;
+    let t_1 = t_0 + h;
+    
+    let x_0 = vector![t_0.tan()];
 
-    let time_span: (f64, f64) = problem.time_span();
+    let x_1 = rk.tableau().do_step(&problem, &t_0, &x_0, &h);
 
-    assert_relative_eq!(time_span.1, t[len - 1], epsilon=0.00000001);
-    assert_relative_eq!(time_span.1.tan(), y[len - 1][0], epsilon=0.04);
+    let x_1_ref = vector![t_1.tan()];
+
+    assert_relative_eq!(x_1, x_1_ref, epsilon=0.00006);
 }

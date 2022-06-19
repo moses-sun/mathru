@@ -61,4 +61,3 @@ impl Function<Vector<f64>> for Sqrt
         return x.clone().apply(&|x: &f64|-> f64 { return x * x - self.y});
     }
 }
-

@@ -1,6 +1,6 @@
 use mathru::{
     algebra::linear::Vector,
-    analysis::differential_equation::ordinary::{problem, ImplicitEuler},
+    analysis::differential_equation::ordinary::{problem, solver::runge_kutta::ImplicitEuler},
 };
 
 

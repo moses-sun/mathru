@@ -1,13 +1,20 @@
-use mathru::{
+use mathru::
+{
     algebra::linear::Vector,
-    analysis::differential_equation::ordinary::{problem, DormandPrince, ProportionalControl, ExplicitODE},
+    analysis::differential_equation::ordinary::
+    {
+        problem::Euler, 
+        ExplicitODE,
+        solver::runge_kutta::explicit::adaptive::DormandPrince54,
+        solver::runge_kutta::ProportionalControl
+    },
 };
 use plotters::prelude::*;
 
 fn main()
 {
     // Create an ODE instance
-    let problem: problem::Euler<f64> = problem::Euler::default();
+    let problem: Euler<f64> = Euler::default();
 
     let (x_start, x_end) = problem.time_span();
 
@@ -23,7 +30,7 @@ fn main()
     let solver: ProportionalControl<f64> = ProportionalControl::new(n_max, h_0, fac, fac_min, fac_max, abs_tol, rel_tol);
 
     // Solve ODE
-    let (x, y): (Vec<f64>, Vec<Vector<f64>>) = solver.solve(&problem, &DormandPrince::default()).unwrap();
+    let (x, y): (Vec<f64>, Vec<Vector<f64>>) = solver.solve(&problem, &DormandPrince54::default()).unwrap();
 
     //Create chart
     let mut graph_x1: Vec<(f64, f64)> = Vec::with_capacity(x.len());

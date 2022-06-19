@@ -3,9 +3,9 @@ use criterion::Criterion;
 extern crate mathru;
 
 use super::ode_problems::ExplicitODE1;
-use mathru::analysis::differential_equation::ordinary::{
+use mathru::analysis::differential_equation::ordinary::solver::runge_kutta::{
     FixedStepper, ProportionalControl,
-    DormandPrince, ExplicitEuler, Heun2, Kutta3, RungeKutta4, Fehlberg45,
+    ExplicitEuler, Heun2, Kutta3, RungeKutta4, Fehlberg54,
 };
 
 criterion_group!(ode,
@@ -13,7 +13,7 @@ criterion_group!(ode,
                  heun,
                  kutta3,
                  rungekutta4,
-                 fehlberg45,
+                 fehlberg54,
                  );
 
 fn forward_euler(bench: &mut Criterion)
@@ -60,7 +60,7 @@ fn rungekutta4(bench: &mut Criterion)
          });
 }
 
-fn fehlberg45(bench: &mut Criterion)
+fn fehlberg54(bench: &mut Criterion)
 {
     let problem: ExplicitODE1 = ExplicitODE1::default();
 
@@ -73,7 +73,7 @@ fn fehlberg45(bench: &mut Criterion)
     let rel_tol: f64 = 10e-3;
 
     let solver: ProportionalControl<f64> = ProportionalControl::new(n_max, h_0, fac, fac_min, fac_max, abs_tol, rel_tol);
-    let method = Fehlberg45::default();
+    let method = Fehlberg54::default();
 
     bench.bench_function("RungeKuttaFehlberg54", move |bh| {
              bh.iter(|| solver.solve(&problem, &method).unwrap())

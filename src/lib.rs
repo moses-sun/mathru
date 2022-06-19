@@ -12,7 +12,7 @@
 //!
 //! ```toml
 //! [dependencies]
-//! mathru = "0.11"
+//! mathru = "0.13"
 //! ```
 //!
 //! Then it is ready to be used:
