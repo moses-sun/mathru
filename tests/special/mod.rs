@@ -1,5 +1,4 @@
 mod beta;
-mod gamma;
 mod error;
+mod gamma;
 mod hypergeometrical;
-

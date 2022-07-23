@@ -11,12 +11,13 @@ use std::clone::Clone;
 /// <https://en.wikipedia.org/wiki/Bernoulli_distribution>
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[derive(Clone, Copy, Debug)]
-pub struct Bernoulli<T>
-{
+pub struct Bernoulli<T> {
     p: T,
 }
 
-impl<T> Bernoulli<T> where T: Real
+impl<T> Bernoulli<T>
+where
+    T: Real,
 {
     /// Create a probability distribution with p(X=1) = p
     ///
@@ -35,10 +36,8 @@ impl<T> Bernoulli<T> where T: Real
     ///
     /// let distrib: Bernoulli<f64> = Bernoulli::new(0.2);
     /// ```
-    pub fn new(p: T) -> Bernoulli<T>
-    {
-        if p < T::zero() || p > T::one()
-        {
+    pub fn new(p: T) -> Bernoulli<T> {
+        if p < T::zero() || p > T::one() {
             panic!()
         }
 
@@ -46,7 +45,9 @@ impl<T> Bernoulli<T> where T: Real
     }
 }
 
-impl<T> Discrete<T, u8, T> for Bernoulli<T> where T: Real
+impl<T> Discrete<T, u8, T> for Bernoulli<T>
+where
+    T: Real,
 {
     /// Probability mass function of the Bernoulli distribution
     ///
@@ -67,19 +68,14 @@ impl<T> Discrete<T, u8, T> for Bernoulli<T> where T: Real
     /// let x: u8 = 0;
     /// let p: f64 = distrib.pmf(x);
     /// ```
-    fn pmf(&self, x: u8) -> T
-    {
-        if (x == 1) || (x == 0)
-        {
-            if x == 0
-            {
+    fn pmf(&self, x: u8) -> T {
+        if (x == 1) || (x == 0) {
+            if x == 0 {
                 T::one() - self.p
             } else {
                 self.p
             }
-        }
-        else
-        {
+        } else {
             panic!()
         }
     }
@@ -99,15 +95,12 @@ impl<T> Discrete<T, u8, T> for Bernoulli<T> where T: Real
     /// let x: f64 = 0.4;
     /// let p: f64 = distrib.cdf(x);
     /// ```
-    fn cdf(&self, x: T) -> T
-    {
-        if x >= T::one()
-        {
+    fn cdf(&self, x: T) -> T {
+        if x >= T::one() {
             return T::one();
         }
 
-        if x <= T::zero()
-        {
+        if x <= T::zero() {
             T::zero()
         } else {
             T::one() - self.p
@@ -124,8 +117,7 @@ impl<T> Discrete<T, u8, T> for Bernoulli<T> where T: Real
     /// let distrib: Bernoulli<f64> = Bernoulli::new(0.2);
     /// let mean: f64 = distrib.mean();
     /// ```
-    fn mean(&self) -> T
-    {
+    fn mean(&self) -> T {
         self.p
     }
 
@@ -139,8 +131,7 @@ impl<T> Discrete<T, u8, T> for Bernoulli<T> where T: Real
     /// let distrib: Bernoulli<f64> = Bernoulli::new(0.2);
     /// let var: f64 = distrib.variance();
     /// ```
-    fn variance(&self) -> T
-    {
+    fn variance(&self) -> T {
         self.p * (T::one() - self.p)
     }
 }

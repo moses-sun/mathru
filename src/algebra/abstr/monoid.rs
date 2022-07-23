@@ -16,9 +16,7 @@ use super::{
 /// $\forall x, y, z \in \mathbb{M}$: $x \circ (y \circ z) = (x \circ y)
 /// \circ z$ 2. $e$ neutral element <br>
 /// $\forall x \in \mathbb{M}$: $x \circ e = e \circ x = x$
-pub trait Monoid<O: Operator>: Semigroup<O> + Identity<O>
-{
-}
+pub trait Monoid<O: Operator>: Semigroup<O> + Identity<O> {}
 
 macro_rules! impl_monoid
 (
@@ -35,9 +33,7 @@ macro_rules! impl_monoid
 impl_monoid!(Addition; add; u8, u16, u32, u64, u128, i8, i16, i32, i64, i128, f32, f64);
 impl_monoid!(Multiplication; mul; u8, u16, u32, u64, u128, i8, i16, i32, i64, i128, f32, f64);
 
-pub trait MonoidAdd: Monoid<Addition> + SemigroupAdd + Zero
-{
-}
+pub trait MonoidAdd: Monoid<Addition> + SemigroupAdd + Zero {}
 
 macro_rules! impl_monoidadd
 (
@@ -54,9 +50,7 @@ macro_rules! impl_monoidadd
 
 impl_monoidadd!(u8, u16, u32, u64, u128, i8, i16, i32, i64, i128, f32, f64);
 
-pub trait MonoidMul: Monoid<Multiplication> + SemigroupMul + One
-{
-}
+pub trait MonoidMul: Monoid<Multiplication> + SemigroupMul + One {}
 
 macro_rules! impl_monoidmul
 (
@@ -73,8 +67,7 @@ macro_rules! impl_monoidmul
 
 impl_monoidmul!(u8, u16, u32, u64, u128, i8, i16, i32, i64, i128, f32, f64);
 
-pub trait One
-{
+pub trait One {
     fn one() -> Self;
 }
 
@@ -97,8 +90,7 @@ macro_rules! impl_one
 impl_one!(1; u8, u16, u32, u64, u128, i8, i16, i32, i64, i128);
 impl_one!(1.0; f32, f64);
 
-pub trait Zero
-{
+pub trait Zero {
     fn zero() -> Self;
 }
 

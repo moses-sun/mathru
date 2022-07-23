@@ -1,14 +1,13 @@
-use crate::algebra::{
-    linear::{
-        matrix::{Transpose, EigenDec, Solve},
-        Matrix, Vector,
-    },
+use crate::algebra::abstr::{AbsDiffEq, Field, Scalar};
+use crate::algebra::linear::{
+    matrix::{EigenDec, Solve, Transpose},
+    Matrix, Vector,
 };
-use crate::algebra::abstr::{Field, Scalar, AbsDiffEq};
 use crate::elementary::Power;
 
 impl<T> Matrix<T>
-    where T: Field + Scalar + Power + AbsDiffEq<Epsilon = T>
+where
+    T: Field + Scalar + Power + AbsDiffEq<Epsilon = T>,
 {
     /// Computes the eigenvalues of a real matrix
     ///
@@ -22,11 +21,16 @@ impl<T> Matrix<T>
     /// let a: Matrix<f64> = Matrix::new(3, 3, vec![1.0, -3.0, 3.0, 3.0, -5.0, 3.0, 6.0, -6.0, 4.0]);
     /// let eigen: EigenDec<f64> = a.dec_eigen().unwrap();
     /// ```
-    pub fn dec_eigen(self) -> Result<EigenDec<T>, ()>
-    {
+    pub fn dec_eigen(self) -> Result<EigenDec<T>, ()> {
         let (m, n): (usize, usize) = self.dim();
-        assert_eq!(m, n, "Unable to compute the eigen value of a non-square matrix");
-        assert_ne!(m, 0, "Unable to compute the eigen value of an empty matrix.");
+        assert_eq!(
+            m, n,
+            "Unable to compute the eigen value of a non-square matrix"
+        );
+        assert_ne!(
+            m, 0,
+            "Unable to compute the eigen value of an empty matrix."
+        );
 
         let value: Vector<T> = self.eigenvalue_r();
         let vector: Matrix<T> = self.eigenvector_r(&value);
@@ -34,8 +38,7 @@ impl<T> Matrix<T>
         Ok(EigenDec::new(value, vector))
     }
 
-    pub fn eigenvalue_r(&self) -> Vector<T>
-    {
+    pub fn eigenvalue_r(&self) -> Vector<T> {
         let (m, _n): (usize, usize) = self.dim();
 
         let h: Matrix<T> = self.dec_hessenberg().h();
@@ -44,16 +47,14 @@ impl<T> Matrix<T>
 
         let mut eig: Vector<T> = Vector::zero(m);
 
-        for i in 0..m
-        {
+        for i in 0..m {
             eig[i] = t[[i, i]];
         }
 
         eig
     }
 
-    fn francis(mut self) -> (Matrix<T>, Matrix<T>)
-    {
+    fn francis(mut self) -> (Matrix<T>, Matrix<T>) {
         let epsilon: T = T::default_epsilon();
 
         let (m, n): (usize, usize) = self.dim();
@@ -63,25 +64,22 @@ impl<T> Matrix<T>
         let mut p: usize = n;
         let mut q: usize;
 
-        while p > 2
-        {
+        while p > 2 {
             q = p - 1;
 
             // Bulge generating
             let s: T = self[[q - 1, q - 1]] + self[[p - 1, p - 1]];
             let t: T = self[[q - 1, q - 1]] * self[[p - 1, p - 1]]
-                       - self[[q - 1, p - 1]] * self[[p - 1, q - 1]];
+                - self[[q - 1, p - 1]] * self[[p - 1, q - 1]];
 
             // compute first 3 elements of first column of M
-            let mut x: T = self[[0, 0]].pow(T::from_f64(2.0))
-                           + self[[0, 1]] * self[[1, 0]]
-                           - s * self[[0, 0]]
-                           + t;
+            let mut x: T = self[[0, 0]].pow(T::from_f64(2.0)) + self[[0, 1]] * self[[1, 0]]
+                - s * self[[0, 0]]
+                + t;
             let mut y: T = self[[1, 0]] * (self[[0, 0]] + self[[1, 1]] - s);
             let mut z: T = self[[1, 0]] * self[[2, 1]];
 
-            for k in 0..(p - 2)
-            {
+            for k in 0..(p - 2) {
                 let b: Vector<T> = Vector::new_column(vec![x, y, z]);
                 let h: Matrix<T> = Matrix::householder(&b, 0);
 
@@ -106,8 +104,7 @@ impl<T> Matrix<T>
 
                 x = self[[k + 1, k]];
                 y = self[[k + 2, k]];
-                if k < (p - 3)
-                {
+                if k < (p - 3) {
                     z = self[[k + 3, k]];
                 }
             }
@@ -133,17 +130,13 @@ impl<T> Matrix<T>
             // check for convergence
             let m: T = self[[q - 1, q - 1]].abs();
             let n: T = self[[p - 1, p - 1]].abs();
-            if self[[p - 1, q - 1]].abs() < epsilon * (m + n)
-            {
+            if self[[p - 1, q - 1]].abs() < epsilon * (m + n) {
                 self[[p - 1, q - 1]] = T::zero();
                 p -= 1;
-            }
-            else
-            {
+            } else {
                 let k: T = self[[q - 2, q - 2]].abs();
                 let l: T = self[[q - 1, q - 1]].abs();
-                if self[[p - 2, q - 2]].abs() < epsilon * (k + l)
-                {
+                if self[[p - 2, q - 2]].abs() < epsilon * (k + l) {
                     self[[p - 2, q - 2]] = T::zero();
                     p -= 2;
                 }
@@ -154,14 +147,12 @@ impl<T> Matrix<T>
         (u, self)
     }
 
-    pub fn eigenvector_r(&self, value: &Vector<T>) -> Matrix<T>
-    {
+    pub fn eigenvector_r(&self, value: &Vector<T>) -> Matrix<T> {
         let eye: Matrix<T> = Matrix::one(self.m);
         let zero_vector: Vector<T> = Vector::zero(self.m);
         let mut vectors: Matrix<T> = Matrix::zero(self.m, self.m);
 
-        for (c, val) in value.iter().enumerate()
-        {
+        for (c, val) in value.iter().enumerate() {
             let diff: Matrix<T> = self - &(&eye * val);
             let vec: Vector<T> = diff.solve(&zero_vector).unwrap();
             vectors.set_column(&vec, c);

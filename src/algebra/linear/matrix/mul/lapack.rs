@@ -6,50 +6,61 @@ use std::ops::Mul;
 
 /// Multiplies matrix by vector.
 impl<'a, 'b, T> Mul<&'b Vector<T>> for &'a Matrix<T>
-    where T: Field + Scalar
+where
+    T: Field + Scalar,
 {
     type Output = Vector<T>;
 
-    fn mul(self, v: &'b Vector<T>) -> Vector<T>
-    {
-        let (_self_m, self_n): (usize, usize) = self.dim();
-        let (v_m, _v_n): (usize, usize) = v.dim();
+    fn mul(self, v: &'b Vector<T>) -> Vector<T> {
+        let (self_m, self_n): (usize, usize) = self.dim();
+        let (v_m, v_n): (usize, usize) = v.dim();
 
-        if self_n != v_m
-        {
+        if self_n != v_m {
             panic!("Matrix and Vector dimension do not match");
         }
 
-        let mut prod_data = Vec::with_capacity(self.m);
+        let m = self_m as i32;
+        let k = self_n as i32;
+        let n = v_n as i32;
 
-        for i in 0..self.m
-        {
-            let mut row_column_product: T = T::zero();
-            for k in 0..self.n
-            {
-                row_column_product += self.data[k * self.m + i] * v[k];
-            }
-            prod_data.push(row_column_product);
-        }
+        let mut prod_data = Vec::with_capacity(self_m);
+        unsafe { prod_data.set_len(self_m) }
+
+        T::xgemm(
+            'N' as u8,
+            'N' as u8,
+            m,
+            n,
+            k,
+            T::one(),
+            &self.data[..],
+            m,
+            &v.data.data[..],
+            k,
+            T::zero(),
+            &mut prod_data[..],
+            m,
+        );
 
         Vector::new_column(prod_data)
     }
 }
 
-
 // Multiplies matrix by vector.
-impl<T> Mul<Vector<T>> for Matrix<T> where T: Field + Scalar
+impl<T> Mul<Vector<T>> for Matrix<T>
+where
+    T: Field + Scalar,
 {
     type Output = Vector<T>;
 
-    fn mul(self, v: Vector<T>) -> Vector<T>
-    {
+    fn mul(self, v: Vector<T>) -> Vector<T> {
         (&self) * (&v)
     }
 }
 
 impl<T> Mul<Matrix<T>> for Matrix<T>
-    where T: Field + Scalar
+where
+    T: Field + Scalar,
 {
     type Output = Matrix<T>;
 
@@ -65,14 +76,14 @@ impl<T> Mul<Matrix<T>> for Matrix<T>
     /// let res_ref: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 0.0, -18.0, 49.0]);
     /// assert_eq!(res_ref, a * b);
     /// ```
-    fn mul(self, rhs: Self) -> Self::Output
-    {
+    fn mul(self, rhs: Self) -> Self::Output {
         (&self).mul(&rhs)
     }
 }
 
 impl<'a, 'b, T> Mul<&'b Matrix<T>> for &'a Matrix<T>
-    where T: Field + Scalar
+where
+    T: Field + Scalar,
 {
     type Output = Matrix<T>;
 
@@ -88,8 +99,7 @@ impl<'a, 'b, T> Mul<&'b Matrix<T>> for &'a Matrix<T>
     /// let res_ref: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 0.0, -18.0, 49.0]);
     /// assert_eq!(res_ref, &a * &b);
     /// ```
-    fn mul(self, rhs: &'b Matrix<T>) -> Self::Output
-    {
+    fn mul(self, rhs: &'b Matrix<T>) -> Self::Output {
         let (self_rows, self_cols) = self.dim();
         let (rhs_rows, rhs_cols) = rhs.dim();
 
@@ -100,26 +110,29 @@ impl<'a, 'b, T> Mul<&'b Matrix<T>> for &'a Matrix<T>
         let k = self_cols as i32;
         let mut c: Matrix<T> = Matrix::zero(m as usize, n as usize);
 
-        T::xgemm('N' as u8,
-                 'N' as u8,
-                 m,
-                 n,
-                 k,
-                 T::one(),
-                 &self.data[..],
-                 m,
-                 &rhs.data[..],
-                 k,
-                 T::zero(),
-                 &mut c.data[..],
-                 m);
+        T::xgemm(
+            'N' as u8,
+            'N' as u8,
+            m,
+            n,
+            k,
+            T::one(),
+            &self.data[..],
+            m,
+            &rhs.data[..],
+            k,
+            T::zero(),
+            &mut c.data[..],
+            m,
+        );
 
         return c;
     }
 }
 
 impl<'a, 'b, T> Mul<&'b Matrix<T>> for &'a mut Matrix<T>
-    where T: Field + Scalar
+where
+    T: Field + Scalar,
 {
     type Output = &'a mut Matrix<T>;
 
@@ -135,8 +148,7 @@ impl<'a, 'b, T> Mul<&'b Matrix<T>> for &'a mut Matrix<T>
     /// let res_ref: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 0.0, -18.0, 49.0]);
     /// assert_eq!(res_ref, *(&mut a * &b));
     /// ```
-    fn mul(self, rhs: &'b Matrix<T>) -> Self::Output
-    {
+    fn mul(self, rhs: &'b Matrix<T>) -> Self::Output {
         let (self_rows, self_cols) = self.dim();
         let (rhs_rows, rhs_cols) = rhs.dim();
 
@@ -146,42 +158,48 @@ impl<'a, 'b, T> Mul<&'b Matrix<T>> for &'a mut Matrix<T>
         let n = rhs_cols as i32;
         let k = self_cols as i32;
 
-        T::xgemm('N' as u8,
-                 'N' as u8,
-                 m,
-                 n,
-                 k,
-                 T::one(),
-                 &self.data.clone()[..],
-                 m,
-                 &rhs.data[..],
-                 k,
-                 T::zero(),
-                 &mut self.data[..],
-                 m);
+        T::xgemm(
+            'N' as u8,
+            'N' as u8,
+            m,
+            n,
+            k,
+            T::one(),
+            &self.data.clone()[..],
+            m,
+            &rhs.data[..],
+            k,
+            T::zero(),
+            &mut self.data[..],
+            m,
+        );
 
+        self.data.truncate(self_rows * rhs_cols);
+        self.m = self_rows;
+        self.n = rhs_cols;
         self
     }
 }
 
 impl<'a, 'b, T> Matrix<T>
-    where T: Field + Scalar
+where
+    T: Field + Scalar,
 {
-    fn mul_scalar(mut self, s: &'b T) -> Matrix<T>
-    {
+    fn mul_scalar(mut self, s: &'b T) -> Matrix<T> {
         let (rows, cols): (usize, usize) = self.dim();
         //
         let m: i32 = rows as i32;
         let n: i32 = cols as i32;
 
-        T::xscal(m * n,  *s,&mut self.data[..], 1);
+        T::xscal(m * n, *s, &mut self.data[..], 1);
         return self;
     }
 }
 
 //Multiplies matrix by scalar
 impl<T> Mul<T> for Matrix<T>
-    where T: Field + Scalar
+where
+    T: Field + Scalar,
 {
     type Output = Matrix<T>;
 
@@ -198,15 +216,15 @@ impl<T> Mul<T> for Matrix<T>
     ///
     /// assert_eq!(res_ref, a * f);
     /// ```
-    fn mul(self, s: T) -> Matrix<T>
-    {
+    fn mul(self, s: T) -> Matrix<T> {
         self.mul_scalar(&s)
     }
 }
 
 // Multiplies matrix by scalar
 impl<'a, 'b, T> Mul<&'b T> for &'a Matrix<T>
-    where T: Field + Scalar
+where
+    T: Field + Scalar,
 {
     type Output = Matrix<T>;
 
@@ -222,15 +240,15 @@ impl<'a, 'b, T> Mul<&'b T> for &'a Matrix<T>
     ///
     /// assert_eq!(res_ref, &a * &4.0);
     /// ```
-    fn mul(self, m: &'b T) -> Matrix<T>
-    {
+    fn mul(self, m: &'b T) -> Matrix<T> {
         return self.clone().mul_scalar(m);
     }
 }
 
 // Multiplies matrix by scalar
 impl<'a, 'b, T> Mul<&'b T> for &'a mut Matrix<T>
-    where T: Field + Scalar
+where
+    T: Field + Scalar,
 {
     type Output = &'a mut Matrix<T>;
 
@@ -246,9 +264,8 @@ impl<'a, 'b, T> Mul<&'b T> for &'a mut Matrix<T>
     ///
     /// assert_eq!(res_ref, *(&mut a * &4.0));
     /// ```
-    fn mul(self, m: &'b T) -> Self::Output
-    {
-        let _ = self.data.iter_mut().for_each(&|a: &mut T| *a *= *m );
+    fn mul(self, m: &'b T) -> Self::Output {
+        let _ = self.data.iter_mut().for_each(&|a: &mut T| *a *= *m);
         self
     }
 }

@@ -1,10 +1,9 @@
-use mathru::algebra::linear::{Matrix, Vector};
-use mathru::algebra::abstr::Complex;
 use mathru::algebra::abstr::cast::FromPrimitive;
+use mathru::algebra::abstr::Complex;
+use mathru::algebra::linear::{Matrix, Vector};
 
 #[test]
-fn matrix_owner()
-{
+fn matrix_owner() {
     let a: Matrix<f64> = matrix![   1.0, 2.0, 5.0;
                                     3.0, 4.0, 6.0];
 
@@ -21,8 +20,7 @@ fn matrix_owner()
 }
 
 #[test]
-fn matrix_borrow()
-{
+fn matrix_borrow() {
     let a: Matrix<f64> = matrix![   1.0, 2.0, 5.0;
                                     3.0, 4.0, 6.0];
 
@@ -39,8 +37,7 @@ fn matrix_borrow()
 }
 
 #[test]
-fn matrix_borrow_mut()
-{
+fn matrix_borrow_mut() {
     let mut a: Matrix<f64> = matrix![   1.0, 2.0, 5.0;
                                     3.0, 4.0, 6.0];
 
@@ -56,10 +53,8 @@ fn matrix_borrow_mut()
     assert_relative_eq!(prod_ref, a);
 }
 
-
 #[test]
-fn mul_1()
-{
+fn mul_1() {
     let a: Matrix<f64> = matrix![   1.0, 2.0, 5.0;
                                     3.0, 4.0, 6.0];
 
@@ -76,8 +71,7 @@ fn mul_1()
 }
 
 #[test]
-fn mul_2()
-{
+fn mul_2() {
     let a: Matrix<f64> = matrix![1.0, 2.0, 5.0];
     let b: Matrix<f64> = matrix![   5.0, 8.0;
                                     6.0, 9.0;
@@ -91,8 +85,7 @@ fn mul_2()
 }
 
 #[test]
-fn mul_3()
-{
+fn mul_3() {
     let a: Matrix<f64> = matrix![   1.0, 2.0, 5.0;
                                     3.0, 4.0, 6.0];
     let b: Matrix<f64> = matrix![   5.0;
@@ -103,12 +96,11 @@ fn mul_3()
 
     let res: Matrix<f64> = &a * &b;
 
-    assert_relative_eq!(reference, res, epsilon=0.00001, max_relative=1.0e-10);
+    assert_relative_eq!(reference, res, epsilon = 0.00001, max_relative = 1.0e-10);
 }
 
 #[test]
-fn mul_4()
-{
+fn mul_4() {
     let a: Matrix<f64> = matrix![   1.0, 2.0, 5.0;
                                     3.0, 4.0, 6.0;
                                     7.0, 8.0, 9.0];
@@ -123,12 +115,11 @@ fn mul_4()
 
     let res: Matrix<f64> = &a * &b;
 
-    assert_relative_eq!(reference, res, epsilon=0.00001, max_relative=1.0e-10);
+    assert_relative_eq!(reference, res, epsilon = 0.00001, max_relative = 1.0e-10);
 }
 
 #[test]
-fn mul_complex_f32()
-{
+fn mul_complex_f32() {
     let a: Matrix<Complex<f32>> = matrix![  Complex::new(1.0, 1.0), Complex::new(-2.0, 2.0) ;
                                             Complex::new(-4.0, 3.0), Complex::new(1.0, -5.0)];
 
@@ -142,8 +133,7 @@ fn mul_complex_f32()
 }
 
 #[test]
-fn mul_complex_f64()
-{
+fn mul_complex_f64() {
     let a: Matrix<Complex<f64>> = matrix![  Complex::new(1.0, 1.0), Complex::new(-2.0, 2.0) ;
                                             Complex::new(-4.0, 3.0), Complex::new(1.0, -5.0)];
 
@@ -157,8 +147,7 @@ fn mul_complex_f64()
 }
 
 #[test]
-fn mul_scalar_f32()
-{
+fn mul_scalar_f32() {
     let a: Matrix<f32> = matrix![   1.0, -2.0, 5.0;
                                     3.0, 4.0, 6.0;
                                     7.0, -8.0, 9.0];
@@ -172,8 +161,7 @@ fn mul_scalar_f32()
 }
 
 #[test]
-fn mul_scalar_f64()
-{
+fn mul_scalar_f64() {
     let a: Matrix<f64> = matrix![   1.0, -2.0, 5.0;
                                     3.0, 4.0, 6.0;
                                     7.0, -8.0, 9.0];
@@ -187,8 +175,7 @@ fn mul_scalar_f64()
 }
 
 #[test]
-fn mul_scalar_complex_f32()
-{
+fn mul_scalar_complex_f32() {
     let a: Matrix<Complex<f32>> = matrix![  Complex::new(1.0, 1.0), Complex::new(-2.0, 2.0);
                                             Complex::new(-4.0, 3.0), Complex::new(1.0, -5.0)];
 
@@ -201,8 +188,7 @@ fn mul_scalar_complex_f32()
 }
 
 #[test]
-fn mul_scalar_complex_f64()
-{
+fn mul_scalar_complex_f64() {
     let a: Matrix<Complex<f64>> = matrix![  Complex::new(1.0, 1.0), Complex::new(-2.0, 2.0);
                                             Complex::new(-4.0, 3.0), Complex::new(1.0, -5.0)];
 
@@ -215,8 +201,7 @@ fn mul_scalar_complex_f64()
 }
 
 #[test]
-fn matrix_mul_scalar_f32()
-{
+fn matrix_mul_scalar_f32() {
     let m: Matrix<f32> = matrix![   1.0, 2.0;
                                     3.0, 4.0];
     let prod_ref: Matrix<f32> = matrix![    -0.5, -1.0;
@@ -226,8 +211,7 @@ fn matrix_mul_scalar_f32()
 }
 
 #[test]
-fn matrix_mul_scalar_f64()
-{
+fn matrix_mul_scalar_f64() {
     let m: Matrix<f64> = matrix![   1.0, 2.0;
                                     3.0, 4.0];
     let prod_ref: Matrix<f64> = matrix![    -0.5, -1.0;
@@ -237,8 +221,7 @@ fn matrix_mul_scalar_f64()
 }
 
 #[test]
-fn matrix_mul_vector_f32()
-{
+fn matrix_mul_vector_f32() {
     let m: Matrix<f32> = matrix![   1.0, 2.0;
                                     3.0, 4.0];
 
@@ -251,8 +234,7 @@ fn matrix_mul_vector_f32()
 }
 
 #[test]
-fn matrix_mul_vector_f64()
-{
+fn matrix_mul_vector_f64() {
     let m: Matrix<f64> = matrix![   1.0, 2.0;
                                     3.0, 4.0];
 
@@ -265,8 +247,7 @@ fn matrix_mul_vector_f64()
 }
 
 #[test]
-fn matrix_mul_vector_complex_f32()
-{
+fn matrix_mul_vector_complex_f32() {
     let m: Matrix<Complex<f32>> = matrix![  Complex::from_f64(1.0), Complex::from_f64(2.0);
                                             Complex::from_f64(3.0), Complex::from_f64(4.0)];
 
@@ -280,8 +261,7 @@ fn matrix_mul_vector_complex_f32()
 }
 
 #[test]
-fn scalar_owner()
-{
+fn scalar_owner() {
     let m: Matrix<f32> = matrix![   1.0, 2.0;
                                     3.0, 4.0];
 
@@ -292,8 +272,7 @@ fn scalar_owner()
 }
 
 #[test]
-fn scalar_borrow()
-{
+fn scalar_borrow() {
     let m: Matrix<f32> = matrix![   1.0, 2.0;
                                     3.0, 4.0];
 
@@ -304,8 +283,7 @@ fn scalar_borrow()
 }
 
 #[test]
-fn scalar_borrow_mut()
-{
+fn scalar_borrow_mut() {
     let mut m: Matrix<f32> = matrix![   1.0, 2.0;
                                     3.0, 4.0];
 

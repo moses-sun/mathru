@@ -1,8 +1,7 @@
-use crate::algebra::abstr::{Lapack, Zero, Complex};
+use crate::algebra::abstr::{Complex, Lapack, Zero};
 use lapack;
 use lapack_sys as ffi;
 use std::os::raw::c_char;
-
 
 macro_rules! lapack_real (
     ($T: ty, $xgehrd: path, $xorghr: path, $xgeev: path, $xgetrf: path, $xgeqrf: path, $xorgqr: path, $xgetri: path, $xpotrf: path,
@@ -139,28 +138,31 @@ macro_rules! lapack_real (
     )
 );
 
-lapack_real!(f32,
-             lapack::sgehrd,
-             lapack::sorghr,
-             lapack::sgeev,
-             lapack::sgetrf,
-             lapack::sgeqrf,
-             lapack::sorgqr,
-             lapack::sgetri,
-             lapack::spotrf,
-             lapack::sgetrs);
+lapack_real!(
+    f32,
+    lapack::sgehrd,
+    lapack::sorghr,
+    lapack::sgeev,
+    lapack::sgetrf,
+    lapack::sgeqrf,
+    lapack::sorgqr,
+    lapack::sgetri,
+    lapack::spotrf,
+    lapack::sgetrs
+);
 
-lapack_real!(f64,
-             lapack::dgehrd,
-             lapack::dorghr,
-             lapack::dgeev,
-             lapack::dgetrf,
-             lapack::dgeqrf,
-             lapack::dorgqr,
-             lapack::dgetri,
-             lapack::dpotrf,
-             lapack::dgetrs);
-
+lapack_real!(
+    f64,
+    lapack::dgehrd,
+    lapack::dorghr,
+    lapack::dgeev,
+    lapack::dgetrf,
+    lapack::dgeqrf,
+    lapack::dorgqr,
+    lapack::dgetri,
+    lapack::dpotrf,
+    lapack::dgetrs
+);
 
 macro_rules! lapack_complex (
     ($T: ty, $xgehrd: path, $xorghr: path, $xgeev: path, $xgetrf: path, $xgeqrf: path, $xorgqr: path, $xgetri: path, $xpotrf: path, $xgetrs: path)
@@ -347,24 +349,28 @@ macro_rules! lapack_complex (
 	)
 );
 
-lapack_complex!(f32,
-             ffi::cgehrd_,
-             ffi::cunghr_,
-             ffi::cgeev_,
-             ffi::cgetrf_,
-             ffi::cgeqrf_,
-             ffi::cungqr_,
-             ffi::cgetri_,
-             ffi::cpotrf_,
-             ffi::cgetrs_);
+lapack_complex!(
+    f32,
+    ffi::cgehrd_,
+    ffi::cunghr_,
+    ffi::cgeev_,
+    ffi::cgetrf_,
+    ffi::cgeqrf_,
+    ffi::cungqr_,
+    ffi::cgetri_,
+    ffi::cpotrf_,
+    ffi::cgetrs_
+);
 
-lapack_complex!(f64,
-             ffi::zgehrd_,
-             ffi::zunghr_,
-             ffi::zgeev_,
-             ffi::zgetrf_,
-             ffi::zgeqrf_,
-             ffi::zungqr_,
-             ffi::zgetri_,
-             ffi::zpotrf_,
-             ffi::zgetrs_);
+lapack_complex!(
+    f64,
+    ffi::zgehrd_,
+    ffi::zunghr_,
+    ffi::zgeev_,
+    ffi::zgetrf_,
+    ffi::zgeqrf_,
+    ffi::zungqr_,
+    ffi::zgetri_,
+    ffi::zpotrf_,
+    ffi::zgetrs_
+);

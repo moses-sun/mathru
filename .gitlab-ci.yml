@@ -34,7 +34,8 @@ fmt:
   needs: ["syntax-check"]
   image: rust:latest
   script:
-    - echo
+    - rustup component add rustfmt
+    - cargo fmt --check
 
 test-default:
   stage: unit-test

@@ -1,9 +1,10 @@
+use crate::algebra::abstr::{Field, Scalar};
 use crate::algebra::linear::Matrix;
 use crate::elementary::Power;
-use crate::algebra::abstr::{Field, Scalar};
 
 impl<T> Matrix<T>
-    where T: Field + Scalar + Power
+where
+    T: Field + Scalar + Power,
 {
     /// Calculates the determinant
     ///
@@ -16,17 +17,14 @@ impl<T> Matrix<T>
     /// let det: f64 = a.det();
     /// assert_eq!(det, -1.0)
     /// ```
-    pub fn det(&self) -> T
-    {
+    pub fn det(&self) -> T {
         assert_eq!(self.m, self.n);
 
-        if self.m == 1
-        {
+        if self.m == 1 {
             return self[[0, 0]];
         }
 
-        if self.m == 2
-        {
+        if self.m == 2 {
             let a_11: T = self[[0, 0]];
             let a_12: T = self[[0, 1]];
             let a_21: T = self[[1, 0]];
@@ -34,31 +32,26 @@ impl<T> Matrix<T>
             return a_11 * a_22 - a_12 * a_21;
         }
 
-        let (_l, u, p) = match self.dec_lu()
-        {
+        let (_l, u, p) = match self.dec_lu() {
             Err(_e) => return T::zero(),
             Ok(dec) => dec.lup(),
         };
 
         let mut det: T = T::one();
 
-        for i in 0..self.m
-        {
+        for i in 0..self.m {
             det *= u[[i, i]];
         }
 
         let mut counter: usize = 0;
-        for i in 0..self.m
-        {
-            if p[[i, i]] != T::one()
-            {
+        for i in 0..self.m {
+            if p[[i, i]] != T::one() {
                 counter += 1;
             }
         }
 
         let mut perm: T = T::one();
-        if counter != 0
-        {
+        if counter != 0 {
             perm = (-T::one()).pow(T::from_u128(counter as u128 - 1));
         }
 

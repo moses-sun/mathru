@@ -26,9 +26,7 @@ use super::{abeliangroup::AbelianGroupAdd, monoid::MonoidMul};
 ///   distributivity)
 ///
 /// <https://en.wikipedia.org/wiki/Ring_(mathematics)>
-pub trait Ring: AbelianGroupAdd + MonoidMul
-{
-}
+pub trait Ring: AbelianGroupAdd + MonoidMul {}
 
 macro_rules! impl_ring
 {
@@ -45,9 +43,7 @@ macro_rules! impl_ring
 
 impl_ring!(i8, i16, i32, i64, i128, f32, f64);
 
-pub trait CommutativeRing: Ring
-{
-}
+pub trait CommutativeRing: Ring {}
 
 macro_rules! impl_commutative_ring
 {

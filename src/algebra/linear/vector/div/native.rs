@@ -1,11 +1,12 @@
 use crate::algebra::{
     abstr::{Field, Scalar},
-    linear::{Vector},
+    linear::Vector,
 };
 use std::ops::Div;
 
 impl<T> Div<T> for Vector<T>
-    where T: Field + Scalar
+where
+    T: Field + Scalar,
 {
     type Output = Vector<T>;
 
@@ -21,14 +22,16 @@ impl<T> Div<T> for Vector<T>
     ///
     /// assert_eq!(res_ref, a / -5.0)
     /// ```
-    fn div(self, rhs: T) -> Self::Output
-    {
-        Vector { data: &self.data / (&rhs) }
+    fn div(self, rhs: T) -> Self::Output {
+        Vector {
+            data: &self.data / (&rhs),
+        }
     }
 }
 
 impl<'a, T> Div<&T> for &'a Vector<T>
-    where T: Field + Scalar
+where
+    T: Field + Scalar,
 {
     type Output = Vector<T>;
 
@@ -44,8 +47,9 @@ impl<'a, T> Div<&T> for &'a Vector<T>
     ///
     /// assert_eq!(res_ref, a / 5.0)
     /// ```
-    fn div(self, rhs: &T) -> Self::Output
-    {
-        Vector { data: (&self.data).div(rhs) }
+    fn div(self, rhs: &T) -> Self::Output {
+        Vector {
+            data: (&self.data).div(rhs),
+        }
     }
 }

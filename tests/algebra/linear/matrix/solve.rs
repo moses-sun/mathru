@@ -1,9 +1,8 @@
-use mathru::algebra::linear::{Matrix, Vector, matrix::Solve};
 use mathru::algebra::abstr::Complex;
+use mathru::algebra::linear::{matrix::Solve, Matrix, Vector};
 
 #[test]
-fn solve_matrix_f32()
-{
+fn solve_matrix_f32() {
     let a: Matrix<f32> = matrix![   1.0, -2.0, 3.0;
                                     2.0, -5.0, 12.0;
                                     0.0, 2.0, -10.0];
@@ -20,8 +19,7 @@ fn solve_matrix_f32()
 }
 
 #[test]
-fn solve_matrix_f64()
-{
+fn solve_matrix_f64() {
     let a: Matrix<f64> = matrix![   1.0, -2.0, 3.0;
                                     2.0, -5.0, 12.0;
                                     0.0, 2.0, -10.0];
@@ -38,8 +36,7 @@ fn solve_matrix_f64()
 }
 
 #[test]
-fn solve_matrix_complex_f32()
-{
+fn solve_matrix_complex_f32() {
     let a: Matrix<Complex<f32>> = matrix![  Complex::new(1.0, 0.0), Complex::new(-2.0, 0.0), Complex::new(3.0, 0.0);
                                             Complex::new(2.0, 0.0), Complex::new(-5.0, 0.0), Complex::new(12.0, 0.0);
                                             Complex::new(0.0, 0.0), Complex::new(2.0, 0.0), Complex::new(-10.0, 0.0)];
@@ -56,8 +53,7 @@ fn solve_matrix_complex_f32()
 }
 
 #[test]
-fn solve_matrix_complex_f64()
-{
+fn solve_matrix_complex_f64() {
     let a: Matrix<Complex<f64>> = matrix![  Complex::new(1.0, 0.0), Complex::new(-2.0, 0.0), Complex::new(3.0, 0.0);
                                             Complex::new(2.0, 0.0), Complex::new(-5.0, 0.0), Complex::new(12.0, 0.0);
                                             Complex::new(0.0, 0.0), Complex::new(2.0, 0.0), Complex::new(-10.0, 0.0)];
@@ -73,8 +69,7 @@ fn solve_matrix_complex_f64()
 }
 
 #[test]
-fn solve_vector_f32()
-{
+fn solve_vector_f32() {
     let a: Matrix<f32> = matrix![   6.0, 2.0, -1.0;
                                     -3.0, 5.0, 3.0;
                                     -2.0, 1.0, 3.0];
@@ -92,8 +87,7 @@ fn solve_vector_f32()
 }
 
 #[test]
-fn solve_vector_f64()
-{
+fn solve_vector_f64() {
     let a: Matrix<f64> = matrix![   6.0, 2.0, -1.0;
                                     -3.0, 5.0, 3.0;
                                     -2.0, 1.0, 3.0];
@@ -111,8 +105,7 @@ fn solve_vector_f64()
 }
 
 #[test]
-fn solve_vector_complex_f32()
-{
+fn solve_vector_complex_f32() {
     let a: Matrix<Complex<f32>> = matrix![  Complex::new(1.0, 0.0), Complex::new(0.0, 1.0), Complex::new(-3.0, 1.0);
                                             Complex::new(2.0, 0.0), Complex::new(1.0, 3.0), Complex::new(-4.0, 2.0);
                                             Complex::new(0.0, 2.0), Complex::new(-2.0, 0.0), Complex::new(-2.0, -3.0)];
@@ -130,8 +123,7 @@ fn solve_vector_complex_f32()
 }
 
 #[test]
-fn solve_vector_complex_f64()
-{
+fn solve_vector_complex_f64() {
     let a: Matrix<Complex<f64>> = matrix![  Complex::new(1.0, 0.0), Complex::new(0.0, 1.0), Complex::new(-3.0, 1.0);
                                             Complex::new(2.0, 0.0), Complex::new(1.0, 3.0), Complex::new(-4.0, 2.0);
                                             Complex::new(0.0, 2.0), Complex::new(-2.0, 0.0), Complex::new(-2.0, -3.0)];
@@ -153,9 +145,9 @@ fn solve_vector_complex_f64()
 * https://gitlab.com/matthiaseiholzer/mathru/-/issues/7
 */
 #[test]
-fn negative_pivot_in_lu_decomposition()
-{
-    let m: Matrix<f64> = matrix![1., 0., 0., 0. ; 1., 0., -1., 0. ; 0., 1., 0., -1. ; 0., 1., 0., 0. ];
+fn negative_pivot_in_lu_decomposition() {
+    let m: Matrix<f64> =
+        matrix![1., 0., 0., 0. ; 1., 0., -1., 0. ; 0., 1., 0., -1. ; 0., 1., 0., 0. ];
     let b: Vector<f64> = vector![3.; 0.; 0.; 1.];
 
     let x: Vector<f64> = m.solve(&b).unwrap();

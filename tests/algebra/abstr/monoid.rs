@@ -1,4 +1,3 @@
-
 // // macro_rules! test_monoid
 // // {
 // //     ($a:expr, $b:expr, $(($id:ident, $s:ty)),*) =>

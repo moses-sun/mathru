@@ -1,8 +1,7 @@
 use mathru::statistics::distrib::{Bernoulli, Discrete};
 
 #[test]
-fn pmf0()
-{
+fn pmf0() {
     let p: f64 = 0.1;
     let distrib: Bernoulli<f64> = Bernoulli::new(p);
     let k: u8 = 0;
@@ -12,8 +11,7 @@ fn pmf0()
 }
 
 #[test]
-fn pmf1()
-{
+fn pmf1() {
     let p: f64 = 0.1;
     let distrib: Bernoulli<f64> = Bernoulli::new(p);
     let k: u8 = 1;
@@ -23,8 +21,7 @@ fn pmf1()
 }
 
 #[test]
-fn cdf0()
-{
+fn cdf0() {
     let p: f64 = 0.1;
     let distrib: Bernoulli<f64> = Bernoulli::new(p);
     let x: f64 = -1.0;
@@ -34,8 +31,7 @@ fn cdf0()
 }
 
 #[test]
-fn cdf1()
-{
+fn cdf1() {
     let p: f64 = 0.1;
     let distrib: Bernoulli<f64> = Bernoulli::new(p);
     let x: f64 = 1.0;
@@ -45,8 +41,7 @@ fn cdf1()
 }
 
 #[test]
-fn cdf2()
-{
+fn cdf2() {
     let p: f64 = 0.1;
     let distrib: Bernoulli<f64> = Bernoulli::new(p);
     let x: f64 = 0.3;
@@ -56,8 +51,7 @@ fn cdf2()
 }
 
 #[test]
-fn mean()
-{
+fn mean() {
     let p: f64 = 0.1;
     let distrib: Bernoulli<f64> = Bernoulli::new(p);
     let mean: f64 = distrib.mean();
@@ -66,8 +60,7 @@ fn mean()
 }
 
 #[test]
-fn variance()
-{
+fn variance() {
     let p: f64 = 0.1;
     let distrib: Bernoulli<f64> = Bernoulli::new(p);
     let variance: f64 = distrib.variance();

@@ -7,9 +7,9 @@ mod matrixiterator;
 mod matrixiteratormut;
 //mod matrixrowiterator;
 //mod matrixrowiteratormut;
+mod eigen;
 mod matrixcolumnintoiterator;
 mod matrixrowintoiterator;
-mod eigen;
 pub use self::eigen::EigenDec;
 
 mod hessenberg;
@@ -23,16 +23,16 @@ pub use self::qr::QRDec;
 
 mod add;
 mod add_assign;
-mod sub;
-mod sub_assign;
 mod div;
 mod inverse;
 mod mul;
 mod mul_assign;
+mod sub;
+mod sub_assign;
 
+mod cholesky;
 mod det;
 mod singular;
-mod cholesky;
 pub use self::cholesky::CholeskyDec;
 mod index;
 
@@ -56,5 +56,6 @@ pub use self::{
     //matrixrowiteratormut::MatrixRowIteratorMut,
     matrixrowintoiterator::MatrixRowIntoIterator,
     solve::Solve,
-    substitute::Substitute, transpose::Transpose
+    substitute::Substitute,
+    transpose::Transpose,
 };

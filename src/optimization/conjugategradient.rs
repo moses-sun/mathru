@@ -91,27 +91,26 @@ use std::clone::Clone;
 /// ```
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[derive(Clone, Copy, Debug)]
-pub struct ConjugateGradient<T>
-{
+pub struct ConjugateGradient<T> {
     iters: u64,
     epsilon: T,
 }
 
-impl<T> ConjugateGradient<T>
-{
+impl<T> ConjugateGradient<T> {
     /// Creates an instance of ConjugateGradient method
     ///
     /// # Arguments
     ///
     /// * 'iters': Number of iterations
     /// * 'epsilon':
-    pub fn new(iters: u64, epsilon: T) -> ConjugateGradient<T>
-    {
+    pub fn new(iters: u64, epsilon: T) -> ConjugateGradient<T> {
         ConjugateGradient { iters, epsilon }
     }
 }
 
-impl<T> ConjugateGradient<T> where T: Real
+impl<T> ConjugateGradient<T>
+where
+    T: Real,
 {
     /// Minimize function func
     ///
@@ -124,14 +123,14 @@ impl<T> ConjugateGradient<T> where T: Real
     ///
     /// local minimum
     pub fn minimize<F>(&self, func: &F, x_0: &Vector<T>) -> OptimResult<Vector<T>>
-        where F: Optim<T>
+    where
+        F: Optim<T>,
     {
         let mut x_n: Vector<T> = x_0.clone();
         let mut d_n: Vector<T> = func.eval(&x_n);
         let mut r_n: Vector<T> = d_n.clone();
 
-        for _i in 0..self.iters
-        {
+        for _i in 0..self.iters {
             let jacobian: Matrix<T> = func.jacobian(&x_n);
 
             let temp: Vector<T> = d_n.clone().transpose() * jacobian.clone();
@@ -146,8 +145,7 @@ impl<T> ConjugateGradient<T> where T: Real
 
             d_n = r_n_1.clone() + d_n * beta_n;
 
-            if r_n_1.dotp(&r_n_1).pow(T::from_f64(0.5)) < self.epsilon
-            {
+            if r_n_1.dotp(&r_n_1).pow(T::from_f64(0.5)) < self.epsilon {
                 break;
             }
 

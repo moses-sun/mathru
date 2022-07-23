@@ -1,8 +1,7 @@
 use mathru::statistics::distrib::{Continuous, Uniform};
 
 #[test]
-fn pdf_lower_a()
-{
+fn pdf_lower_a() {
     let a: f64 = -0.2;
     let b: f64 = 0.4;
     let x: f64 = -0.3;
@@ -13,8 +12,7 @@ fn pdf_lower_a()
 }
 
 #[test]
-fn pdf_higher_b()
-{
+fn pdf_higher_b() {
     let a: f64 = -0.2;
     let b: f64 = 0.4;
     let x: f64 = 0.5;
@@ -25,8 +23,7 @@ fn pdf_higher_b()
 }
 
 #[test]
-fn pdf()
-{
+fn pdf() {
     let a: f64 = -0.2;
     let b: f64 = 0.4;
     let x: f64 = 0.3;
@@ -37,8 +34,7 @@ fn pdf()
 }
 
 #[test]
-fn cdf_lower_a()
-{
+fn cdf_lower_a() {
     let a: f64 = -0.2;
     let b: f64 = 0.4;
     let x: f64 = -0.3;
@@ -49,8 +45,7 @@ fn cdf_lower_a()
 }
 
 #[test]
-fn cdf_higher_b()
-{
+fn cdf_higher_b() {
     let a: f64 = -0.2;
     let b: f64 = 0.4;
     let x: f64 = 0.5;
@@ -61,8 +56,7 @@ fn cdf_higher_b()
 }
 
 #[test]
-fn cdf()
-{
+fn cdf() {
     let a: f64 = -0.2;
     let b: f64 = 0.4;
     let x: f64 = 0.3;
@@ -73,8 +67,7 @@ fn cdf()
 }
 
 #[test]
-fn quantile()
-{
+fn quantile() {
     let a: f64 = -0.2;
     let b: f64 = 0.4;
     let x: f64 = 0.3;
@@ -86,8 +79,7 @@ fn quantile()
 }
 
 #[test]
-fn mean()
-{
+fn mean() {
     let a: f64 = -0.2;
     let b: f64 = 0.4;
 
@@ -97,8 +89,7 @@ fn mean()
 }
 
 #[test]
-fn variance()
-{
+fn variance() {
     let a: f64 = -0.2;
     let b: f64 = 0.4;
     let diff: f64 = b - a;
@@ -109,8 +100,7 @@ fn variance()
 }
 
 #[test]
-fn skewness()
-{
+fn skewness() {
     let a: f64 = -0.2;
     let b: f64 = 0.4;
 
@@ -120,8 +110,7 @@ fn skewness()
 }
 
 #[test]
-fn entropy()
-{
+fn entropy() {
     let a: f64 = 0.2;
     let b: f64 = 0.5;
     let distrib: Uniform<f64> = Uniform::new(a, b);

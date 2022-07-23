@@ -1,10 +1,9 @@
-use mathru::algebra::linear::Matrix;
-use mathru::algebra::abstr::Complex;
 use crate::mathru::algebra::linear::matrix::Transpose;
+use mathru::algebra::abstr::Complex;
+use mathru::algebra::linear::Matrix;
 
 #[test]
-fn dec_f32()
-{
+fn dec_f32() {
     let a: Matrix<f32> = matrix![   1.0, 5.0, 3.0;
                                     1.0, 0.0, -7.0;
                                     3.0, 8.0, 9.0];
@@ -19,15 +18,14 @@ fn dec_f32()
 
     let (q, h): (Matrix<f32>, Matrix<f32>) = a.dec_hessenberg().qh();
 
-    assert_relative_eq!(q, q_ref, epsilon=1.0e-5);
-    assert_relative_eq!(h, h_ref, epsilon=1.0e-5);
+    assert_relative_eq!(q, q_ref, epsilon = 1.0e-5);
+    assert_relative_eq!(h, h_ref, epsilon = 1.0e-5);
 
-    assert_relative_eq!(&(&q * &h) * &q.transpose(), a, epsilon=1.0e-5);
+    assert_relative_eq!(&(&q * &h) * &q.transpose(), a, epsilon = 1.0e-5);
 }
 
 #[test]
-fn dec_f64()
-{
+fn dec_f64() {
     let a: Matrix<f64> = matrix![   1.0, 5.0, 3.0;
                                     1.0, 0.0, -7.0;
                                     3.0, 8.0, 9.0];
@@ -40,41 +38,38 @@ fn dec_f64()
                                         0.0, -0.316227766016838, -0.9486832980505137;
                                         0.0, -0.9486832980505137, 0.3162277660168381];
 
-
     let (q, h): (Matrix<f64>, Matrix<f64>) = a.dec_hessenberg().qh();
 
-    assert_relative_eq!(q, q_ref, epsilon=1.0e-10);
-    assert_relative_eq!(h, h_ref, epsilon=1.0e-10);
+    assert_relative_eq!(q, q_ref, epsilon = 1.0e-10);
+    assert_relative_eq!(h, h_ref, epsilon = 1.0e-10);
 
-    assert_relative_eq!(&(&q * &h) * &q.transpose(), a, epsilon=1.0e-10);
+    assert_relative_eq!(&(&q * &h) * &q.transpose(), a, epsilon = 1.0e-10);
 }
 
 #[test]
-fn dec_f64_2()
-{
+fn dec_f64_2() {
     let a: Matrix<f64> = matrix![   2.0, 0.0, 0.0;
                                     0.0, -5.0, 3.0;
                                     0.0, -6.0, 4.0];
 
-    let (q, h): (Matrix<f64>, Matrix<f64>) =  a.dec_hessenberg().qh();
+    let (q, h): (Matrix<f64>, Matrix<f64>) = a.dec_hessenberg().qh();
 
-    let q_ref: Matrix<f64>  = matrix![  1.0, 0.0, 0.0;
+    let q_ref: Matrix<f64> = matrix![  1.0, 0.0, 0.0;
                                         0.0, 1.0, 0.0;
                                         0.0, 0.0, 1.0];
 
-    let h_ref: Matrix<f64>  = matrix![  2.0, 0.0, 0.0;
+    let h_ref: Matrix<f64> = matrix![  2.0, 0.0, 0.0;
                                         0.0, -5.0, 3.0;
                                         0.0, -6.0, 4.0];
 
-    assert_relative_eq!(q, q_ref, epsilon=1.0e-10);
-    assert_relative_eq!(h, h_ref, epsilon=1.0e-10);
+    assert_relative_eq!(q, q_ref, epsilon = 1.0e-10);
+    assert_relative_eq!(h, h_ref, epsilon = 1.0e-10);
 
-    assert_relative_eq!(&(&q * &h) * &q.transpose(), a, epsilon=1.0e-10);
+    assert_relative_eq!(&(&q * &h) * &q.transpose(), a, epsilon = 1.0e-10);
 }
 
 #[test]
-fn dec_complex_f32()
-{
+fn dec_complex_f32() {
     let a: Matrix<Complex<f32>> = matrix![  Complex::new(1.0, 0.0), Complex::new(5.0, 0.0), Complex::new(3.0, 0.0);
                                             Complex::new(1.0, 0.0), Complex::new(0.0, 0.0), Complex::new(-7.0, 0.0);
                                             Complex::new(3.0, 0.0), Complex::new(8.0, 0.0), Complex::new(9.0, 0.0)];
@@ -89,15 +84,18 @@ fn dec_complex_f32()
 
     let (q, h): (Matrix<Complex<f32>>, Matrix<Complex<f32>>) = a.dec_hessenberg().qh();
 
-    assert_relative_eq!(q, q_ref, epsilon=Complex::new(1.0e-5, 1.0e-5));
-    assert_relative_eq!(h, h_ref, epsilon=Complex::new(1.0e-5, 1.0e-5));
+    assert_relative_eq!(q, q_ref, epsilon = Complex::new(1.0e-5, 1.0e-5));
+    assert_relative_eq!(h, h_ref, epsilon = Complex::new(1.0e-5, 1.0e-5));
 
-    assert_relative_eq!(&(&q * &h) * &q.transpose(), a, epsilon=Complex::new(1.0e-5, 1.0e-5));
+    assert_relative_eq!(
+        &(&q * &h) * &q.transpose(),
+        a,
+        epsilon = Complex::new(1.0e-5, 1.0e-5)
+    );
 }
 
 #[test]
-fn dec_complex_f64()
-{
+fn dec_complex_f64() {
     let a: Matrix<Complex<f64>> = matrix![  Complex::new(1.0, 0.0), Complex::new(5.0, 0.0), Complex::new(3.0, 0.0);
                                             Complex::new(1.0, 0.0), Complex::new(0.0, 0.0), Complex::new(-7.0, 0.0);
                                             Complex::new(3.0, 0.0), Complex::new(8.0, 0.0), Complex::new(9.0, 0.0)];
@@ -112,8 +110,12 @@ fn dec_complex_f64()
 
     let (q, h): (Matrix<Complex<f64>>, Matrix<Complex<f64>>) = a.dec_hessenberg().qh();
 
-    assert_relative_eq!(q, q_ref, epsilon=Complex::new(1.0e-10, 1.0e-10));
-    assert_relative_eq!(h, h_ref, epsilon=Complex::new(1.0e-10, 1.0e-10));
+    assert_relative_eq!(q, q_ref, epsilon = Complex::new(1.0e-10, 1.0e-10));
+    assert_relative_eq!(h, h_ref, epsilon = Complex::new(1.0e-10, 1.0e-10));
 
-    assert_relative_eq!(&(&q * &h) * &q.transpose(), a, epsilon=Complex::new(1.0e-10, 1.0e-10));
+    assert_relative_eq!(
+        &(&q * &h) * &q.transpose(),
+        a,
+        epsilon = Complex::new(1.0e-10, 1.0e-10)
+    );
 }

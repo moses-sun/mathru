@@ -1,12 +1,13 @@
 use crate::algebra::{
     abstr::{Field, Scalar},
-    linear::{Vector},
+    linear::Vector,
 };
 use std::ops::Sub;
 
 //c = a - b , a,b,c E T^m
 impl<T> Sub<Vector<T>> for Vector<T>
-    where T: Field + Scalar
+where
+    T: Field + Scalar,
 {
     type Output = Vector<T>;
 
@@ -23,14 +24,14 @@ impl<T> Sub<Vector<T>> for Vector<T>
     ///
     /// assert_eq!(res_ref, a - b)
     /// ```
-    fn sub(self, rhs: Vector<T>) -> Self::Output
-    {
+    fn sub(self, rhs: Vector<T>) -> Self::Output {
         &self - &rhs
     }
 }
 
 impl<'a, 'b, T> Sub<&'b Vector<T>> for &'a Vector<T>
-    where T: Field + Scalar
+where
+    T: Field + Scalar,
 {
     type Output = Vector<T>;
 
@@ -47,14 +48,16 @@ impl<'a, 'b, T> Sub<&'b Vector<T>> for &'a Vector<T>
     ///
     /// assert_eq!(res_ref, &a - &b)
     /// ```
-    fn sub(self, rhs: &'b Vector<T>) -> Self::Output
-    {
-        Vector { data: (&self.data).sub(&rhs.data) }
+    fn sub(self, rhs: &'b Vector<T>) -> Self::Output {
+        Vector {
+            data: (&self.data).sub(&rhs.data),
+        }
     }
 }
 
 impl<'a, 'b, T> Sub<&'b Vector<T>> for &'a mut Vector<T>
-    where T: Field + Scalar
+where
+    T: Field + Scalar,
 {
     type Output = &'a mut Vector<T>;
 
@@ -71,15 +74,15 @@ impl<'a, 'b, T> Sub<&'b Vector<T>> for &'a mut Vector<T>
     /// &mut a - &b;
     /// assert_eq!(res_ref, a)
     /// ```
-    fn sub(self, rhs: &'b Vector<T>) -> Self::Output
-    {
+    fn sub(self, rhs: &'b Vector<T>) -> Self::Output {
         let _ = &mut self.data - &rhs.data;
         self
     }
 }
 
 impl<T> Sub<T> for Vector<T>
-    where T: Field + Scalar
+where
+    T: Field + Scalar,
 {
     type Output = Vector<T>;
 
@@ -95,15 +98,15 @@ impl<T> Sub<T> for Vector<T>
     ///
     /// assert_eq!(res_ref, a - -5.0)
     /// ```
-    fn sub(mut self, rhs: T) -> Self::Output
-    {
+    fn sub(mut self, rhs: T) -> Self::Output {
         self.data = (&self.data).sub(&rhs);
         self
     }
 }
 
 impl<'a, T> Sub<&T> for &'a Vector<T>
-    where T: Field + Scalar
+where
+    T: Field + Scalar,
 {
     type Output = Vector<T>;
 
@@ -119,14 +122,16 @@ impl<'a, T> Sub<&T> for &'a Vector<T>
     ///
     /// assert_eq!(res_ref, a - 5.0)
     /// ```
-    fn sub(self, rhs: &T) -> Self::Output
-    {
-        Vector { data: (&self.data).sub(rhs) }
+    fn sub(self, rhs: &T) -> Self::Output {
+        Vector {
+            data: (&self.data).sub(rhs),
+        }
     }
 }
 
 impl<'a, T> Sub<&T> for &'a mut Vector<T>
-    where T: Field + Scalar
+where
+    T: Field + Scalar,
 {
     type Output = &'a mut Vector<T>;
 
@@ -142,10 +147,8 @@ impl<'a, T> Sub<&T> for &'a mut Vector<T>
     ///
     /// assert_eq!(res_ref, *(&mut a - &5.0))
     /// ```
-    fn sub(self, rhs: &T) -> Self::Output
-    {
+    fn sub(self, rhs: &T) -> Self::Output {
         let _ = &mut self.data - rhs;
         self
     }
 }
-

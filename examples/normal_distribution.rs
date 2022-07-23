@@ -1,8 +1,7 @@
 use mathru::statistics::distrib::{Continuous, Normal};
 use plotters::prelude::*;
 
-fn main()
-{
+fn main() {
     let mean: f64 = 1.0;
     let variance: f64 = 1.0;
     let distrib: Normal<f64> = Normal::new(mean, variance);
@@ -12,14 +11,13 @@ fn main()
     let length: usize = 1000;
 
     let mut graph_1: Vec<(f64, f64)> = Vec::with_capacity(length);
-    for i in 0..length
-    {
+    for i in 0..length {
         let x: f64 = (x_end - x_start) / (length as f64) * (i as f64) + x_start;
         graph_1.push((x, distrib.pdf(x)));
     }
 
-    let root_area =
-        BitMapBackend::new("./figures/pdf_normal_distribution.png", (1200, 800)).into_drawing_area();
+    let root_area = BitMapBackend::new("./figures/pdf_normal_distribution.png", (1200, 800))
+        .into_drawing_area();
     root_area.fill(&WHITE).unwrap();
 
     let mut ctx = ChartBuilder::on(&root_area)
@@ -34,10 +32,10 @@ fn main()
         .unwrap();
 
     ctx.configure_mesh()
-       .x_desc("x")
-       .axis_desc_style(("sans-serif", 25).into_font())
-       .draw()
-       .unwrap();
+        .x_desc("x")
+        .axis_desc_style(("sans-serif", 25).into_font())
+        .draw()
+        .unwrap();
 
     ctx.draw_series(LineSeries::new(graph_1, &BLUE)).unwrap();
 }

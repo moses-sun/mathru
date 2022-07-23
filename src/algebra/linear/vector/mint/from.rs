@@ -1,17 +1,16 @@
-use crate::algebra::linear::Vector;
 use crate::algebra::abstr::Real;
-
+use crate::algebra::linear::Vector;
 
 macro_rules! impl_from_mint_v(
     ($($rows: literal => $MV: ident, $v: ident, $ret: expr);* $(;)*) => {$(
- 
+
         impl<T> From<mint::$MV<T>> for Vector<T>
-            where T: Real 
+            where T: Real
         {
-            fn from(v_mint: mint::$MV<T>) -> Self 
+            fn from(v_mint: mint::$MV<T>) -> Self
             {
                 let $v = v_mint;
-                 
+
                 $ret
             }
         }

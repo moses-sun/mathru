@@ -1,9 +1,11 @@
 use crate::mathru::algebra::linear::matrix::Substitute;
-use mathru::algebra::linear::{matrix::{Transpose, Solve}, Matrix, Vector};
+use mathru::algebra::linear::{
+    matrix::{Solve, Transpose},
+    Matrix, Vector,
+};
 
 #[test]
-fn macro_0()
-{
+fn macro_0() {
     //Construct a 2x3 matrix of f32
     let mat: Matrix<f32> = matrix![ 1.0, 2.0, 3.0;
                                     4.0, 5.0, 6.0];
@@ -14,8 +16,7 @@ fn macro_0()
 }
 
 #[test]
-fn macro_1()
-{
+fn macro_1() {
     //Construct a 2x3 matrix of f32
     let mat: Matrix<f32> = matrix![1.0, 2.0, 3.0, 4.0, 5.0, 6.0];
 
@@ -26,8 +27,7 @@ fn macro_1()
 
 #[cfg(feature = "serde")]
 #[test]
-fn serde_0()
-{
+fn serde_0() {
     let mat: Matrix<f64> = matrix![1.0, 2.0; 3.0, 4.0];
     let serialized = serde_json::to_string(&mat).unwrap();
 
@@ -37,41 +37,32 @@ fn serde_0()
 }
 
 #[test]
-fn zeros()
-{
+fn zeros() {
     let rows: usize = 5;
     let cols: usize = 7;
     let m_zero: Matrix<f32> = Matrix::zero(rows, cols);
     let dim: (usize, usize) = m_zero.dim();
     assert_eq!(dim, (rows, cols));
 
-    for i in 0..rows
-    {
-        for k in 0..cols
-        {
+    for i in 0..rows {
+        for k in 0..cols {
             assert_relative_eq!(m_zero[[i, k]], 0.0);
         }
     }
 }
 
 #[test]
-fn one()
-{
+fn one() {
     let rows: usize = 5;
     let m_ones: Matrix<f32> = Matrix::one(rows);
     let dim: (usize, usize) = m_ones.dim();
     assert_eq!(dim, (rows, rows));
 
-    for i in 0..rows
-    {
-        for k in 0..rows
-        {
-            if i == k
-            {
+    for i in 0..rows {
+        for k in 0..rows {
+            if i == k {
                 assert_relative_eq!(m_ones[[i, k]], 1.0);
-            }
-            else
-            {
+            } else {
                 assert_relative_eq!(m_ones[[i, k]], 0.0);
             }
         }
@@ -79,8 +70,7 @@ fn one()
 }
 
 #[test]
-fn ones()
-{
+fn ones() {
     let rows: usize = 3;
     let columns: usize = 5;
     let m_ones: Matrix<f64> = Matrix::ones(rows, columns);
@@ -93,8 +83,7 @@ fn ones()
 }
 
 #[test]
-fn get_column()
-{
+fn get_column() {
     let a: Matrix<f32> = matrix![4.0, 1.0, -3.0, 2.0; 1.0, 2.0, 0.0, 1.0; -2.0, 0.0, 3.0, -2.0; 2.0, 1.0, -2.0,
     -1.0];
 
@@ -102,32 +91,28 @@ fn get_column()
 
     let x_ref: Vector<f32> = Vector::new_column(vec![4.0, 1.0, -2.0, 2.0]);
 
-    for i in 0..4
-    {
+    for i in 0..4 {
         assert_relative_eq!(x[i], x_ref[i]);
     }
 }
 
 #[test]
-fn get_row()
-{
+fn get_row() {
     let a: Matrix<f64> = matrix![   4.0, 1.0, -2.0, 2.0;
                                     1.0, 2.0, 3.0, 1.0;
                                     -2.0, 0.0, 3.0, -2.0;
                                     2.0, 3.0, -2.0, -1.0];
 
     let x: Vector<f64> = a.get_row(1);
-    let x_ref: Vector<f64> = Vector::new_row( vec![1.0, 2.0, 3.0, 1.0]);
+    let x_ref: Vector<f64> = Vector::new_row(vec![1.0, 2.0, 3.0, 1.0]);
 
-    for i in 0..4
-    {
+    for i in 0..4 {
         assert_relative_eq!(x[i], x_ref[i]);
     }
 }
 
 #[test]
-fn givens()
-{
+fn givens() {
     let m: usize = 4;
     let i: usize = 1;
     let j: usize = 2;
@@ -146,8 +131,7 @@ fn givens()
 
 #[cfg(feature = "native")]
 #[test]
-fn givens2()
-{
+fn givens2() {
     let (c, s): (f64, f64) = Matrix::givens_cosine_sine_pair(3.0, 5.0);
 
     assert_relative_eq!(-0.5144957554275266, c);
@@ -155,8 +139,7 @@ fn givens2()
 }
 
 #[test]
-fn givens_3()
-{
+fn givens_3() {
     let m: usize = 4;
     let i: usize = 1;
     let j: usize = 2;
@@ -168,42 +151,36 @@ fn givens_3()
     let res_ref: Matrix<f64> = Matrix::one(m);
     let res: Matrix<f64> = givens_t * givens;
 
-    assert_relative_eq!(res_ref, res, epsilon=0.00001, max_relative=1.0e-10);
+    assert_relative_eq!(res_ref, res, epsilon = 0.00001, max_relative = 1.0e-10);
 }
 
-
-
 #[test]
-fn trace_0()
-{
+fn trace_0() {
     let a: Matrix<f64> = matrix![0.0];
     let tr: f64 = a.trace();
 
-    assert_abs_diff_eq!(0.0, tr, epsilon=1.0e-10);
+    assert_abs_diff_eq!(0.0, tr, epsilon = 1.0e-10);
 }
 
 #[test]
-fn trace_1()
-{
+fn trace_1() {
     let a: Matrix<f64> = matrix![-9.0];
     let tr: f64 = a.trace();
 
-    assert_abs_diff_eq!(-9.0, tr, epsilon=1.0e-10);
+    assert_abs_diff_eq!(-9.0, tr, epsilon = 1.0e-10);
 }
 
 #[test]
-fn trace_2()
-{
+fn trace_2() {
     let a: Matrix<f64> = matrix![   1.0, -2.0;
                                     3.0, -7.0];
     let tr: f64 = a.trace();
 
-    assert_abs_diff_eq!(-6.0, tr, epsilon=1.0e-10);
+    assert_abs_diff_eq!(-6.0, tr, epsilon = 1.0e-10);
 }
 
 #[test]
-fn householder_0()
-{
+fn householder_0() {
     let v: Vector<f64> = Vector::new_column(vec![1.0, 2.0, 3.0]);
     let h: Matrix<f64> = Matrix::householder(&v, 0);
 
@@ -211,12 +188,11 @@ fn householder_0()
                                         -0.5345224838248488, 0.7745419205884382, -0.33818711911734267;
                                         -0.8017837257372731, -0.33818711911734267, 0.4927193213239861];
 
-    assert_relative_eq!(h_ref, h, epsilon=0.00001, max_relative=1.0e-10);
+    assert_relative_eq!(h_ref, h, epsilon = 0.00001, max_relative = 1.0e-10);
 }
 
 #[test]
-fn householder_1()
-{
+fn householder_1() {
     let v: Vector<f64> = Vector::new_column(vec![1.0, 2.0, 3.0]);
     let h: Matrix<f64> = Matrix::householder(&v, 1);
 
@@ -224,12 +200,11 @@ fn householder_1()
                                         0.0, -0.5547001962252291, -0.8320502943378437;
                                         0.0, -0.8320502943378437, 0.5547001962252291];
 
-    assert_relative_eq!(h_ref, h, epsilon=0.00001, max_relative=1.0e-10);
+    assert_relative_eq!(h_ref, h, epsilon = 0.00001, max_relative = 1.0e-10);
 }
 
 #[test]
-fn householder_2()
-{
+fn householder_2() {
     let v: Vector<f64> = Vector::new_column(vec![1.0, 2.0, 3.0]);
     let h: Matrix<f64> = Matrix::householder(&v, 2);
 
@@ -237,12 +212,11 @@ fn householder_2()
                                         0.0, 1.0, 0.0;
                                         0.0, 0.0, -1.0];
 
-    assert_relative_eq!(h_ref, h, epsilon=0.00001, max_relative=1.0e-10);
+    assert_relative_eq!(h_ref, h, epsilon = 0.00001, max_relative = 1.0e-10);
 }
 
 #[test]
-fn slice_get_0()
-{
+fn slice_get_0() {
     let a: Matrix<f32> = matrix![   1.0, 2.0, 3.0;
                                     4.0, 5.0, 6.0;
                                     7.0, 8.0, 9.0];
@@ -255,8 +229,7 @@ fn slice_get_0()
 }
 
 #[test]
-fn slice_get_1()
-{
+fn slice_get_1() {
     let a: Matrix<f32> = matrix![   1.0, 2.0, 3.0;
                                     4.0, 5.0, 6.0;
                                     7.0, 8.0, 9.0];
@@ -266,12 +239,11 @@ fn slice_get_1()
 
     let slice: Matrix<f32> = a.get_slice(1, 2, 1, 2);
 
-    assert_relative_eq!(a_ref, slice, epsilon=0.0000001, max_relative=1.0e-10);
+    assert_relative_eq!(a_ref, slice, epsilon = 0.0000001, max_relative = 1.0e-10);
 }
 
 #[test]
-fn slice_set_1()
-{
+fn slice_set_1() {
     let a: Matrix<f32> = matrix![   1.0, 2.0, 3.0;
                                     4.0, 5.0, 6.0;
                                     7.0, 8.0, 9.0];
@@ -289,8 +261,7 @@ fn slice_set_1()
 }
 
 #[test]
-fn householder_bidiagonal_0()
-{
+fn householder_bidiagonal_0() {
     let a: Matrix<f32> = matrix![   1.0, 2.0, 3.0;
                                     4.0, 5.0, 6.0;
                                     7.0, 8.0, 9.0;
@@ -307,13 +278,12 @@ fn householder_bidiagonal_0()
 
     let (_u, b, v): (Matrix<f32>, Matrix<f32>, Matrix<f32>) = a.householder_bidiag();
 
-    assert_relative_eq!(b_ref, b, epsilon=0.00001, max_relative=1.0e-10);
-    assert_relative_eq!(v_ref, v, epsilon=0.00001, max_relative=1.0e-10);
+    assert_relative_eq!(b_ref, b, epsilon = 0.00001, max_relative = 1.0e-10);
+    assert_relative_eq!(v_ref, v, epsilon = 0.00001, max_relative = 1.0e-10);
 }
 
 #[test]
-fn householder_bidiagonal_1()
-{
+fn householder_bidiagonal_1() {
     let a: Matrix<f64> = matrix![   1.0, 5.0, 3.0;
                                     1.0, 0.0, -7.0;
                                     3.0, 8.0, 9.0];
@@ -328,13 +298,12 @@ fn householder_bidiagonal_1()
 
     let (_u, b, v): (Matrix<f64>, Matrix<f64>, Matrix<f64>) = a.householder_bidiag();
 
-    assert_relative_eq!(b_ref, b, epsilon=0.00001, max_relative=1.0e-10);
-    assert_relative_eq!(v_ref, v, epsilon=0.00001, max_relative=1.0e-10);
+    assert_relative_eq!(b_ref, b, epsilon = 0.00001, max_relative = 1.0e-10);
+    assert_relative_eq!(v_ref, v, epsilon = 0.00001, max_relative = 1.0e-10);
 }
 
 #[test]
-fn householder_bidiagonal_2()
-{
+fn householder_bidiagonal_2() {
     let a: Matrix<f32> = matrix![   4.0, 1.0, -2.0, 2.0;
                                     1.0, 2.0, 0.0, -2.0;
                                     0.0, 3.0, -2.0, 2.0;
@@ -347,12 +316,11 @@ fn householder_bidiagonal_2()
 
     let (_u, b, _v): (Matrix<f32>, Matrix<f32>, Matrix<f32>) = a.householder_bidiag();
 
-    assert_relative_eq!(b_ref, b, epsilon=0.00001, max_relative=1.0e-10);
+    assert_relative_eq!(b_ref, b, epsilon = 0.00001, max_relative = 1.0e-10);
 }
 
 #[test]
-fn rot_0()
-{
+fn rot_0() {
     let f: f64 = 0.0;
     let g: f64 = -3.0;
     let (c_ref, s_ref, r_ref): (f64, f64, f64) = (0.0, 1.0, -3.0);
@@ -365,8 +333,7 @@ fn rot_0()
 }
 
 #[test]
-fn rot_1()
-{
+fn rot_1() {
     let f: f64 = 2.0;
     let g: f64 = 3.0;
     let (c_ref, s_ref, r_ref): (f64, f64, f64) =
@@ -380,8 +347,7 @@ fn rot_1()
 }
 
 #[test]
-fn rot_2()
-{
+fn rot_2() {
     let f: f64 = 3.0;
     let g: f64 = -5.0;
     let (c_ref, s_ref, r_ref): (f64, f64, f64) =
@@ -389,16 +355,13 @@ fn rot_2()
 
     let (c, s, r): (f64, f64, f64) = Matrix::rot(f, g);
 
-    assert_relative_eq!(c_ref, c, epsilon=0.0000001, max_relative=1.0e-10);
-    assert_relative_eq!(s_ref, s, epsilon=0.0000001, max_relative=1.0e-10);
-    assert_relative_eq!(r_ref, r, epsilon=0.0000001, max_relative=1.0e-10);
+    assert_relative_eq!(c_ref, c, epsilon = 0.0000001, max_relative = 1.0e-10);
+    assert_relative_eq!(s_ref, s, epsilon = 0.0000001, max_relative = 1.0e-10);
+    assert_relative_eq!(r_ref, r, epsilon = 0.0000001, max_relative = 1.0e-10);
 }
 
-
-
 #[test]
-fn apply_0()
-{
+fn apply_0() {
     let a: Matrix<f64> = matrix![   1.0, -3.0, 3.0;
                                     3.0, -5.0, 3.0;
                                     6.0, -6.0, 4.0];
@@ -409,12 +372,11 @@ fn apply_0()
 
     let b: Matrix<f64> = a.apply(&|x| -x);
 
-    assert_relative_eq!(a_ref, b, epsilon=1.0e-10);
+    assert_relative_eq!(a_ref, b, epsilon = 1.0e-10);
 }
 
 #[test]
-fn subst_backward()
-{
+fn subst_backward() {
     let a: Matrix<f64> = matrix![   1.0, 2.0, 3.0;
                                     0.0, 4.0, 5.0;
                                     0.0, 0.0, 6.0];
@@ -424,12 +386,11 @@ fn subst_backward()
 
     let c: Vector<f64> = a.substitute_backward(b).unwrap();
 
-    assert_relative_eq!(c, c_ref, epsilon=1.0e-10);
+    assert_relative_eq!(c, c_ref, epsilon = 1.0e-10);
 }
 
 #[test]
-fn subst_forward()
-{
+fn subst_forward() {
     let a: Matrix<f64> = matrix![   6.0, 0.0, 0.0;
                                     5.0, 4.0, 0.0;
                                     3.0, 2.0, 1.0];
@@ -440,29 +401,27 @@ fn subst_forward()
 
     let c: Vector<f64> = a.substitute_forward(b).unwrap();
 
-    assert_relative_eq!(c, c_ref, epsilon=1.0e-10);
+    assert_relative_eq!(c, c_ref, epsilon = 1.0e-10);
 }
 
 #[test]
-fn solve_0()
-{
+fn solve_0() {
     let a: Matrix<f64> = matrix![6.0, 2.0, -1.0; -3.0, 5.0, 3.0; -2.0, 1.0, 3.0];
     let b: Vector<f64> = vector![48.0; 49.0; 24.0];
 
     let x: Vector<f64> = a.solve(&b).unwrap();
     let x_ref: Vector<f64> = vector![7.0; 8.0; 10.0];
 
-    assert_relative_eq!(x, x_ref, epsilon=10e-10);
+    assert_relative_eq!(x, x_ref, epsilon = 10e-10);
 }
 
 #[test]
-fn pinv_0()
-{
+fn pinv_0() {
     let a: Matrix<f64> = matrix![1.0, 2.0, 3.0; 4.0, 5.0, 6.0; 8.0, 8.0, 9.0];
     let a_pinv: Matrix<f64> = a.pinv().unwrap();
     let a_pinv_ref: Matrix<f64> = matrix![  1.0, -2.0, 1.0;
                                             -4.0, 5.0, -2.0;
                                             2.6666666666666474, -2.66666666666661, 1.0];
 
-    assert_relative_eq!(a_pinv, a_pinv_ref, epsilon=10e-10);
+    assert_relative_eq!(a_pinv, a_pinv_ref, epsilon = 10e-10);
 }

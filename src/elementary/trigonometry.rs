@@ -1,14 +1,12 @@
-use crate::algebra::abstr::{Real, Complex};
-use crate::elementary::exponential::Exponential;
 use crate::algebra::abstr::One;
+use crate::algebra::abstr::{Complex, Real};
+use crate::elementary::exponential::Exponential;
 use crate::elementary::power::Power;
-
 
 /// Trigonometric functions
 ///
 ///<https://en.wikipedia.org/wiki/Trigonometric_functions>
-pub trait Trigonometry
-{
+pub trait Trigonometry {
     /// Returns the mathematics constant PI
     fn pi() -> Self;
 
@@ -53,35 +51,29 @@ pub trait Trigonometry
 
 macro_rules! trigonometry_impl {
     ($t:ty, $pi: expr) => {
-        impl Trigonometry for $t
-        {
+        impl Trigonometry for $t {
             /// Returns the mathematical constant PI
-            fn pi() -> Self
-            {
+            fn pi() -> Self {
                 $pi
             }
 
             /// sine
-            fn sin(self) -> Self
-            {
+            fn sin(self) -> Self {
                 self.sin()
             }
 
             /// Cosine
-            fn cos(self) -> Self
-            {
+            fn cos(self) -> Self {
                 self.cos()
             }
 
             ///tangents
-            fn tan(self) -> Self
-            {
+            fn tan(self) -> Self {
                 self.tan()
             }
 
             //
-            fn cot(self) -> Self
-            {
+            fn cot(self) -> Self {
                 1.0 / self.tan()
             }
 
@@ -90,13 +82,11 @@ macro_rules! trigonometry_impl {
             /// # Panics
             ///
             /// self = n pi + pi/2 n \in Z
-            fn sec(self) -> Self
-            {
+            fn sec(self) -> Self {
                 1.0 / self.cos()
             }
 
-            fn csc(self) -> Self
-            {
+            fn csc(self) -> Self {
                 1.0 / self.sin()
             }
 
@@ -109,10 +99,8 @@ macro_rules! trigonometry_impl {
             /// # Panics
             ///
             /// |x| > 1.0
-            fn arcsin(self) -> Self
-            {
-                if self.abs() > 1.0
-                {
+            fn arcsin(self) -> Self {
+                if self.abs() > 1.0 {
                     panic!();
                 }
 
@@ -128,10 +116,8 @@ macro_rules! trigonometry_impl {
             /// # Panics
             ///
             /// |x| > 1.0
-            fn arccos(self) -> Self
-            {
-                if self.abs() > 1.0
-                {
+            fn arccos(self) -> Self {
+                if self.abs() > 1.0 {
                     panic!();
                 }
 
@@ -139,41 +125,32 @@ macro_rules! trigonometry_impl {
             }
 
             /// Computes the arctangent of a number
-            fn arctan(self) -> Self
-            {
+            fn arctan(self) -> Self {
                 self.atan()
             }
 
             /// Computes the arctangent
-            fn arctan2(self, other: Self) -> Self
-            {
+            fn arctan2(self, other: Self) -> Self {
                 self.atan2(other)
             }
 
-            fn arccot(self) -> Self
-            {
-                if self == 0.0
-                {
+            fn arccot(self) -> Self {
+                if self == 0.0 {
                     return 0.0;
                 }
 
-                if self > 0.0
-                {
+                if self > 0.0 {
                     (1.0 / self).atan()
-                }
-                else
-                {
+                } else {
                     (1.0 / self).atan()
                 }
             }
 
-            fn arcsec(self) -> Self
-            {
+            fn arcsec(self) -> Self {
                 (1.0 / self).acos()
             }
 
-            fn arccsc(self) -> Self
-            {
+            fn arccsc(self) -> Self {
                 (1.0 / self).asin()
             }
         }
@@ -184,13 +161,15 @@ trigonometry_impl!(f32, std::f32::consts::PI);
 trigonometry_impl!(f64, std::f64::consts::PI);
 
 impl<T> Trigonometry for Complex<T>
-    where T: Real
+where
+    T: Real,
 {
     /// Returns the mathematics constant PI, represented as a complex number
-    fn pi() -> Self
-    {
-        Complex { re: T::pi(),
-            im: T::zero() }
+    fn pi() -> Self {
+        Complex {
+            re: T::pi(),
+            im: T::zero(),
+        }
     }
 
     /// sine function
@@ -212,8 +191,7 @@ impl<T> Trigonometry for Complex<T>
     ///
     /// assert_eq!(refer, uut);
     /// ```
-    fn sin(self) -> Self
-    {
+    fn sin(self) -> Self {
         let a: Complex<T> = Complex::new(-self.im, self.re);
         let b: Complex<T> = Complex::new(self.im, -self.re);
         let c: Complex<T> = Complex::new(T::zero(), T::one() + T::one());
@@ -240,8 +218,7 @@ impl<T> Trigonometry for Complex<T>
     ///
     /// assert_eq!(refer, uut);
     /// ```
-    fn cos(self) -> Self
-    {
+    fn cos(self) -> Self {
         let a: Complex<T> = Complex::new(-self.im, self.re);
         let b: Complex<T> = Complex::new(self.im, -self.re);
         let c: Complex<T> = Complex::new(T::one() + T::one(), T::zero());
@@ -275,8 +252,7 @@ impl<T> Trigonometry for Complex<T>
     ///
     /// assert_eq!(refer, uut);
     /// ```
-    fn tan(self) -> Self
-    {
+    fn tan(self) -> Self {
         self.sin() / self.cos()
     }
 
@@ -296,8 +272,7 @@ impl<T> Trigonometry for Complex<T>
     ///
     /// assert_eq!(refer, a.cot());
     /// ```
-    fn cot(self) -> Self
-    {
+    fn cot(self) -> Self {
         Complex::one() / self.tan()
     }
 
@@ -317,8 +292,7 @@ impl<T> Trigonometry for Complex<T>
     ///
     /// assert_eq!(refer, a.sec());
     /// ```
-    fn sec(self) -> Self
-    {
+    fn sec(self) -> Self {
         Complex::one() / self.cos()
     }
 
@@ -338,8 +312,7 @@ impl<T> Trigonometry for Complex<T>
     ///
     /// assert_eq!(refer, a.csc());
     /// ```
-    fn csc(self) -> Self
-    {
+    fn csc(self) -> Self {
         Complex::one() / self.sin()
     }
 
@@ -361,8 +334,7 @@ impl<T> Trigonometry for Complex<T>
     ///
     /// assert_eq!(refer, a.arcsin());
     /// ```
-    fn arcsin(self) -> Self
-    {
+    fn arcsin(self) -> Self {
         let mi: Complex<T> = Complex::new(T::zero(), -T::one());
         let iz: Complex<T> = Complex::new(-self.im, self.re);
         let exp: Complex<T> = Complex::new(T::one() / (T::one() + T::one()), T::zero());
@@ -387,8 +359,7 @@ impl<T> Trigonometry for Complex<T>
     ///
     /// assert_eq!(refer, a.arccos());
     /// ```
-    fn arccos(self) -> Self
-    {
+    fn arccos(self) -> Self {
         Complex::new(T::pi() / (T::one() + T::one()), T::zero()) - self.arcsin()
     }
 
@@ -414,8 +385,7 @@ impl<T> Trigonometry for Complex<T>
     ///
     /// assert_eq!(refer, a.arctan());
     /// ```
-    fn arctan(self) -> Self
-    {
+    fn arctan(self) -> Self {
         //		let iz: Complex<T> = Complex::new(-self.im, self.re);
         //		let f: Complex<T> = Complex::new(T::zero(), T::one() / (T::one() + T::one()));
         //		((Complex::one() - iz).ln() - (Complex::one() + iz).ln()) * f
@@ -425,39 +395,27 @@ impl<T> Trigonometry for Complex<T>
         let two: T = T::one() + T::one();
         let re: T;
 
-        if self.re == T::zero()
-        {
-            if self.im.abs() <= T::one()
-            {
+        if self.re == T::zero() {
+            if self.im.abs() <= T::one() {
                 re = T::zero()
-            }
-            else
-            {
-                if self.im > T::zero()
-                {
+            } else {
+                if self.im > T::zero() {
                     re = T::pi() / two;
-                }
-                else
-                {
+                } else {
                     re = -T::pi() / two;
                 }
             }
-        }
-        else
-        {
-            if self.re > T::zero()
-            {
-                re =
-                    (((self.re * self.re + self.im * self.im - T::one()) / (two * self.re)).arctan()
-                        + T::pi() / two)
-                        / two
-            }
-            else
-            {
-                re =
-                    (((self.re * self.re + self.im * self.im - T::one()) / (two * self.re)).arctan()
-                        - T::pi() / two)
-                        / two
+        } else {
+            if self.re > T::zero() {
+                re = (((self.re * self.re + self.im * self.im - T::one()) / (two * self.re))
+                    .arctan()
+                    + T::pi() / two)
+                    / two
+            } else {
+                re = (((self.re * self.re + self.im * self.im - T::one()) / (two * self.re))
+                    .arctan()
+                    - T::pi() / two)
+                    / two
             }
         }
 
@@ -467,8 +425,7 @@ impl<T> Trigonometry for Complex<T>
         Complex::new(re, im)
     }
 
-    fn arctan2(self, _other: Self) -> Self
-    {
+    fn arctan2(self, _other: Self) -> Self {
         unimplemented!()
     }
 
@@ -492,10 +449,8 @@ impl<T> Trigonometry for Complex<T>
     ///
     /// assert_eq!(refer, a.arccot());
     /// ```
-    fn arccot(self) -> Self
-    {
-        if self.re == T::zero() && (self.im == T::one() || self.im == -T::one())
-        {
+    fn arccot(self) -> Self {
+        if self.re == T::zero() && (self.im == T::one() || self.im == -T::one()) {
             panic!()
         }
         (Complex::one() / self).arctan()
@@ -521,9 +476,9 @@ impl<T> Trigonometry for Complex<T>
     ///
     /// assert_eq!(refer, a.arcsec());
     /// ```
-    fn arcsec(self) -> Self
-    {
-        if self.im == T::zero() && (self.re == -T::one() || self.re == T::zero() || self.re == T::one())
+    fn arcsec(self) -> Self {
+        if self.im == T::zero()
+            && (self.re == -T::one() || self.re == T::zero() || self.re == T::one())
         {
             panic!()
         }
@@ -549,8 +504,7 @@ impl<T> Trigonometry for Complex<T>
     ///
     /// assert_eq!(refer, a.arccsc());
     /// ```
-    fn arccsc(self) -> Self
-    {
+    fn arccsc(self) -> Self {
         (Complex::one() / self).arcsin()
     }
 }

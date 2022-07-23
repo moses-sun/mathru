@@ -1,16 +1,14 @@
 use mathru::special::error;
 use plotters::prelude::*;
 
-fn main()
-{
+fn main() {
     let x_start: f64 = -3.0;
     let x_end: f64 = 3.0;
     let length: usize = 2000;
 
     let mut graph_1: Vec<(f64, f64)> = Vec::with_capacity(length);
 
-    for i in 0..length
-    {
+    for i in 0..length {
         let x: f64 = (x_end - x_start) / (length as f64) * (i as f64) + x_start;
         graph_1.push((x, error::erf(x)));
     }
@@ -32,5 +30,9 @@ fn main()
         .draw()
         .unwrap();
 
-    ctx.draw_series(LineSeries::new(graph_1, Into::<ShapeStyle>::into(&BLUE).stroke_width(2))).unwrap();
+    ctx.draw_series(LineSeries::new(
+        graph_1,
+        Into::<ShapeStyle>::into(&BLUE).stroke_width(2),
+    ))
+    .unwrap();
 }

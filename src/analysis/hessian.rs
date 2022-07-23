@@ -4,7 +4,8 @@ use crate::algebra::{
 };
 
 pub trait Hessian<T>
-    where T: Real
+where
+    T: Real,
 {
     fn hessian(&self, input: &Vector<T>) -> Matrix<T>;
 }

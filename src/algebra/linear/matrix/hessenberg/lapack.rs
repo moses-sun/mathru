@@ -6,7 +6,9 @@ use crate::{
     elementary::Power,
 };
 
-impl<T> Matrix<T> where T: Field + Scalar + Power
+impl<T> Matrix<T>
+where
+    T: Field + Scalar + Power,
 {
     /// Decomposes self in to the M
     ///
@@ -30,11 +32,16 @@ impl<T> Matrix<T> where T: Field + Scalar + Power
     /// let a: Matrix<f64> = Matrix::new(3, 3, vec![1.0, 5.0, 3.0, 1.0, 0.0, -7.0, 3.0, 8.0, 9.0]);
     /// let (q, h): (Matrix<f64>, Matrix<f64>) = a.dec_hessenberg().qh();
     /// ```
-    pub fn dec_hessenberg(&self) -> HessenbergDec<T>
-    {
+    pub fn dec_hessenberg(&self) -> HessenbergDec<T> {
         let (m, n): (usize, usize) = self.dim();
-        assert_eq!(m, n, "Unable to compute the hessenberg decomposition of a non-square matrix");
-        assert_ne!(m, 0, "Unable to compute the hessenberg decomposition of an empty matrix.");
+        assert_eq!(
+            m, n,
+            "Unable to compute the hessenberg decomposition of a non-square matrix"
+        );
+        assert_ne!(
+            m, 0,
+            "Unable to compute the hessenberg decomposition of an empty matrix."
+        );
         let (m, n): (usize, usize) = self.dim();
 
         //lapack(fortran) uses column major order
@@ -45,27 +52,31 @@ impl<T> Matrix<T> where T: Field + Scalar + Power
 
         let mut info: i32 = 0;
 
-        let lwork: i32 = T::xgehrd_work_size(n_i32,
-                                             1,
-                                             n_i32,
-                                             &mut self_data[..],
-                                             n_i32,
-                                             tau.as_mut(),
-                                             &mut info);
+        let lwork: i32 = T::xgehrd_work_size(
+            n_i32,
+            1,
+            n_i32,
+            &mut self_data[..],
+            n_i32,
+            tau.as_mut(),
+            &mut info,
+        );
 
         assert_eq!(0, info);
 
         let mut work_xgehrd: Vec<T> = vec![T::zero(); lwork as usize];
 
-        T::xgehrd(n_i32,
-                  1,
-                  n_i32,
-                  &mut self_data[..],
-                  n_i32,
-                  tau.as_mut(),
-                  &mut work_xgehrd[..],
-                  lwork,
-                  &mut info);
+        T::xgehrd(
+            n_i32,
+            1,
+            n_i32,
+            &mut self_data[..],
+            n_i32,
+            tau.as_mut(),
+            &mut work_xgehrd[..],
+            lwork,
+            &mut info,
+        );
 
         assert_eq!(0, info);
 
@@ -74,33 +85,33 @@ impl<T> Matrix<T> where T: Field + Scalar + Power
 
         let mut info: i32 = 0;
 
-        let lwork: i32 = T::xorghr_work_size(n_i32, 1, n_i32, &mut q[..], n_i32, tau.as_mut(), &mut info);
+        let lwork: i32 =
+            T::xorghr_work_size(n_i32, 1, n_i32, &mut q[..], n_i32, tau.as_mut(), &mut info);
         let mut work_xorghr = vec![T::zero(); lwork as usize];
 
         assert_eq!(0, info);
 
-        T::xorghr(n_i32,
-                  1,
-                  n_i32,
-                  &mut q[..],
-                  n_i32,
-                  &tau[..],
-                  &mut work_xorghr[..],
-                  lwork,
-                  &mut info);
+        T::xorghr(
+            n_i32,
+            1,
+            n_i32,
+            &mut q[..],
+            n_i32,
+            &tau[..],
+            &mut work_xorghr[..],
+            lwork,
+            &mut info,
+        );
 
         assert_eq!(0, info);
 
         HessenbergDec::new(Matrix::new(m, n, q), h)
     }
 
-    fn h(mut self) -> Self
-    {
+    fn h(mut self) -> Self {
         let (m, _n) = self.dim();
-        for i in 2..m
-        {
-            for k in 0..(i - 1)
-            {
+        for i in 2..m {
+            for k in 0..(i - 1) {
                 self[[i, k]] = T::zero();
             }
         }

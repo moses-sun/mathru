@@ -1,15 +1,14 @@
 use mathru::{
     algebra::{
         abstr::Sign,
+        linear::vector::{VectorIntoIterator, VectorIterator, VectorIteratorMut},
         linear::{Matrix, Vector},
-        linear::vector::{VectorIterator, VectorIteratorMut, VectorIntoIterator},
     },
     elementary::Power,
 };
 
 #[test]
-fn macro_vector_column()
-{
+fn macro_vector_column() {
     let vec: Vector<f32> = vector![1.0; 2.0; 3.0];
 
     let vec_ref: Vector<f32> = Vector::new_column(vec![1.0, 2.0, 3.0]);
@@ -18,8 +17,7 @@ fn macro_vector_column()
 }
 
 #[test]
-fn macro_vector_row()
-{
+fn macro_vector_row() {
     let vec: Vector<f32> = vector![1.0, 2.0, 3.0];
 
     let vec_ref: Vector<f32> = Vector::new_row(vec![1.0, 2.0, 3.0]);
@@ -29,8 +27,7 @@ fn macro_vector_row()
 
 #[cfg(feature = "serde")]
 #[test]
-fn serde_0()
-{
+fn serde_0() {
     let mat: Vector<f64> = vector![1.0; 2.0; 3.0];
     let serialized = serde_json::to_string(&mat).unwrap();
 
@@ -40,8 +37,7 @@ fn serde_0()
 }
 
 #[test]
-fn zero()
-{
+fn zero() {
     let rows: usize = 5;
 
     let m_zero: Vector<f32> = Vector::zero(rows);
@@ -49,31 +45,27 @@ fn zero()
     assert_eq!(m, rows);
     assert_eq!(n, 1);
 
-    for i in 0..rows
-    {
+    for i in 0..rows {
         assert_relative_eq!(m_zero[i], 0.0);
     }
 }
 
 #[test]
-fn partial_eq0()
-{
+fn partial_eq0() {
     let lhs: Vector<f32> = Vector::new_column(vec![1.0, 2.0]);
     let rhs: Vector<f32> = Vector::new_column(vec![1.0, 2.0]);
     assert_relative_eq!(lhs, rhs);
 }
 
 #[test]
-fn partial_eq1()
-{
+fn partial_eq1() {
     let lhs: Vector<f32> = Vector::new_column(vec![1.0, 2.0]);
     let rhs: Vector<f32> = Vector::new_column(vec![1.0, 2.0]);
     assert_relative_eq!(lhs, rhs);
 }
 
 #[test]
-fn scalar_div_owner()
-{
+fn scalar_div_owner() {
     let a: Vector<f32> = Vector::new_column(vec![20.0, -10.0, 12.0, -4.0, -1.0]);
     let res_ref: Vector<f32> = Vector::new_column(vec![-10.0, 5.0, -6.0, 2.0, 0.5]);
 
@@ -83,8 +75,7 @@ fn scalar_div_owner()
 }
 
 #[test]
-fn scalar_div_borrow()
-{
+fn scalar_div_borrow() {
     let a: Vector<f32> = Vector::new_column(vec![20.0, -10.0, 12.0, -4.0, -1.0]);
     let res_ref: Vector<f32> = Vector::new_column(vec![-10.0, 5.0, -6.0, 2.0, 0.5]);
 
@@ -94,26 +85,7 @@ fn scalar_div_borrow()
 }
 
 #[test]
-fn get_0()
-{
-    let res: Vector<f32> = Vector::new_column(vec![1.0, 2.0, 3.0, 4.0, 5.0]);
-    let res_ref: Vector<f32> = Vector::new_column(vec![1.0, 2.0, 3.0, 4.0, 5.0]);
-
-    assert_relative_eq!(res, res_ref);
-}
-
-#[test]
-fn get_1()
-{
-    let res: Vector<f32> = Vector::new_row(vec![1.0, 2.0, 3.0, 4.0, 5.0]);
-    let res_ref: Vector<f32> = Vector::new_column(vec![1.0, 2.0, 3.0, 4.0, 5.0]);
-
-    assert_relative_eq!(res, res_ref);
-}
-
-#[test]
-fn get_slice_0()
-{
+fn get_slice_0() {
     let res: Vector<f32> = Vector::new_column(vec![1.0, 2.0, 3.0, 4.0, 5.0]);
     let res_ref: Vector<f32> = Vector::new_column(vec![3.0, 4.0, 5.0]);
 
@@ -123,8 +95,7 @@ fn get_slice_0()
 }
 
 #[test]
-fn set_slice_0()
-{
+fn set_slice_0() {
     let mut a: Vector<f32> = Vector::new_column(vec![1.0, 2.0, 3.0, 4.0, 5.0]);
 
     let b: Vector<f32> = Vector::new_column(vec![-3.0, -4.0, -5.0]);
@@ -136,8 +107,7 @@ fn set_slice_0()
 }
 
 #[test]
-fn dotp_0()
-{
+fn dotp_0() {
     let a: Vector<f32> = Vector::new_column(vec![-1.0, -3.0, 6.0, -1.0]);
     let b: Vector<f32> = Vector::new_column(vec![-2.0, -5.0, -3.0, 2.0]);
     let dotp_ref: f32 = -3.0;
@@ -146,8 +116,7 @@ fn dotp_0()
 }
 
 #[test]
-fn dotp_1()
-{
+fn dotp_1() {
     let a: Vector<f32> = Vector::new_column(vec![-1.0, -3.0, 6.0, -1.0]);
     let dotp_ref: f32 = 47.0;
     let dotp: f32 = a.dotp(&a);
@@ -165,8 +134,7 @@ fn dotp_1()
 //    }
 
 #[test]
-fn dyadp()
-{
+fn dyadp() {
     let x: Vector<f32> = vector![   1.0;
                                     3.0;
                                     2.0];
@@ -183,8 +151,7 @@ fn dyadp()
 }
 
 #[test]
-fn p_norm()
-{
+fn p_norm() {
     let p: f32 = 2.0;
     let v: Vector<f32> = Vector::new_column(vec![-2.0, -5.0, -3.0, 2.0]);
     let p_norm_ref: f32 = 42.0.pow(0.5);
@@ -192,26 +159,22 @@ fn p_norm()
     assert_relative_eq!(p_norm_ref, p_norm);
 }
 
-
 #[test]
-fn argmax()
-{
+fn argmax() {
     let m: Vector<f64> = vector![1.0, -2.0, 3.0, -4.0];
 
     assert_eq!(2, m.argmax());
 }
 
 #[test]
-fn argmin()
-{
+fn argmin() {
     let m: Vector<f64> = vector![1.0, -2.0, 3.0, -4.0];
 
     assert_eq!(3, m.argmin());
 }
 
 #[test]
-fn sign()
-{
+fn sign() {
     let v: Vector<f64> = vector![1.0, -2.0, 0.0, -4.0];
 
     let sign: Vector<f64> = vector![1.0, -1.0, 0.0, -1.0];
@@ -221,8 +184,7 @@ fn sign()
 }
 
 #[test]
-fn abs()
-{
+fn abs() {
     let v: Vector<f64> = vector![1.0, -2.0, 0.0, -4.0];
 
     let abs_ref: Vector<f64> = vector![1.0, 2.0, 0.0, 4.0];
@@ -232,8 +194,7 @@ fn abs()
 }
 
 #[test]
-fn iter()
-{
+fn iter() {
     let v: Vector<f64> = vector![1.0, -4.0];
     let mut iter: VectorIterator<f64> = v.iter();
 
@@ -242,8 +203,7 @@ fn iter()
 }
 
 #[test]
-fn iter_mut()
-{
+fn iter_mut() {
     let mut v: Vector<f64> = vector![1.0, -4.0];
     let mut iter_mut: VectorIteratorMut<f64> = v.iter_mut();
 
@@ -255,8 +215,7 @@ fn iter_mut()
 }
 
 #[test]
-fn into_iter()
-{
+fn into_iter() {
     let v: Vector<f64> = vector![1.0, -4.0];
     let mut iter: VectorIntoIterator<f64> = v.into_iter();
 

@@ -1,6 +1,6 @@
-pub mod matrix;
 pub mod add;
-pub mod sub;
+pub mod matrix;
 pub mod mul;
+pub mod sub;
 
 pub use matrix::matrix;

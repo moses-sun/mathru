@@ -1,10 +1,9 @@
-use mathru::algebra::linear::Matrix;
 use crate::mathru::algebra::abstr::cast::FromPrimitive;
 use mathru::algebra::abstr::Complex;
+use mathru::algebra::linear::Matrix;
 
 #[test]
-fn add_matrix_own_f32()
-{
+fn add_matrix_own_f32() {
     let a: Matrix<f32> = matrix![   1.0, -2.0, -3.0;
                                     -4.0, -1.0, -2.5];
 
@@ -18,8 +17,7 @@ fn add_matrix_own_f32()
 }
 
 #[test]
-fn add_matrix_own()
-{
+fn add_matrix_own() {
     let a: Matrix<f64> = matrix![   1.0, -2.0, -3.0;
                                     -4.0, -1.0, -2.5];
 
@@ -33,8 +31,7 @@ fn add_matrix_own()
 }
 
 #[test]
-fn add_matrix_borrow()
-{
+fn add_matrix_borrow() {
     let a: Matrix<f64> = matrix![   1.0, -2.0, -3.0;
                                     -4.0, -1.0, -2.5];
 
@@ -48,8 +45,7 @@ fn add_matrix_borrow()
 }
 
 #[test]
-fn add_matrix_mut_borrow()
-{
+fn add_matrix_mut_borrow() {
     let mut a: Matrix<f64> = matrix![   1.0, -2.0, -3.0;
                                     -4.0, -1.0, -2.5];
 
@@ -63,8 +59,7 @@ fn add_matrix_mut_borrow()
 }
 
 #[test]
-fn add_scalar_own()
-{
+fn add_scalar_own() {
     let a: Matrix<f64> = matrix![   1.0, -2.0, -3.0;
                                     -4.0, -1.0, -2.5];
 
@@ -75,8 +70,7 @@ fn add_scalar_own()
 }
 
 #[test]
-fn add_scalar_borrow()
-{
+fn add_scalar_borrow() {
     let a: Matrix<f32> = matrix![   1.0, -2.0, -3.0;
                                     -4.0, -1.0, -2.5];
 
@@ -87,8 +81,7 @@ fn add_scalar_borrow()
 }
 
 #[test]
-fn add_scalar_mut_borrow()
-{
+fn add_scalar_mut_borrow() {
     let mut a: Matrix<f32> = matrix![   1.0, -2.0, -3.0;
                                     -4.0, -1.0, -2.5];
 
@@ -98,10 +91,8 @@ fn add_scalar_mut_borrow()
     assert_relative_eq!(sum_ref, &mut a + &5.0f32);
 }
 
-
 #[test]
-fn add_complex_f32()
-{
+fn add_complex_f32() {
     let a: Matrix<Complex<f32>> = matrix![  Complex::from_f32(1.0), Complex::from_f32(-2.0), Complex::from_f32(-3.0);
                                             Complex::from_f32(-4.0), Complex::from_f32(-1.0), Complex::from_f32(-2.5)];
 
@@ -115,8 +106,7 @@ fn add_complex_f32()
 }
 
 #[test]
-fn add_complex_f64()
-{
+fn add_complex_f64() {
     let a: Matrix<Complex<f64>> = matrix![  Complex::new(1.0, 1.0), Complex::new(-2.0, 2.0) ;
                                             Complex::new(-4.0, 3.0), Complex::new(1.0, -5.0)];
 

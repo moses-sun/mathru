@@ -1,3 +1,2 @@
-
-mod newton_cotes;
 mod gauss_legendre;
+mod newton_cotes;

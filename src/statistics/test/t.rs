@@ -1,14 +1,14 @@
+use crate::special::hypergeometric::Hypergeometric;
 use crate::{
     algebra::abstr::Real,
+    special::beta::Beta,
+    special::error::Error,
+    special::gamma::Gamma,
     statistics::{
         distrib::{Continuous, Normal, T as TD},
         test::Test,
     },
-    special::gamma::Gamma,
-    special::beta::Beta,
-    special::error::Error,
 };
-use crate::special::hypergeometric::Hypergeometric;
 use std::clone::Clone;
 
 #[cfg(feature = "serde")]
@@ -62,42 +62,41 @@ use serde::{Deserialize, Serialize};
 /// ```
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[derive(Clone, Copy, Debug)]
-pub struct T<K>
-{
+pub struct T<K> {
     p: K,
     t: K,
 }
 
-impl<K> Test<K> for T<K> where K: Real
+impl<K> Test<K> for T<K>
+where
+    K: Real,
 {
     ///Test value
-    fn value(&self) -> K
-    {
+    fn value(&self) -> K {
         self.t
     }
 
     /// Degree of freedom
-    fn df(&self) -> u32
-    {
+    fn df(&self) -> u32 {
         0
     }
 
     ///
-    fn p_value(&self) -> K
-    {
+    fn p_value(&self) -> K {
         self.p
     }
 }
 
-impl<K> T<K> where K: Real + Gamma + Beta + Error + Hypergeometric
+impl<K> T<K>
+where
+    K: Real + Gamma + Beta + Error + Hypergeometric,
 {
     /// This is a one-sided test for the null hypothesis that the expected value
     /// (mean) of a sample of independent observations a is equal
     /// to the given mean.
     ///
     /// x: observation
-    pub fn one_sample(x: &Vec<K>, mu_0: K) -> T<K>
-    {
+    pub fn one_sample(x: &Vec<K>, mu_0: K) -> T<K> {
         let n: u32 = x.len() as u32;
 
         let normal: Normal<K> = Normal::from_data(x);
@@ -105,8 +104,10 @@ impl<K> T<K> where K: Real + Gamma + Beta + Error + Hypergeometric
         let x_bar: K = normal.mean();
         let s: K = normal.variance().sqrt();
 
-        T { t: K::from_u32(n).sqrt() * (x_bar - mu_0) / s,
-            p: K::zero() }
+        T {
+            t: K::from_u32(n).sqrt() * (x_bar - mu_0) / s,
+            p: K::zero(),
+        }
     }
 
     /// Calculates the T-test for the means of two independent samples of scores
@@ -114,8 +115,7 @@ impl<K> T<K> where K: Real + Gamma + Beta + Error + Hypergeometric
     /// This is a two-sided test for the null hypothesis that two independent
     /// samples have identical expected values. It is assumed, that the
     /// populations have identical variances.
-    pub fn test_independence_equal_variance(x: &Vec<K>, y: &Vec<K>) -> T<K>
-    {
+    pub fn test_independence_equal_variance(x: &Vec<K>, y: &Vec<K>) -> T<K> {
         let n_x: usize = x.len();
         let n_y: usize = y.len();
 
@@ -131,13 +131,13 @@ impl<K> T<K> where K: Real + Gamma + Beta + Error + Hypergeometric
         let s_y_squared: K = y_dist.variance();
 
         let nomin: K = K::from_f64((n_x - 1) as f64) * s_x_squared
-                       + K::from_f64((n_y - 1) as f64) * s_y_squared;
+            + K::from_f64((n_y - 1) as f64) * s_y_squared;
         let denom: K = K::from((df) as f64);
 
         let s_p: K = (nomin / denom).sqrt();
 
         let t: K = (mean_x - mean_y)
-                   / (s_p * K::from_f64((1.0 / (n_x as f64) + 1.0 / (n_y as f64)).sqrt()));
+            / (s_p * K::from_f64((1.0 / (n_x as f64) + 1.0 / (n_y as f64)).sqrt()));
         T { p: K::zero(), t }
     }
 
@@ -146,8 +146,7 @@ impl<K> T<K> where K: Real + Gamma + Beta + Error + Hypergeometric
     /// This is a two-sided test for the null hypothesis that two independent
     /// samples have identical expected values. It is assumed, that the
     /// populations have NOT identical variances. It performs the Welch’s t-test
-    pub fn test_independence_unequal_variance(x: &Vec<K>, y: &Vec<K>) -> T<K>
-    {
+    pub fn test_independence_unequal_variance(x: &Vec<K>, y: &Vec<K>) -> T<K> {
         let n_x: usize = x.len();
         let n_y: usize = y.len();
 
@@ -164,8 +163,8 @@ impl<K> T<K> where K: Real + Gamma + Beta + Error + Hypergeometric
             s_x_squared / K::from_f64(n_x as f64) + s_y_squared / K::from_f64(n_y as f64);
 
         let df: K = term1 * term1
-                    / (s_x_squared * s_x_squared / K::from_f64((n_x * n_x * (n_x - 1)) as f64)
-                       + s_y_squared * s_y_squared / K::from_f64((n_y * n_y * (n_y - 1)) as f64));
+            / (s_x_squared * s_x_squared / K::from_f64((n_x * n_x * (n_x - 1)) as f64)
+                + s_y_squared * s_y_squared / K::from_f64((n_y * n_y * (n_y - 1)) as f64));
 
         let s_p: K = term1.sqrt();
 

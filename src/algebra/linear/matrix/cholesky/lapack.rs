@@ -1,12 +1,11 @@
-use crate::{
-    algebra::{
-        abstr::{Field, Scalar},
-        linear::{matrix::CholeskyDec, Matrix},
-    }
+use crate::algebra::{
+    abstr::{Field, Scalar},
+    linear::{matrix::CholeskyDec, Matrix},
 };
 
 impl<T> Matrix<T>
-    where T: Field + Scalar
+where
+    T: Field + Scalar,
 {
     /// Decomposes the symmetric, positive definite quadratic matrix A into a
     /// lower triangular matrix L A = L L^T
@@ -35,8 +34,7 @@ impl<T> Matrix<T>
     /// let l: (Matrix<f64>) = a.dec_cholesky().unwrap().l();
     /// # }
     /// ```
-    pub fn dec_cholesky(&self) -> Result<CholeskyDec<T>, ()>
-    {
+    pub fn dec_cholesky(&self) -> Result<CholeskyDec<T>, ()> {
         let (m, n): (usize, usize) = self.dim();
         assert_eq!(m, n);
 
@@ -49,18 +47,15 @@ impl<T> Matrix<T>
 
         T::xpotrf('L', n_i32, l_data.as_mut_slice(), n_i32, &mut info);
 
-        if info < 0
-        {
+        if info < 0 {
             return Err(());
         }
 
         let mut l: Matrix<T> = Matrix::new(n, n, l_data);
 
         //fill above diagonal with zeros
-        for i in 0..n
-        {
-            for j in (i + 1)..n
-            {
+        for i in 0..n {
+            for j in (i + 1)..n {
                 l[[i, j]] = T::zero();
             }
         }

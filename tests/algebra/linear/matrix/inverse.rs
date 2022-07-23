@@ -1,9 +1,8 @@
-use mathru::algebra::linear::{matrix::Inverse, Matrix};
 use mathru::algebra::abstr::Complex;
+use mathru::algebra::linear::{matrix::Inverse, Matrix};
 
 #[test]
-fn inv_f32()
-{
+fn inv_f32() {
     let a: Matrix<f32> = matrix![   1.0, -2.0, 3.0;
                                     2.0, -5.0, 12.0;
                                     0.0, 2.0, -10.0];
@@ -14,12 +13,11 @@ fn inv_f32()
 
     let a_inv: Matrix<f32> = a.inv().unwrap();
 
-    assert_relative_eq!(a_inv, a_inv_ref, epsilon=2.0e-5);
+    assert_relative_eq!(a_inv, a_inv_ref, epsilon = 2.0e-5);
 }
 
 #[test]
-fn inv_f64()
-{
+fn inv_f64() {
     let a: Matrix<f64> = matrix![   1.0, -2.0, 3.0;
                                     2.0, -5.0, 12.0;
                                     0.0, 2.0, -10.0];
@@ -30,12 +28,11 @@ fn inv_f64()
 
     let a_inv: Matrix<f64> = a.inv().unwrap();
 
-    assert_relative_eq!(a_inv, a_inv_ref, epsilon=1.0e-10);
+    assert_relative_eq!(a_inv, a_inv_ref, epsilon = 1.0e-10);
 }
 
 #[test]
-fn inv_complex_f64()
-{
+fn inv_complex_f64() {
     let a: Matrix<Complex<f64>> = matrix![  Complex::new(1.0, 0.0), Complex::new(-2.0, 0.0), Complex::new(3.0, 0.0);
                                             Complex::new(2.0, 0.0), Complex::new(-5.0, 0.0), Complex::new(12.0, 0.0);
                                             Complex::new(0.0, 0.0), Complex::new(2.0, 0.0), Complex::new(-10.0, 0.0)];
@@ -46,12 +43,11 @@ fn inv_complex_f64()
 
     let a_inv: Matrix<Complex<f64>> = a.inv().unwrap();
 
-    assert_relative_eq!(a_inv, a_inv_ref, epsilon=Complex::new(1.0e-10, 1.0e-10));
+    assert_relative_eq!(a_inv, a_inv_ref, epsilon = Complex::new(1.0e-10, 1.0e-10));
 }
 
 #[test]
-fn inv_complex_f32()
-{
+fn inv_complex_f32() {
     let a: Matrix<Complex<f32>> = matrix![  Complex::new(1.0, 0.0), Complex::new(-2.0, 0.0), Complex::new(3.0, 0.0);
                                             Complex::new(2.0, 0.0), Complex::new(-5.0, 0.0), Complex::new(12.0, 0.0);
                                             Complex::new(0.0, 0.0), Complex::new(2.0, 0.0), Complex::new(-10.0, 0.0)];
@@ -62,12 +58,11 @@ fn inv_complex_f32()
 
     let a_inv: Matrix<Complex<f32>> = a.inv().unwrap();
 
-    assert_relative_eq!(a_inv, a_inv_ref, epsilon=Complex::new(2.0e-5, 2.0e-5));
+    assert_relative_eq!(a_inv, a_inv_ref, epsilon = Complex::new(2.0e-5, 2.0e-5));
 }
 
 #[test]
-fn inv_1()
-{
+fn inv_1() {
     let a: Matrix<f64> = matrix![   1.0, 0.0, 2.0;
                                     -1.0, 5.0, 0.0;
                                     0.0, 3.0, -9.0];
@@ -78,12 +73,11 @@ fn inv_1()
 
     let a_inv: Matrix<f64> = a.inv().unwrap();
 
-    assert_relative_eq!(a_inv, a_inv_ref, epsilon=1.0e-10);
+    assert_relative_eq!(a_inv, a_inv_ref, epsilon = 1.0e-10);
 }
 
 #[test]
-fn inv_2()
-{
+fn inv_2() {
     let a: Matrix<f64> = matrix![   -1.0, 2.0, 3.0, 4.0, 5.0;
                                     -6.0, -7.0, 8.0, 9.0, 10.0;
                                     -11.0, 12.0, 13.0, 14.0, 15.0;
@@ -99,5 +93,5 @@ fn inv_2()
 
     let a_inv: Matrix<f64> = a.inv().unwrap();
 
-    assert_relative_eq!(a_inv, a_inv_ref, epsilon=1.0e-10);
+    assert_relative_eq!(a_inv, a_inv_ref, epsilon = 1.0e-10);
 }

@@ -1,8 +1,7 @@
 //! Operator Trait
 
 ///
-pub trait Operator: Copy
-{
+pub trait Operator: Copy {
     fn operator() -> Self;
 }
 
@@ -10,10 +9,8 @@ pub trait Operator: Copy
 #[derive(Copy, Clone)]
 pub struct Addition;
 
-impl Operator for Addition
-{
-    fn operator() -> Self
-    {
+impl Operator for Addition {
+    fn operator() -> Self {
         Addition
     }
 }
@@ -22,10 +19,8 @@ impl Operator for Addition
 #[derive(Copy, Clone)]
 pub struct Multiplication;
 
-impl Operator for Multiplication
-{
-    fn operator() -> Self
-    {
+impl Operator for Multiplication {
+    fn operator() -> Self {
         Multiplication
     }
 }

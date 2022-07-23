@@ -1,8 +1,7 @@
 use mathru::statistics::combins;
 
 #[test]
-fn binom0()
-{
+fn binom0() {
     let n: u32 = 5;
     let k: u32 = 3;
     let c: u32 = 10;
@@ -11,8 +10,7 @@ fn binom0()
 }
 
 #[test]
-fn binom1()
-{
+fn binom1() {
     let n: u32 = 6;
     let k: u32 = 3;
     let c: u32 = 20;
@@ -21,8 +19,7 @@ fn binom1()
 }
 
 #[test]
-fn binom2()
-{
+fn binom2() {
     let n: u32 = 5;
     let k: u32 = 2;
     let c: u32 = 10;
@@ -31,8 +28,7 @@ fn binom2()
 }
 
 #[test]
-fn factorial()
-{
+fn factorial() {
     let n: u32 = 5;
     assert_eq!(120, combins::factorial(n));
 }

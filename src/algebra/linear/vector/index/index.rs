@@ -1,8 +1,7 @@
-use std::ops::{Index, IndexMut};
 use crate::algebra::linear::Vector;
+use std::ops::{Index, IndexMut};
 
-impl<T> Index<usize> for Vector<T>
-{
+impl<T> Index<usize> for Vector<T> {
     type Output = T;
 
     /// Returns the component
@@ -20,25 +19,21 @@ impl<T> Index<usize> for Vector<T>
     ///
     /// assert_eq!(-2.0, a[3])
     /// ```
-    fn index(&self, index: usize) -> &Self::Output
-    {
+    fn index(&self, index: usize) -> &Self::Output {
         let (m, n): (usize, usize) = self.data.dim();
 
-        if m == 1
-        {
-            return &self.data[[0, index]]
+        if m == 1 {
+            return &self.data[[0, index]];
         }
 
-        if n == 1
-        {
-            return &self.data[[index, 0]]
+        if n == 1 {
+            return &self.data[[index, 0]];
         }
         panic!("")
     }
 }
 
-impl<'a, T> IndexMut<usize> for Vector<T>
-{
+impl<'a, T> IndexMut<usize> for Vector<T> {
     /// Returns the component
     ///
     /// # Panics
@@ -54,18 +49,15 @@ impl<'a, T> IndexMut<usize> for Vector<T>
     ///
     /// assert_eq!(-2.0, a[3])
     /// ```
-    fn index_mut(&mut self, index: usize) -> &mut Self::Output
-    {
+    fn index_mut(&mut self, index: usize) -> &mut Self::Output {
         let (m, n): (usize, usize) = self.data.dim();
 
-        if m == 1
-        {
-            return &mut self.data[[0, index]]
+        if m == 1 {
+            return &mut self.data[[0, index]];
         }
 
-        if n == 1
-        {
-            return &mut self.data[[index, 0]]
+        if n == 1 {
+            return &mut self.data[[index, 0]];
         }
         panic!("")
     }

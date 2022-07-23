@@ -10,13 +10,14 @@ use std::clone::Clone;
 ///
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[derive(Clone, Copy, Debug)]
-pub struct RaisedCosine<T>
-{
+pub struct RaisedCosine<T> {
     mu: T,
     s: T,
 }
 
-impl<T> RaisedCosine<T> where T: Real
+impl<T> RaisedCosine<T>
+where
+    T: Real,
 {
     /// Creates a probability distribution
     ///
@@ -39,17 +40,17 @@ impl<T> RaisedCosine<T> where T: Real
     /// let s: f64 = 0.5 * PI;
     /// let distrib: RaisedCosine<f64> = RaisedCosine::new(mu, s);
     /// ```
-    pub fn new(mu: T, s: T) -> RaisedCosine<T>
-    {
-        if s < T::zero()
-        {
+    pub fn new(mu: T, s: T) -> RaisedCosine<T> {
+        if s < T::zero() {
             panic!();
         }
         RaisedCosine { mu, s }
     }
 }
 
-impl<T> Continuous<T> for RaisedCosine<T> where T: Real
+impl<T> Continuous<T> for RaisedCosine<T>
+where
+    T: Real,
 {
     /// Probability density function
     ///
@@ -70,12 +71,10 @@ impl<T> Continuous<T> for RaisedCosine<T> where T: Real
     /// let x: f64 = 5.0;
     /// let p: f64 = distrib.pdf(x);
     /// ```
-    fn pdf(&self, x: T) -> T
-    {
-        if (self.mu - self.s) <= x && x < (self.mu + self.s)
-        {
+    fn pdf(&self, x: T) -> T {
+        if (self.mu - self.s) <= x && x < (self.mu + self.s) {
             return (T::one() + (T::pi() * (x - self.mu) / self.s).cos())
-                   / (T::from_f64(2.0) * self.s);
+                / (T::from_f64(2.0) * self.s);
         }
 
         T::zero()
@@ -96,15 +95,12 @@ impl<T> Continuous<T> for RaisedCosine<T> where T: Real
     /// let x: f64 = PI / 2.0;
     /// let p: f64 = distrib.cdf(x);
     /// ```
-    fn cdf(&self, x: T) -> T
-    {
-        if (self.mu - self.s) <= x && x <= (self.mu + self.s)
-        {
+    fn cdf(&self, x: T) -> T {
+        if (self.mu - self.s) <= x && x <= (self.mu + self.s) {
             let k: T = (x - self.mu) / self.s;
             (T::one() + k + T::one() / T::pi() * (k * T::pi()).sin()) / T::from_f64(2.0)
         } else {
-            if x < (self.mu - self.s)
-            {
+            if x < (self.mu - self.s) {
                 T::zero()
             } else {
                 T::one()
@@ -113,8 +109,7 @@ impl<T> Continuous<T> for RaisedCosine<T> where T: Real
     }
 
     /// Quantile function of inverse cdf
-    fn quantile(&self, _p: T) -> T
-    {
+    fn quantile(&self, _p: T) -> T {
         unimplemented!();
     }
 
@@ -128,8 +123,7 @@ impl<T> Continuous<T> for RaisedCosine<T> where T: Real
     /// let distrib: RaisedCosine<f64> = RaisedCosine::new(-2.0, 0.5);
     /// let mean: f64 = distrib.mean();
     /// ```
-    fn mean(&self) -> T
-    {
+    fn mean(&self) -> T {
         self.mu
     }
 
@@ -144,27 +138,23 @@ impl<T> Continuous<T> for RaisedCosine<T> where T: Real
     /// let distrib: RaisedCosine<f64> = RaisedCosine::new(2.0, PI);
     /// let var: f64 = distrib.variance();
     /// ```
-    fn variance(&self) -> T
-    {
+    fn variance(&self) -> T {
         self.s * self.s * (T::from_f64(1.0 / 3.0) - T::from_f64(2.0) / (T::pi() * T::pi()))
     }
 
     ///
-    fn skewness(&self) -> T
-    {
+    fn skewness(&self) -> T {
         T::zero()
     }
 
     /// Median is the value separating the higher half from the lower half of a
     /// probability distribution.
-    fn median(&self) -> T
-    {
+    fn median(&self) -> T {
         self.mu
     }
 
     ///
-    fn entropy(&self) -> T
-    {
+    fn entropy(&self) -> T {
         unimplemented!();
     }
 }

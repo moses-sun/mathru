@@ -2,38 +2,39 @@
 //!
 //! <https://en.wikipedia.org/wiki/Abstract_algebra>
 
-pub use self::{
-    abeliangroup::{AbelianGroup, AbelianGroupAdd, AbelianGroupMul},
-    abs_diff_eq::{AbsDiff, AbsDiffEq},
-    group::{Group, GroupAdd, GroupMul},
-    identity::Identity,
-    loop_::Loop,
-    magma::{Magma, MagmaAdd, MagmaMul},
-    monoid::{Monoid, MonoidAdd, MonoidMul, One, Zero},
-    operator::{Addition, Multiplication, Operator},
-    quasigroup::Quasigroup,
-    relative_eq::{Relative, RelativeEq},
-    semigroup::{Semigroup, SemigroupAdd, SemigroupMul},
-    complex::Complex,
-    field::Field,
-    integer::Integer,
-    natural::Natural,
-    real::Real,
-    ring::{CommutativeRing, Ring},
-    scalar::Scalar,
-    sign::Sign,
-    polynomial::Polynomial,
-};
+#[cfg(feature = "native")]
+pub use self::scalar::MatrixMultiply;
 #[cfg(feature = "lapack")]
 pub use self::scalar::{Blas, Lapack};
 
+pub use self::{
+    abeliangroup::{AbelianGroup, AbelianGroupAdd, AbelianGroupMul},
+    abs_diff_eq::{AbsDiff, AbsDiffEq},
+    complex::Complex,
+    field::Field,
+    group::{Group, GroupAdd, GroupMul},
+    identity::Identity,
+    integer::Integer,
+    loop_::Loop,
+    magma::{Magma, MagmaAdd, MagmaMul},
+    monoid::{Monoid, MonoidAdd, MonoidMul, One, Zero},
+    natural::Natural,
+    operator::{Addition, Multiplication, Operator},
+    polynomial::Polynomial,
+    quasigroup::Quasigroup,
+    real::Real,
+    relative_eq::{Relative, RelativeEq},
+    ring::{CommutativeRing, Ring},
+    scalar::Scalar,
+    semigroup::{Semigroup, SemigroupAdd, SemigroupMul},
+    sign::Sign,
+};
+
+mod abeliangroup;
+mod abs_diff_eq;
+mod bound;
 pub mod cast;
 mod field;
-mod ring;
-mod scalar;
-mod sign;
-mod semiring;
-mod abeliangroup;
 mod group;
 mod identity;
 mod integer;
@@ -43,10 +44,12 @@ mod monoid;
 mod natural;
 mod operator;
 mod quasigroup;
-mod semigroup;
-mod abs_diff_eq;
 mod relative_eq;
-mod bound;
+mod ring;
+mod scalar;
+mod semigroup;
+mod semiring;
+mod sign;
 
 mod polynomial;
 #[macro_use]

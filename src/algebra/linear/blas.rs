@@ -89,5 +89,17 @@ macro_rules! blas_impl (
 
 blas_impl!(f32, ffi::sgemm_, ffi::strsm_, ffi::sscal_, ffi::saxpy_);
 blas_impl!(f64, ffi::dgemm_, ffi::dtrsm_, ffi::dscal_, ffi::daxpy_);
-blas_impl!(Complex<f32>, ffi::cgemm_, ffi::ctrsm_, ffi::cscal_, ffi::caxpy_);
-blas_impl!(Complex<f64>, ffi::zgemm_, ffi::ztrsm_, ffi::zscal_, ffi::zaxpy_);
+blas_impl!(
+    Complex<f32>,
+    ffi::cgemm_,
+    ffi::ctrsm_,
+    ffi::cscal_,
+    ffi::caxpy_
+);
+blas_impl!(
+    Complex<f64>,
+    ffi::zgemm_,
+    ffi::ztrsm_,
+    ffi::zscal_,
+    ffi::zaxpy_
+);

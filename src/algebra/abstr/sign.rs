@@ -1,8 +1,7 @@
 use std::ops::Neg;
 
 /// Sign trait
-pub trait Sign: Sized + Neg<Output = Self>
-{
+pub trait Sign: Sized + Neg<Output = Self> {
     /// Returns the sign of a number
     ///
     /// # Param

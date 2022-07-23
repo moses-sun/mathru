@@ -1,9 +1,8 @@
 use mathru::algebra::linear::Vector;
 
 #[test]
-fn scalar()
-{
-    let mut a: Vector<f32> = vector![ 1.0, -2.0, -3.0];
+fn scalar() {
+    let mut a: Vector<f32> = vector![1.0, -2.0, -3.0];
     let prod_ref: Vector<f32> = vector![5.0, -10.0, -15.0];
 
     a *= 5.0f32;

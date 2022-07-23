@@ -1,11 +1,10 @@
-use crate::algebra::abstr::{Complex, Real };
 use crate::algebra::abstr::Sign;
+use crate::algebra::abstr::{Complex, Real};
 
 /// Power functions
 ///
 ///<https://en.wikipedia.org/wiki/Exponentiation#Power_functions>
-pub trait Power
-{
+pub trait Power {
     fn pow(self, exp: Self) -> Self;
 
     fn root(self, root: Self) -> Self;
@@ -15,20 +14,16 @@ pub trait Power
 
 macro_rules! power_impl {
     ($t:ty) => {
-        impl Power for $t
-        {
-            fn pow(self, exp: Self) -> Self
-            {
+        impl Power for $t {
+            fn pow(self, exp: Self) -> Self {
                 self.powf(exp)
             }
 
-            fn root(self, root: Self) -> Self
-            {
+            fn root(self, root: Self) -> Self {
                 self.powf(1.0 / root)
             }
 
-            fn sqrt(self) -> Self
-            {
+            fn sqrt(self) -> Self {
                 self.powf(0.5)
             }
         }
@@ -40,20 +35,16 @@ power_impl!(f64);
 
 macro_rules! power_impl_integer {
     ($t:ty) => {
-        impl Power for $t
-        {
-            fn pow(self, _exp: Self) -> Self
-            {
+        impl Power for $t {
+            fn pow(self, _exp: Self) -> Self {
                 unimplemented!();
             }
 
-            fn root(self, _root: Self) -> Self
-            {
+            fn root(self, _root: Self) -> Self {
                 unimplemented!();
             }
 
-            fn sqrt(self) -> Self
-            {
+            fn sqrt(self) -> Self {
                 unimplemented!();
             }
         }
@@ -74,7 +65,8 @@ power_impl_integer!(i128);
 power_impl_integer!(isize);
 
 impl<T> Power for Complex<T>
-    where T: Real
+where
+    T: Real,
 {
     /// Power
     ///
@@ -90,8 +82,7 @@ impl<T> Power for Complex<T>
     ///
     /// assert_eq!(refer, a.pow(b));
     /// ```
-    fn pow(self, exp: Self) -> Self
-    {
+    fn pow(self, exp: Self) -> Self {
         let r: T = self.abs().re;
         let phi: T = self.arg().re;
         let k: T = r.pow(exp.re) * (-exp.im * phi).exp();
@@ -102,13 +93,11 @@ impl<T> Power for Complex<T>
         Complex::new(re, im)
     }
 
-    fn root(self, _root: Self) -> Self
-    {
+    fn root(self, _root: Self) -> Self {
         unimplemented!();
     }
 
-    fn sqrt(self) -> Self
-    {
+    fn sqrt(self) -> Self {
         let arg = self.arg().re * T::from_f64(0.5);
         let abs = self.abs().re.sqrt();
 

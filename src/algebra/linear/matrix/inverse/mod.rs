@@ -5,8 +5,7 @@ pub mod native;
 
 use crate::algebra::linear::Matrix;
 
-pub trait Inverse<T>
-{
+pub trait Inverse<T> {
     /// Inverse Matrix
     ///
     /// # Example

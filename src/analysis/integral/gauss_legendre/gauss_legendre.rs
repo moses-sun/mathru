@@ -13,16 +13,14 @@ use serde::{Deserialize, Serialize};
 /// <https://en.wikipedia.org/wiki/Gaussian_quadrature#Gauss-Legendre_quadrature>
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[derive(Clone, Debug)]
-pub struct GaussLegendre<T>
-{
-    root_weight: RootWeight<T>
+pub struct GaussLegendre<T> {
+    root_weight: RootWeight<T>,
 }
 
-
 impl<T> GaussLegendre<T>
-    where T: Real
+where
+    T: Real,
 {
-
     /// # Arguments
     ///
     ///
@@ -46,18 +44,15 @@ impl<T> GaussLegendre<T>
     /// assert_relative_eq!(integral, 6.0)
     /// # }
     /// ```
-    pub fn new(n: u8) -> GaussLegendre<T>
-    {
-        if !(1..=9).contains(&n)
-        {
+    pub fn new(n: u8) -> GaussLegendre<T> {
+        if !(1..=9).contains(&n) {
             panic!("n is not within the limits");
         }
 
-        GaussLegendre{
-            root_weight: RootWeight::new(n)
+        GaussLegendre {
+            root_weight: RootWeight::new(n),
         }
     }
-
 
     /// Integrate function f from lower bound a to upper bound b
     ///
@@ -65,17 +60,13 @@ impl<T> GaussLegendre<T>
     /// * a: lower bound of the definite integral
     /// * b: upper bound of the definite integral
     pub fn integrate<F>(&self, f: F, a: T, b: T) -> T
-        where
-            F: Fn(T) -> T,
+    where
+        F: Fn(T) -> T,
     {
-
-        let sum = self.root_weight.clone().fold(
-        T::zero(),
-        |s,  (x_i, a_i)  | {
+        let sum = self.root_weight.clone().fold(T::zero(), |s, (x_i, a_i)| {
             let x = (b - a) / T::from_f64(2.0) * x_i + (a + b) / T::from_f64(2.0);
             s + f(x) * a_i
-        }
-        );
+        });
 
         (b - a) / T::from_f64(2.0) * sum
     }

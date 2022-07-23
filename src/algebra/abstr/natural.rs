@@ -3,9 +3,7 @@
 /// Natural number
 ///
 ///<https://en.wikipedia.org/wiki/Natural_number>
-pub trait Natural: Eq
-{
-}
+pub trait Natural: Eq {}
 
 macro_rules! impl_natural
 {

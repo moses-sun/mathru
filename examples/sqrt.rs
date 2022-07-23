@@ -1,6 +1,8 @@
-use mathru::analysis::{NewtonRaphson, Jacobian, Function};
-use mathru::{algebra::linear::{Vector, Matrix}, vector};
-
+use mathru::analysis::{Function, Jacobian, NewtonRaphson};
+use mathru::{
+    algebra::linear::{Matrix, Vector},
+    vector,
+};
 
 /// Square root calculation with the Newton-Raphson method
 ///
@@ -16,48 +18,39 @@ use mathru::{algebra::linear::{Vector, Matrix}, vector};
 /// \frac{df(x)}{dx} = f'(x) = 2x
 /// ```
 ///
-fn main()
-{
+fn main() {
     let x: f64 = Sqrt::sqrt(17.0);
 
     println!("Sqrt: {:?}", x);
 }
 
-
-struct Sqrt
-{
-    y: f64
+struct Sqrt {
+    y: f64,
 }
 
-impl Sqrt
-{
+impl Sqrt {
     ///
     ///
     ///
-    pub fn sqrt(y: f64) -> f64
-    {
+    pub fn sqrt(y: f64) -> f64 {
         let newton: NewtonRaphson<f64> = NewtonRaphson::default();
 
-        let sqrt: Sqrt = Sqrt{y};
+        let sqrt: Sqrt = Sqrt { y };
 
         let x: f64 = newton.find_root(&sqrt, &vector![y]).unwrap()[0];
         return x;
     }
 }
 
-impl Jacobian<f64> for Sqrt
-{
-    fn jacobian(&self, x: &Vector<f64>) -> Matrix<f64>
-    {
+impl Jacobian<f64> for Sqrt {
+    fn jacobian(&self, x: &Vector<f64>) -> Matrix<f64> {
         return Matrix::from(x.clone().transpose()) * 2.0;
     }
 }
 
-impl Function<Vector<f64>> for Sqrt
-{
+impl Function<Vector<f64>> for Sqrt {
     type Codomain = Vector<f64>;
-    fn eval(&self, x: &Vector<f64>) -> Self::Codomain
-    {
-        return x.clone().apply(&|x: &f64|-> f64 { return x * x - self.y});
+    fn eval(&self, x: &Vector<f64>) -> Self::Codomain {
+        return x.clone().apply(&|x: &f64| -> f64 { return x * x - self.y });
     }
 }

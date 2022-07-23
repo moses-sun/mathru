@@ -6,16 +6,13 @@ use std::clone::Clone;
 /// QR decomposition
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[derive(Debug, Clone)]
-pub struct QRDec<T>
-{
+pub struct QRDec<T> {
     q: Matrix<T>,
     r: Matrix<T>,
 }
 
-impl<T> QRDec<T>
-{
-    pub(super) fn new(q: Matrix<T>, r: Matrix<T>) -> QRDec<T>
-    {
+impl<T> QRDec<T> {
+    pub(super) fn new(q: Matrix<T>, r: Matrix<T>) -> QRDec<T> {
         QRDec { q, r }
     }
 
@@ -24,21 +21,18 @@ impl<T> QRDec<T>
     /// # Arguments
     ///
     /// * `self`
-    pub fn q(self) -> Matrix<T>
-    {
+    pub fn q(self) -> Matrix<T> {
         self.q
     }
 
     /// Return the r matrix of the qr decomposition
     ///
     /// # Re
-    pub fn r(self) -> Matrix<T>
-    {
+    pub fn r(self) -> Matrix<T> {
         self.r
     }
 
-    pub fn qr(self) -> (Matrix<T>, Matrix<T>)
-    {
+    pub fn qr(self) -> (Matrix<T>, Matrix<T>) {
         (self.q, self.r)
     }
 }

@@ -3,9 +3,7 @@ use crate::algebra::abstr::Ring;
 /// Integer
 ///
 ///<https://en.wikipedia.org/wiki/Integer>
-pub trait Integer: Ring + Eq
-{
-}
+pub trait Integer: Ring + Eq {}
 
 macro_rules! impl_integer
 {

@@ -4,8 +4,7 @@ use mathru::statistics::{
 };
 
 /// One sample, two tailed
-fn main()
-{
+fn main() {
     let mean: f64 = 0.0;
 
     let alpha: f64 = 0.05;
@@ -26,12 +25,9 @@ fn main()
     println!("test: {}", test.value());
     println!("t(1.0 - alpha, n - 1) = {}", t);
 
-    if -t <= test.value() && test.value() <= t
-    {
+    if -t <= test.value() && test.value() <= t {
         println!("H0 is accepted");
-    }
-    else
-    {
+    } else {
         println!("H0 is rejected and H1 is accepted");
     }
 }

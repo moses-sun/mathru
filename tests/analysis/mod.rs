@@ -1,3 +1,3 @@
-mod ode;
-mod newton_raphson;
 mod integral;
+mod newton_raphson;
+mod ode;

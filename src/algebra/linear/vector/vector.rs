@@ -3,21 +3,16 @@
 use super::{VectorIntoIterator, VectorIterator, VectorIteratorMut};
 use crate::{
     algebra::{
-        abstr::{Field, Scalar, Sign},
-        linear::Matrix,
-        linear::matrix::Transpose,
         abstr::{AbsDiffEq, RelativeEq},
+        abstr::{Field, Scalar, Sign},
+        linear::matrix::Transpose,
+        linear::Matrix,
     },
     elementary::{Exponential, Power},
 };
 #[cfg(feature = "serde")]
 use serde::{Deserialize, Serialize};
-use std::{
-    fmt,
-    fmt::Display,
-    iter::IntoIterator,
-    ops::{Neg},
-};
+use std::{fmt, fmt::Display, iter::IntoIterator, ops::Neg};
 
 /// Macro to construct vectors
 ///
@@ -56,19 +51,19 @@ macro_rules! vector
 
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[derive(Debug, Clone)]
-pub struct Vector<T>
-{
-    pub(super) data: Matrix<T>,
+pub struct Vector<T> {
+    pub data: Matrix<T>,
 }
 
-impl<T> IntoIterator for Vector<T> where T: Field + Scalar
+impl<T> IntoIterator for Vector<T>
+where
+    T: Field + Scalar,
 {
     type Item = T;
     type IntoIter = VectorIntoIterator<T>;
 
-    fn into_iter(self) -> Self::IntoIter
-    {
-        VectorIntoIterator::new(self.data.into_iter() )
+    fn into_iter(self) -> Self::IntoIter {
+        VectorIntoIterator::new(self.data.into_iter())
     }
 }
 
@@ -79,21 +74,19 @@ impl<T> IntoIterator for Vector<T> where T: Field + Scalar
 //    T: IntoIterator<Item = A>,
 //}
 
-impl<T> Vector<T>
-{
-    pub fn iter(&self) -> VectorIterator<T>
-    {
+impl<T> Vector<T> {
+    pub fn iter(&self) -> VectorIterator<T> {
         VectorIterator::new(self.data.iter())
     }
 
-    pub fn iter_mut(&mut self) -> VectorIteratorMut<T>
-    {
+    pub fn iter_mut(&mut self) -> VectorIteratorMut<T> {
         VectorIteratorMut::new(self.data.iter_mut())
     }
 }
 
-impl<T> Vector<T> 
-    where T: Field + Scalar + Power
+impl<T> Vector<T>
+where
+    T: Field + Scalar + Power,
 {
     /// Computes the p norm
     ///
@@ -117,14 +110,12 @@ impl<T> Vector<T>
     ///
     /// assert_eq!(norm_ref, norm);
     /// ```
-    pub fn p_norm(&self, p: &T) -> T
-    {
+    pub fn p_norm(&self, p: &T) -> T {
         assert!(*p >= T::one());
 
         let (m, n): (usize, usize) = self.dim();
         let mut sum: T = T::zero();
-        for i in 0..(m * n)
-        {
+        for i in 0..(m * n) {
             let b: T = self[i];
             sum += b.pow(*p);
         }
@@ -133,26 +124,26 @@ impl<T> Vector<T>
     }
 }
 
-impl<T> Neg for Vector<T> where T: Field + Scalar
+impl<T> Neg for Vector<T>
+where
+    T: Field + Scalar,
 {
     type Output = Vector<T>;
 
-    fn neg(self) -> Self::Output
-    {
+    fn neg(self) -> Self::Output {
         self.apply(&|&x| -x)
     }
 }
 
-impl<T> Vector<T>
-{
-    pub fn convert_to_vec(self) -> Vec<T>
-    {
+impl<T> Vector<T> {
+    pub fn convert_to_vec(self) -> Vec<T> {
         self.data.convert_to_vec()
     }
 }
 
 impl<T> Vector<T>
-    where T: Field + Scalar + Power + Exponential
+where
+    T: Field + Scalar + Power + Exponential,
 {
     /// Computes the euclidean norm
     ///
@@ -167,15 +158,16 @@ impl<T> Vector<T>
     ///
     /// assert_eq!(norm_ref, norm);
     /// ```
-    pub fn eucl_norm(&self) -> T
-    {
+    pub fn eucl_norm(&self) -> T {
         let exp: T = T::from_f64(2.0);
 
         self.p_norm(&exp)
     }
 }
 
-impl<T> Vector<T> where T: Clone + Copy
+impl<T> Vector<T>
+where
+    T: Clone + Copy,
 {
     /// Returns a row vector
     ///
@@ -186,9 +178,10 @@ impl<T> Vector<T> where T: Clone + Copy
     ///
     /// let a: Vector<f64> = Vector::new_row(vec![1.0, 0.0, 3.0, -2.0]);
     /// ```
-    pub fn new_row(data: Vec<T>) -> Self
-    {
-        Vector { data: Matrix::new(1, data.len(), data) }
+    pub fn new_row(data: Vec<T>) -> Self {
+        Vector {
+            data: Matrix::new(1, data.len(), data),
+        }
     }
 
     /// Returns a column vector
@@ -200,19 +193,21 @@ impl<T> Vector<T> where T: Clone + Copy
     ///
     /// let a: Vector<f64> = Vector::new_column(vec![1.0, 0.0, 3.0, -2.0]);
     /// ```
-    pub fn new_column(data: Vec<T>) -> Self
-    {
-        Vector { data: Matrix::new(data.len(), 1, data) }
+    pub fn new_column(data: Vec<T>) -> Self {
+        Vector {
+            data: Matrix::new(data.len(), 1, data),
+        }
     }
 
-    pub fn apply(mut self: Vector<T>, f: &dyn Fn(&T) -> T) -> Self
-    {
+    pub fn apply(mut self: Vector<T>, f: &dyn Fn(&T) -> T) -> Self {
         self.data = self.data.apply(f);
         self
     }
 }
 
-impl<T> Vector<T> where T: Scalar
+impl<T> Vector<T>
+where
+    T: Scalar,
 {
     /// Returns a row vector initialized with random numbers
     ///
@@ -223,9 +218,10 @@ impl<T> Vector<T> where T: Scalar
     ///
     /// let a: Vector<f64> = Vector::new_row_random(4);
     /// ```
-    pub fn new_row_random(n: usize) -> Self
-    {
-        Vector { data: Matrix::new_random(1, n) }
+    pub fn new_row_random(n: usize) -> Self {
+        Vector {
+            data: Matrix::new_random(1, n),
+        }
     }
 
     /// Returns a column vector initialized with random numbers
@@ -237,14 +233,16 @@ impl<T> Vector<T> where T: Scalar
     ///
     /// let a: Vector<f64> = Vector::new_column_random(4);
     /// ```
-    pub fn new_column_random(m: usize) -> Self
-    {
-        Vector { data: Matrix::new_random(m, 1) }
+    pub fn new_column_random(m: usize) -> Self {
+        Vector {
+            data: Matrix::new_random(m, 1),
+        }
     }
 }
 
 impl<T> Vector<T>
-    where T: Field + Scalar
+where
+    T: Field + Scalar,
 {
     /// Returns the transposed vector
     ///
@@ -256,8 +254,7 @@ impl<T> Vector<T>
     /// let a: Vector<f64> = Vector::new_column(vec![1.0, 0.0, 3.0, -2.0]);
     /// let b: Vector<f64> = a.transpose();
     /// ```
-    pub fn transpose(mut self) -> Self
-    {
+    pub fn transpose(mut self) -> Self {
         self.data = self.data.transpose();
 
         self
@@ -265,7 +262,8 @@ impl<T> Vector<T>
 }
 
 impl<T> Vector<T>
-    where T: Field + Scalar
+where
+    T: Field + Scalar,
 {
     /// Computes the dot product of two vectors
     ///
@@ -282,8 +280,7 @@ impl<T> Vector<T>
     ///
     /// assert_eq!(dotp_ref, dotp);
     /// ```
-    pub fn dotp(&self, rhs: &Self) -> T
-    {
+    pub fn dotp(&self, rhs: &Self) -> T {
         let (lhs_m, lhs_n) = self.dim();
         let (rhs_m, rhs_n) = rhs.dim();
         assert_ne!(lhs_m, 0);
@@ -310,8 +307,7 @@ impl<T> Vector<T>
     /// let idx = a.argmax();
     /// assert_eq!(idx, 3);
     /// ```
-    pub fn argmax(&self) -> usize
-    {
+    pub fn argmax(&self) -> usize {
         let (m, n) = self.dim();
 
         let mut max_index: usize = 0;
@@ -321,11 +317,9 @@ impl<T> Vector<T>
 
         assert_ne!(limit, 0);
 
-        for idx in 0..limit
-        {
+        for idx in 0..limit {
             let element: T = self[idx];
-            if element > max
-            {
+            if element > max {
                 max_index = idx;
                 max = element;
             }
@@ -347,8 +341,7 @@ impl<T> Vector<T>
     /// let b = a.argmin();
     /// assert_eq!(b, 2);
     /// ```
-    pub fn argmin(&self) -> usize
-    {
+    pub fn argmin(&self) -> usize {
         let (m, n) = self.dim();
 
         let mut min_index: usize = 0;
@@ -358,11 +351,9 @@ impl<T> Vector<T>
 
         assert_ne!(limit, 0);
 
-        for idx in 0..limit
-        {
+        for idx in 0..limit {
             let element: T = self[idx];
-            if element < min
-            {
+            if element < min {
                 min_index = idx;
                 min = element;
             }
@@ -373,7 +364,8 @@ impl<T> Vector<T>
 }
 
 impl<T> Vector<T>
-    where T: Field + Scalar
+where
+    T: Field + Scalar,
 {
     /// Computes the dyadic product of two vectors
     ///
@@ -387,16 +379,13 @@ impl<T> Vector<T>
     ///
     /// let m: Matrix<f64> = a.dyadp(&b);
     /// ```
-    pub fn dyadp(&self, rhs: &Self) -> Matrix<T>
-    {
+    pub fn dyadp(&self, rhs: &Self) -> Matrix<T> {
         let (x_m, _x_n): (usize, usize) = self.dim();
         let (y_m, _y_n): (usize, usize) = rhs.dim();
         let mut c: Matrix<T> = Matrix::zero(x_m, y_m);
 
-        for i in 0..x_m
-        {
-            for j in 0..y_m
-            {
+        for i in 0..x_m {
+            for j in 0..y_m {
                 c[[i, j]] = self[i] * rhs[j];
             }
         }
@@ -405,10 +394,10 @@ impl<T> Vector<T>
 }
 
 impl<T> Vector<T>
-    where T: Field + Scalar + Power
+where
+    T: Field + Scalar + Power,
 {
-    pub fn reflector(&self) -> Vector<T>
-    {
+    pub fn reflector(&self) -> Vector<T> {
         let two = T::one() + T::one();
         let mut x_temp: Vector<T> = self.clone();
 
@@ -423,7 +412,8 @@ impl<T> Vector<T>
 }
 
 impl<T> Vector<T>
-    where T: Field + Scalar
+where
+    T: Field + Scalar,
 {
     /// Returns the zero vector
     ///
@@ -437,14 +427,16 @@ impl<T> Vector<T>
     ///
     /// assert_eq!(a, b)
     /// ```
-    pub fn zero(m: usize) -> Self
-    {
-        Vector { data: Matrix::zero(m, 1) }
+    pub fn zero(m: usize) -> Self {
+        Vector {
+            data: Matrix::zero(m, 1),
+        }
     }
 }
 
 impl<T> Vector<T>
-    where T: Field + Scalar
+where
+    T: Field + Scalar,
 {
     /// Returns the one vector
     ///
@@ -458,12 +450,10 @@ impl<T> Vector<T>
     ///
     /// assert_eq!(a, b)
     /// ```
-    pub fn one(m: usize) -> Self
-    {
+    pub fn one(m: usize) -> Self {
         let mut vec: Vec<T> = Vec::with_capacity(m);
 
-        for _i in 0..m
-        {
+        for _i in 0..m {
             vec.push(T::one());
         }
 
@@ -471,8 +461,7 @@ impl<T> Vector<T>
     }
 }
 
-impl<T> Vector<T>
-{
+impl<T> Vector<T> {
     /// Returns the vector dimension
     ///
     /// # Example
@@ -485,14 +474,14 @@ impl<T> Vector<T>
     /// assert_eq!(4, m);
     /// assert_eq!(1, n);
     /// ```
-    pub fn dim(&self) -> (usize, usize)
-    {
+    pub fn dim(&self) -> (usize, usize) {
         self.data.dim()
     }
 }
 
 impl<T> Vector<T>
-    where T: Field + Scalar
+where
+    T: Field + Scalar,
 {
     /// Returns a slice of the vector
     ///
@@ -520,24 +509,19 @@ impl<T> Vector<T>
     ///
     /// assert_eq!(a_ref, a);
     /// ```
-    pub fn get_slice(&self, s: usize, e: usize) -> Vector<T>
-    {
+    pub fn get_slice(&self, s: usize, e: usize) -> Vector<T> {
         let (m, n): (usize, usize) = self.dim();
-        if m == 1
-        {
+        if m == 1 {
             assert!(s < n);
             assert!(e < n);
-        }
-        else
-        {
+        } else {
             assert!(s < m);
             assert!(e < m);
         }
 
         let mut slice: Vector<T> = Vector::zero(e - s + 1);
 
-        for r in s..(e + 1)
-        {
+        for r in s..(e + 1) {
             slice[r - s] = self[r]
         }
 
@@ -565,20 +549,20 @@ impl<T> Vector<T>
     ///
     /// assert_eq!(a_ref, a);
     /// ```
-    pub fn set_slice(&mut self, rhs: &Self, s: usize)
-    {
+    pub fn set_slice(&mut self, rhs: &Self, s: usize) {
         let (m, _n): (usize, usize) = self.dim();
         let (s_m, _s_n): (usize, usize) = rhs.dim();
         assert!(s + s_m <= m);
 
-        for r in s..(s + s_m)
-        {
+        for r in s..(s + s_m) {
             self[r] = rhs[r - s];
         }
     }
 }
 
-impl<T> PartialEq<Self> for Vector<T> where T: Scalar
+impl<T> PartialEq<Self> for Vector<T>
+where
+    T: Scalar,
 {
     /// Compares if two vectors are equal
     ///
@@ -592,77 +576,74 @@ impl<T> PartialEq<Self> for Vector<T> where T: Scalar
     ///
     /// assert_eq!(true, a.eq(&b))
     /// ```
-    fn eq(&self, other: &Self) -> bool
-    {
-        if self.data == other.data
-        {
+    fn eq(&self, other: &Self) -> bool {
+        if self.data == other.data {
             return true;
         }
         false
     }
 }
 
-impl<T> Display for Vector<T> where T: Display
+impl<T> Display for Vector<T>
+where
+    T: Display,
 {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result
-    {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         self.data.fmt(f)
     }
 }
 
-
-impl<T> Sign for Vector<T> where T: Field + Scalar
+impl<T> Sign for Vector<T>
+where
+    T: Field + Scalar,
 {
-    fn sign(&self) -> Self
-    {
+    fn sign(&self) -> Self {
         (self.clone()).apply(&|x: &T| x.sign())
     }
 
-    fn abs(&self) -> Self
-    {
+    fn abs(&self) -> Self {
         (self.clone()).apply(&|x: &T| x.abs())
     }
 
-    fn is_positive(&self) -> bool
-    {
+    fn is_positive(&self) -> bool {
         unimplemented!();
     }
 
-    fn is_negative(&self) -> bool
-    {
+    fn is_negative(&self) -> bool {
         unimplemented!();
     }
 }
 
 impl<T> AbsDiffEq for Vector<T>
-    where T: Field + Scalar + AbsDiffEq<Epsilon = T>
+where
+    T: Field + Scalar + AbsDiffEq<Epsilon = T>,
 {
     type Epsilon = T;
 
-    fn default_epsilon() -> T
-    {
+    fn default_epsilon() -> T {
         T::default_epsilon()
     }
 
-    fn abs_diff_eq(&self, other: &Vector<T>, epsilon: T) -> bool
-    {
+    fn abs_diff_eq(&self, other: &Vector<T>, epsilon: T) -> bool {
         self.data.abs_diff_eq(&other.data, epsilon)
     }
 }
 
 impl<T> RelativeEq for Vector<T>
-    where T: Field + Scalar + AbsDiffEq<Epsilon = T> + RelativeEq
+where
+    T: Field + Scalar + AbsDiffEq<Epsilon = T> + RelativeEq,
 {
-
-    fn default_max_relative() -> T
-    {
+    fn default_max_relative() -> T {
         T::default_max_relative()
     }
 
     /// A test for equality that uses a relative comparison if the values are far apart.
-    fn relative_eq(&self, other: &Vector<T>, epsilon: Self::Epsilon, max_relative: Self::Epsilon) -> bool
-    {
+    fn relative_eq(
+        &self,
+        other: &Vector<T>,
+        epsilon: Self::Epsilon,
+        max_relative: Self::Epsilon,
+    ) -> bool {
         self.data.relative_eq(&other.data, epsilon, max_relative)
     }
 }
-

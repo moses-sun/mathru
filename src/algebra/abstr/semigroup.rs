@@ -13,10 +13,8 @@ use super::{
 /// and is associative
 /// $x, y, z \in \mathbb{S}$
 /// $x \circ (y \circ z) = (x \circ y) \circ z$
-pub trait Semigroup<O: Operator + Copy>: Magma<O>
-{
-    fn is_associative(self, y: Self, z: Self) -> bool
-    {
+pub trait Semigroup<O: Operator + Copy>: Magma<O> {
+    fn is_associative(self, y: Self, z: Self) -> bool {
         self.clone().operate(y.clone()).operate(z.clone()) == self.operate(y.operate(z))
     }
 }
@@ -36,9 +34,7 @@ macro_rules! impl_semigroup
 impl_semigroup!(Addition; add; u8, u16, u32, u64, u128, i8, i16, i32, i64, i128, f32, f64);
 impl_semigroup!(Multiplication; mul; u8, u16, u32, u64, u128, i8, i16, i32, i64, i128, f32, f64);
 
-pub trait SemigroupAdd: Semigroup<Addition> + MagmaAdd
-{
-}
+pub trait SemigroupAdd: Semigroup<Addition> + MagmaAdd {}
 
 macro_rules! impl_semigroupadd
 (
@@ -55,9 +51,7 @@ macro_rules! impl_semigroupadd
 
 impl_semigroupadd!(u8, u16, u32, u64, u128, i8, i16, i32, i64, i128, f32, f64);
 
-pub trait SemigroupMul: Semigroup<Multiplication> + MagmaMul
-{
-}
+pub trait SemigroupMul: Semigroup<Multiplication> + MagmaMul {}
 
 macro_rules! impl_semigroupmul
 (

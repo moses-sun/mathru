@@ -1,8 +1,7 @@
 use mathru::algebra::linear::Matrix;
 
 #[test]
-fn svd_f32()
-{
+fn svd_f32() {
     let a: Matrix<f32> = matrix![   4.0, 1.0, -2.0, 2.0;
                                     1.0, 2.0, 0.0, -2.0;
                                     0.0, 3.0, -2.0, 2.0;
@@ -25,15 +24,13 @@ fn svd_f32()
                                         0.0, 0.0, 3.0918649662716553, 0.0;
                                         0.0, 0.0, 0.0, 1.1694937978293738];
 
-    assert_relative_eq!(u_ref, u, epsilon=1.0e-5);
-    assert_relative_eq!(s_ref, s, epsilon=1.0e-5);
-    assert_relative_eq!(v_ref, v, epsilon=1.0e-5);
+    assert_relative_eq!(u_ref, u, epsilon = 1.0e-5);
+    assert_relative_eq!(s_ref, s, epsilon = 1.0e-5);
+    assert_relative_eq!(v_ref, v, epsilon = 1.0e-5);
 }
 
-
 #[test]
-fn svd_f64()
-{
+fn svd_f64() {
     let a: Matrix<f64> = matrix![   4.0, 1.0, -2.0, 2.0;
                                     1.0, 2.0, 0.0, -2.0;
                                     0.0, 3.0, -2.0, 2.0;
@@ -56,8 +53,7 @@ fn svd_f64()
                                         0.0, 0.0, 3.0918649662716553, 0.0;
                                         0.0, 0.0, 0.0, 1.1694937978293738];
 
-    assert_relative_eq!(u_ref, u, epsilon=0.0000001, max_relative=1.0e-10);
-    assert_relative_eq!(s_ref, s, epsilon=0.0000001, max_relative=1.0e-10);
-    assert_relative_eq!(v_ref, v, epsilon=0.0000001, max_relative=1.0e-10);
+    assert_relative_eq!(u_ref, u, epsilon = 0.0000001, max_relative = 1.0e-10);
+    assert_relative_eq!(s_ref, s, epsilon = 0.0000001, max_relative = 1.0e-10);
+    assert_relative_eq!(v_ref, v, epsilon = 0.0000001, max_relative = 1.0e-10);
 }
-
