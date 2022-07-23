@@ -16,18 +16,18 @@ use std::{f32, f64};
 /// AbsDiff::default().epsilon(f64::EPSILON).eq(&1.0, &1.0);
 /// ```
 pub struct AbsDiff<A, B = A>
-    where
-        A: AbsDiffEq<B> + ?Sized,
-        B: ?Sized,
+where
+    A: AbsDiffEq<B> + ?Sized,
+    B: ?Sized,
 {
     /// The tolerance to use when testing values that are close together.
     pub epsilon: A::Epsilon,
 }
 
 impl<A, B> Default for AbsDiff<A, B>
-    where
-        A: AbsDiffEq<B> + ?Sized,
-        B: ?Sized,
+where
+    A: AbsDiffEq<B> + ?Sized,
+    B: ?Sized,
 {
     fn default() -> AbsDiff<A, B> {
         AbsDiff {
@@ -37,9 +37,9 @@ impl<A, B> Default for AbsDiff<A, B>
 }
 
 impl<A, B> AbsDiff<A, B>
-    where
-        A: AbsDiffEq<B> + ?Sized,
-        B: ?Sized,
+where
+    A: AbsDiffEq<B> + ?Sized,
+    B: ?Sized,
 {
     /// Replace the epsilon value with the one specified.
     pub fn epsilon(self, epsilon: A::Epsilon) -> AbsDiff<A, B> {
@@ -47,22 +47,20 @@ impl<A, B> AbsDiff<A, B>
     }
 
     /// Perform the equality comparison
-    pub fn eq(self, lhs: &A, rhs: &B) -> bool
-    {
+    pub fn eq(self, lhs: &A, rhs: &B) -> bool {
         A::abs_diff_eq(lhs, rhs, self.epsilon)
     }
 
     /// Perform the inequality comparison
-    pub fn ne(self, lhs: &A, rhs: &B) -> bool
-    {
+    pub fn ne(self, lhs: &A, rhs: &B) -> bool {
         A::abs_diff_ne(lhs, rhs, self.epsilon)
     }
 }
 
 /// Equality that is defined using the absolute difference of two numbers.
 pub trait AbsDiffEq<Rhs = Self>: PartialEq<Rhs>
-    where
-        Rhs: ?Sized,
+where
+    Rhs: ?Sized,
 {
     /// Used for specifying relative comparisons.
     type Epsilon;
@@ -77,35 +75,26 @@ pub trait AbsDiffEq<Rhs = Self>: PartialEq<Rhs>
     fn abs_diff_eq(&self, other: &Rhs, epsilon: Self::Epsilon) -> bool;
 
     /// The inverse of [`AbsDiffEq::abs_diff_eq`].
-    fn abs_diff_ne(&self, other: &Rhs, epsilon: Self::Epsilon) -> bool
-    {
+    fn abs_diff_ne(&self, other: &Rhs, epsilon: Self::Epsilon) -> bool {
         !Self::abs_diff_eq(self, other, epsilon)
     }
 }
 
-macro_rules! impl_abs_diff_eq
-{
-    ($T:ident, $default_epsilon:expr) =>
-    {
-        impl AbsDiffEq for $T
-        {
+macro_rules! impl_abs_diff_eq {
+    ($T:ident, $default_epsilon:expr) => {
+        impl AbsDiffEq for $T {
             type Epsilon = $T;
 
-            fn default_epsilon() -> $T
-            {
+            fn default_epsilon() -> $T {
                 $default_epsilon
             }
 
-            fn abs_diff_eq(&self, other: &$T, epsilon: $T) -> bool
-            {
-                (
-                    if self > other
-                    {
-                        self - other
-                    } else {
-                        other - self
-                    }
-                ) <= epsilon
+            fn abs_diff_eq(&self, other: &$T, epsilon: $T) -> bool {
+                (if self > other {
+                    self - other
+                } else {
+                    other - self
+                }) <= epsilon
             }
         }
     };
@@ -144,10 +133,10 @@ macro_rules! __assert_approx {
 
         if !$eq!(*given, *expected) {
             panic!(
-"assert_{}!({}, {})
-    left  = {:?}
-    right = {:?}
-",
+                "assert_{}!({}, {})
+                left  = {:?}
+                right = {:?}
+                ",
                 stringify!($eq),
                 stringify!($given),
                 stringify!($expected),

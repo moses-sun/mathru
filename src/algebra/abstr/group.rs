@@ -19,9 +19,7 @@ use std::ops::{Div, DivAssign, Neg, Sub, SubAssign};
 /// $\forall x \in \mathbb{M}$: $x \circ e = e \circ x = x$
 /// 3.
 /// $x^-1 \in \mathbb{M}: x^⁻1 \circ x = x \circ x^-1 ` = e$
-pub trait Group<O: Operator>: Loop<O> + Monoid<O>
-{
-}
+pub trait Group<O: Operator>: Loop<O> + Monoid<O> {}
 
 macro_rules! impl_group(
     ($T:ty, $($S:ty),*) =>

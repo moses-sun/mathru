@@ -5,7 +5,8 @@ use crate::algebra::{
 use std::ops::Add;
 
 impl<T> Add<Self> for Matrix<T>
-    where T: Field + Scalar
+where
+    T: Field + Scalar,
 {
     type Output = Matrix<T>;
 
@@ -21,8 +22,7 @@ impl<T> Add<Self> for Matrix<T>
     ///
     /// let c: Matrix<f64> = a + b;
     /// ```
-    fn add(mut self, rhs: Self) -> Self::Output
-    {
+    fn add(mut self, rhs: Self) -> Self::Output {
         let _ = (&mut self).add(&rhs);
         self
     }
@@ -30,7 +30,8 @@ impl<T> Add<Self> for Matrix<T>
 
 ///Adds two matrices
 impl<'a, 'b, T> Add<&'b Matrix<T>> for &'a Matrix<T>
-    where T: Field + Scalar
+where
+    T: Field + Scalar,
 {
     type Output = Matrix<T>;
 
@@ -46,23 +47,26 @@ impl<'a, 'b, T> Add<&'b Matrix<T>> for &'a Matrix<T>
     ///
     /// let c: Matrix<f64> = &b + &a;
     /// ```
-    fn add(self, rhs: &'b Matrix<T>) -> Self::Output
-    {
+    fn add(self, rhs: &'b Matrix<T>) -> Self::Output {
         // assert_eq!(self.dim(), rhs.dim());
         let (m, n) = self.dim();
-        Matrix { m,
-                 n,
-                 data: self.data
-                           .iter()
-                           .zip(rhs.data.iter())
-                           .map(|(x, y)| *x + *y)
-                           .collect::<Vec<T>>() }
+        Matrix {
+            m,
+            n,
+            data: self
+                .data
+                .iter()
+                .zip(rhs.data.iter())
+                .map(|(x, y)| *x + *y)
+                .collect::<Vec<T>>(),
+        }
     }
 }
 
 ///Adds two matrices
 impl<'a, 'b, T> Add<&'b Matrix<T>> for &'a mut Matrix<T>
-    where T: Field + Scalar
+where
+    T: Field + Scalar,
 {
     type Output = &'a mut Matrix<T>;
 
@@ -78,17 +82,20 @@ impl<'a, 'b, T> Add<&'b Matrix<T>> for &'a mut Matrix<T>
     ///
     /// let _ = &mut a + &b;
     /// ```
-    fn add(self, rhs: &'b Matrix<T>) -> Self::Output
-    {
+    fn add(self, rhs: &'b Matrix<T>) -> Self::Output {
         // assert_eq!(self.dim(), rhs.dim());
-        self.data.iter_mut().zip(rhs.data.iter()).for_each(|(x, y)| *x += *y);
+        self.data
+            .iter_mut()
+            .zip(rhs.data.iter())
+            .for_each(|(x, y)| *x += *y);
         self
     }
 }
 
 /// Add scalar to matrix
 impl<T> Add<T> for Matrix<T>
-    where T: Field + Scalar
+where
+    T: Field + Scalar,
 {
     type Output = Matrix<T>;
 
@@ -102,8 +109,7 @@ impl<T> Add<T> for Matrix<T>
     /// let a: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
     /// let b: Matrix<f64> = a + -4.0;
     /// ```
-    fn add(mut self, rhs: T) -> Self::Output
-    {
+    fn add(mut self, rhs: T) -> Self::Output {
         let _ = (&mut self).add(&rhs);
         self
     }
@@ -111,7 +117,8 @@ impl<T> Add<T> for Matrix<T>
 
 /// Add scalar to matrix
 impl<'a, 'b, T> Add<&'a T> for &'a Matrix<T>
-    where T: Field + Scalar
+where
+    T: Field + Scalar,
 {
     type Output = Matrix<T>;
 
@@ -125,8 +132,7 @@ impl<'a, 'b, T> Add<&'a T> for &'a Matrix<T>
     /// let a: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
     /// &a + &-4.0;
     /// ```
-    fn add(self, rhs: &'a T) -> Self::Output
-    {
+    fn add(self, rhs: &'a T) -> Self::Output {
         let mut a: Matrix<T> = self.clone();
         let _ = &mut a + rhs;
         a
@@ -135,7 +141,8 @@ impl<'a, 'b, T> Add<&'a T> for &'a Matrix<T>
 
 /// Add scalar to matrix
 impl<'a, 'b, T> Add<&'a T> for &'a mut Matrix<T>
-    where T: Field + Scalar
+where
+    T: Field + Scalar,
 {
     type Output = &'a mut Matrix<T>;
 
@@ -149,8 +156,7 @@ impl<'a, 'b, T> Add<&'a T> for &'a mut Matrix<T>
     /// let mut a: Matrix<f64> = Matrix::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
     /// &mut a + &-4.0;
     /// ```
-    fn add(self, rhs: &'a T) -> Self::Output
-    {
+    fn add(self, rhs: &'a T) -> Self::Output {
         let _ = self.data.iter_mut().for_each(&|x: &mut T| *x += *rhs);
         self
     }

@@ -1,13 +1,8 @@
-use mathru::{
-    algebra::linear::{Vector},
-    optimization::{Newton},
-};
 use crate::optimization::problem::Rosenbrock;
-
+use mathru::{algebra::linear::Vector, optimization::Newton};
 
 #[test]
-fn test_minimization()
-{
+fn test_minimization() {
     let rosenbrock: Rosenbrock = Rosenbrock::new();
 
     let optimizer: Newton<f64> = Newton::new(15, 0.1, 0.00001);

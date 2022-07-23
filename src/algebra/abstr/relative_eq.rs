@@ -18,9 +18,9 @@ use crate::algebra::abstr::abs_diff_eq::AbsDiffEq;
 /// Relative::default().max_relative(1.0).epsilon(f64::EPSILON).eq(&1.0, &1.0);
 /// ```
 pub struct Relative<A, B = A>
-    where
-        A: RelativeEq<B> + ?Sized,
-        B: ?Sized,
+where
+    A: RelativeEq<B> + ?Sized,
+    B: ?Sized,
 {
     /// The tolerance to use when testing values that are close together.
     pub epsilon: A::Epsilon,
@@ -29,12 +29,11 @@ pub struct Relative<A, B = A>
 }
 
 impl<A, B> Default for Relative<A, B>
-    where
-        A: RelativeEq<B> + ?Sized,
-        B: ?Sized,
+where
+    A: RelativeEq<B> + ?Sized,
+    B: ?Sized,
 {
-    fn default() -> Relative<A, B>
-    {
+    fn default() -> Relative<A, B> {
         Relative {
             epsilon: A::default_epsilon(),
             max_relative: A::default_max_relative(),
@@ -43,19 +42,17 @@ impl<A, B> Default for Relative<A, B>
 }
 
 impl<A, B> Relative<A, B>
-    where
-        A: RelativeEq<B> + ?Sized,
-        B: ?Sized,
+where
+    A: RelativeEq<B> + ?Sized,
+    B: ?Sized,
 {
     /// Replace the epsilon value with the one specified.
-    pub fn epsilon(self, epsilon: A::Epsilon) -> Relative<A, B>
-    {
+    pub fn epsilon(self, epsilon: A::Epsilon) -> Relative<A, B> {
         Relative { epsilon, ..self }
     }
 
     /// Replace the maximum relative value with the one specified.
-    pub fn max_relative(self, max_relative: A::Epsilon) -> Relative<A, B>
-    {
+    pub fn max_relative(self, max_relative: A::Epsilon) -> Relative<A, B> {
         Relative {
             max_relative,
             ..self
@@ -63,24 +60,21 @@ impl<A, B> Relative<A, B>
     }
 
     /// Perform the equality comparison
-    pub fn eq(self, lhs: &A, rhs: &B) -> bool
-    {
+    pub fn eq(self, lhs: &A, rhs: &B) -> bool {
         A::relative_eq(lhs, rhs, self.epsilon, self.max_relative)
     }
 
     /// Perform the inequality comparison
-    pub fn ne(self, lhs: &A, rhs: &B) -> bool
-    {
+    pub fn ne(self, lhs: &A, rhs: &B) -> bool {
         A::relative_ne(lhs, rhs, self.epsilon, self.max_relative)
     }
 }
 
-
 /// Equality comparisons between two numbers using both the absolute difference and
 /// relative based comparisons.
 pub trait RelativeEq<Rhs = Self>: AbsDiffEq<Rhs>
-    where
-        Rhs: ?Sized,
+where
+    Rhs: ?Sized,
 {
     /// The default relative tolerance for testing values that are far-apart.
     ///
@@ -88,12 +82,8 @@ pub trait RelativeEq<Rhs = Self>: AbsDiffEq<Rhs>
     fn default_max_relative() -> Self::Epsilon;
 
     /// A test for equality that uses a relative comparison if the values are far apart.
-    fn relative_eq(
-        &self,
-        other: &Rhs,
-        epsilon: Self::Epsilon,
-        max_relative: Self::Epsilon,
-    ) -> bool;
+    fn relative_eq(&self, other: &Rhs, epsilon: Self::Epsilon, max_relative: Self::Epsilon)
+        -> bool;
 
     /// The inverse of [`RelativeEq::relative_eq`].
     fn relative_ne(
@@ -115,7 +105,6 @@ pub trait RelativeEq<Rhs = Self>: AbsDiffEq<Rhs>
 macro_rules! impl_relative_eq_float {
     ($T:ident, $U:ident) => {
         impl RelativeEq for $T {
-
             fn default_max_relative() -> $T {
                 $T::EPSILON
             }

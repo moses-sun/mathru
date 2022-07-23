@@ -1,2 +1,2 @@
-mod root_weight;
 mod gausslegendre;
+mod root_weight;

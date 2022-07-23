@@ -13,10 +13,7 @@ use super::{Addition, Identity, Magma, Multiplication, Operator};
 /// $r = a \backslash b$ and $l = b / a$
 ///
 /// where $\backslash$ is the left and $/$ is th right division.
-pub trait Quasigroup<O: Operator>: Magma<O> + Identity<O> + PartialEq
-{
-
-}
+pub trait Quasigroup<O: Operator>: Magma<O> + Identity<O> + PartialEq {}
 
 macro_rules! impl_quasigroup(
     ($T:ty, $($S:ty),*) =>

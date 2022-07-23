@@ -1,10 +1,12 @@
-use mathru::algebra::linear::matrix::{MatrixIterator, MatrixIteratorMut, MatrixIntoIterator, MatrixColumnIntoIterator, MatrixRowIntoIterator};
-use mathru::{vector, matrix};
-use mathru::algebra::linear::{Vector, Matrix};
+use mathru::algebra::linear::matrix::{
+    MatrixColumnIntoIterator, MatrixIntoIterator, MatrixIterator, MatrixIteratorMut,
+    MatrixRowIntoIterator,
+};
+use mathru::algebra::linear::{Matrix, Vector};
+use mathru::{matrix, vector};
 
 #[test]
-fn iter()
-{
+fn iter() {
     let m: Matrix<f64> = matrix![1.0, -4.0];
     let mut iter: MatrixIterator<f64> = m.iter();
 
@@ -13,8 +15,7 @@ fn iter()
 }
 
 #[test]
-fn iter_mut()
-{
+fn iter_mut() {
     let mut m: Matrix<f64> = matrix![1.0, -4.0];
     let mut iter_mut: MatrixIteratorMut<f64> = m.iter_mut();
 
@@ -26,8 +27,7 @@ fn iter_mut()
 }
 
 #[test]
-fn into_iter()
-{
+fn into_iter() {
     let m: Matrix<f64> = matrix![1.0, -4.0];
     let mut iter: MatrixIntoIterator<f64> = m.into_iter();
 
@@ -37,8 +37,7 @@ fn into_iter()
 }
 
 #[test]
-fn column_iter()
-{
+fn column_iter() {
     let m: Matrix<f64> = matrix![1.0f64, 2.0; 3.0, 4.0];
     let mut iter: MatrixColumnIntoIterator<f64> = m.column_into_iter();
 
@@ -48,8 +47,7 @@ fn column_iter()
 }
 
 #[test]
-fn row_iter()
-{
+fn row_iter() {
     let m: Matrix<f64> = matrix![1.0f64, 2.0; 3.0, 4.0];
     let mut iter: MatrixRowIntoIterator<f64> = m.row_into_iter();
 
@@ -57,5 +55,3 @@ fn row_iter()
     assert_eq!(iter.next(), Some(vector![3.0f64, 4.0]));
     assert_eq!(iter.next(), None);
 }
-
-

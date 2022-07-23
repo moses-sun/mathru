@@ -2,8 +2,7 @@ use mathru::statistics::distrib::{Continuous, Normal};
 use std::f64::consts::{E, PI};
 
 #[test]
-fn pdf0()
-{
+fn pdf0() {
     let mean: f64 = 0.0;
     let variance: f64 = 1.0;
     let distrib: Normal<f64> = Normal::new(mean, variance);
@@ -36,8 +35,7 @@ fn pdf0()
 // }
 
 #[test]
-fn cdf0()
-{
+fn cdf0() {
     let mean: f64 = 0.0;
     let variance: f64 = 1.0;
     let distrib: Normal<f64> = Normal::new(mean, variance);
@@ -46,8 +44,7 @@ fn cdf0()
 }
 
 #[test]
-fn quantile0()
-{
+fn quantile0() {
     let mean: f64 = 0.0;
     let variance: f64 = 1.0;
     let distrib: Normal<f64> = Normal::new(mean, variance);
@@ -56,8 +53,7 @@ fn quantile0()
 }
 
 #[test]
-fn quantile1()
-{
+fn quantile1() {
     let mean: f64 = 1.0;
     let variance: f64 = 0.5;
     let distrib: Normal<f64> = Normal::new(mean, variance);
@@ -66,8 +62,7 @@ fn quantile1()
 }
 
 #[test]
-fn mean()
-{
+fn mean() {
     let mean: f64 = 1.0;
     let variance: f64 = 0.5;
     let distrib: Normal<f64> = Normal::new(mean, variance);
@@ -76,8 +71,7 @@ fn mean()
 }
 
 #[test]
-fn median()
-{
+fn median() {
     let mean: f64 = 1.0;
     let variance: f64 = 0.5;
     let distrib: Normal<f64> = Normal::new(mean, variance);
@@ -86,8 +80,7 @@ fn median()
 }
 
 #[test]
-fn skewness()
-{
+fn skewness() {
     let mean: f64 = 1.0;
     let variance: f64 = 0.5;
     let distrib: Normal<f64> = Normal::new(mean, variance);
@@ -96,8 +89,7 @@ fn skewness()
 }
 
 #[test]
-fn entropy()
-{
+fn entropy() {
     let mean: f64 = 1.0;
     let variance: f64 = 0.5;
     let distrib: Normal<f64> = Normal::new(mean, variance);

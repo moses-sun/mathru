@@ -1,10 +1,9 @@
-use mathru::algebra::linear::Matrix;
-use mathru::algebra::abstr::Complex;
 use crate::mathru::algebra::abstr::Zero;
+use mathru::algebra::abstr::Complex;
+use mathru::algebra::linear::Matrix;
 
 #[test]
-fn cholesky_f32()
-{
+fn cholesky_f32() {
     let a: Matrix<f32> = matrix![   2.0, -1.0, 0.0;
                                     -1.0, 2.0, -1.0;
                                     0.0, -1.0,  2.0];
@@ -15,12 +14,11 @@ fn cholesky_f32()
 
     let g: Matrix<f32> = a.dec_cholesky().unwrap().l();
 
-    assert_relative_eq!(g, g_ref, epsilon=1.0e-5);
+    assert_relative_eq!(g, g_ref, epsilon = 1.0e-5);
 }
 
 #[test]
-fn cholesky_f64()
-{
+fn cholesky_f64() {
     let a: Matrix<f64> = matrix![   2.0, -1.0, 0.0;
                                     -1.0, 2.0, -1.0;
                                     0.0, -1.0,  2.0];
@@ -31,12 +29,11 @@ fn cholesky_f64()
 
     let g: Matrix<f64> = a.dec_cholesky().unwrap().l();
 
-    assert_relative_eq!(g, g_ref, epsilon=1.0e-10);
+    assert_relative_eq!(g, g_ref, epsilon = 1.0e-10);
 }
 
 #[test]
-fn cholesky_complex_f32()
-{
+fn cholesky_complex_f32() {
     let a: Matrix<Complex<f32>> = matrix![  Complex::new(2.0, 0.0), Complex::new(-1.0, 0.0), Complex::zero();
                                             Complex::new(-1.0, 0.0), Complex::new(2.0, 0.0), Complex::new(-1.0, 0.0);
                                             Complex::zero(), Complex::new(-1.0, 0.0),  Complex::new(2.0, 0.0)];
@@ -47,12 +44,11 @@ fn cholesky_complex_f32()
 
     let g: Matrix<Complex<f32>> = a.dec_cholesky().unwrap().l();
 
-    assert_relative_eq!(g, g_ref, epsilon=Complex::new(1.0e-5, 1.0e-5));
+    assert_relative_eq!(g, g_ref, epsilon = Complex::new(1.0e-5, 1.0e-5));
 }
 
 #[test]
-fn cholesky_complex_f64()
-{
+fn cholesky_complex_f64() {
     let a: Matrix<Complex<f64>> = matrix![  Complex::new(2.0, 0.0), Complex::new(-1.0, 0.0), Complex::zero();
                                             Complex::new(-1.0, 0.0), Complex::new(2.0, 0.0), Complex::new(-1.0, 0.0);
                                             Complex::zero(), Complex::new(-1.0, 0.0),  Complex::new(2.0, 0.0)];
@@ -63,8 +59,5 @@ fn cholesky_complex_f64()
 
     let g: Matrix<Complex<f64>> = a.dec_cholesky().unwrap().l();
 
-    assert_relative_eq!(g, g_ref, epsilon=Complex::new(1.0e-10, 1.0e-10));
+    assert_relative_eq!(g, g_ref, epsilon = Complex::new(1.0e-10, 1.0e-10));
 }
-
-
-

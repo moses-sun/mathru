@@ -1,8 +1,7 @@
-
-mod power;
 mod exponential;
-mod trigonometry;
 mod hyperbolic;
+mod power;
+mod trigonometry;
 //
 //pub use self::power::Power;
 //pub use self::exponential::Exponential;

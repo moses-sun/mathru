@@ -17,9 +17,7 @@ use super::{
 ///
 /// $\forall a \in \mathbb{Q}, \exists e \in \mathbb{Q}$, such that $e ∘ a =
 /// a ∘ e = a$.
-pub trait Loop<O: Operator>: Quasigroup<O> + Identity<O>
-{
-}
+pub trait Loop<O: Operator>: Quasigroup<O> + Identity<O> {}
 
 macro_rules! impl_loop(
     ($T:ty, $($S:ty),*) =>

@@ -16,12 +16,13 @@ use std::clone::Clone;
 /// <https://en.wikipedia.org/wiki/Poisson_distribution>
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[derive(Clone, Copy, Debug)]
-pub struct Poisson<T>
-{
+pub struct Poisson<T> {
     gamma: T,
 }
 
-impl<T> Poisson<T> where T: Real
+impl<T> Poisson<T>
+where
+    T: Real,
 {
     /// Creates a probability distribution
     ///
@@ -40,10 +41,8 @@ impl<T> Poisson<T> where T: Real
     ///
     /// let distrib: Poisson<f64> = Poisson::new(&0.2);
     /// ```
-    pub fn new(gamma: &T) -> Poisson<T>
-    {
-        if *gamma <= T::zero()
-        {
+    pub fn new(gamma: &T) -> Poisson<T> {
+        if *gamma <= T::zero() {
             panic!();
         }
 
@@ -52,7 +51,8 @@ impl<T> Poisson<T> where T: Real
 }
 
 impl<T> Discrete<T, u32, u32> for Poisson<T>
-    where T: Real + Gamma
+where
+    T: Real + Gamma,
 {
     /// Probability mass function
     ///
@@ -69,8 +69,7 @@ impl<T> Discrete<T, u32, u32> for Poisson<T>
     /// let x: u32 = 5;
     /// let p: f64 = distrib.pmf(x);
     /// ```
-    fn pmf(&self, x: u32) -> T
-    {
+    fn pmf(&self, x: u32) -> T {
         let k_fact: T = T::from_u64(combins::factorial(x));
         self.gamma.pow(T::from_u32(x)) * (-self.gamma).exp() / k_fact
     }
@@ -90,8 +89,7 @@ impl<T> Discrete<T, u32, u32> for Poisson<T>
     /// let x: u32 = 4;
     /// let p: f64 = distrib.cdf(x);
     /// ```
-    fn cdf(&self, x: u32) -> T
-    {
+    fn cdf(&self, x: u32) -> T {
         special::gamma::gamma_ur(T::from_u32(x + 1), self.gamma)
     }
 
@@ -105,8 +103,7 @@ impl<T> Discrete<T, u32, u32> for Poisson<T>
     /// let distrib: Poisson<f64> = Poisson::new(&0.2);
     /// let mean: f64 = distrib.mean();
     /// ```
-    fn mean(&self) -> T
-    {
+    fn mean(&self) -> T {
         self.gamma
     }
 
@@ -120,8 +117,7 @@ impl<T> Discrete<T, u32, u32> for Poisson<T>
     /// let distrib: Poisson<f64> = Poisson::new(&0.2);
     /// let var: f64 = distrib.variance();
     /// ```
-    fn variance(&self) -> T
-    {
+    fn variance(&self) -> T {
         self.gamma
     }
 }

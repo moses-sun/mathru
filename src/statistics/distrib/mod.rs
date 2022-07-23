@@ -13,11 +13,11 @@ mod chisquare;
 mod distrib;
 mod exponential;
 mod gamma;
+mod log_normal;
 mod normal;
 mod poisson;
-mod t;
-mod log_normal;
 mod raisedcosine;
+mod t;
 mod uniform;
 
 pub use self::{
@@ -28,10 +28,10 @@ pub use self::{
     distrib::{Continuous, Discrete, Distribution},
     exponential::Exponential,
     gamma::Gamma,
+    log_normal::LogNormal,
     normal::Normal,
     poisson::Poisson,
-    t::T,
-    log_normal::LogNormal,
     raisedcosine::RaisedCosine,
+    t::T,
     uniform::Uniform,
 };

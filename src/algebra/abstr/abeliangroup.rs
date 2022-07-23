@@ -21,9 +21,7 @@ use super::{Addition, Group, GroupAdd, GroupMul, Multiplication, Operator};
 /// $x^{-1} \in \mathbb{A}: x^{-1} \circ x = x \circ x^{-1} = e$
 /// 5. Commutativity
 /// $\forall x, y, \in \mathbb{A}: x \circ y = y \circ x$
-pub trait AbelianGroup<O: Operator>: Group<O>
-{
-}
+pub trait AbelianGroup<O: Operator>: Group<O> {}
 
 macro_rules! impl_abeliangroup(
     ($T:ty, $($S:ty),*) =>
@@ -39,9 +37,7 @@ macro_rules! impl_abeliangroup(
 impl_abeliangroup!(Addition, i8, i16, i32, i64, i128, f32, f64);
 impl_abeliangroup!(Multiplication, f32, f64);
 
-pub trait AbelianGroupAdd: AbelianGroup<Addition> + GroupAdd
-{
-}
+pub trait AbelianGroupAdd: AbelianGroup<Addition> + GroupAdd {}
 
 macro_rules! impl_abeliangroupadd
 (
@@ -58,9 +54,7 @@ macro_rules! impl_abeliangroupadd
 
 impl_abeliangroupadd!(i8, i16, i32, i64, i128, f32, f64);
 
-pub trait AbelianGroupMul: AbelianGroup<Multiplication> + GroupMul
-{
-}
+pub trait AbelianGroupMul: AbelianGroup<Multiplication> + GroupMul {}
 
 macro_rules! impl_abeliangroupmul
 (

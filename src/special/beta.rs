@@ -1,10 +1,9 @@
 //! Provides the [beta](https://en.wikipedia.org/wiki/Beta_function) and related functions
-use crate::{algebra::abstr::Real, special::gamma::Gamma};
 use crate::algebra::abstr::cast::ToPrimitive;
+use crate::{algebra::abstr::Real, special::gamma::Gamma};
 
 /// Provides [beta, also called the Euler integral of the first kind](https://en.wikipedia.org/wiki/Beta_function) related functions
-pub trait Beta
-{
+pub trait Beta {
     /// Beta function
     ///
     /// ```math
@@ -100,46 +99,37 @@ pub trait Beta
     fn beta_inc_reg(self, a: Self, b: Self) -> Self;
 }
 
-macro_rules! impl_beta
-{
-    ($t:ident) =>
-    {
-        impl Beta for $t
-        {
-            fn beta(self, y: Self) -> Self
-            {
+macro_rules! impl_beta {
+    ($t:ident) => {
+        impl Beta for $t {
+            fn beta(self, y: Self) -> Self {
                 self.gamma() * y.gamma() / (self + y).gamma()
             }
 
-            fn beta_inc(self, a: Self, b: Self) -> Self
-            {
+            fn beta_inc(self, a: Self, b: Self) -> Self {
                 a.beta(b) * self.beta_inc_reg(a, b)
             }
 
             /// The code from the following C code was ported to Rust
             /// <http://people.sc.fsu.edu/~jburkardt/c_src/asa109/asa109.c>
-            fn beta_inc_reg(self, a: Self, b: Self) -> Self
-            {
+            fn beta_inc_reg(self, a: Self, b: Self) -> Self {
                 let acu: Self = 0.1E-14;
 
                 /*
                 Check the input arguments.
                 */
-                if a <= 0.0 || b <= 0.0
-                {
+                if a <= 0.0 || b <= 0.0 {
                     panic!();
                 }
 
-                if !(0.0..=1.0).contains(&self)
-                {
+                if !(0.0..=1.0).contains(&self) {
                     panic!();
                 }
 
                 /*
                 Special cases.
                 */
-                if self == 0.0 || self == 1.0
-                {
+                if self == 0.0 || self == 1.0 {
                     return self;
                 }
 
@@ -153,16 +143,13 @@ macro_rules! impl_beta
                 let qq: Self;
                 let indx: u32;
 
-                if a < psq * self
-                {
+                if a < psq * self {
                     xx = cx;
                     cx = self;
                     pp = b;
                     qq = a;
                     indx = 1;
-                }
-                else
-                {
+                } else {
                     xx = self;
                     pp = a;
                     qq = b;
@@ -180,23 +167,21 @@ macro_rules! impl_beta
                 */
                 let mut rx: Self = xx / cx;
                 let mut temp: Self = qq - ai;
-                if ns == 0
-                {
+                if ns == 0 {
                     rx = xx;
                 }
 
-                loop
-                {
+                loop {
                     term = term * temp * rx / (pp + ai);
                     value += term;
                     temp = term.abs();
 
-                    if temp <= acu && temp <= acu * value
-                    {
-                        value = value * (pp * xx.ln() + (qq - 1.0) * cx.ln() - (a.beta(b)).ln()).exp() / pp;
+                    if temp <= acu && temp <= acu * value {
+                        value = value
+                            * (pp * xx.ln() + (qq - 1.0) * cx.ln() - (a.beta(b)).ln()).exp()
+                            / pp;
 
-                        if indx != 0
-                        {
+                        if indx != 0 {
                             value = 1.0 - value;
                         }
                         break;
@@ -205,16 +190,12 @@ macro_rules! impl_beta
                     ai += 1.0;
                     ns -= 1;
 
-                    if 0 <= ns
-                    {
+                    if 0 <= ns {
                         temp = qq - ai;
-                        if ns == 0
-                        {
+                        if ns == 0 {
                             rx = xx;
                         }
-                    }
-                    else
-                    {
+                    } else {
                         temp = psq;
                         psq += 1.0;
                     }
@@ -258,7 +239,8 @@ impl_beta!(f64);
 /// let beta: f64 = beta::beta(x, y);
 /// ```
 pub fn beta<T>(x: T, y: T) -> T
-    where T: Real + Beta
+where
+    T: Real + Beta,
 {
     x.beta(y)
 }
@@ -294,11 +276,11 @@ pub fn beta<T>(x: T, y: T) -> T
 /// let beta: f64 = beta::beta_inc(x, a, b);
 /// ```
 pub fn beta_inc<T>(x: T, a: T, b: T) -> T
-    where T: Real + Beta
+where
+    T: Real + Beta,
 {
     x.beta_inc(a, b)
 }
-
 
 /// Incomplete regularized beta function
 ///
@@ -331,7 +313,8 @@ pub fn beta_inc<T>(x: T, a: T, b: T) -> T
 /// let beta: f64 = beta::beta_inc_reg(x, a, b);
 /// ```
 pub fn beta_inc_reg<T>(x: T, a: T, b: T) -> T
-    where T: Real + Beta
+where
+    T: Real + Beta,
 {
     x.beta_inc_reg(a, b)
 }

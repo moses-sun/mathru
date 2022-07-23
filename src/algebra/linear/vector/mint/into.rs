@@ -1,13 +1,12 @@
-use crate::algebra::linear::Vector;
 use crate::algebra::abstr::Real;
+use crate::algebra::linear::Vector;
 use mint::{Vector2, Vector3, Vector4};
-
 
 macro_rules! impl_into_mint(
     ($($rows: literal => $MV: ident, $data: ident, $ret: expr);* $(;)*) => {$(
- 
+
         impl<T> Into<$MV<T>> for Vector<T>
-            where T: Real 
+            where T: Real
         {
             fn into(self) -> $MV<T> {
                 let (m, n) = self.dim();
@@ -16,7 +15,7 @@ macro_rules! impl_into_mint(
                 if (m != 1 && n != $rows) && (m != $rows && n != 1) {
                     panic!("Vector can not be converted into a $MV because it is not a 1 by {} or {} by 1 vector", $rows, $rows)
                 }
-                 
+
                 $ret
             }
         }

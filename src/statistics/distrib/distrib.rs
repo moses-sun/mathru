@@ -2,12 +2,12 @@ use crate::algebra::abstr::Real;
 use std::iter;
 
 pub trait Distribution<T>
-    where T: Real
+where
+    T: Real,
 {
     fn random(&self) -> T;
 
-    fn random_sequence(&self, size: u32) -> Vec<T>
-    {
+    fn random_sequence(&self, size: u32) -> Vec<T> {
         let mut v: Vec<T> = Vec::new();
         v.extend(iter::repeat_with(&|| self.random()).take(size as usize));
 
@@ -17,7 +17,8 @@ pub trait Distribution<T>
 
 /// Continuous distribution
 pub trait Continuous<T>
-    where T: Real
+where
+    T: Real,
 {
     /// Probability density function
     ///
@@ -55,8 +56,7 @@ pub trait Continuous<T>
 }
 
 /// Discrete distribution
-pub trait Discrete<T, A, B>
-{
+pub trait Discrete<T, A, B> {
     /// Probability mass function
     ///
     /// # Arguments
@@ -75,5 +75,5 @@ pub trait Discrete<T, A, B>
     fn mean(&self) -> T;
 
     /// Variance
-    fn variance(self: & Self) -> T;
+    fn variance(self: &Self) -> T;
 }

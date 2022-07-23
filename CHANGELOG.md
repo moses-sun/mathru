@@ -1,26 +1,47 @@
 # Change Log
 All notable changes starting with the version 0.6.9 are documented here.
 
-## 0.13.0
+The format is based on [Keep a Changelog](https://keepachangelog.com) and this project adheres to [Semantic Versioning](https://semver.org).
+
+## [0.14.0]
+### Added
+- ExplicitInitialValueProblem and corresponding ExplicitInitialValueProblemBuilder as structs for explicit IVPs
+
+### Fixed
+
+
+## [0.13.0] - 2022-06-19
+### Fixed
 - Fix bug as reported in [Issue #8](https://gitlab.com/matthiaseiholzer/mathru/-/issues/8) and [Issue #12](https://gitlab.com/matthiaseiholzer/mathru/-/issues/12)
+### Changed
 - Code refactoring
 
-## [0.12.0]
+## [0.12.0] - 2022-03-13.
+### Added
 - Implement convert-mint feature that can be enabled to convert from and to types of the mint crate.
 
-## [0.11.3]
+## [0.11.3] - 2022-03-05
+
+### Fixed
 - Fix failing docs.rs build
 
 ## [0.11.2]
+
+### Added
 - Legendre polynomials
 - Chebyshev polynomials first & second kind
 
 ## [0.11.1]
 
 ## [0.11.0]
+
+### Added
+- Implement Newton-Cotes and Gauss-Legendre as integration methods
+
+### Changed
 - Code refactoring
 - Performance improvements
-- Implement Newton-Cotes and Gauss-Legendre as integration methods
+
 
 ## [0.10.1]
 - Fixed Bug in LU decomposition [Issue #7](https://gitlab.com/matthiaseiholzer/mathru/-/issues/7)

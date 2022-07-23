@@ -3,23 +3,19 @@
 //Copied from <https://github.com/rust-num/num-traits/blob/master/src/cast.rs>
 
 /// A generic trait for converting a value to a number.
-pub trait ToPrimitive
-{
+pub trait ToPrimitive {
     /// Converts the value of `self` to an `i8`.
-    fn to_i8(&self) -> i8
-    {
+    fn to_i8(&self) -> i8 {
         self.to_i64().to_i8()
     }
 
     /// Converts the value of `self` to an `i16`.
-    fn to_i16(&self) -> i16
-    {
+    fn to_i16(&self) -> i16 {
         self.to_i64().to_i16()
     }
 
     /// Converts the value of `self` to an `i32`.
-    fn to_i32(&self) -> i32
-    {
+    fn to_i32(&self) -> i32 {
         self.to_i64().to_i32()
     }
 
@@ -30,20 +26,17 @@ pub trait ToPrimitive
     fn to_i128(&self) -> i128;
 
     /// Converts the value of `self` to an `u8`.
-    fn to_u8(&self) -> u8
-    {
+    fn to_u8(&self) -> u8 {
         self.to_u64().to_u8()
     }
 
     /// Converts the value of `self` to an `u16`.
-    fn to_u16(&self) -> u16
-    {
+    fn to_u16(&self) -> u16 {
         self.to_u64().to_u16()
     }
 
     /// Converts the value of `self` to an `u32`.
-    fn to_u32(&self) -> u32
-    {
+    fn to_u32(&self) -> u32 {
         self.to_u64().to_u32()
     }
 
@@ -54,8 +47,7 @@ pub trait ToPrimitive
     fn to_u128(&self) -> u128;
 
     /// Converts the value of `self` to an `f32`.
-    fn to_f32(&self) -> f32
-    {
+    fn to_f32(&self) -> f32 {
         self.to_f64().to_f32()
     }
 
@@ -67,26 +59,22 @@ pub trait ToPrimitive
 }
 
 /// A generic trait for converting a number to a value.
-pub trait FromPrimitive: Sized
-{
+pub trait FromPrimitive: Sized {
     /// Convert an `i8` to return an optional value of this type. If the
     /// type cannot be represented by this value, the `None` is returned.
-    fn from_i8(n: i8) -> Self
-    {
+    fn from_i8(n: i8) -> Self {
         FromPrimitive::from_i64(n as i64)
     }
 
     /// Convert an `i16` to return an optional value of this type. If the
     /// type cannot be represented by this value, the `None` is returned.
-    fn from_i16(n: i16) -> Self
-    {
+    fn from_i16(n: i16) -> Self {
         FromPrimitive::from_i64(n as i64)
     }
 
     /// Convert an `i32` to return an optional value of this type. If the
     /// type cannot be represented by this value, the `None` is returned.
-    fn from_i32(n: i32) -> Self
-    {
+    fn from_i32(n: i32) -> Self {
         FromPrimitive::from_i64(n as i64)
     }
 
@@ -100,23 +88,20 @@ pub trait FromPrimitive: Sized
 
     /// Convert an `u8` to return an optional value of this type. If the
     /// type cannot be represented by this value, the `None` is returned.
-    fn from_u8(n: u8) -> Self
-    {
+    fn from_u8(n: u8) -> Self {
         FromPrimitive::from_u64(n as u64)
     }
 
     /// Convert an `u16` to return an optional value of this type. If the
     /// type cannot be represented by this value, the `None` is returned.
 
-    fn from_u16(n: u16) -> Self
-    {
+    fn from_u16(n: u16) -> Self {
         FromPrimitive::from_u64(n as u64)
     }
 
     /// Convert an `u32` to return an optional value of this type. If the
     /// type cannot be represented by this value, the `None` is returned.
-    fn from_u32(n: u32) -> Self
-    {
+    fn from_u32(n: u32) -> Self {
         FromPrimitive::from_u64(n as u64)
     }
 
@@ -130,8 +115,7 @@ pub trait FromPrimitive: Sized
 
     /// Convert a `f32` to return an optional value of this type. If the
     /// type cannot be represented by this value, the `None` is returned.
-    fn from_f32(n: f32) -> Self
-    {
+    fn from_f32(n: f32) -> Self {
         FromPrimitive::from_f64(n as f64)
     }
 
@@ -144,21 +128,20 @@ pub trait FromPrimitive: Sized
 }
 
 /// Cast from one machine scalar to another.
-pub fn cast<T: NumCast, U: NumCast>(n: T) -> U
-{
+pub fn cast<T: NumCast, U: NumCast>(n: T) -> U {
     NumCast::from(n)
 }
 
 /// An interface for casting between machine scalars.
-pub trait NumCast: Sized + ToPrimitive
-{
+pub trait NumCast: Sized + ToPrimitive {
     /// Creates a number from another value that can be converted into
     /// a primitive via the `ToPrimitive` trait.
     fn from<T: ToPrimitive>(n: T) -> Self;
 }
 
 pub trait AsPrimitive<T>: 'static + Copy
-    where T: 'static + Copy
+where
+    T: 'static + Copy,
 {
     /// Convert a value to another, using the `as` operator.
     fn as_(self) -> T;
@@ -166,65 +149,52 @@ pub trait AsPrimitive<T>: 'static + Copy
 
 macro_rules! impl_from_primitive {
     ($T:ty, $to_ty:ident) => {
-        impl FromPrimitive for $T
-        {
-            fn from_i8(n: i8) -> $T
-            {
+        impl FromPrimitive for $T {
+            fn from_i8(n: i8) -> $T {
                 n.$to_ty()
             }
 
-            fn from_i16(n: i16) -> $T
-            {
+            fn from_i16(n: i16) -> $T {
                 n.$to_ty()
             }
 
-            fn from_i32(n: i32) -> $T
-            {
+            fn from_i32(n: i32) -> $T {
                 n.$to_ty()
             }
 
-            fn from_i64(n: i64) -> $T
-            {
+            fn from_i64(n: i64) -> $T {
                 n.$to_ty()
             }
 
-            fn from_i128(n: i128) -> $T
-            {
+            fn from_i128(n: i128) -> $T {
                 n.$to_ty()
             }
 
-            fn from_u8(n: u8) -> $T
-            {
+            fn from_u8(n: u8) -> $T {
                 n.$to_ty()
             }
 
-            fn from_u16(n: u16) -> $T
-            {
+            fn from_u16(n: u16) -> $T {
                 n.$to_ty()
             }
 
-            fn from_u32(n: u32) -> $T
-            {
+            fn from_u32(n: u32) -> $T {
                 n.$to_ty()
             }
 
-            fn from_u64(n: u64) -> $T
-            {
+            fn from_u64(n: u64) -> $T {
                 n.$to_ty()
             }
 
-            fn from_u128(n: u128) -> $T
-            {
+            fn from_u128(n: u128) -> $T {
                 n.$to_ty()
             }
 
-            fn from_f32(n: f32) -> $T
-            {
+            fn from_f32(n: f32) -> $T {
                 n.$to_ty()
             }
 
-            fn from_f64(n: f64) -> $T
-            {
+            fn from_f64(n: f64) -> $T {
                 n.$to_ty()
             }
         }
@@ -246,10 +216,8 @@ impl_from_primitive!(f64, to_f64);
 
 macro_rules! impl_num_cast {
     ($T:ty, $conv:ident) => {
-        impl NumCast for $T
-        {
-            fn from<N: ToPrimitive>(n: N) -> $T
-            {
+        impl NumCast for $T {
+            fn from<N: ToPrimitive>(n: N) -> $T {
                 n.$conv()
             }
         }
@@ -320,7 +288,9 @@ impl_as_primitive!(char => { char });
 impl_as_primitive!(bool => {});
 
 macro_rules! impl_to_primitive_int_to_int {
-    ($SrcT:ty, $DstT:ty, $slf:expr) => {{ $slf as $DstT }};
+    ($SrcT:ty, $DstT:ty, $slf:expr) => {{
+        $slf as $DstT
+    }};
 }
 
 macro_rules! impl_to_primitive_int_to_uint {
@@ -331,65 +301,52 @@ macro_rules! impl_to_primitive_int_to_uint {
 
 macro_rules! impl_to_primitive_int {
     ($T:ty) => {
-        impl ToPrimitive for $T
-        {
-            fn to_i8(&self) -> i8
-            {
+        impl ToPrimitive for $T {
+            fn to_i8(&self) -> i8 {
                 impl_to_primitive_int_to_int!($T, i8, *self)
             }
 
-            fn to_i16(&self) -> i16
-            {
+            fn to_i16(&self) -> i16 {
                 impl_to_primitive_int_to_int!($T, i16, *self)
             }
 
-            fn to_i32(&self) -> i32
-            {
+            fn to_i32(&self) -> i32 {
                 impl_to_primitive_int_to_int!($T, i32, *self)
             }
 
-            fn to_i64(&self) -> i64
-            {
+            fn to_i64(&self) -> i64 {
                 impl_to_primitive_int_to_int!($T, i64, *self)
             }
 
-            fn to_i128(&self) -> i128
-            {
+            fn to_i128(&self) -> i128 {
                 impl_to_primitive_int_to_int!($T, i128, *self)
             }
 
-            fn to_u8(&self) -> u8
-            {
+            fn to_u8(&self) -> u8 {
                 impl_to_primitive_int_to_uint!($T, u8, *self)
             }
 
-            fn to_u16(&self) -> u16
-            {
+            fn to_u16(&self) -> u16 {
                 impl_to_primitive_int_to_uint!($T, u16, *self)
             }
 
-            fn to_u32(&self) -> u32
-            {
+            fn to_u32(&self) -> u32 {
                 impl_to_primitive_int_to_uint!($T, u32, *self)
             }
 
-            fn to_u64(&self) -> u64
-            {
+            fn to_u64(&self) -> u64 {
                 impl_to_primitive_int_to_uint!($T, u64, *self)
             }
 
-            fn to_u128(&self) -> u128
-            {
+            fn to_u128(&self) -> u128 {
                 impl_to_primitive_int_to_uint!($T, u128, *self)
             }
 
-            fn to_f32(&self) -> f32
-            {
+            fn to_f32(&self) -> f32 {
                 return *self as f32;
             }
 
-            fn to_f64(&self) -> f64
-            {
+            fn to_f64(&self) -> f64 {
                 return *self as f64;
             }
         }
@@ -416,65 +373,52 @@ macro_rules! impl_to_primitive_uint_to_uint {
 
 macro_rules! impl_to_primitive_uint {
     ($T:ty) => {
-        impl ToPrimitive for $T
-        {
-            fn to_i8(&self) -> i8
-            {
+        impl ToPrimitive for $T {
+            fn to_i8(&self) -> i8 {
                 impl_to_primitive_uint_to_int!(i8, *self)
             }
 
-            fn to_i16(&self) -> i16
-            {
+            fn to_i16(&self) -> i16 {
                 impl_to_primitive_uint_to_int!(i16, *self)
             }
 
-            fn to_i32(&self) -> i32
-            {
+            fn to_i32(&self) -> i32 {
                 impl_to_primitive_uint_to_int!(i32, *self)
             }
 
-            fn to_i64(&self) -> i64
-            {
+            fn to_i64(&self) -> i64 {
                 impl_to_primitive_uint_to_int!(i64, *self)
             }
 
-            fn to_i128(&self) -> i128
-            {
+            fn to_i128(&self) -> i128 {
                 impl_to_primitive_uint_to_int!(i128, *self)
             }
 
-            fn to_u8(&self) -> u8
-            {
+            fn to_u8(&self) -> u8 {
                 impl_to_primitive_uint_to_uint!($T, u8, *self)
             }
 
-            fn to_u16(&self) -> u16
-            {
+            fn to_u16(&self) -> u16 {
                 impl_to_primitive_uint_to_uint!($T, u16, *self)
             }
 
-            fn to_u32(&self) -> u32
-            {
+            fn to_u32(&self) -> u32 {
                 impl_to_primitive_uint_to_uint!($T, u32, *self)
             }
 
-            fn to_u64(&self) -> u64
-            {
+            fn to_u64(&self) -> u64 {
                 impl_to_primitive_uint_to_uint!($T, u64, *self)
             }
 
-            fn to_u128(&self) -> u128
-            {
+            fn to_u128(&self) -> u128 {
                 impl_to_primitive_uint_to_uint!($T, u128, *self)
             }
 
-            fn to_f32(&self) -> f32
-            {
+            fn to_f32(&self) -> f32 {
                 return *self as f32;
             }
 
-            fn to_f64(&self) -> f64
-            {
+            fn to_f64(&self) -> f64 {
                 return *self as f64;
             }
         }
@@ -497,65 +441,52 @@ macro_rules! impl_to_primitive_float_to_float {
 
 macro_rules! impl_to_primitive_float {
     ($T:ident) => {
-        impl ToPrimitive for $T
-        {
-            fn to_i8(&self) -> i8
-            {
+        impl ToPrimitive for $T {
+            fn to_i8(&self) -> i8 {
                 return *self as i8;
             }
 
-            fn to_i16(&self) -> i16
-            {
+            fn to_i16(&self) -> i16 {
                 return *self as i16;
             }
 
-            fn to_i32(&self) -> i32
-            {
+            fn to_i32(&self) -> i32 {
                 return *self as i32;
             }
 
-            fn to_i64(&self) -> i64
-            {
+            fn to_i64(&self) -> i64 {
                 return *self as i64;
             }
 
-            fn to_i128(&self) -> i128
-            {
+            fn to_i128(&self) -> i128 {
                 return *self as i128;
             }
 
-            fn to_u8(&self) -> u8
-            {
+            fn to_u8(&self) -> u8 {
                 return *self as u8;
             }
 
-            fn to_u16(&self) -> u16
-            {
+            fn to_u16(&self) -> u16 {
                 return *self as u16;
             }
 
-            fn to_u32(&self) -> u32
-            {
+            fn to_u32(&self) -> u32 {
                 return *self as u32;
             }
 
-            fn to_u64(&self) -> u64
-            {
+            fn to_u64(&self) -> u64 {
                 return *self as u64;
             }
 
-            fn to_u128(&self) -> u128
-            {
+            fn to_u128(&self) -> u128 {
                 return *self as u128;
             }
 
-            fn to_f32(&self) -> f32
-            {
+            fn to_f32(&self) -> f32 {
                 impl_to_primitive_float_to_float!($T, f32, *self)
             }
 
-            fn to_f64(&self) -> f64
-            {
+            fn to_f64(&self) -> f64 {
                 impl_to_primitive_float_to_float!($T, f64, *self)
             }
         }

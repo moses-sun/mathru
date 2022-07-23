@@ -1,17 +1,13 @@
-pub struct OptimResult<T>
-{
+pub struct OptimResult<T> {
     arg: T,
 }
 
-impl<T> OptimResult<T>
-{
-    pub fn new(arg: T) -> OptimResult<T>
-    {
+impl<T> OptimResult<T> {
+    pub fn new(arg: T) -> OptimResult<T> {
         OptimResult { arg }
     }
 
-    pub fn arg(self) -> T
-    {
+    pub fn arg(self) -> T {
         self.arg
     }
 }

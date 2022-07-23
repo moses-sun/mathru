@@ -1,3 +1,2 @@
-
-mod newtoncotes;
 mod closedfixedintervaliterator;
+mod newtoncotes;

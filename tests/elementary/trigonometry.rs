@@ -2,8 +2,7 @@ use mathru::algebra::abstr::{Complex, One};
 use mathru::elementary::{Hyperbolic, Trigonometry};
 
 #[test]
-fn sin_complex_f64()
-{
+fn sin_complex_f64() {
     let a: f64 = 1.0;
     let b: f64 = 2.0;
     let z: Complex<f64> = Complex::new(a, b);
@@ -17,8 +16,7 @@ fn sin_complex_f64()
 }
 
 #[test]
-fn sin_complex_f32()
-{
+fn sin_complex_f32() {
     let a: f32 = 1.0;
     let b: f32 = 2.0;
     let z: Complex<f32> = Complex::new(a, b);
@@ -32,25 +30,21 @@ fn sin_complex_f32()
 }
 
 #[test]
-fn sin_f32()
-{
+fn sin_f32() {
     let uut: f32 = (f32::pi() / 2.0).sin();
 
     assert_eq!(1.0, uut);
 }
 
 #[test]
-fn sin_f64()
-{
+fn sin_f64() {
     let uut: f64 = (f64::pi() / 2.0).sin();
 
     assert_eq!(1.0, uut);
 }
 
-
 #[test]
-fn cos()
-{
+fn cos() {
     let a: f64 = 1.0;
     let b: f64 = 2.0;
     let z: Complex<f64> = Complex::new(a, b);
@@ -65,8 +59,7 @@ fn cos()
 }
 
 #[test]
-fn tan()
-{
+fn tan() {
     let a: f64 = 1.0;
     let b: f64 = 2.0;
     let z: Complex<f64> = Complex::new(a, b);
@@ -78,8 +71,7 @@ fn tan()
 }
 
 #[test]
-fn cot()
-{
+fn cot() {
     let a: Complex<f64> = Complex::new(1.0_f64, 2.0_f64);
     let refer: Complex<f64> = Complex::one() / a.tan();
 
@@ -87,8 +79,7 @@ fn cot()
 }
 
 #[test]
-fn sec()
-{
+fn sec() {
     let a: Complex<f64> = Complex::new(1.0_f64, 2.0_f64);
     let refer: Complex<f64> = Complex::one() / a.cos();
 
@@ -96,8 +87,7 @@ fn sec()
 }
 
 #[test]
-fn csc()
-{
+fn csc() {
     let a: Complex<f64> = Complex::new(1.0_f64, 2.0_f64);
     let refer: Complex<f64> = Complex::one() / a.sin();
 
@@ -105,8 +95,7 @@ fn csc()
 }
 
 #[test]
-fn arctan0()
-{
+fn arctan0() {
     let a: Complex<f64> = Complex::new(3.0 * std::f64::consts::PI / 2.0, 0.0);
     let refer: Complex<f64> = Complex::new(1.3616916829711636, 0.0);
 
@@ -114,26 +103,29 @@ fn arctan0()
 }
 
 #[test]
-fn arctan1()
-{
+fn arctan1() {
     let a: Complex<f64> = Complex::new(0.0_f64, 2.0_f64);
-    let refer: Complex<f64> = Complex::new(std::f64::consts::PI / 2.0, (4.0_f64 / 5.0_f64).artanh() / 2.0_f64);
+    let refer: Complex<f64> = Complex::new(
+        std::f64::consts::PI / 2.0,
+        (4.0_f64 / 5.0_f64).artanh() / 2.0_f64,
+    );
 
     assert_eq!(refer, a.arctan());
 }
 
 #[test]
-fn arctan2()
-{
+fn arctan2() {
     let a: Complex<f64> = Complex::new(1.0_f64, 2.0_f64);
-    let refer: Complex<f64> = Complex::new((2.0_f64.atan() + std::f64::consts::PI / 2.0_f64) / 2.0_f64, (4.0_f64 / 6.0_f64).atanh() / 2.0_f64);
+    let refer: Complex<f64> = Complex::new(
+        (2.0_f64.atan() + std::f64::consts::PI / 2.0_f64) / 2.0_f64,
+        (4.0_f64 / 6.0_f64).atanh() / 2.0_f64,
+    );
 
     assert_eq!(refer, a.arctan());
 }
 
 #[test]
-fn arccot()
-{
+fn arccot() {
     let a: Complex<f64> = Complex::new(1.0_f64, 2.0_f64);
     let refer: Complex<f64> = (Complex::one() / a).arctan();
 
@@ -141,8 +133,7 @@ fn arccot()
 }
 
 #[test]
-fn arcsin()
-{
+fn arcsin() {
     let a: Complex<f64> = Complex::new(1.0_f64, 2.0_f64);
     let refer: Complex<f64> = Complex::new(0.4270785863924768, 1.5285709194809995);
 
@@ -150,8 +141,7 @@ fn arcsin()
 }
 
 #[test]
-fn arccos()
-{
+fn arccos() {
     let a: Complex<f64> = Complex::new(1.0_f64, 2.0_f64);
     let refer: Complex<f64> = Complex::new(std::f64::consts::PI / 2.0_f64, 0.0_f64) - a.arcsin();
 
@@ -159,8 +149,7 @@ fn arccos()
 }
 
 #[test]
-fn arcsec()
-{
+fn arcsec() {
     let a: Complex<f64> = Complex::new(1.0_f64, 2.0_f64);
     let refer: Complex<f64> = (Complex::one() / a).arccos();
 
@@ -168,8 +157,7 @@ fn arcsec()
 }
 
 #[test]
-fn arccsc()
-{
+fn arccsc() {
     let a: Complex<f64> = Complex::new(1.0_f64, 2.0_f64);
     let refer: Complex<f64> = (Complex::one() / a).arcsin();
 

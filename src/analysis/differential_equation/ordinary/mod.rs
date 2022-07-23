@@ -9,8 +9,8 @@
 //! ```math
 //! \frac{dy}{dt}=f(t, y)
 //! ```
-//! 
-//! 
+//!
+//!
 //! Solves an ODE using the Runge-Kutta-Dormand-Prince algorithm.
 //!
 //!<https://en.wikipedia.org/wiki/Dormand-Prince_method>
@@ -41,41 +41,20 @@
 //! # {
 //! use mathru::{
 //!     algebra::linear::Vector,
-//!     analysis::differential_equation::ordinary::{solver::runge_kutta::{DormandPrince54, ProportionalControl}, ExplicitODE},
+//!     analysis::differential_equation::ordinary::{ExplicitInitialValueProblem, ExplicitInitialValueProblemBuilder, solver::explicit::runge_kutta::adaptive::{DormandPrince54, ProportionalControl}},
 //! };
 //!
-//! pub struct ExplicitODE1
+//! fn ode(x: &f64, y: &Vector<f64>) -> Vector<f64>
 //! {
-//!     time_span: (f64, f64),
-//!     init_cond: Vector<f64>,
+//!      y * &2.0
 //! }
 //!
-//! impl Default for ExplicitODE1
-//! {
-//!     fn default() -> ExplicitODE1
-//!     {
-//!         ExplicitODE1 { time_span: (0.0, 2.0),
-//!                        init_cond: vector![0.5] }
-//!     }
-//! }
-//!
-//! impl ExplicitODE<f64> for ExplicitODE1
-//! {
-//!     fn func(&self, _t: &f64, x: &Vector<f64>) -> Vector<f64>
-//!     {
-//!         return x * &2.0f64;
-//!     }
-//!
-//!     fn time_span(&self) -> (f64, f64)
-//!     {
-//!         return self.time_span;
-//!     }
-//!
-//!     fn init_cond(&self) -> Vector<f64>
-//!     {
-//!         return self.init_cond.clone();
-//!     }
-//! }
+//! let problem = ExplicitInitialValueProblemBuilder::new(
+//!     &|t, x| { x * &2.0f64 },
+//!     0.0,
+//!     vector![0.5]
+//! ).t_end(2.0)
+//! .build();
 //!
 //! let h_0: f64 = 0.1;
 //! let fac: f64 = 0.9;
@@ -86,7 +65,6 @@
 //! let rel_tol: f64 = 10e-6;
 //!
 //! let solver: ProportionalControl<f64> = ProportionalControl::new(n_max, h_0, fac, fac_min, fac_max, abs_tol, rel_tol);
-//! let problem: ExplicitODE1 = ExplicitODE1::default();
 //!
 //! // Solve the ODE
 //! let (t, y): (Vec<f64>, Vec<Vector<f64>>) = solver.solve(&problem, &DormandPrince54::default()).unwrap();
@@ -94,12 +72,18 @@
 //! # }
 //! ```
 
-pub mod solver;
 pub mod problem;
+pub mod solver;
 
-mod explicit_ode;
 mod implicit_ode;
-
 pub use implicit_ode::ImplicitODE;
-pub use explicit_ode::ExplicitODE;
 
+mod explicit_initial_value_problem;
+pub use explicit_initial_value_problem::{
+    ExplicitInitialValueProblem, ExplicitInitialValueProblemBuilder,
+};
+
+mod implicit_initial_value_problem;
+pub use implicit_initial_value_problem::{
+    ImplicitInitialValueProblem, ImplicitInitialValueProblemBuilder,
+};

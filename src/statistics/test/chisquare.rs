@@ -1,10 +1,10 @@
 use crate::{
     algebra::abstr::Real,
+    special::{error::Error, gamma::Gamma},
     statistics::{
         distrib::{ChiSquare as ChiSquareDistrib, Continuous},
         test::Test,
     },
-    special::{error::Error, gamma::Gamma},
 };
 #[cfg(feature = "serde")]
 use serde::{Deserialize, Serialize};
@@ -17,34 +17,31 @@ use std::clone::Clone;
 ///
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[derive(Clone, Copy, Debug)]
-pub struct ChiSquare<T>
-{
+pub struct ChiSquare<T> {
     df: u32,
     chi_square: T,
 }
 
-impl<T> ChiSquare<T> where T: Real
+impl<T> ChiSquare<T>
+where
+    T: Real,
 {
     ///
     /// alpha: significance level
-    pub fn test_vector(x: &Vec<T>, y: &Vec<T>) -> ChiSquare<T>
-    {
-        if x.len() != y.len()
-        {
+    pub fn test_vector(x: &Vec<T>, y: &Vec<T>) -> ChiSquare<T> {
+        if x.len() != y.len() {
             panic!();
         }
 
         let df: u32 = (y.len() - 1) as u32;
 
         let mut sum_x: T = T::zero();
-        for n_i in x.iter()
-        {
+        for n_i in x.iter() {
             sum_x += *n_i;
         }
 
         let mut sum_y: T = T::zero();
-        for n_j in y.iter()
-        {
+        for n_j in y.iter() {
             sum_y += *n_j;
         }
 
@@ -52,25 +49,18 @@ impl<T> ChiSquare<T> where T: Real
 
         let mut chi_square: T = T::zero();
         let m: usize = x.len();
-        for j in 0..m
-        {
-            for k in 0..2
-            {
+        for j in 0..m {
+            for k in 0..2 {
                 let n_jk: T;
                 let mut n_k: T = T::zero();
-                if k == 0
-                {
+                if k == 0 {
                     n_jk = x[j];
-                    for l in x.iter().take(m)
-                    {
+                    for l in x.iter().take(m) {
                         n_k += *l;
                     }
-                }
-                else
-                {
+                } else {
                     n_jk = y[j];
-                    for l in y.iter().take(m)
-                    {
+                    for l in y.iter().take(m) {
                         n_k += *l
                     }
                 }
@@ -87,20 +77,18 @@ impl<T> ChiSquare<T> where T: Real
 }
 
 impl<T> Test<T> for ChiSquare<T>
-    where T: Real + Gamma + Error
+where
+    T: Real + Gamma + Error,
 {
-    fn df(&self) -> u32
-    {
+    fn df(&self) -> u32 {
         self.df
     }
 
-    fn value(&self) -> T
-    {
+    fn value(&self) -> T {
         self.chi_square
     }
 
-    fn p_value(&self) -> T
-    {
+    fn p_value(&self) -> T {
         let distrib: ChiSquareDistrib<T> = ChiSquareDistrib::new(self.df);
         T::one() - distrib.cdf(self.chi_square)
     }

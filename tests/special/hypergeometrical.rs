@@ -1,8 +1,7 @@
 use mathru::special;
 
 #[test]
-fn hypergeometrical_f21_0()
-{
+fn hypergeometrical_f21_0() {
     let a: f64 = 0.5_f64;
     let b: f64 = 0.3_f64;
     let c: f64 = 0.7_f64;
@@ -14,8 +13,7 @@ fn hypergeometrical_f21_0()
 }
 
 #[test]
-fn hypergeometrical_f21_1()
-{
+fn hypergeometrical_f21_1() {
     let a: f64 = 0.5_f64;
     let b: f64 = 0.3_f64;
     let c: f64 = 0.7_f64;
@@ -27,8 +25,7 @@ fn hypergeometrical_f21_1()
 }
 
 #[test]
-fn hypergeometrical_f21_2()
-{
+fn hypergeometrical_f21_2() {
     let a: f64 = 0.5_f64;
     let b: f64 = 0.3_f64;
     let c: f64 = 0.7_f64;
@@ -40,8 +37,7 @@ fn hypergeometrical_f21_2()
 }
 
 #[test]
-fn hypergeometrical_f21_3()
-{
+fn hypergeometrical_f21_3() {
     let a: f64 = 0.5_f64;
     let b: f64 = 0.3_f64;
     let c: f64 = 0.7_f64;
@@ -53,8 +49,7 @@ fn hypergeometrical_f21_3()
 }
 
 #[test]
-fn hypergeometrical_f21_4()
-{
+fn hypergeometrical_f21_4() {
     let a: f64 = 0.5_f64;
     let b: f64 = 0.3_f64;
     let c: f64 = 0.7_f64;
@@ -92,8 +87,7 @@ fn hypergeometrical_f21_4()
 //    }
 
 #[test]
-fn hypergeometrical_f21_7()
-{
+fn hypergeometrical_f21_7() {
     let a: f64 = 0.5_f64;
     let b: f64 = 0.3_f64;
     let c: f64 = 0.7_f64;
@@ -105,8 +99,7 @@ fn hypergeometrical_f21_7()
 }
 
 #[test]
-fn hypergeometrical_f21_8()
-{
+fn hypergeometrical_f21_8() {
     let a: f64 = 0.1_f64;
     let b: f64 = 0.2_f64;
     let c: f64 = 0.3_f64;

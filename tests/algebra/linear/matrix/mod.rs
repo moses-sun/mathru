@@ -1,21 +1,21 @@
 mod add;
 mod add_assign;
-mod sub;
-mod sub_assign;
-mod mul;
-mod mul_assign;
-mod transpose;
 mod cholesky;
+mod det;
 mod eigen;
 mod hessenberg;
 mod inverse;
+mod iterator;
 mod lu;
 mod matrix;
+mod mul;
+mod mul_assign;
 mod qr;
-mod iterator;
-mod solve;
-mod det;
 mod singular;
+mod solve;
+mod sub;
+mod sub_assign;
+mod transpose;
 
 #[cfg(feature = "mint")]
 mod mint;

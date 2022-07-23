@@ -1,11 +1,10 @@
-use mathru::algebra::linear::{Matrix, Vector};
-use mathru::algebra::abstr::Complex;
 use crate::mathru::algebra::abstr::cast::FromPrimitive;
+use mathru::algebra::abstr::Complex;
+use mathru::algebra::linear::{Matrix, Vector};
 
 #[cfg(not(feature = "intel-mkl"))]
 #[test]
-fn eigen_f32()
-{
+fn eigen_f32() {
     let a: Matrix<f32> = matrix![   1.0, -3.0, 3.0;
                                     3.0, -5.0,  3.0;
                                     6.0, -6.0,  4.0];
@@ -20,13 +19,12 @@ fn eigen_f32()
 
     let value: Vector<f32> = a.dec_eigen().unwrap().value();
 
-    assert_relative_eq!(value, eig_ref, epsilon=1.0e-5);
+    assert_relative_eq!(value, eig_ref, epsilon = 1.0e-5);
     // assert_relative_eq!(vector, eig_vector_ref, epsilon=1.0e-5);
 }
 
 #[test]
-fn eigen_f64()
-{
+fn eigen_f64() {
     let a: Matrix<f64> = matrix![   1.0, -3.0, 3.0;
                                     3.0, -5.0, 3.0;
                                     6.0, -6.0, 4.0];
@@ -41,7 +39,7 @@ fn eigen_f64()
 
     let value: Vector<f64> = a.dec_eigen().unwrap().value();
 
-    assert_relative_eq!(value, eig_ref, epsilon=1.0e-5);
+    assert_relative_eq!(value, eig_ref, epsilon = 1.0e-5);
     // assert_relative_eq!(vector, eig_vector_ref, epsilon=1.0e-5);
 }
 
@@ -68,8 +66,7 @@ fn eigen_f64()
 
 #[cfg(feature = "native")]
 #[test]
-fn eigen_complex_f32()
-{
+fn eigen_complex_f32() {
     let a: Matrix<Complex<f32>> = matrix![  Complex::from_f32(1.0), Complex::from_f32(-3.0), Complex::from_f32(3.0);
                                             Complex::from_f32(3.0), Complex::from_f32(-5.0), Complex::from_f32(3.0);
                                             Complex::from_f32(6.0), Complex::from_f32(-6.0), Complex::from_f32(4.0)];
@@ -84,14 +81,13 @@ fn eigen_complex_f32()
 
     let value: Vector<Complex<f32>> = a.dec_eigen().unwrap().value();
 
-    assert_relative_eq!(value, eig_value_ref, epsilon=Complex::new(2.0e-5, 2.0e-5));
+    assert_relative_eq!(value, eig_value_ref, epsilon = Complex::new(2.0e-5, 2.0e-5));
     // assert_relative_eq!(vector, eig_vector_ref, epsilon=Complex::new(2.0e-5, 2.0e-5));
 }
 
 #[cfg(feature = "lapack")]
 #[test]
-fn eigen_complex_f32()
-{
+fn eigen_complex_f32() {
     let a: Matrix<Complex<f32>> = matrix![  Complex::from_f32(1.0), Complex::from_f32(-3.0), Complex::from_f32(3.0);
                                             Complex::from_f32(3.0), Complex::from_f32(-5.0), Complex::from_f32(3.0);
                                             Complex::from_f32(6.0), Complex::from_f32(-6.0), Complex::from_f32(4.0)];
@@ -106,13 +102,12 @@ fn eigen_complex_f32()
 
     let value: Vector<Complex<f32>> = a.dec_eigen().unwrap().value();
 
-    assert_relative_eq!(value, eig_value_ref, epsilon=Complex::new(2.0e-5, 2.0e-5));
+    assert_relative_eq!(value, eig_value_ref, epsilon = Complex::new(2.0e-5, 2.0e-5));
     // assert_relative_eq!(vector, eig_vector_ref, epsilon=Complex::new(2.0e-5, 2.0e-5));
 }
 
 #[test]
-fn eigen_complex_f64()
-{
+fn eigen_complex_f64() {
     let a: Matrix<Complex<f64>> = matrix![  Complex::from_f64(1.0), Complex::from_f64(-3.0), Complex::from_f64(3.0);
                                             Complex::from_f64(3.0), Complex::from_f64(-5.0), Complex::from_f64(3.0);
                                             Complex::from_f64(6.0), Complex::from_f64(-6.0), Complex::from_f64(4.0)];
@@ -127,7 +122,11 @@ fn eigen_complex_f64()
 
     let value: Vector<Complex<f64>> = a.dec_eigen().unwrap().value();
 
-    assert_relative_eq!(value, eig_value_ref, epsilon=Complex::new(1.0e-10, 1.0e-10));
+    assert_relative_eq!(
+        value,
+        eig_value_ref,
+        epsilon = Complex::new(1.0e-10, 1.0e-10)
+    );
     // assert_relative_eq!(vector, eig_vector_ref, epsilon=Complex::new(1.0e-10, 1.0e-10));
 }
 
@@ -151,4 +150,3 @@ fn eigen_complex_f64()
 //     assert_relative_eq!(value, eig_ref, epsilon=Complex::new(1.0e-5, 1.0e-5));
 //     assert_relative_eq!(vector, eig_vector_ref, epsilon=Complex::new(1.0e-5, 1.0e-5));
 // }
-

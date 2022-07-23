@@ -8,9 +8,6 @@
 //! <https://en.wikipedia.org/wiki/List_of_mathematical_functions>
 
 pub mod beta;
+pub mod error;
 pub mod gamma;
 pub mod hypergeometric;
-pub mod error;
-
-
-

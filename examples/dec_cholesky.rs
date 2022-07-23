@@ -1,7 +1,6 @@
 use mathru::{algebra::linear::Matrix, matrix};
 
-fn main()
-{
+fn main() {
     let a: Matrix<f64> = matrix![   2.0, -1.0, 0.0;
                                 	-1.0, 2.0, -1.0;
                                 	0.0, -1.0,  2.0];

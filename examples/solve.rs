@@ -7,8 +7,7 @@ use mathru::{
 };
 
 /// Solves a system of linear equations
-fn main()
-{
+fn main() {
     let a: Matrix<f64> = matrix![6.0, 2.0, -1.0; -3.0, 5.0, 3.0; -2.0, 1.0, 3.0];
     let b: Vector<f64> = vector![48.0; 49.0; 24.0];
 

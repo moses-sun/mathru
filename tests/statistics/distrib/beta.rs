@@ -3,8 +3,7 @@ use std::f64;
 
 #[test]
 #[should_panic]
-fn pdf_lower_0()
-{
+fn pdf_lower_0() {
     let p: f64 = 2.0;
     let q: f64 = 5.0;
     let x: f64 = 0.0 - f64::EPSILON;
@@ -15,8 +14,7 @@ fn pdf_lower_0()
 }
 
 #[test]
-fn pdf0()
-{
+fn pdf0() {
     let p: f64 = 2.0;
     let q: f64 = 5.0;
     let x: f64 = 0.0;
@@ -27,8 +25,7 @@ fn pdf0()
 }
 
 #[test]
-fn pdf1()
-{
+fn pdf1() {
     let p: f64 = 2.0;
     let q: f64 = 5.0;
     let x: f64 = 1.0;
@@ -39,8 +36,7 @@ fn pdf1()
 }
 
 #[test]
-fn pdf_greater_1()
-{
+fn pdf_greater_1() {
     let p: f64 = 2.0;
     let q: f64 = 5.0;
     let x: f64 = 1.0 + f64::EPSILON;
@@ -51,8 +47,7 @@ fn pdf_greater_1()
 }
 
 #[test]
-fn pdf2()
-{
+fn pdf2() {
     let p: f64 = 2.0;
     let q: f64 = 5.0;
     let x: f64 = 0.4;
@@ -64,8 +59,7 @@ fn pdf2()
 
 #[test]
 #[should_panic]
-fn cdf_lower_0()
-{
+fn cdf_lower_0() {
     let p: f64 = 2.0;
     let q: f64 = 5.0;
     let x: f64 = 0.0 - f64::EPSILON;
@@ -76,8 +70,7 @@ fn cdf_lower_0()
 }
 
 #[test]
-fn cdf0()
-{
+fn cdf0() {
     let q: f64 = 5.0;
     let x: f64 = 0.0;
 
@@ -87,8 +80,7 @@ fn cdf0()
 }
 
 #[test]
-fn cdf1()
-{
+fn cdf1() {
     let p: f64 = 2.0;
     let q: f64 = 5.0;
     let x: f64 = 1.0;
@@ -100,8 +92,7 @@ fn cdf1()
 
 #[test]
 #[should_panic]
-fn cdf_greater_1()
-{
+fn cdf_greater_1() {
     let p: f64 = 2.0;
     let q: f64 = 5.0;
     let x: f64 = 1.0 + f64::EPSILON;
@@ -112,8 +103,7 @@ fn cdf_greater_1()
 }
 
 #[test]
-fn cdf2()
-{
+fn cdf2() {
     let p: f64 = 2.0_f64;
     let q: f64 = 5.0_f64;
     let x: f64 = 0.3_f64;
@@ -124,8 +114,7 @@ fn cdf2()
 }
 
 #[test]
-fn mean()
-{
+fn mean() {
     let p: f64 = 2.0_f64;
     let q: f64 = 5.0_f64;
 
@@ -135,25 +124,27 @@ fn mean()
 }
 
 #[test]
-fn variance()
-{
+fn variance() {
     let p: f64 = 2.0_f64;
     let q: f64 = 5.0_f64;
 
     let distrib: Beta<f64> = Beta::new(p, q);
 
-    assert_eq!((p * q) / ((p + q + 1.0) * (p + q) * (p + q)),
-               distrib.variance());
+    assert_eq!(
+        (p * q) / ((p + q + 1.0) * (p + q) * (p + q)),
+        distrib.variance()
+    );
 }
 
 #[test]
-fn skewness()
-{
+fn skewness() {
     let p: f64 = 2.0_f64;
     let q: f64 = 5.0_f64;
 
     let distrib: Beta<f64> = Beta::new(p, q);
 
-    assert_eq!((2.0 * (q - p) * (p + q + 1.0).sqrt()) / ((p + q + 2.0) * (p * q).sqrt()),
-               distrib.skewness());
+    assert_eq!(
+        (2.0 * (q - p) * (p + q + 1.0).sqrt()) / ((p + q + 2.0) * (p * q).sqrt()),
+        distrib.skewness()
+    );
 }

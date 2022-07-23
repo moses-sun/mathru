@@ -6,7 +6,9 @@ use crate::{
     elementary::Power,
 };
 
-impl<T> Matrix<T> where T: Field + Scalar + Power
+impl<T> Matrix<T>
+where
+    T: Field + Scalar + Power,
 {
     /// QR Decomposition with Givens rotations
     ///
@@ -27,8 +29,7 @@ impl<T> Matrix<T> where T: Field + Scalar + Power
     ///
     /// let (q, r): (Matrix<f64>, Matrix<f64>) = a.dec_qr().unwrap().qr();
     /// ```
-    pub fn dec_qr(&self) -> Result<QRDec<T>, ()>
-    {
+    pub fn dec_qr(&self) -> Result<QRDec<T>, ()> {
         let (m, n) = self.dim();
         assert!(m >= n);
 
@@ -45,78 +46,78 @@ impl<T> Matrix<T> where T: Field + Scalar + Power
 
         let mut info: i32 = 0;
 
-        let lwork: i32 = T::xgeqrf_work_size(m_i32,
-                                             n_i32,
-                                             &mut self_data[..],
-                                             m_i32,
-                                             &mut tau[..],
-                                             &mut info);
+        let lwork: i32 = T::xgeqrf_work_size(
+            m_i32,
+            n_i32,
+            &mut self_data[..],
+            m_i32,
+            &mut tau[..],
+            &mut info,
+        );
 
-        if info != 0
-        {
-            return Err(())
+        if info != 0 {
+            return Err(());
         }
 
         let mut work: Vec<T> = vec![T::zero(); lwork as usize];
 
-        T::xgeqrf(m_i32,
-                  n_i32,
-                  &mut self_data[..],
-                  m_i32,
-                  tau.as_mut(),
-                  &mut work,
-                  lwork,
-                  &mut info);
+        T::xgeqrf(
+            m_i32,
+            n_i32,
+            &mut self_data[..],
+            m_i32,
+            tau.as_mut(),
+            &mut work,
+            lwork,
+            &mut info,
+        );
 
-        if info != 0
-        {
-            return Err(())
+        if info != 0 {
+            return Err(());
         }
 
         let a: Matrix<T> = Matrix::new(m, n, self_data.clone());
         let r: Matrix<T> = a.r();
 
-        let lwork = T::xorgqr_work_size(m_i32,
-                                        m_n_min as i32,
-                                        tau.len() as i32,
-                                        &mut self_data[..],
-                                        m_i32,
-                                        &mut tau[..],
-                                        &mut info);
-        if info != 0
-        {
-            return Err(())
+        let lwork = T::xorgqr_work_size(
+            m_i32,
+            m_n_min as i32,
+            tau.len() as i32,
+            &mut self_data[..],
+            m_i32,
+            &mut tau[..],
+            &mut info,
+        );
+        if info != 0 {
+            return Err(());
         }
 
         let mut work = vec![T::zero(); lwork as usize];
 
-        T::xorgqr(m_i32,
-                  m_n_min as i32,
-                  tau.len() as i32,
-                  &mut self_data[..],
-                  m_i32,
-                  &mut tau[..],
-                  &mut work,
-                  lwork,
-                  &mut info);
+        T::xorgqr(
+            m_i32,
+            m_n_min as i32,
+            tau.len() as i32,
+            &mut self_data[..],
+            m_i32,
+            &mut tau[..],
+            &mut work,
+            lwork,
+            &mut info,
+        );
 
-        if info != 0
-        {
-            return Err(())
+        if info != 0 {
+            return Err(());
         }
-
 
         let q: Matrix<T> = Matrix::new(m, n, self_data);
 
         Ok(QRDec::new(q, r))
     }
 
-    fn r(mut self) -> Self
-    {
-        for i in 1..self.m
-        {
-            for k in 0..(i.min(self.n))
-            {
+    fn r(mut self) -> Self {
+        for i in 1..self.m {
+            for k in 0..(i.min(self.n)) {
                 self[[i, k]] = T::zero();
             }
         }

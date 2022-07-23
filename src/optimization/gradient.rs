@@ -36,15 +36,16 @@ use std::clone::Clone;
 /// 5. $ k := k + 1 $ go to 2.
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[derive(Clone, Copy, Debug)]
-pub struct Gradient<T>
-{
+pub struct Gradient<T> {
     /// Learning rate
     sigma: T,
     /// The number of iterations to run.
     iters: usize,
 }
 
-impl<T> Gradient<T> where T: Real
+impl<T> Gradient<T>
+where
+    T: Real,
 {
     /// Construct an instance of gradient algorithm.
     ///
@@ -59,30 +60,30 @@ impl<T> Gradient<T> where T: Real
     ///
     /// let gd = Gradient::new(0.3, 10000);
     /// ```
-    pub fn new(sigma: T, iters: usize) -> Gradient<T>
-    {
+    pub fn new(sigma: T, iters: usize) -> Gradient<T> {
         assert!(sigma <= T::one() && sigma > T::zero());
         assert!(iters > 0);
         Gradient { sigma, iters }
     }
 }
 
-impl<T> Gradient<T> where T: Real
+impl<T> Gradient<T>
+where
+    T: Real,
 {
     pub fn minimize<F>(&self, func: &F, x_0: &Vector<T>) -> OptimResult<Vector<T>>
-        where F: Optim<T>
+    where
+        F: Optim<T>,
     {
         let mut x_k: Vector<T> = x_0.clone();
 
-        for _k in 0..self.iters
-        {
+        for _k in 0..self.iters {
             let mut alpha_k: T = T::one();
             let anti_grad: Vector<T> = -func.jacobian(&x_k).get_row(0).transpose();
 
             //Backtracking line search
             //Armijo–Goldstein condition
-            loop
-            {
+            loop {
                 let anti_grad_alpha: Vector<T> = &anti_grad * &alpha_k;
                 let r: Vector<T> = &x_k + &anti_grad_alpha;
                 let f_r: T = func.eval(&r)[0];
@@ -90,8 +91,7 @@ impl<T> Gradient<T> where T: Real
 
                 let f_x_k: T = func.eval(&x_k)[0];
 
-                if f_r <= f_x_k - b
-                {
+                if f_r <= f_x_k - b {
                     break;
                 }
                 alpha_k /= T::from_f64(2.0);

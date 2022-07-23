@@ -5,13 +5,9 @@ use crate::algebra::{
 
 use super::Transpose;
 
-
-impl<T> Matrix<T>
-{
-    pub fn gcd(mut m: usize, mut n: usize) -> usize
-    {
-        while m != 0
-        {
+impl<T> Matrix<T> {
+    pub fn gcd(mut m: usize, mut n: usize) -> usize {
+        while m != 0 {
             let old_m: usize = m;
             m = n % m;
             n = old_m;
@@ -19,24 +15,22 @@ impl<T> Matrix<T>
         n
     }
 
-    fn gather(&self, i: usize, j: usize, b: usize) -> usize
-    {
+    fn gather(&self, i: usize, j: usize, b: usize) -> usize {
         (i + (j / b)) % self.m
     }
 
-    fn gather_sa(&self, i: usize, j: usize, a: usize) -> usize
-    {
+    fn gather_sa(&self, i: usize, j: usize, a: usize) -> usize {
         (j + i * self.n - i / a) % self.m
     }
 
-    fn scatter_da(&self, i: usize, j: usize, b: usize) -> usize
-    {
+    fn scatter_da(&self, i: usize, j: usize, b: usize) -> usize {
         (((i + j / b) % self.m) + j * self.m) % self.n
     }
 }
 
 impl<T> Transpose for Matrix<T>
-    where T: Field + Scalar
+where
+    T: Field + Scalar,
 {
     type Output = Matrix<T>;
 
@@ -61,8 +55,7 @@ impl<T> Transpose for Matrix<T>
     /// assert_relative_eq!(refer, uut);
     /// # }
     /// ```
-    fn transpose(mut self) -> Matrix<T>
-    {
+    fn transpose(mut self) -> Matrix<T> {
         let gcdiv: usize = Matrix::<T>::gcd(self.m, self.n);
 
         std::mem::swap(&mut self.m, &mut self.n);
@@ -76,44 +69,34 @@ impl<T> Transpose for Matrix<T>
         //Bad
         unsafe { temp.set_len(bigger) };
 
-        if gcdiv > 1
-        {
-            for j in 0..self.n
-            {
-                for i in 0..self.m
-                {
+        if gcdiv > 1 {
+            for j in 0..self.n {
+                for i in 0..self.m {
                     temp[i] = self[[self.gather(i, j, b), j]]
                 }
 
-                for i in 0..self.m
-                {
+                for i in 0..self.m {
                     self[[i, j]] = temp[i];
                 }
             }
         }
 
-        for i in 0..self.m
-        {
-            for j in 0..self.n
-            {
+        for i in 0..self.m {
+            for j in 0..self.n {
                 temp[self.scatter_da(i, j, b)] = self[[i, j]];
             }
 
-            for j in 0..self.n
-            {
+            for j in 0..self.n {
                 self[[i, j]] = temp[j];
             }
         }
 
-        for j in 0..self.n
-        {
-            for i in 0..self.m
-            {
+        for j in 0..self.n {
+            for i in 0..self.m {
                 temp[i] = self[[self.gather_sa(i, j, a), j]];
             }
 
-            for i in 0..self.m
-            {
+            for i in 0..self.m {
                 self[[i, j]] = temp[i];
             }
         }

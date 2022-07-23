@@ -1,10 +1,11 @@
-use crate::algebra::linear::{Matrix, Vector};
 use crate::algebra::abstr::{Field, Scalar};
-use crate::elementary::Power;
 use crate::algebra::linear::matrix::Transpose;
+use crate::algebra::linear::{Matrix, Vector};
+use crate::elementary::Power;
 
 impl<T> Matrix<T>
-    where T: Field + Scalar + Power
+where
+    T: Field + Scalar + Power,
 {
     /// Computes the singular value decomposition
     ///
@@ -26,8 +27,7 @@ impl<T> Matrix<T>
     ///
     /// let (u, s, v): (Matrix<f64>, Matrix<f64>, Matrix<f64>) = a.dec_sv();
     /// ```
-    pub fn dec_sv(&self) -> (Self, Self, Self)
-    {
+    pub fn dec_sv(&self) -> (Self, Self, Self) {
         let (mut u, mut b, mut v): (Matrix<T>, Matrix<T>, Matrix<T>) = self.householder_bidiag();
 
         let (_m, n): (usize, usize) = b.dim();
@@ -35,8 +35,7 @@ impl<T> Matrix<T>
 
         let mut u_k: Matrix<T> = Matrix::one(n);
 
-        for _k in 0..max_iterations
-        {
+        for _k in 0..max_iterations {
             let (u_ks, b_k, v_k): (Matrix<T>, Matrix<T>, Matrix<T>) = Matrix::msweep(u_k, b, v);
             u_k = u_ks;
             b = b_k;
@@ -48,10 +47,8 @@ impl<T> Matrix<T>
         let (b_m, _b_n): (usize, usize) = b.dim();
 
         // check that all singular values are positive
-        for l in 0..b_m
-        {
-            if b[[l, l]] < T::zero()
-            {
+        for l in 0..b_m {
+            if b[[l, l]] < T::zero() {
                 b[[l, l]] = -b[[l, l]];
                 let mut column_l: Vector<T> = u.get_column(l);
                 column_l = &column_l * &-T::one();
@@ -60,12 +57,9 @@ impl<T> Matrix<T>
         }
 
         // null all values beneath the diagonal
-        for l in 0..b_m
-        {
-            for k in 0..b_m
-            {
-                if k != l
-                {
+        for l in 0..b_m {
+            for k in 0..b_m {
+                if k != l {
                     b[[k, l]] = T::zero();
                 }
             }
@@ -75,15 +69,14 @@ impl<T> Matrix<T>
         (u, b, v)
     }
 
-    fn msweep(mut u: Matrix<T>,
-              mut b: Matrix<T>,
-              mut v: Matrix<T>)
-              -> (Matrix<T>, Matrix<T>, Matrix<T>)
-    {
+    fn msweep(
+        mut u: Matrix<T>,
+        mut b: Matrix<T>,
+        mut v: Matrix<T>,
+    ) -> (Matrix<T>, Matrix<T>, Matrix<T>) {
         let (_m, n): (usize, usize) = b.dim();
 
-        for k in 0..n - 1
-        {
+        for k in 0..n - 1 {
             let mut q: Matrix<T> = Matrix::one(n);
 
             // Construct matrix Q and multiply on the right by Q'.
@@ -99,7 +92,6 @@ impl<T> Matrix<T>
             let q_t: Matrix<T> = q.clone().transpose();
             b = &b * &q_t;
             v = &v * &q_t;
-
 
             // Construct matrix Q and multiply on the left by Q.
             // Q annihilates B(k+1,k) but makes B(k,k+1) and
@@ -118,25 +110,18 @@ impl<T> Matrix<T>
         (u, b, v)
     }
 
-    pub fn rot(f: T, g: T) -> (T, T, T)
-    {
-        if f == T::zero()
-        {
+    pub fn rot(f: T, g: T) -> (T, T, T) {
+        if f == T::zero() {
             (T::zero(), T::one(), g)
-        }
-        else
-        {
+        } else {
             let expo: T = T::from_f64(2.0);
             let sqrt: T = T::from_f64(0.5);
-            if f.abs() > g.abs()
-            {
+            if f.abs() > g.abs() {
                 let t: T = g / f;
                 let t1: T = (T::one() + t.pow(expo)).pow(sqrt);
 
                 (T::one() / t1, t / t1, f * t1)
-            }
-            else
-            {
+            } else {
                 let t: T = f / g;
                 let t1: T = (T::one() + t.pow(expo)).pow(sqrt);
 
@@ -151,11 +136,9 @@ impl<T> Matrix<T>
     /// U \in T^{m \times n}
     /// B \in T^{n \times n}
     /// V \in T^{n \times n}
-    pub fn householder_bidiag(&self) -> (Self, Self, Self)
-    {
+    pub fn householder_bidiag(&self) -> (Self, Self, Self) {
         let (m, n): (usize, usize) = self.dim();
-        if m < n
-        {
+        if m < n {
             panic!("Read the API");
         }
 
@@ -163,8 +146,7 @@ impl<T> Matrix<T>
         let mut v: Matrix<T> = Matrix::one(n);
         let mut a_i: Matrix<T> = self.clone();
 
-        for i in 0..n - 1
-        {
+        for i in 0..n - 1 {
             // eliminate non-zeros below the diagonal
             // Keep the product U*B unchanged
             let u_x: Vector<T> = a_i.clone().get_column(i);
@@ -183,8 +165,7 @@ impl<T> Matrix<T>
             //superdiagonal by working with the transpose
             // Keep the product B*V' unchanged
             //B_T = B';
-            if i < (n - 1)
-            {
+            if i < (n - 1) {
                 let v_x: Vector<T> = a_i.get_row(i);
                 let v_x_trans: Vector<T> = v_x.transpose();
                 let v_x_trans_slice: Vector<T> = v_x_trans.get_slice(i + 1, n - 1);
@@ -202,12 +183,9 @@ impl<T> Matrix<T>
         }
 
         //Null all elements beneath the diagonal, and superdiagonal
-        for i in 0..m
-        {
-            for k in 0..n
-            {
-                if k != i && k != (i + 1)
-                {
+        for i in 0..m {
+            for k in 0..n {
+                if k != i && k != (i + 1) {
                     a_i[[i, k]] = T::zero();
                 }
             }

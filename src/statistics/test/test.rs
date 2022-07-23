@@ -1,5 +1,4 @@
-pub trait Test<T>
-{
+pub trait Test<T> {
     ///Test value
     fn value(&self) -> T;
 

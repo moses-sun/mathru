@@ -1,8 +1,7 @@
 use mathru::algebra::linear::Matrix;
 
 #[test]
-fn matrix()
-{
+fn matrix() {
     let mut a: Matrix<f32> = matrix![   1.0, -2.0, -3.0;
                                         -4.0, -1.0, -2.5];
 
@@ -18,8 +17,7 @@ fn matrix()
 }
 
 #[test]
-fn scalar()
-{
+fn scalar() {
     let mut a: Matrix<f32> = matrix![   1.0, -2.0, -3.0;
                                         -4.0, -1.0, -2.5];
     let sum: Matrix<f32> = matrix![ 6.0, 3.0, 2.0;

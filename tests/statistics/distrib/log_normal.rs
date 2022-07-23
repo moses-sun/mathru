@@ -1,9 +1,8 @@
 use mathru::statistics::distrib::{Continuous, LogNormal};
-use std::f64::consts::{PI};
+use std::f64::consts::PI;
 
 #[test]
-fn pdf_negative()
-{
+fn pdf_negative() {
     let mu: f64 = 0.0;
     let sigma_squared: f64 = 0.25;
     let distrib: LogNormal<f64> = LogNormal::new(mu, sigma_squared);
@@ -14,8 +13,7 @@ fn pdf_negative()
 }
 
 #[test]
-fn pdf0()
-{
+fn pdf0() {
     let mu: f64 = 0.0;
     let sigma_squared: f64 = 0.25 * 0.25;
     let distrib: LogNormal<f64> = LogNormal::new(mu, sigma_squared);
@@ -47,8 +45,7 @@ fn pdf0()
 //    assert!(distrib_2.variance() > 0.98 * variance_1);
 // }
 #[test]
-fn cdf_negative()
-{
+fn cdf_negative() {
     let mu: f64 = 0.0;
     let sigma_squared: f64 = 1.0;
     let distrib: LogNormal<f64> = LogNormal::new(mu, sigma_squared);
@@ -57,8 +54,7 @@ fn cdf_negative()
 }
 
 #[test]
-fn cdf_zero()
-{
+fn cdf_zero() {
     let mu: f64 = 0.0;
     let sigma_squared: f64 = 1.0;
     let distrib: LogNormal<f64> = LogNormal::new(mu, sigma_squared);
@@ -67,8 +63,7 @@ fn cdf_zero()
 }
 
 #[test]
-fn cdf0()
-{
+fn cdf0() {
     let mu: f64 = 0.0;
     let sigma_squared: f64 = 1.0;
     let distrib: LogNormal<f64> = LogNormal::new(mu, sigma_squared);
@@ -77,8 +72,7 @@ fn cdf0()
 }
 
 #[test]
-fn cdf1()
-{
+fn cdf1() {
     let mu: f64 = 0.0;
     let sigma_squared: f64 = 100.0;
     let distrib: LogNormal<f64> = LogNormal::new(mu, sigma_squared);
@@ -86,10 +80,8 @@ fn cdf1()
     assert_relative_eq!(0.5, distrib.cdf(1.0))
 }
 
-
 #[test]
-fn quantile0()
-{
+fn quantile0() {
     let mu: f64 = 0.0;
     let variance: f64 = 1.0;
     let distrib: LogNormal<f64> = LogNormal::new(mu, variance);
@@ -98,8 +90,7 @@ fn quantile0()
 }
 
 #[test]
-fn quantile1()
-{
+fn quantile1() {
     let mu: f64 = 0.0;
     let variance: f64 = 1.0;
     let distrib: LogNormal<f64> = LogNormal::new(mu, variance);
@@ -108,8 +99,7 @@ fn quantile1()
 }
 
 #[test]
-fn mean()
-{
+fn mean() {
     let mu: f64 = 1.0;
     let sigma_squared: f64 = 0.5;
     let distrib: LogNormal<f64> = LogNormal::new(mu, sigma_squared);
@@ -118,8 +108,7 @@ fn mean()
 }
 
 #[test]
-fn median()
-{
+fn median() {
     let mu: f64 = 1.0;
     let sigma_squared: f64 = 0.5;
     let distrib: LogNormal<f64> = LogNormal::new(mu, sigma_squared);
@@ -128,34 +117,39 @@ fn median()
 }
 
 #[test]
-fn variance()
-{
+fn variance() {
     let mu: f64 = 1.0;
     let sigma_squared: f64 = 0.5;
     let distrib: LogNormal<f64> = LogNormal::new(mu, sigma_squared);
 
-    assert_relative_eq!((sigma_squared.exp() - 1.0) * (2.0 * mu + sigma_squared).exp(), distrib.variance());
+    assert_relative_eq!(
+        (sigma_squared.exp() - 1.0) * (2.0 * mu + sigma_squared).exp(),
+        distrib.variance()
+    );
 }
 //
 #[test]
-fn skewness()
-{
+fn skewness() {
     let mu: f64 = 1.0;
     let sigma_squared: f64 = 0.5;
     let distrib: LogNormal<f64> = LogNormal::new(mu, sigma_squared);
 
-    assert_relative_eq!((sigma_squared.exp() + 2.0) * (sigma_squared.exp() - 1.0).sqrt() , distrib.skewness());
+    assert_relative_eq!(
+        (sigma_squared.exp() + 2.0) * (sigma_squared.exp() - 1.0).sqrt(),
+        distrib.skewness()
+    );
 }
 
-
 #[test]
-fn entropy()
-{
+fn entropy() {
     let mu: f64 = 1.0;
     let sigma_squared: f64 = 0.5;
     let distrib: LogNormal<f64> = LogNormal::new(mu, sigma_squared);
 
-    assert_relative_eq!((sigma_squared.sqrt() * (mu + 0.5).exp() * (2.0 * PI).sqrt()).log(2.0), distrib.entropy());
+    assert_relative_eq!(
+        (sigma_squared.sqrt() * (mu + 0.5).exp() * (2.0 * PI).sqrt()).log(2.0),
+        distrib.entropy()
+    );
 }
 //
 // //    #[test]

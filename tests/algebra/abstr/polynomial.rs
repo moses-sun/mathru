@@ -1,9 +1,8 @@
-use mathru::algebra::abstr::Polynomial;
 use crate::mathru::algebra::abstr::Zero;
+use mathru::algebra::abstr::Polynomial;
 
 #[test]
-fn fmt_constant()
-{
+fn fmt_constant() {
     let poly: Polynomial<f64> = Polynomial::from_coef(vec![1.0]);
 
     let output = format!("{}", poly);
@@ -12,8 +11,7 @@ fn fmt_constant()
 }
 
 #[test]
-fn fmt_coefficient_zero()
-{
+fn fmt_coefficient_zero() {
     let poly: Polynomial<f64> = Polynomial::from_coef(vec![1.0, 0.0, 1.0]);
 
     let output = format!("{}", poly);
@@ -22,8 +20,7 @@ fn fmt_coefficient_zero()
 }
 
 #[test]
-fn fmt_start_zero_term()
-{
+fn fmt_start_zero_term() {
     let poly: Polynomial<f64> = Polynomial::from_coef(vec![1.0, 0.0]);
 
     let output = format!("{}", poly);
@@ -32,8 +29,7 @@ fn fmt_start_zero_term()
 }
 
 #[test]
-fn fmt()
-{
+fn fmt() {
     let poly: Polynomial<f64> = Polynomial::from_coef(vec![3.0, 2.0, 1.0]);
 
     let output = format!("{}", poly);
@@ -42,8 +38,7 @@ fn fmt()
 }
 
 #[test]
-fn from_root_1()
-{
+fn from_root_1() {
     let poly: Polynomial<f64> = Polynomial::from_root(vec![1.0]);
     let poly_ref: Polynomial<f64> = Polynomial::from_coef(vec![1.0, -1.0]);
 
@@ -51,17 +46,15 @@ fn from_root_1()
 }
 
 #[test]
-fn from_root_2()
-{
+fn from_root_2() {
     let poly: Polynomial<f64> = Polynomial::from_root(vec![2.0, 1.0]);
-    let poly_ref: Polynomial<f64> = Polynomial::from_coef( vec![1.0, -3.0, 2.0]);
+    let poly_ref: Polynomial<f64> = Polynomial::from_coef(vec![1.0, -3.0, 2.0]);
 
     assert_eq!(poly_ref, poly)
 }
 
 #[test]
-fn eval_degree_0()
-{
+fn eval_degree_0() {
     let poly: Polynomial<f64> = Polynomial::from_coef(vec![1.0]);
 
     let value = poly.eval(2.0);
@@ -70,8 +63,7 @@ fn eval_degree_0()
 }
 
 #[test]
-fn eval_degree_odd()
-{
+fn eval_degree_odd() {
     let poly: Polynomial<f64> = Polynomial::from_coef(vec![3.0, 2.0, 1.0]);
 
     let value = poly.eval(2.0);
@@ -80,8 +72,7 @@ fn eval_degree_odd()
 }
 
 #[test]
-fn eval_degree_even()
-{
+fn eval_degree_even() {
     let poly: Polynomial<f64> = Polynomial::from_coef(vec![2.0, 1.0]);
 
     let value = poly.eval(2.0);
@@ -90,8 +81,7 @@ fn eval_degree_even()
 }
 
 #[test]
-fn add_with_zero()
-{
+fn add_with_zero() {
     let a: Polynomial<f64> = Polynomial::from_coef(vec![3.0, 2.0, 1.0]);
     let b: Polynomial<f64> = Polynomial::from_coef(vec![0.0]);
 
@@ -99,8 +89,7 @@ fn add_with_zero()
 }
 
 #[test]
-fn add()
-{
+fn add() {
     let a: Polynomial<f64> = Polynomial::from_coef(vec![3.0, 2.0, 1.0]);
     let b: Polynomial<f64> = Polynomial::from_coef(vec![2.0, 1.0]);
     let c: Polynomial<f64> = Polynomial::from_coef(vec![3.0, 4.0, 2.0]);
@@ -109,8 +98,7 @@ fn add()
 }
 
 #[test]
-fn sub_with_zero()
-{
+fn sub_with_zero() {
     let a: Polynomial<f64> = Polynomial::from_coef(vec![3.0, 2.0, 1.0]);
     let b: Polynomial<f64> = Polynomial::from_coef(vec![0.0]);
 
@@ -118,8 +106,7 @@ fn sub_with_zero()
 }
 
 #[test]
-fn sub()
-{
+fn sub() {
     let a: Polynomial<f64> = Polynomial::from_coef(vec![3.0, 2.0, 1.0]);
     let b: Polynomial<f64> = Polynomial::from_coef(vec![2.0, 1.0]);
     let c: Polynomial<f64> = Polynomial::from_coef(vec![3.0, 0.0, 0.0]);
@@ -128,8 +115,7 @@ fn sub()
 }
 
 #[test]
-fn sub2()
-{
+fn sub2() {
     let a: Polynomial<f64> = Polynomial::from_coef(vec![3.0, 2.0, 1.0]);
     let b: Polynomial<f64> = Polynomial::from_coef(vec![2.0, 1.0]);
     let c: Polynomial<f64> = Polynomial::from_coef(vec![-3.0, 0.0, 0.0]);
@@ -137,10 +123,8 @@ fn sub2()
     assert_eq!(c, &b - &a)
 }
 
-
 #[test]
-fn neg_ref()
-{
+fn neg_ref() {
     let a: Polynomial<f64> = Polynomial::from_coef(vec![1.0, 2.0, 3.0]);
     let c: Polynomial<f64> = Polynomial::from_coef(vec![-1.0, -2.0, -3.0]);
 
@@ -148,8 +132,7 @@ fn neg_ref()
 }
 
 #[test]
-fn neg()
-{
+fn neg() {
     let a: Polynomial<f64> = Polynomial::from_coef(vec![1.0, 2.0, 3.0]);
     let c: Polynomial<f64> = Polynomial::from_coef(vec![-1.0, -2.0, -3.0]);
 
@@ -157,17 +140,14 @@ fn neg()
 }
 
 #[test]
-fn degree()
-{
+fn degree() {
     let a: Polynomial<f64> = Polynomial::from_coef(vec![1.0, 2.0, 3.0]);
 
     assert_eq!(2, a.degree())
 }
 
-
 #[test]
-fn mul_with_degree_zero()
-{
+fn mul_with_degree_zero() {
     let a: Polynomial<f64> = Polynomial::from_coef(vec![1.0, 2.0, 3.0]);
     let b: Polynomial<f64> = Polynomial::from_coef(vec![0.0]);
     let c: Polynomial<f64> = Polynomial::from_coef(vec![0.0, 0.0, 0.0]);
@@ -176,8 +156,7 @@ fn mul_with_degree_zero()
 }
 
 #[test]
-fn mul_with_degree_one()
-{
+fn mul_with_degree_one() {
     let a: Polynomial<f64> = Polynomial::from_coef(vec![1.0, 2.0, 3.0]);
     let b: Polynomial<f64> = Polynomial::from_coef(vec![1.0, 1.0]);
     let c: Polynomial<f64> = Polynomial::from_coef(vec![1.0, 3.0, 5.0, 3.0]);
@@ -186,8 +165,7 @@ fn mul_with_degree_one()
 }
 
 #[test]
-fn reduce()
-{
+fn reduce() {
     let a: Polynomial<f64> = Polynomial::from_coef(vec![0.0, 0.0, 1.0, 0.0, 2.0, 1.0]);
     let reduced: Polynomial<f64> = Polynomial::from_coef(vec![1.0, 0.0, 2.0, 1.0]);
 
@@ -195,8 +173,7 @@ fn reduce()
 }
 
 #[test]
-fn div_1()
-{
+fn div_1() {
     let a: Polynomial<f64> = Polynomial::from_coef(vec![1.0, 2.0, 3.0]);
     let b: Polynomial<f64> = Polynomial::from_coef(vec![1.0, 1.0]);
 
@@ -205,8 +182,7 @@ fn div_1()
 }
 
 #[test]
-fn div_2()
-{
+fn div_2() {
     let a: Polynomial<f64> = Polynomial::from_coef(vec![1.0, 2.0, 3.0]);
     let b: Polynomial<f64> = Polynomial::from_coef(vec![1.0, 1.0]);
     let c: Polynomial<f64> = Polynomial::from_coef(vec![1.0, 3.0, 5.0, 3.0]);
@@ -216,8 +192,7 @@ fn div_2()
 }
 
 #[test]
-fn div_own()
-{
+fn div_own() {
     let a: Polynomial<f64> = Polynomial::from_coef(vec![1.0, 2.0, 3.0]);
     let b: Polynomial<f64> = Polynomial::from_coef(vec![1.0, 1.0]);
 
@@ -226,8 +201,7 @@ fn div_own()
 }
 
 #[test]
-fn div_with_remainder()
-{
+fn div_with_remainder() {
     let a: Polynomial<f64> = Polynomial::from_coef(vec![3.0, 2.0, 1.0]);
     let b: Polynomial<f64> = Polynomial::from_coef(vec![1.0, 1.0]);
     let c: Polynomial<f64> = Polynomial::from_coef(vec![3.0, 5.0, 3.0, 0.0]);
@@ -237,8 +211,7 @@ fn div_with_remainder()
 }
 
 #[test]
-fn differentiate_degree_zero()
-{
+fn differentiate_degree_zero() {
     let c: Polynomial<f64> = Polynomial::from_coef(vec![1.0]);
     let c_s: Polynomial<f64> = Polynomial::from_coef(vec![0.0]);
 
@@ -246,8 +219,7 @@ fn differentiate_degree_zero()
 }
 
 #[test]
-fn differentiate_degree_one()
-{
+fn differentiate_degree_one() {
     let c: Polynomial<f64> = Polynomial::from_coef(vec![3.0, 1.0]);
     let c_s: Polynomial<f64> = Polynomial::from_coef(vec![3.0]);
 
@@ -255,8 +227,7 @@ fn differentiate_degree_one()
 }
 
 #[test]
-fn differentiate_general()
-{
+fn differentiate_general() {
     let c: Polynomial<f64> = Polynomial::from_coef(vec![3.0, 5.0, 3.0, 1.0]);
     let c_s: Polynomial<f64> = Polynomial::from_coef(vec![9.0, 10.0, 3.0]);
 
@@ -264,8 +235,7 @@ fn differentiate_general()
 }
 
 #[test]
-fn integrate_degree_zero_null()
-{
+fn integrate_degree_zero_null() {
     let c: Polynomial<f64> = Polynomial::from_coef(vec![0.0]);
     let c_s: Polynomial<f64> = Polynomial::from_coef(vec![0.0]);
 
@@ -273,8 +243,7 @@ fn integrate_degree_zero_null()
 }
 
 #[test]
-fn integrate_degree_zero_not_null()
-{
+fn integrate_degree_zero_not_null() {
     let c: Polynomial<f64> = Polynomial::from_coef(vec![1.0]);
     let c_s: Polynomial<f64> = Polynomial::from_coef(vec![1.0, 0.0]);
 
@@ -282,8 +251,7 @@ fn integrate_degree_zero_not_null()
 }
 
 #[test]
-fn integrate_general()
-{
+fn integrate_general() {
     let c: Polynomial<f64> = Polynomial::from_coef(vec![3.0, 2.0, 1.0]);
     let c_s: Polynomial<f64> = Polynomial::from_coef(vec![1.0, 1.0, 1.0, 0.0]);
 
@@ -291,8 +259,7 @@ fn integrate_general()
 }
 
 #[test]
-fn from_legendre_degree0()
-{
+fn from_legendre_degree0() {
     let p: Polynomial<f64> = Polynomial::from_legendre(0);
     let p_ref = Polynomial::from_coef(vec![1.0f64]);
 
@@ -300,8 +267,7 @@ fn from_legendre_degree0()
 }
 
 #[test]
-fn from_legendre_degree1()
-{
+fn from_legendre_degree1() {
     let p: Polynomial<f64> = Polynomial::from_legendre(1);
     let p_ref = Polynomial::from_coef(vec![1.0f64, 0.0f64]);
 
@@ -309,8 +275,7 @@ fn from_legendre_degree1()
 }
 
 #[test]
-fn from_legendre_degree2()
-{
+fn from_legendre_degree2() {
     let p: Polynomial<f64> = Polynomial::from_legendre(2);
     let p_ref = Polynomial::from_coef(vec![1.5f64, 0.0f64, -0.5f64]);
 
@@ -318,8 +283,7 @@ fn from_legendre_degree2()
 }
 
 #[test]
-fn from_chebyshev_t_0()
-{
+fn from_chebyshev_t_0() {
     let p: Polynomial<f64> = Polynomial::from_chebyshev_t(0);
     let p_ref = Polynomial::from_coef(vec![1.0]);
 
@@ -327,8 +291,7 @@ fn from_chebyshev_t_0()
 }
 
 #[test]
-fn from_chebyshev_t_1()
-{
+fn from_chebyshev_t_1() {
     let p: Polynomial<f64> = Polynomial::from_chebyshev_t(1);
     let p_ref = Polynomial::from_coef(vec![1.0, 0.0]);
 
@@ -336,8 +299,7 @@ fn from_chebyshev_t_1()
 }
 
 #[test]
-fn from_chebyshev_t_2()
-{
+fn from_chebyshev_t_2() {
     let p: Polynomial<f64> = Polynomial::from_chebyshev_t(2);
     let p_ref = Polynomial::from_coef(vec![2.0, 0.0, -1.0]);
 
@@ -345,8 +307,7 @@ fn from_chebyshev_t_2()
 }
 
 #[test]
-fn from_chebyshev_u_0()
-{
+fn from_chebyshev_u_0() {
     let p: Polynomial<f64> = Polynomial::from_chebyshev_u(0);
     let p_ref = Polynomial::from_coef(vec![1.0]);
 
@@ -354,8 +315,7 @@ fn from_chebyshev_u_0()
 }
 
 #[test]
-fn from_chebyshev_u_1()
-{
+fn from_chebyshev_u_1() {
     let p: Polynomial<f64> = Polynomial::from_chebyshev_u(1);
     let p_ref = Polynomial::from_coef(vec![2.0, 0.0]);
 
@@ -363,8 +323,7 @@ fn from_chebyshev_u_1()
 }
 
 #[test]
-fn from_chebyshev_u_2()
-{
+fn from_chebyshev_u_2() {
     let p: Polynomial<f64> = Polynomial::from_chebyshev_u(2);
     let p_ref = Polynomial::from_coef(vec![4.0, 0.0, -1.0]);
 

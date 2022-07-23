@@ -9,7 +9,6 @@ use crate::{
 use serde::{Deserialize, Serialize};
 use std::clone::Clone;
 
-
 /// Newton's method
 ///
 /// ```math
@@ -42,27 +41,26 @@ use std::clone::Clone;
 ///
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[derive(Clone, Copy, Debug)]
-pub struct Newton<T>
-{
+pub struct Newton<T> {
     iters: u64,
     sigma: T,
     rho: T,
 }
 
-impl<T> Newton<T>
-{
+impl<T> Newton<T> {
     /// Creates an instance of newtons method
     ///
     /// # Arguments
     ///
     /// * 'iters': Number of iterations
-    pub fn new(iters: u64, sigma: T, rho: T) -> Newton<T>
-    {
+    pub fn new(iters: u64, sigma: T, rho: T) -> Newton<T> {
         Newton { iters, sigma, rho }
     }
 }
 
-impl<T> Newton<T> where T: Real
+impl<T> Newton<T>
+where
+    T: Real,
 {
     /// Minimize function func
     ///
@@ -75,34 +73,28 @@ impl<T> Newton<T> where T: Real
     ///
     /// local minimum
     pub fn minimize<F>(&self, func: &F, x_0: &Vector<T>) -> OptimResult<Vector<T>>
-        where F: Optim<T>
+    where
+        F: Optim<T>,
     {
         let mut x_n: Vector<T> = x_0.clone();
 
-        for _i in 0..self.iters
-        {
+        for _i in 0..self.iters {
             let hessian_x_n: Matrix<T> = func.hessian(&x_n);
             let grad_x_n: Vector<T> = func.jacobian(&x_n).get_row(0).transpose();
             let res_solve: Result<Vector<T>, ()> = hessian_x_n.solve(&-grad_x_n.clone());
             let d_k: Vector<T>;
 
-            match res_solve
-            {
-                Ok(d_k_temp) =>
-                {
+            match res_solve {
+                Ok(d_k_temp) => {
                     let grad_x_n_abs: T = grad_x_n.dotp(&grad_x_n);
                     let grad_d_k_temp: T = grad_x_n.dotp(&d_k_temp);
-                    if grad_d_k_temp <= -self.rho * grad_x_n_abs
-                    {
+                    if grad_d_k_temp <= -self.rho * grad_x_n_abs {
                         d_k = d_k_temp;
-                    }
-                    else
-                    {
+                    } else {
                         d_k = -grad_x_n.clone();
                     }
                 }
-                Err(_e) =>
-                {
+                Err(_e) => {
                     d_k = -grad_x_n.clone();
                 }
             }
@@ -113,8 +105,7 @@ impl<T> Newton<T> where T: Real
             let mut f_r: T = func.eval(&r)[0];
             let f_x_n: T = func.eval(&x_n)[0];
             let temp: T = grad_x_n.dotp(&d_k);
-            while f_r > f_x_n + temp * (self.sigma * alpha)
-            {
+            while f_r > f_x_n + temp * (self.sigma * alpha) {
                 alpha /= T::from_f64(2.0);
                 r = &x_n + &(&d_k * &alpha);
                 f_r = func.eval(&r)[0];

@@ -4,7 +4,8 @@ use crate::algebra::{
 };
 
 pub trait Jacobian<T>
-    where T: Real
+where
+    T: Real,
 {
     fn jacobian(&self, input: &Vector<T>) -> Matrix<T>;
 }

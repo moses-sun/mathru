@@ -60,24 +60,22 @@ use mathru::statistics::test::{Test, T};
 //    }
 
 #[test]
-fn test_independence_equal_variance()
-{
+fn test_independence_equal_variance() {
     let rv1: Vec<f64> = vec![1.0, 4.0, 5.0, 2.0, 1.0];
     let rv2: Vec<f64> = vec![1.0, 4.0, 5.0, 3.0, 4.0];
 
     let t_measure: T<f64> = T::test_independence_equal_variance(&rv1, &rv2);
 
-    assert_relative_eq!(t_measure.value().abs(), 0.7559, epsilon=0.0001);
+    assert_relative_eq!(t_measure.value().abs(), 0.7559, epsilon = 0.0001);
 }
 
 #[test]
-fn test_independence_unequal_variance()
-{
+fn test_independence_unequal_variance() {
     let rv1: Vec<f64> = vec![1.0, 4.0, 5.0, 2.0, 1.0];
     let rv2: Vec<f64> = vec![1.0, 4.0, 5.0, 3.0, 4.0];
 
     let measure: T<f64> = T::test_independence_unequal_variance(&rv1, &rv2);
 
-    assert_relative_eq!(measure.value().abs(), 0.756, epsilon=0.001);
-    assert_relative_eq!(measure.p_value(), 0.472, epsilon=0.001);
+    assert_relative_eq!(measure.value().abs(), 0.756, epsilon = 0.001);
+    assert_relative_eq!(measure.p_value(), 0.472, epsilon = 0.001);
 }

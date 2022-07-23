@@ -11,12 +11,13 @@ use std::clone::Clone;
 /// <https://en.wikipedia.org/wiki/Exponential_distribution>
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[derive(Clone, Copy, Debug)]
-pub struct Exponential<T>
-{
+pub struct Exponential<T> {
     lambda: T,
 }
 
-impl<T> Exponential<T> where T: Real
+impl<T> Exponential<T>
+where
+    T: Real,
 {
     /// Creates a probability distribution
     ///
@@ -35,29 +36,24 @@ impl<T> Exponential<T> where T: Real
     ///
     /// let distrib: Exponential<f64> = Exponential::new(0.3);
     /// ```
-    pub fn new(lambda: T) -> Exponential<T>
-    {
-        if lambda <= T::zero()
-        {
+    pub fn new(lambda: T) -> Exponential<T> {
+        if lambda <= T::zero() {
             panic!()
         }
 
         Exponential { lambda }
     }
 
-    pub fn from_data(data: &Vec<T>) -> Self
-    {
+    pub fn from_data(data: &Vec<T>) -> Self {
         let lambda: T = T::one() / Exponential::calc_mean(data);
 
         Exponential::new(lambda)
     }
 
-    fn calc_mean(data: &Vec<T>) -> T
-    {
+    fn calc_mean(data: &Vec<T>) -> T {
         let mut sum: T = T::zero();
 
-        for x in data.iter()
-        {
+        for x in data.iter() {
             sum += *x;
         }
 
@@ -65,7 +61,9 @@ impl<T> Exponential<T> where T: Real
     }
 }
 
-impl<T> Continuous<T> for Exponential<T> where T: Real
+impl<T> Continuous<T> for Exponential<T>
+where
+    T: Real,
 {
     /// Probability density function
     ///
@@ -82,10 +80,8 @@ impl<T> Continuous<T> for Exponential<T> where T: Real
     /// let x: f64 = 5.0;
     /// let p: f64 = distrib.pdf(x);
     /// ```
-    fn pdf(&self, x: T) -> T
-    {
-        if x < T::zero()
-        {
+    fn pdf(&self, x: T) -> T {
+        if x < T::zero() {
             return T::zero();
         }
 
@@ -107,10 +103,8 @@ impl<T> Continuous<T> for Exponential<T> where T: Real
     /// let x: f64 = 0.4;
     /// let p: f64 = distrib.cdf(x);
     /// ```
-    fn cdf(&self, x: T) -> T
-    {
-        if x < T::zero()
-        {
+    fn cdf(&self, x: T) -> T {
+        if x < T::zero() {
             return T::zero();
         }
 
@@ -118,8 +112,7 @@ impl<T> Continuous<T> for Exponential<T> where T: Real
     }
 
     /// Quantile function of inverse cdf
-    fn quantile(&self, p: T) -> T
-    {
+    fn quantile(&self, p: T) -> T {
         -(T::one() - p).ln() / self.lambda
     }
 
@@ -133,8 +126,7 @@ impl<T> Continuous<T> for Exponential<T> where T: Real
     /// let distrib: Exponential<f64> = Exponential::new(0.2);
     /// let mean: f64 = distrib.mean();
     /// ```
-    fn mean(&self) -> T
-    {
+    fn mean(&self) -> T {
         T::one() / self.lambda
     }
 
@@ -148,34 +140,31 @@ impl<T> Continuous<T> for Exponential<T> where T: Real
     /// let distrib: Exponential<f64> = Exponential::new(0.2);
     /// let var: f64 = distrib.variance();
     /// ```
-    fn variance(&self) -> T
-    {
+    fn variance(&self) -> T {
         T::one() / self.lambda.pow(T::from_u8(2))
     }
 
     ///
-    fn skewness(&self) -> T
-    {
+    fn skewness(&self) -> T {
         T::from_f64(2.0)
     }
 
     ///
-    fn median(&self) -> T
-    {
+    fn median(&self) -> T {
         T::from_f64(2.0).ln() / self.lambda
     }
 
     ///
-    fn entropy(&self) -> T
-    {
+    fn entropy(&self) -> T {
         T::one() - self.lambda.ln()
     }
 }
 
-impl<T> Exponential<T> where T: Real
+impl<T> Exponential<T>
+where
+    T: Real,
 {
-    pub fn random(&self) -> T
-    {
+    pub fn random(&self) -> T {
         let y: T = T::from_f64(rand::random::<f64>());
         let p: T = self.quantile(y);
 

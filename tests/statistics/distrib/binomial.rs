@@ -1,8 +1,7 @@
 use mathru::statistics::distrib::{Binomial, Discrete};
 
 #[test]
-fn pmf0()
-{
+fn pmf0() {
     let p: f64 = 0.1;
     let n: u32 = 5;
     let distrib: Binomial<f64> = Binomial::new(n, p);
@@ -13,8 +12,7 @@ fn pmf0()
 }
 
 #[test]
-fn pmf1()
-{
+fn pmf1() {
     let p: f64 = 0.1;
     let n: u32 = 3;
     let distrib: Binomial<f64> = Binomial::new(n, p);
@@ -25,8 +23,7 @@ fn pmf1()
 }
 
 #[test]
-fn pmf2()
-{
+fn pmf2() {
     let p: f64 = 0.2;
     let n: u32 = 2;
     let distrib: Binomial<f64> = Binomial::new(n, p);
@@ -37,8 +34,7 @@ fn pmf2()
 }
 
 #[test]
-fn pmf3()
-{
+fn pmf3() {
     let p: f64 = 0.1;
     let n: u32 = 5;
     let distrib: Binomial<f64> = Binomial::new(n, p);
@@ -49,8 +45,7 @@ fn pmf3()
 }
 
 #[test]
-fn cdf0()
-{
+fn cdf0() {
     let p: f64 = 0.1;
     let n: u32 = 2;
     let distrib: Binomial<f64> = Binomial::new(n, p);
@@ -61,8 +56,7 @@ fn cdf0()
 }
 
 #[test]
-fn cdf1()
-{
+fn cdf1() {
     let p: f64 = 0.1;
     let n: u32 = 2;
     let distrib: Binomial<f64> = Binomial::new(n, p);
@@ -73,8 +67,7 @@ fn cdf1()
 }
 
 #[test]
-fn cdf2()
-{
+fn cdf2() {
     let p: f64 = 0.1;
     let n: u32 = 2;
     let distrib: Binomial<f64> = Binomial::new(n, p);
