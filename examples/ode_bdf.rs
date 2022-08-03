@@ -1,57 +1,22 @@
 use mathru::{
-    algebra::linear::{Matrix, Vector},
+    algebra::linear::Vector,
     analysis::differential_equation::ordinary::{
-        solver::implicit::BDF, ImplicitInitialValueProblemBuilder,
+        problem::Euler, solver::implicit::BDF, ImplicitInitialValueProblemBuilder,
     },
-    elementary::Trigonometry,
-    {matrix, vector},
+    vector,
 };
 use plotters::prelude::*;
 
 fn main() {
-    fn ode(x: &f64, y: &Vector<f64>) -> Vector<f64> {
-        let i1 = 0.5;
-        let i2 = 2.0;
-        let i3 = 3.0;
-
-        let a = (i2 - i3) / i1;
-        let b = (i3 - i1) / i2;
-        let c = (i1 - i2) / i3;
-
-        let y_1s = a * (y[1] * y[2]);
-        let y_2s = b * (y[2] * y[0]);
-
-        let f = if *x >= 3.0 * f64::pi() && *x <= 4.0 * f64::pi() {
-            0.25 * x.sin() * x.sin()
-        } else {
-            0.0
-        };
-
-        let y_3s = c * (y[0] * y[1]) + f;
-        vector![y_1s; y_2s; y_3s]
-    }
-
-    fn jacobian(_x: &f64, y: &Vector<f64>) -> Matrix<f64> {
-        let i1 = 0.5;
-        let i2 = 2.0;
-        let i3 = 3.0;
-
-        let a = (i2 - i3) / i1;
-        let b = (i3 - i1) / i2;
-        let c = (i1 - i2) / i3;
-
-        matrix![0.0, a * y[2], a * y[1];
-                        b * y[2], 0.0, b * y[0];
-                        c * y[1], c * y[0], 0.0]
-    }
-
     let x_start = 0.0f64;
     let x_end = 20.0f64;
 
-    let problem =
-        ImplicitInitialValueProblemBuilder::new(&ode, &jacobian, 0.0f64, vector![1.0; 0.0; 0.9])
-            .t_end(x_end)
-            .build();
+    // Create an ODE instance
+    let ode = Euler::default();
+
+    let problem = ImplicitInitialValueProblemBuilder::new(&ode, 0.0f64, vector![1.0; 0.0; 0.9])
+        .t_end(x_end)
+        .build();
 
     let step_size: f64 = 0.0001;
     let solver: BDF<f64> = BDF::new(6, step_size);

@@ -1,3 +1,4 @@
+use crate::analysis::ode::problem::ExplicitOde1;
 use mathru::{
     algebra::linear::Vector,
     analysis::differential_equation::ordinary::{
@@ -10,9 +11,7 @@ use mathru::{
 
 #[test]
 fn t_end() {
-    fn ode(_t: &f64, x: &Vector<f64>) -> Vector<f64> {
-        return x * &2.0f64;
-    }
+    let ode = ExplicitOde1::default();
 
     let time_end = 1.0;
     let problem = ExplicitInitialValueProblemBuilder::new(&ode, 0.0, vector![0.5; 2.0])
@@ -50,9 +49,7 @@ fn t_end() {
 
 #[test]
 fn test_callback() {
-    fn ode(_t: &f64, x: &Vector<f64>) -> Vector<f64> {
-        return x * &2.0f64;
-    }
+    let ode = ExplicitOde1::default();
 
     let time_end = 1.0;
     let time_early_end = 0.6;
@@ -92,9 +89,7 @@ fn test_callback() {
 
 #[test]
 fn initial_step_size() {
-    fn ode(_t: &f64, x: &Vector<f64>) -> Vector<f64> {
-        return x * &2.0f64;
-    }
+    let ode = ExplicitOde1::default();
 
     let time_end = 1.0;
     let problem = ExplicitInitialValueProblemBuilder::new(&ode, 0.0, vector![0.5; 2.0])

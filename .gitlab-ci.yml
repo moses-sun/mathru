@@ -27,7 +27,7 @@ syntax-check:
   stage: syntax-check
   image: rust:latest
   script:
-    - cargo check
+    - cargo rustc -- -D warnings
 
 fmt:
   stage: lint

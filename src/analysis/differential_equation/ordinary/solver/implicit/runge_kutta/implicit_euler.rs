@@ -7,10 +7,7 @@ use crate::{
         abstr::Real,
         linear::{Matrix, Vector},
     },
-    analysis::{
-        differential_equation::ordinary::solver::implicit::runge_kutta::ImplicitFixedStepper,
-        Function, Jacobian, NewtonRaphson,
-    },
+    analysis::{Function, Jacobian, NewtonRaphson},
 };
 #[cfg(feature = "serde")]
 use serde::{Deserialize, Serialize};
@@ -22,8 +19,7 @@ use std::clone::Clone;
 ///
 /// # Example
 ///
-/// For this example, we want to solve the following stiff ordinary
-/// differential equation:
+/// For this example, we want to solve the following stiff initial value problem:
 /// ```math
 /// 0 = -4(y(t) -2) - y(t)^{'} = f(t, y, y^{'})
 /// ```
@@ -41,27 +37,17 @@ use std::clone::Clone;
 /// # {
 /// use mathru::{
 ///     algebra::linear::{Matrix, Vector},
-///     analysis::differential_equation::ordinary::{solver::implicit::runge_kutta::ImplicitEuler, ImplicitODE},
+///     analysis::differential_equation::ordinary::{solver::implicit::runge_kutta::{ImplicitEuler, ImplicitFixedStepper}, ImplicitODE,
+///     ImplicitInitialValueProblemBuilder},
 /// };
 ///
 /// pub struct ImplicitODEExample
 /// {
-///     time_span: (f64, f64),
-///     init_cond: Vector<f64>,
-/// }
-///
-/// impl Default for ImplicitODEExample
-/// {
-///     fn default() -> ImplicitODEExample
-///     {
-///         return ImplicitODEExample { time_span: (0.0, 2.0),
-///                                     init_cond: vector![1.0] };
-///     }
 /// }
 ///
 /// impl ImplicitODE<f64> for ImplicitODEExample
 /// {
-///     fn func(&self, _t: &f64, x: &Vector<f64>) -> Vector<f64>
+///     fn ode(&self, _t: &f64, x: &Vector<f64>) -> Vector<f64>
 ///     {
 ///         let result = (x * &-4.0) + 8.0;
 ///         return result;
@@ -72,62 +58,37 @@ use std::clone::Clone;
 ///         let jacobian = matrix![-4.0];
 ///         return jacobian;
 ///     }
-///
-///     fn time_span(&self) -> (f64, f64)
-///     {
-///         return self.time_span;
-///     }
-///
-///     fn init_cond(&self) -> Vector<f64>
-///     {
-///         return self.init_cond.clone();
-///     }
 /// }
 ///
-/// // We instantiate Euler's backward algorithm with a step size of 0.001
-/// let step_size: f64 = 0.0001;
-/// let solver: ImplicitEuler<f64> = ImplicitEuler::new(step_size);
+/// let ode = ImplicitODEExample{};
+/// let x_start: f64 = 0.0;
+/// let x_end: f64 = 2.0;
 ///
-/// let problem: ImplicitODEExample = ImplicitODEExample::default();
+/// let problem = ImplicitInitialValueProblemBuilder::<f64, ImplicitODEExample>::new(&ode, x_start, vector![1.0]).t_end(x_end).build();
+///
+/// let step_size: f64 = 0.0001;
+/// let solver: ImplicitFixedStepper<f64> = ImplicitFixedStepper::new(0.0001);
 ///
 /// // Solve the ODE
-/// let (t, x): (Vec<f64>, Vec<Vector<f64>>) = solver.solve(&problem).unwrap();
+/// let (t, x): (Vec<f64>, Vec<Vector<f64>>) = solver.solve(&problem, &ImplicitEuler::default()).unwrap();
 ///
 /// # }
 /// ```
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[derive(Clone, Copy, Debug)]
 pub struct ImplicitEuler<T> {
-    stepper: ImplicitFixedStepper<T>,
-
     root_finder: NewtonRaphson<T>,
 }
 
-impl<T> ImplicitEuler<T>
+impl<T> Default for ImplicitEuler<T>
 where
     T: Real,
 {
     /// Creates a backward Euler instance
-    pub fn new(step_size: T) -> ImplicitEuler<T> {
+    fn default() -> ImplicitEuler<T> {
         ImplicitEuler {
-            stepper: ImplicitFixedStepper::new(step_size),
             root_finder: NewtonRaphson::new(100, T::from_f64(0.00000001)),
         }
-    }
-
-    pub fn solve<F>(&self, prob: &F) -> Result<(Vec<T>, Vec<Vector<T>>), ()>
-    where
-        F: ImplicitODE<T>,
-    {
-        self.stepper.solve(prob, self)
-    }
-
-    pub fn get_step_size(&self) -> &T {
-        self.stepper.get_step_size()
-    }
-
-    pub fn set_step_size(&mut self, step_size: T) {
-        self.stepper.set_step_size(step_size)
     }
 }
 
@@ -191,7 +152,7 @@ where
     ///
     /// g(z) = y(t_n) + hf(t_{n+1}, z) - z)$
     fn eval(&self, z: &Vector<T>) -> Vector<T> {
-        &(self.x + &(&self.function.func(self.t, z) * self.h)) - z
+        &(self.x + &(&self.function.ode(self.t, z) * self.h)) - z
     }
 }
 

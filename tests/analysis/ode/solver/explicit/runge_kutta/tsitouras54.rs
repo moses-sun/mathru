@@ -14,7 +14,7 @@ fn test_1()
     
     let x_0 = vector![1.2601588];
 
-    let (x_1, x_1_s) = rk.tableau().do_step(&problem, &0.9f64, &x_0, &0.1f64);
+    let (x_1, x_1_s) = rk.tableau().do_step(problem, &0.9f64, &x_0, &0.1f64);
 
     let x_1_ref = vector![1.5574064];
 

@@ -1,7 +1,7 @@
 //! Solves an ODE using backward differentiation formula
 use crate::{
     algebra::{abstr::Real, linear::vector::vector::Vector},
-    analysis::differential_equation::ordinary::ImplicitInitialValueProblem,
+    analysis::differential_equation::ordinary::{ImplicitInitialValueProblem, ImplicitODE},
 };
 #[cfg(feature = "serde")]
 use serde::{Deserialize, Serialize};
@@ -30,57 +30,60 @@ use std::clone::Clone;
 /// # {
 /// use mathru::{
 ///     algebra::linear::{Matrix, Vector},
-///     analysis::differential_equation::ordinary::{ImplicitInitialValueProblem, ImplicitInitialValueProblemBuilder, solver::implicit::BDF},
+///     analysis::differential_equation::ordinary::{ImplicitODE, ImplicitInitialValueProblem, ImplicitInitialValueProblemBuilder, solver::implicit::BDF},
 ///     elementary::Trigonometry
 /// };
 ///
-/// fn ode(x: &f64, y: &Vector<f64>) -> Vector<f64>
+/// pub struct Euler
 /// {
-///    let i1 = 0.5;
-///    let i2 = 2.0;
-///    let i3 = 3.0;
-///
-///    let a = (i2 - i3) / i1;
-///    let b = (i3 - i1) / i2;
-///    let c = (i1 - i2) / i3;
-///
-///    let y_1s = a * (y[1] * y[2]);
-///    let y_2s = b * (y[2] * y[0]);
-///
-///    let f = if *x >= 3.0 * f64::pi() && *x <= 4.0 * f64::pi()
-///    {
-///        0.25 * x.sin() * x.sin()
-///    }
-///    else
-///    {
-///        0.0
-///    };
-///
-///    let y_3s = c * (y[0] * y[1]) + f;
-///    vector![y_1s; y_2s; y_3s]
+///     i1: f64,
+///     i2: f64,
+///     i3: f64
 /// }
 ///
-/// fn jacobian(_x: &f64, y: &Vector<f64>) -> Matrix<f64>
+/// impl ImplicitODE<f64> for Euler
 /// {
-///    let i1 = 0.5;
-///    let i2 = 2.0;
-///    let i3 = 3.0;
+///     fn ode(&self, x: &f64, y: &Vector<f64>) -> Vector<f64> {
+///         let a: f64 = (self.i2 - self.i3) / self.i1;
+///         let b: f64 = (self.i3 - self.i1) / self.i2;
+///         let c: f64 = (self.i1 - self.i2) / self.i3;
 ///
-///    let a = (i2 - i3) / i1;
-///    let b = (i3 - i1) / i2;
-///    let c = (i1 - i2) / i3;
+///         let y_1s: f64 = a * (y[1] * y[2]);
+///         let y_2s: f64 = b * (y[2] * y[0]);
 ///
-///    matrix![0.0, a * y[2], a * y[1];
-///                    b * y[2], 0.0, b * y[0];
-///                    c * y[1], c * y[0], 0.0]
+///         
+///         let f = if *x >= 3.0 * f64::pi() && *x <= 4.0 * f64::pi() {
+///             0.25 * x.sin() * x.sin()
+///         } else {
+///             0.0
+///         };
+///
+///         let y_3s: f64 = c * (y[0] * y[1]) + f;
+///         vector![y_1s; y_2s; y_3s]
+///     }
+///
+///     fn jacobian(&self, _x: &f64, y: &Vector<f64>) -> Matrix<f64> {
+///         let a: f64 = (self.i2 - self.i3) / self.i1;
+///         let b: f64 = (self.i3 - self.i1) / self.i2;
+///         let c: f64 = (self.i1 - self.i2) / self.i3;
+///
+///             matrix![0.0, a * y[2], a * y[1];
+///                     b * y[2], 0.0, b * y[0];
+///                     c * y[1], c * y[0], 0.0]
+///     }
 /// }
+///
+/// let ode = Euler {
+///     i1: 0.5,
+///     i2: 2.0,
+///     i3: 3.0
+/// };
 ///
 /// let x_start = 0.0f64;
 /// let x_end = 20.0f64;
 ///
 /// let problem = ImplicitInitialValueProblemBuilder::new(
 ///    &ode,
-///    &jacobian,
 ///    0.0f64,
 ///    vector![1.0; 0.0; 0.9]
 /// ).t_end(x_end)
@@ -131,10 +134,13 @@ where
     ///
     /// # Panic
     ///
-    pub fn solve(
+    pub fn solve<O>(
         &self,
-        prob: &ImplicitInitialValueProblem<T>,
-    ) -> Result<(Vec<T>, Vec<Vector<T>>), ()> {
+        prob: &ImplicitInitialValueProblem<T, O>,
+    ) -> Result<(Vec<T>, Vec<Vector<T>>), ()>
+    where
+        O: ImplicitODE<T>,
+    {
         let t_start: T = prob.t_start();
         let t_stop: T = prob.t_end().unwrap();
 
@@ -224,61 +230,51 @@ impl<T> BDF<T>
 where
     T: Real,
 {
-    fn step_s1(
-        prob: &ImplicitInitialValueProblem<T>,
+    fn step_s1<O>(
+        prob: &ImplicitInitialValueProblem<T, O>,
         t: &Vec<T>,
         x: &Vec<Vector<T>>,
         h: T,
-    ) -> Vector<T> {
+    ) -> Vector<T>
+    where
+        O: ImplicitODE<T>,
+    {
         let ode = prob.ode();
         let n: usize = x.len() - 1;
         let x_n: &Vector<T> = &x[n];
         let t_n: T = t[n];
-        x_n + &(&ode(&t_n, x_n) * &h)
+        x_n + &(&ode.ode(&t_n, x_n) * &h)
     }
 
-    fn step_s2(
-        prob: &ImplicitInitialValueProblem<T>,
+    fn step_s2<O>(
+        prob: &ImplicitInitialValueProblem<T, O>,
         t: &Vec<T>,
         x: &Vec<Vector<T>>,
         h: T,
-    ) -> Vector<T> {
-        let ode = prob.ode();
-        let n: usize = x.len() - 1;
-        let x_n: &Vector<T> = &x[n];
-        let t_n: T = t[n];
-        let x_n1: &Vector<T> = &x[n - 1];
-        let t_n1: T = t[n - 1];
-        x_n + &((ode(&t_n, x_n) * T::from_f64(3.0 / 2.0) + ode(&t_n1, x_n1) * T::from_f64(-0.5))
-            * h)
-    }
-
-    fn step_s3(
-        prob: &ImplicitInitialValueProblem<T>,
-        t: &Vec<T>,
-        x: &Vec<Vector<T>>,
-        h: T,
-    ) -> Vector<T> {
+    ) -> Vector<T>
+    where
+        O: ImplicitODE<T>,
+    {
         let ode = prob.ode();
         let n: usize = x.len() - 1;
         let x_n: &Vector<T> = &x[n];
         let t_n: T = t[n];
         let x_n1: &Vector<T> = &x[n - 1];
         let t_n1: T = t[n - 1];
-        let x_n2: &Vector<T> = &x[n - 2];
-        let t_n2: T = t[n - 2];
-        x_n + &((ode(&t_n, x_n) * T::from_f64(23.0 / 12.0)
-            + ode(&t_n1, x_n1) * T::from_f64(-16.0 / 12.0)
-            + ode(&t_n2, x_n2) * T::from_f64(5.0 / 12.0))
+        x_n + &((ode.ode(&t_n, x_n) * T::from_f64(3.0 / 2.0)
+            + ode.ode(&t_n1, x_n1) * T::from_f64(-0.5))
             * h)
     }
 
-    fn step_s4(
-        prob: &ImplicitInitialValueProblem<T>,
+    fn step_s3<O>(
+        prob: &ImplicitInitialValueProblem<T, O>,
         t: &Vec<T>,
         x: &Vec<Vector<T>>,
         h: T,
-    ) -> Vector<T> {
+    ) -> Vector<T>
+    where
+        O: ImplicitODE<T>,
+    {
         let ode = prob.ode();
         let n: usize = x.len() - 1;
         let x_n: &Vector<T> = &x[n];
@@ -287,21 +283,21 @@ where
         let t_n1: T = t[n - 1];
         let x_n2: &Vector<T> = &x[n - 2];
         let t_n2: T = t[n - 2];
-        let x_n3: &Vector<T> = &x[n - 3];
-        let t_n3: T = t[n - 3];
-        x_n + &((ode(&t_n, x_n) * T::from_f64(55.0 / 24.0)
-            + ode(&t_n1, x_n1) * T::from_f64(-59.0 / 24.0)
-            + ode(&t_n2, x_n2) * T::from_f64(37.0 / 24.0)
-            + ode(&t_n3, x_n3) * T::from_f64(-9.0 / 24.0))
+        x_n + &((ode.ode(&t_n, x_n) * T::from_f64(23.0 / 12.0)
+            + ode.ode(&t_n1, x_n1) * T::from_f64(-16.0 / 12.0)
+            + ode.ode(&t_n2, x_n2) * T::from_f64(5.0 / 12.0))
             * h)
     }
 
-    fn step_s5(
-        prob: &ImplicitInitialValueProblem<T>,
+    fn step_s4<O>(
+        prob: &ImplicitInitialValueProblem<T, O>,
         t: &Vec<T>,
         x: &Vec<Vector<T>>,
         h: T,
-    ) -> Vector<T> {
+    ) -> Vector<T>
+    where
+        O: ImplicitODE<T>,
+    {
         let ode = prob.ode();
         let n: usize = x.len() - 1;
         let x_n: &Vector<T> = &x[n];
@@ -312,22 +308,22 @@ where
         let t_n2: T = t[n - 2];
         let x_n3: &Vector<T> = &x[n - 3];
         let t_n3: T = t[n - 3];
-        let x_n4: &Vector<T> = &x[n - 4];
-        let t_n4: T = t[n - 4];
-        x_n + &((ode(&t_n, x_n) * T::from_f64(1901.0 / 720.0)
-            + ode(&t_n1, x_n1) * T::from_f64(-2774.0 / 720.0)
-            + ode(&t_n2, x_n2) * T::from_f64(2616.0 / 720.0)
-            + ode(&t_n3, x_n3) * T::from_f64(-1274.0 / 720.0)
-            + ode(&t_n4, x_n4) * T::from_f64(251.0 / 720.0))
+        x_n + &((ode.ode(&t_n, x_n) * T::from_f64(55.0 / 24.0)
+            + ode.ode(&t_n1, x_n1) * T::from_f64(-59.0 / 24.0)
+            + ode.ode(&t_n2, x_n2) * T::from_f64(37.0 / 24.0)
+            + ode.ode(&t_n3, x_n3) * T::from_f64(-9.0 / 24.0))
             * h)
     }
 
-    fn step_s6(
-        prob: &ImplicitInitialValueProblem<T>,
+    fn step_s5<O>(
+        prob: &ImplicitInitialValueProblem<T, O>,
         t: &Vec<T>,
         x: &Vec<Vector<T>>,
         h: T,
-    ) -> Vector<T> {
+    ) -> Vector<T>
+    where
+        O: ImplicitODE<T>,
+    {
         let ode = prob.ode();
         let n: usize = x.len() - 1;
         let x_n: &Vector<T> = &x[n];
@@ -340,11 +336,40 @@ where
         let t_n3: T = t[n - 3];
         let x_n4: &Vector<T> = &x[n - 4];
         let t_n4: T = t[n - 4];
-        x_n + &((ode(&t_n, x_n) * T::from_f64(1901.0 / 720.0)
-            + ode(&t_n1, x_n1) * T::from_f64(-2774.0 / 720.0)
-            + ode(&t_n2, x_n2) * T::from_f64(2616.0 / 720.0)
-            + ode(&t_n3, x_n3) * T::from_f64(-1274.0 / 720.0)
-            + ode(&t_n4, x_n4) * T::from_f64(251.0 / 720.0))
+        x_n + &((ode.ode(&t_n, x_n) * T::from_f64(1901.0 / 720.0)
+            + ode.ode(&t_n1, x_n1) * T::from_f64(-2774.0 / 720.0)
+            + ode.ode(&t_n2, x_n2) * T::from_f64(2616.0 / 720.0)
+            + ode.ode(&t_n3, x_n3) * T::from_f64(-1274.0 / 720.0)
+            + ode.ode(&t_n4, x_n4) * T::from_f64(251.0 / 720.0))
+            * h)
+    }
+
+    fn step_s6<O>(
+        prob: &ImplicitInitialValueProblem<T, O>,
+        t: &Vec<T>,
+        x: &Vec<Vector<T>>,
+        h: T,
+    ) -> Vector<T>
+    where
+        O: ImplicitODE<T>,
+    {
+        let ode = prob.ode();
+        let n: usize = x.len() - 1;
+        let x_n: &Vector<T> = &x[n];
+        let t_n: T = t[n];
+        let x_n1: &Vector<T> = &x[n - 1];
+        let t_n1: T = t[n - 1];
+        let x_n2: &Vector<T> = &x[n - 2];
+        let t_n2: T = t[n - 2];
+        let x_n3: &Vector<T> = &x[n - 3];
+        let t_n3: T = t[n - 3];
+        let x_n4: &Vector<T> = &x[n - 4];
+        let t_n4: T = t[n - 4];
+        x_n + &((ode.ode(&t_n, x_n) * T::from_f64(1901.0 / 720.0)
+            + ode.ode(&t_n1, x_n1) * T::from_f64(-2774.0 / 720.0)
+            + ode.ode(&t_n2, x_n2) * T::from_f64(2616.0 / 720.0)
+            + ode.ode(&t_n3, x_n3) * T::from_f64(-1274.0 / 720.0)
+            + ode.ode(&t_n4, x_n4) * T::from_f64(251.0 / 720.0))
             * h)
     }
 }

@@ -1,15 +1,14 @@
-use super::super::super::problem::explicit_ode;
+use crate::analysis::ode::problem::explicit_ode;
 use mathru::{
     algebra::linear::Vector,
-    analysis::differential_equation::ordinary::{
-        solver::explicit::runge_kutta::fixed::{ExplicitRKMethod, Heun2},
-        ExplicitInitialValueProblem,
+    analysis::differential_equation::ordinary::solver::explicit::runge_kutta::fixed::{
+        ExplicitRKMethod, Heun2,
     },
 };
 
 #[test]
 fn test_1() {
-    let problem: ExplicitInitialValueProblem<f64> = explicit_ode();
+    let problem = explicit_ode();
 
     let rk = Heun2::<f64>::default();
     let t_0 = 0.9f64;
@@ -18,7 +17,7 @@ fn test_1() {
 
     let x_0 = vector![t_0.tan()];
 
-    let x_1 = rk.tableau().do_step(&problem.ode(), &t_0, &x_0, &h);
+    let x_1 = rk.tableau().do_step(problem.ode(), &t_0, &x_0, &h);
 
     let x_1_ref = vector![t_1.tan()];
 

@@ -2,6 +2,7 @@
 use crate::algebra::{abstr::Real, linear::Vector};
 use crate::analysis::differential_equation::ordinary::solver::explicit::runge_kutta::adaptive::ExplicitRKEmbeddedMethod;
 use crate::analysis::differential_equation::ordinary::ExplicitInitialValueProblem;
+use crate::analysis::differential_equation::ordinary::ExplicitODE;
 #[cfg(feature = "serde")]
 use serde::{Deserialize, Serialize};
 use std::clone::Clone;
@@ -125,26 +126,19 @@ where
     ///
     /// Ok:
     ///
-    /// # Panics
-    ///
-    /// if the beginning of the time span in 'prob' is greater than the end
-    pub fn solve<M>(
+
+    pub fn solve<M, O>(
         &self,
-        prob: &ExplicitInitialValueProblem<T>,
+        prob: &ExplicitInitialValueProblem<T, O>,
         method: &M,
     ) -> Result<(Vec<T>, Vec<Vector<T>>), &'static str>
     where
         M: ExplicitRKEmbeddedMethod<T>,
+        O: ExplicitODE<T>,
     {
-        // let t_span: (T, T) = prob.time_span();
         let t_start: T = prob.t_start();
 
         let t_stop: Option<T> = prob.t_end();
-
-        // if t_start > t_stop
-        // {
-        //     panic!("The beginning of the time span is greater that the end");
-        // }
 
         let tableau = method.tableau();
 
@@ -168,7 +162,7 @@ where
         while n < self.n_max && t_smaller_t_stop && callback_condition {
             h = t_stop.map_or(h, |t_e| h.min(t_e - t_n));
 
-            let (y_n, y_n_s): (Vector<T>, Vector<T>) = tableau.do_step(&prob.ode(), &t_n, &x_n, &h);
+            let (y_n, y_n_s): (Vector<T>, Vector<T>) = tableau.do_step(prob.ode(), &t_n, &x_n, &h);
             let err: T = self.calc_error(&y_n, &y_n_s, &x_n);
 
             if err <= T::one() {
@@ -202,9 +196,9 @@ where
         match t_stop {
             Some(t_e) => {
                 if t_n < t_e && callback_condition {
-                    return Err("Maximum number of iterations reached");
+                    Err("Maximum number of iterations reached")
                 } else {
-                    return Ok((t_vec, res_vec));
+                    Ok((t_vec, res_vec))
                 }
             }
             None => Ok((t_vec, res_vec)),
@@ -235,14 +229,17 @@ where
         (sum / T::from_f64(m as f64)).sqrt()
     }
 
-    fn calc_initial_step(&self, prob: &ExplicitInitialValueProblem<T>, p: u8) -> T {
+    fn calc_initial_step<O>(&self, prob: &ExplicitInitialValueProblem<T, O>, p: u8) -> T
+    where
+        O: ExplicitODE<T>,
+    {
         let ode = prob.ode();
         let y_0 = prob.init_cond();
         let d_0: T = self.norm(&y_0);
 
         let x_0 = prob.t_start();
 
-        let f_y_0 = ode(&x_0, &y_0);
+        let f_y_0 = ode.ode(&x_0, &y_0);
         let d_1: T = self.norm(&f_y_0);
 
         let h_0_limit = T::from_f64(1.0e-5);
@@ -254,7 +251,7 @@ where
 
         let y_1 = y_0 + &f_y_0 * &h_0;
 
-        let f_y_1 = ode(&(x_0 + h_0), &y_1);
+        let f_y_1 = ode.ode(&(x_0 + h_0), &y_1);
 
         let d_2 = self.norm(&(f_y_1 - f_y_0)) / h_0;
 

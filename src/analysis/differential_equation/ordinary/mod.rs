@@ -41,16 +41,25 @@
 //! # {
 //! use mathru::{
 //!     algebra::linear::Vector,
-//!     analysis::differential_equation::ordinary::{ExplicitInitialValueProblem, ExplicitInitialValueProblemBuilder, solver::explicit::runge_kutta::adaptive::{DormandPrince54, ProportionalControl}},
+//!     analysis::differential_equation::ordinary::{ExplicitODE, ExplicitInitialValueProblem, ExplicitInitialValueProblemBuilder, solver::explicit::runge_kutta::adaptive::{DormandPrince54, ProportionalControl}},
 //! };
 //!
-//! fn ode(x: &f64, y: &Vector<f64>) -> Vector<f64>
+//! pub struct Ode
 //! {
-//!      y * &2.0
 //! }
 //!
+//! impl ExplicitODE<f64> for Ode
+//! {
+//!    fn ode(&self, _x: &f64, y: &Vector<f64>) -> Vector<f64>
+//!    {
+//!        y * &2.0f64
+//!    }
+//! }
+//!
+//! let ode = Ode{};
+//!
 //! let problem = ExplicitInitialValueProblemBuilder::new(
-//!     &|t, x| { x * &2.0f64 },
+//!     &ode,
 //!     0.0,
 //!     vector![0.5]
 //! ).t_end(2.0)
@@ -78,6 +87,8 @@ pub mod solver;
 mod implicit_ode;
 pub use implicit_ode::ImplicitODE;
 
+mod explicit_ode;
+pub use explicit_ode::ExplicitODE;
 mod explicit_initial_value_problem;
 pub use explicit_initial_value_problem::{
     ExplicitInitialValueProblem, ExplicitInitialValueProblemBuilder,

@@ -1,3 +1,4 @@
+use crate::analysis::ode::problem::ExplicitOde1;
 use mathru::{
     algebra::linear::Vector,
     analysis::differential_equation::ordinary::{
@@ -8,9 +9,7 @@ use mathru::{
 
 #[test]
 fn t_end() {
-    fn ode(_t: &f64, x: &Vector<f64>) -> Vector<f64> {
-        return x * &2.0f64;
-    }
+    let ode = ExplicitOde1::default();
 
     let time_end = 1.0;
     let problem = ExplicitInitialValueProblemBuilder::new(&ode, 0.0, vector![0.5; 2.0])
@@ -30,6 +29,7 @@ fn t_end() {
         y[len - 1][0],
         epsilon = 0.01
     );
+
     assert_relative_eq!(
         init_cond[1] * (2.0 * time_end).exp(),
         y[len - 1][1],

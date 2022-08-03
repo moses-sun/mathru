@@ -1,19 +1,75 @@
 use mathru::{
-    algebra::linear::Vector,
+    algebra::linear::{Matrix, Vector},
     analysis::differential_equation::ordinary::{
-        problem::Euler, solver::implicit::runge_kutta::ImplicitEuler, ImplicitODE,
+        solver::implicit::runge_kutta::{ImplicitEuler, ImplicitFixedStepper},
+        ImplicitInitialValueProblemBuilder, ImplicitODE,
     },
+    elementary::Trigonometry,
+    {matrix, vector},
 };
 use plotters::prelude::*;
 
 fn main() {
-    // Create an ODE instance
-    let problem: Euler<f64> = Euler::default();
-    let solver: ImplicitEuler<f64> = ImplicitEuler::new(0.0001);
+    pub struct Euler {
+        i1: f64,
+        i2: f64,
+        i3: f64,
+    }
+    /// ```math
+    /// y_{1}^{'}(x) = (I_{2} - I_{3})/I_{1} * y_{2}(x) * y_{3}(x)
+    /// y_{2}^{'}(x) = (I_{3} - I_{1})/I_{2} * y_{3}(x) * y_{1}(x)
+    /// y_{3}^{'}(x) = (I_{1} - I_{2})/I_{3} * y_{1}(x) * y_{2}(x) + f(x)
+    /// ```
+    impl ImplicitODE<f64> for Euler {
+        fn ode(&self, x: &f64, y: &Vector<f64>) -> Vector<f64> {
+            let a: f64 = (self.i2 - self.i3) / self.i1;
+            let b: f64 = (self.i3 - self.i1) / self.i2;
+            let c: f64 = (self.i1 - self.i2) / self.i3;
 
-    let (x, y): (Vec<f64>, Vec<Vector<f64>>) = solver.solve(&problem).unwrap();
+            let y_1s: f64 = a * (y[1] * y[2]);
+            let y_2s: f64 = b * (y[2] * y[0]);
 
-    let (x_start, x_end) = problem.time_span();
+            let f: f64 = if *x >= 3.0 * f64::pi() && *x <= 4.0 * f64::pi() {
+                0.25 * x.sin() * x.sin()
+            } else {
+                0.0
+            };
+
+            let y_3s: f64 = c * (y[0] * y[1]) + f;
+            vector![y_1s; y_2s; y_3s]
+        }
+
+        fn jacobian(&self, _x: &f64, y: &Vector<f64>) -> Matrix<f64> {
+            let a: f64 = (self.i2 - self.i3) / self.i1;
+            let b: f64 = (self.i3 - self.i1) / self.i2;
+            let c: f64 = (self.i1 - self.i2) / self.i3;
+
+            matrix![0.0, a * y[2], a * y[1];
+                        b * y[2], 0.0, b * y[0];
+                        c * y[1], c * y[0], 0.0]
+        }
+    }
+    let implicit_euler = Euler {
+        i1: 0.5,
+        i2: 2.0,
+        i3: 3.0,
+    };
+
+    let x_start: f64 = 0.0;
+    let x_end: f64 = 20.0;
+
+    let problem = ImplicitInitialValueProblemBuilder::<f64, Euler>::new(
+        &implicit_euler,
+        x_start,
+        vector![1.0; 0.0; 0.9],
+    )
+    .t_end(x_end)
+    .build();
+
+    let solver: ImplicitFixedStepper<f64> = ImplicitFixedStepper::new(0.0001);
+
+    let (x, y): (Vec<f64>, Vec<Vector<f64>>) =
+        solver.solve(&problem, &ImplicitEuler::default()).unwrap();
 
     //Create chart
     let mut graph_x1: Vec<(f64, f64)> = Vec::with_capacity(x.len());
