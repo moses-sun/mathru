@@ -1,19 +1,27 @@
 use mathru::{
     algebra::linear::Vector,
     analysis::differential_equation::ordinary::{
-        problem::explicit_euler,
+        problem::Euler,
         solver::explicit::runge_kutta::adaptive::{DormandPrince54, ProportionalControl},
-        ExplicitInitialValueProblem,
+        ExplicitInitialValueProblemBuilder,
     },
+    vector,
 };
 use plotters::prelude::*;
 
 fn main() {
-    // Create an ODE instance
-    let problem: ExplicitInitialValueProblem<f64> = explicit_euler();
+    let x_start: f64 = 0.0;
+    let x_end: f64 = 20.0;
 
-    let x_start = problem.t_start();
-    let x_end = problem.t_end().unwrap();
+    // Create an ODE instance
+    let explicit_euler = Euler::default();
+    let problem = ExplicitInitialValueProblemBuilder::<f64, Euler<f64>>::new(
+        &explicit_euler,
+        x_start,
+        vector![1.0; 0.0; 0.9],
+    )
+    .t_end(x_end)
+    .build();
 
     // Create a ODE solver instance
     let h_0: f64 = 0.0001;

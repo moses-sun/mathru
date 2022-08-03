@@ -1,12 +1,14 @@
 use crate::algebra::abstr::Real;
 use crate::algebra::linear::Vector;
+use crate::analysis::differential_equation::ordinary::ExplicitODE;
 
 #[derive(Clone)]
-pub struct ExplicitInitialValueProblem<'a, T>
+pub struct ExplicitInitialValueProblem<'a, T, O>
 where
     T: Real,
+    O: ExplicitODE<T>,
 {
-    ode: &'a (dyn Fn(&T, &Vector<T>) -> Vector<T> + 'a),
+    ode: &'a O,
     t_start: T,
     init_cond: Vector<T>,
     t_end: Option<T>,
@@ -14,11 +16,12 @@ where
     //dense_output: Option<Vec<T>>
 }
 
-impl<'a, T> ExplicitInitialValueProblem<'a, T>
+impl<'a, T, O> ExplicitInitialValueProblem<'a, T, O>
 where
     T: Real,
+    O: ExplicitODE<T>,
 {
-    pub fn ode(&self) -> &'a dyn Fn(&T, &Vector<T>) -> Vector<T> {
+    pub fn ode(&self) -> &O {
         self.ode
     }
 
@@ -40,11 +43,12 @@ where
 }
 
 #[derive(Clone)]
-pub struct ExplicitInitialValueProblemBuilder<'a, T>
+pub struct ExplicitInitialValueProblemBuilder<'a, T, O>
 where
     T: Real,
+    O: ExplicitODE<T>,
 {
-    ode: &'a (dyn Fn(&T, &Vector<T>) -> Vector<T> + 'a),
+    ode: &'a O,
     t_start: T,
     init_cond: Vector<T>,
     t_end: Option<T>,
@@ -52,16 +56,17 @@ where
     //dense_output: Option<Vec<T>>
 }
 
-impl<'a, T> ExplicitInitialValueProblemBuilder<'a, T>
+impl<'a, T, O> ExplicitInitialValueProblemBuilder<'a, T, O>
 where
     T: Real,
+    O: ExplicitODE<T>,
 {
     ///
     pub fn new(
-        ode: &'a (dyn Fn(&T, &Vector<T>) -> Vector<T> + 'a),
+        ode: &'a O,
         t_start: T,
         init_cond: Vector<T>,
-    ) -> ExplicitInitialValueProblemBuilder<'a, T> {
+    ) -> ExplicitInitialValueProblemBuilder<'a, T, O> {
         ExplicitInitialValueProblemBuilder {
             ode: ode,
             t_start,
@@ -85,7 +90,7 @@ where
     ///
     /// # Panics
     ///
-    pub fn build(&self) -> ExplicitInitialValueProblem<'a, T> {
+    pub fn build(&self) -> ExplicitInitialValueProblem<'a, T, O> {
         if self.callback.is_none() && self.t_end.is_none() {
             panic!("Either callback or t_end has to be set")
         }

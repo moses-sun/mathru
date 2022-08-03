@@ -1,13 +1,14 @@
 use crate::algebra::abstr::Real;
-use crate::algebra::linear::{Matrix, Vector};
+use crate::algebra::linear::Vector;
+use crate::analysis::differential_equation::ordinary::ImplicitODE;
 
 #[derive(Clone)]
-pub struct ImplicitInitialValueProblem<'a, T>
+pub struct ImplicitInitialValueProblem<'a, T, O>
 where
     T: Real,
+    O: ImplicitODE<T>,
 {
-    ode: &'a (dyn Fn(&T, &Vector<T>) -> Vector<T> + 'a),
-    jacobian: &'a (dyn Fn(&T, &Vector<T>) -> Matrix<T> + 'a),
+    ode: &'a O,
     t_start: T,
     init_cond: Vector<T>,
     t_end: Option<T>,
@@ -15,11 +16,12 @@ where
     //dense_output: Option<Vec<T>>
 }
 
-impl<'a, T> ImplicitInitialValueProblem<'a, T>
+impl<'a, T, O> ImplicitInitialValueProblem<'a, T, O>
 where
     T: Real,
+    O: ImplicitODE<T>,
 {
-    pub fn ode(&self) -> &'a dyn Fn(&T, &Vector<T>) -> Vector<T> {
+    pub fn ode(&self) -> &'a O {
         self.ode
     }
 
@@ -41,12 +43,12 @@ where
 }
 
 #[derive(Clone)]
-pub struct ImplicitInitialValueProblemBuilder<'a, T>
+pub struct ImplicitInitialValueProblemBuilder<'a, T, O>
 where
     T: Real,
+    O: ImplicitODE<T>,
 {
-    ode: &'a (dyn Fn(&T, &Vector<T>) -> Vector<T> + 'a),
-    jacobian: &'a (dyn Fn(&T, &Vector<T>) -> Matrix<T> + 'a),
+    ode: &'a O,
     t_start: T,
     init_cond: Vector<T>,
     t_end: Option<T>,
@@ -54,20 +56,19 @@ where
     //dense_output: Option<Vec<T>>
 }
 
-impl<'a, T> ImplicitInitialValueProblemBuilder<'a, T>
+impl<'a, T, O> ImplicitInitialValueProblemBuilder<'a, T, O>
 where
     T: Real,
+    O: ImplicitODE<T>,
 {
     ///
     pub fn new(
-        ode: &'a (dyn Fn(&T, &Vector<T>) -> Vector<T> + 'a),
-        jacobian: &'a (dyn Fn(&T, &Vector<T>) -> Matrix<T> + 'a),
+        ode: &'a O,
         t_start: T,
         init_cond: Vector<T>,
-    ) -> ImplicitInitialValueProblemBuilder<'a, T> {
+    ) -> ImplicitInitialValueProblemBuilder<'a, T, O> {
         ImplicitInitialValueProblemBuilder {
             ode: ode,
-            jacobian: jacobian,
             t_start,
             init_cond,
             callback: None,
@@ -89,14 +90,13 @@ where
     ///
     /// # Panics
     ///
-    pub fn build(&self) -> ImplicitInitialValueProblem<'a, T> {
+    pub fn build(&self) -> ImplicitInitialValueProblem<'a, T, O> {
         if self.callback.is_none() && self.t_end.is_none() {
             panic!("Either callback or t_end has to be set")
         }
 
         ImplicitInitialValueProblem {
             ode: self.ode,
-            jacobian: self.jacobian,
             t_start: self.t_start,
             init_cond: self.init_cond.clone(),
             t_end: self.t_end,

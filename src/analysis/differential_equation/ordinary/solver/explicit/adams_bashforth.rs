@@ -1,7 +1,7 @@
 //! Solves an ODE using Adams-Bashforth method.
 use crate::{
     algebra::{abstr::Real, linear::vector::vector::Vector},
-    analysis::differential_equation::ordinary::ExplicitInitialValueProblem,
+    analysis::differential_equation::ordinary::{ExplicitInitialValueProblem, ExplicitODE},
 };
 
 #[cfg(feature = "serde")]
@@ -36,12 +36,25 @@ use std::clone::Clone;
 /// # {
 /// use mathru::{
 ///     algebra::linear::Vector,
-///     analysis::differential_equation::ordinary::{ExplicitInitialValueProblem, ExplicitInitialValueProblemBuilder, solver::explicit::AdamsBashforth},
+///     analysis::differential_equation::ordinary::{ExplicitODE, ExplicitInitialValueProblemBuilder, solver::explicit::AdamsBashforth},
 /// };
 ///
+/// pub struct Ode
+/// {
+/// }
 ///
-/// let problem: ExplicitInitialValueProblem<f64> = ExplicitInitialValueProblemBuilder::new(
-///     &|_t, x| { x * &2.0},
+/// impl ExplicitODE<f64> for Ode
+/// {
+///    fn ode(&self, _x: &f64, y: &Vector<f64>) -> Vector<f64>
+///    {
+///        y * &2.0f64
+///    }
+/// }
+///
+/// let ode = Ode{};
+///
+/// let problem = ExplicitInitialValueProblemBuilder::new(
+///     &ode,
 ///     0.0,
 ///     vector![0.5]
 /// )
@@ -94,10 +107,13 @@ where
     ///
     /// # Panic
     ///
-    pub fn solve(
+    pub fn solve<O>(
         &self,
-        prob: &ExplicitInitialValueProblem<T>,
-    ) -> Result<(Vec<T>, Vec<Vector<T>>), ()> {
+        prob: &ExplicitInitialValueProblem<T, O>,
+    ) -> Result<(Vec<T>, Vec<Vector<T>>), ()>
+    where
+        O: ExplicitODE<T>,
+    {
         let t_start: T = prob.t_start();
         let t_stop: T = prob.t_end().unwrap();
 
@@ -181,40 +197,51 @@ impl<'a, T> AdamsBashforth<T>
 where
     T: Real,
 {
-    fn step_s1(
-        prob: &ExplicitInitialValueProblem<T>,
+    fn step_s1<O>(
+        prob: &ExplicitInitialValueProblem<T, O>,
         t: &Vec<T>,
         x: &Vec<Vector<T>>,
         h: T,
-    ) -> Vector<T> {
+    ) -> Vector<T>
+    where
+        O: ExplicitODE<T>,
+    {
         let n: usize = x.len() - 1;
         let x_n: &Vector<T> = &x[n];
         let t_n: &T = &t[n];
         let ode = prob.ode();
-        x_n + &(&ode(t_n, x_n) * &h)
+        x_n + &(&ode.ode(t_n, x_n) * &h)
     }
 
-    fn step_s2(
-        prob: &ExplicitInitialValueProblem<T>,
+    fn step_s2<O>(
+        prob: &ExplicitInitialValueProblem<T, O>,
         t: &Vec<T>,
         x: &Vec<Vector<T>>,
         h: T,
-    ) -> Vector<T> {
+    ) -> Vector<T>
+    where
+        O: ExplicitODE<T>,
+    {
         let n: usize = x.len() - 1;
         let x_n: &Vector<T> = &x[n];
         let t_n: &T = &t[n];
         let x_n1: &Vector<T> = &x[n - 1];
         let t_n1: &T = &t[n - 1];
         let ode = prob.ode();
-        x_n + &((ode(t_n, x_n) * T::from_f64(3.0 / 2.0) + ode(&t_n1, x_n1) * T::from_f64(-0.5)) * h)
+        x_n + &((ode.ode(t_n, x_n) * T::from_f64(3.0 / 2.0)
+            + ode.ode(&t_n1, x_n1) * T::from_f64(-0.5))
+            * h)
     }
 
-    fn step_s3(
-        prob: &ExplicitInitialValueProblem<T>,
+    fn step_s3<O>(
+        prob: &ExplicitInitialValueProblem<T, O>,
         t: &Vec<T>,
         x: &Vec<Vector<T>>,
         h: T,
-    ) -> Vector<T> {
+    ) -> Vector<T>
+    where
+        O: ExplicitODE<T>,
+    {
         let n: usize = x.len() - 1;
         let x_n: &Vector<T> = &x[n];
         let t_n: &T = &t[n];
@@ -224,18 +251,21 @@ where
         let t_n2: &T = &t[n - 2];
         let ode = prob.ode();
 
-        x_n + &((ode(t_n, x_n) * T::from_f64(23.0 / 12.0)
-            + ode(t_n1, x_n1) * T::from_f64(-16.0 / 12.0)
-            + ode(t_n2, x_n2) * T::from_f64(5.0 / 12.0))
+        x_n + &((ode.ode(t_n, x_n) * T::from_f64(23.0 / 12.0)
+            + ode.ode(t_n1, x_n1) * T::from_f64(-16.0 / 12.0)
+            + ode.ode(t_n2, x_n2) * T::from_f64(5.0 / 12.0))
             * h)
     }
 
-    fn step_s4(
-        prob: &ExplicitInitialValueProblem<T>,
+    fn step_s4<O>(
+        prob: &ExplicitInitialValueProblem<T, O>,
         t: &Vec<T>,
         x: &Vec<Vector<T>>,
         h: T,
-    ) -> Vector<T> {
+    ) -> Vector<T>
+    where
+        O: ExplicitODE<T>,
+    {
         let n: usize = x.len() - 1;
         let x_n: &Vector<T> = &x[n];
         let t_n: &T = &t[n];
@@ -247,19 +277,22 @@ where
         let t_n3: &T = &t[n - 3];
         let ode = prob.ode();
 
-        x_n + &((ode(t_n, x_n) * T::from_f64(55.0 / 24.0)
-            + ode(t_n1, x_n1) * T::from_f64(-59.0 / 24.0)
-            + ode(t_n2, x_n2) * T::from_f64(37.0 / 24.0)
-            + ode(t_n3, x_n3) * T::from_f64(-9.0 / 24.0))
+        x_n + &((ode.ode(t_n, x_n) * T::from_f64(55.0 / 24.0)
+            + ode.ode(t_n1, x_n1) * T::from_f64(-59.0 / 24.0)
+            + ode.ode(t_n2, x_n2) * T::from_f64(37.0 / 24.0)
+            + ode.ode(t_n3, x_n3) * T::from_f64(-9.0 / 24.0))
             * h)
     }
 
-    fn step_s5(
-        prob: &ExplicitInitialValueProblem<T>,
+    fn step_s5<O>(
+        prob: &ExplicitInitialValueProblem<T, O>,
         t: &Vec<T>,
         x: &Vec<Vector<T>>,
         h: T,
-    ) -> Vector<T> {
+    ) -> Vector<T>
+    where
+        O: ExplicitODE<T>,
+    {
         let n: usize = x.len() - 1;
         let x_n: &Vector<T> = &x[n];
         let t_n: &T = &t[n];
@@ -273,11 +306,11 @@ where
         let t_n4: &T = &t[n - 4];
         let ode = prob.ode();
 
-        x_n + &((ode(t_n, x_n) * T::from_f64(1901.0 / 720.0)
-            + ode(t_n1, x_n1) * T::from_f64(-2774.0 / 720.0)
-            + ode(t_n2, x_n2) * T::from_f64(2616.0 / 720.0)
-            + ode(t_n3, x_n3) * T::from_f64(-1274.0 / 720.0)
-            + ode(t_n4, x_n4) * T::from_f64(251.0 / 720.0))
+        x_n + &((ode.ode(t_n, x_n) * T::from_f64(1901.0 / 720.0)
+            + ode.ode(t_n1, x_n1) * T::from_f64(-2774.0 / 720.0)
+            + ode.ode(t_n2, x_n2) * T::from_f64(2616.0 / 720.0)
+            + ode.ode(t_n3, x_n3) * T::from_f64(-1274.0 / 720.0)
+            + ode.ode(t_n4, x_n4) * T::from_f64(251.0 / 720.0))
             * h)
     }
 }

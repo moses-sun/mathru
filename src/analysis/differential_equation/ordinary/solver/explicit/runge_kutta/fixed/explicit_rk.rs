@@ -1,5 +1,6 @@
 use crate::algebra::abstr::Real;
 use crate::algebra::linear::Vector;
+use crate::analysis::differential_equation::ordinary::ExplicitODE;
 #[cfg(feature = "serde")]
 use serde::{Deserialize, Serialize};
 use std::clone::Clone;
@@ -21,13 +22,13 @@ where
         ExplicitRK { a, b, b_order, c }
     }
 
-    pub fn do_step<F>(&self, ode: &F, t_n: &T, x_n: &Vector<T>, h: &T) -> Vector<T>
+    pub fn do_step<O>(&self, ode: &O, t_n: &T, x_n: &Vector<T>, h: &T) -> Vector<T>
     where
-        F: Fn(&T, &Vector<T>) -> Vector<T>,
+        O: ExplicitODE<T>,
     {
         let mut k: Vec<Vector<T>> = Vec::with_capacity(self.b.len());
 
-        k.push(ode(t_n, x_n));
+        k.push(ode.ode(t_n, x_n));
 
         for j in 1..self.b.len() {
             let i_b = (j - 1) * j / 2;
@@ -39,7 +40,7 @@ where
                 .map(|(a_jl, k_l)| k_l * a_jl * *h)
                 .fold(x_n.clone(), |a, b| a + b);
 
-            k.push(ode(&(*t_n + self.c[j - 1] * *h), &sum));
+            k.push(ode.ode(&(*t_n + self.c[j - 1] * *h), &sum));
         }
 
         self.b
