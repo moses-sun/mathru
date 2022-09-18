@@ -329,3 +329,35 @@ fn from_chebyshev_u_2() {
 
     assert_eq!(p_ref, p);
 }
+
+#[test]
+fn from_bernstein_1() {
+    let p = Polynomial::from_bernstein(1, 3);
+    let p_ref = Polynomial::from_coef(vec![3.0, -6.0, 3.0, 0.0]);
+
+    assert_eq!(p_ref, p);
+}
+
+#[test]
+fn from_bernstein_2() {
+    let p = Polynomial::from_bernstein(0, 0);
+    let p_ref = Polynomial::from_coef(vec![1.0]);
+
+    assert_eq!(p_ref, p);
+}
+
+#[test]
+fn from_bernstein_3() {
+    let p = Polynomial::from_bernstein(3, 3);
+    let p_ref = Polynomial::from_coef(vec![1.0, 0.0, 0.0, 0.0]);
+
+    assert_eq!(p_ref, p);
+}
+
+#[test]
+fn from_bernstein_4() {
+    let p = Polynomial::from_bernstein(0, 3);
+    let p_ref = Polynomial::from_coef(vec![-1.0, 3.0, -3.0, 1.0]);
+
+    assert_eq!(p_ref, p);
+}
