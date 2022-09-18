@@ -10,6 +10,8 @@ use crate::algebra::abstr::{
     AbsDiffEq, Monoid, Quasigroup, Real, RelativeEq, Semigroup, SemigroupAdd,
 };
 use crate::algebra::abstr::{Field, Scalar};
+use crate::elementary::Power;
+use crate::statistics::combins::binom;
 use std::fmt::{Display, Formatter, Result};
 use std::ops::{Add, AddAssign, Div, Mul, MulAssign, Neg, Sub, SubAssign};
 
@@ -144,6 +146,50 @@ impl<T> Polynomial<T> {
                 .0
             }
         }
+    }
+
+    /// Creates a Bernstein polynomial of degree n
+    ///
+    /// <https://en.wikipedia.org/wiki/Bernstein_polynomial>
+    ///
+    /// # Arguments
+    /// * `n`: Degree of the Bernstein polynomial
+    /// * `v`:
+    ///
+    /// # Panics
+    /// if v > n
+    ///
+    /// # Example
+    /// ```
+    /// use mathru::algebra::abstr::Polynomial;
+    ///
+    /// let p = Polynomial::from_bernstein(1, 3);
+    /// let p_ref = Polynomial::from_coef(vec![3.0, -6.0, 3.0, 0.0]);
+    ///
+    /// assert_eq!(p_ref, p)
+    /// ```
+    pub fn from_bernstein(v: u32, n: u32) -> Polynomial<T>
+    where
+        T: Field + Scalar + Power,
+    {
+        if v > n {
+            panic!("v is not allowed to be greather than n")
+        }
+
+        let p = n - v;
+
+        let p2 = if p > 0 {
+            let roots = vec![T::one(); p as usize];
+            Polynomial::from_root(roots)
+        } else {
+            Polynomial::from_coef(vec![T::one()])
+        };
+
+        let mut coefs = vec![T::zero(); (v + 1) as usize];
+        coefs[0] = (-T::one()).pow(T::from_u32(p)) * T::from_u32(binom(n, v));
+        let p1 = Polynomial::from_coef(coefs);
+
+        p1 * p2
     }
 
     /// Creates a Chebyshev polynomial of first kind with the given degree
