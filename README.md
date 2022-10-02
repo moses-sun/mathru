@@ -55,6 +55,8 @@ The following features are implemented in this create:
         * [Implicit methods](https://matthiaseiholzer.gitlab.io/mathru/documentation/analysis/differentialeq/ode/implicit)
             * Implicit Euler
             * Backward differentiation formula (BDF)
+    * Interpolation
+        * Cubic spline
 
 * [Optimization](https://matthiaseiholzer.gitlab.io/mathru/documentation/optimization)
     * Gauss-Newton algorithm
