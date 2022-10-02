@@ -12,7 +12,7 @@
 //!
 //! ```toml
 //! [dependencies]
-//! mathru = "0.13"
+//! mathru = "0.14"
 //! ```
 //!
 //! Then it is ready to be used:
@@ -115,46 +115,33 @@
 //! }
 //!
 //!
-//! fn main()
+//!
+//!
+//! let num_samples: usize = 100;
+//! let noise: Normal<f64> = Normal::new(0.0, 0.05);
+//! let mut t_vec: Vec<f64> = Vec::with_capacity(num_samples);
+//! // Start time
+//! let t_0 = 0.0f64;
+//! // End time
+//! let t_1 = 5.0f64;
+//! let mut y_vec: Vec<f64> = Vec::with_capacity(num_samples);
+//! // True function parameters
+//! let beta: Vector<f64> = vector![0.5; 5.0; -1.0];
+//! for i in 0..num_samples
 //! {
-//!     let num_samples: usize = 100;
-//!
-//!     let noise: Normal<f64> = Normal::new(0.0, 0.05);
-//!
-//!     let mut t_vec: Vec<f64> = Vec::with_capacity(num_samples);
-//!
-//!     // Start time
-//!     let t_0 = 0.0f64;
-//!     // End time
-//!     let t_1 = 5.0f64;
-//!
-//!     let mut y_vec: Vec<f64> = Vec::with_capacity(num_samples);
-//!
-//!     // True function parameters
-//!     let beta: Vector<f64> = vector![0.5; 5.0; -1.0];
-//!
-//!     for i in 0..num_samples
-//!     {
-//!         let t_i: f64 = (t_1 - t_0) / (num_samples as f64) * (i as f64);
-//!
-//!         //Add some noise
-//!         y_vec.push(Example::function(t_i, &beta) + noise.random());
-//!
-//!         t_vec.push(t_i);
-//!     }
-//!
-//!     let t: Vector<f64> = Vector::new_column(t_vec.clone());
-//!     let y: Vector<f64> = Vector::new_column(y_vec.clone());
-//!
-//!     let example_function = Example::new(t, y);
-//!
-//!     let optim: LevenbergMarquardt<f64> = LevenbergMarquardt::new(100, 0.3, 0.95);
-//!
-//!     let beta_0: Vector<f64> = vector![-1.5; 1.0; -2.0];
-//!     let beta_opt: Vector<f64> = optim.minimize(&example_function, &beta_0).unwrap().arg();
-//!
-//!     println!("{}", beta_opt);
+//!     let t_i: f64 = (t_1 - t_0) / (num_samples as f64) * (i as f64);
+//!     //Add some noise
+//!     y_vec.push(Example::function(t_i, &beta) + noise.random());
+//!     t_vec.push(t_i);
 //! }
+//! let t: Vector<f64> = Vector::new_column(t_vec.clone());
+//! let y: Vector<f64> = Vector::new_column(y_vec.clone());
+//! let example_function = Example::new(t, y);
+//! let optim: LevenbergMarquardt<f64> = LevenbergMarquardt::new(100, 0.3, 0.95);
+//! let beta_0: Vector<f64> = vector![-1.5; 1.0; -2.0];
+//! let beta_opt: Vector<f64> = optim.minimize(&example_function, &beta_0).unwrap().arg();
+//! println!("{}", beta_opt);
+//!
 //! ```
 
 #[cfg(feature = "lapack")]

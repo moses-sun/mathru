@@ -36,7 +36,7 @@ where
         &self,
         prob: &ImplicitInitialValueProblem<T, O>,
         method: &M,
-    ) -> Result<(Vec<T>, Vec<Vector<T>>), ()>
+    ) -> Result<(Vec<T>, Vec<Vector<T>>), String>
     where
         O: ImplicitODE<T>,
         M: ImplicitFixedStepSizeMethod<T>,

@@ -1,6 +1,6 @@
 //! Solves an ODE using Adams-Bashforth method.
 use crate::{
-    algebra::{abstr::Real, linear::vector::vector::Vector},
+    algebra::{abstr::Real, linear::vector::Vector},
     analysis::differential_equation::ordinary::{ExplicitInitialValueProblem, ExplicitODE},
 };
 
@@ -110,7 +110,7 @@ where
     pub fn solve<O>(
         &self,
         prob: &ExplicitInitialValueProblem<T, O>,
-    ) -> Result<(Vec<T>, Vec<Vector<T>>), ()>
+    ) -> Result<(Vec<T>, Vec<Vector<T>>), String>
     where
         O: ExplicitODE<T>,
     {
@@ -193,13 +193,13 @@ where
     }
 }
 
-impl<'a, T> AdamsBashforth<T>
+impl<T> AdamsBashforth<T>
 where
     T: Real,
 {
     fn step_s1<O>(
         prob: &ExplicitInitialValueProblem<T, O>,
-        t: &Vec<T>,
+        t: &[T],
         x: &Vec<Vector<T>>,
         h: T,
     ) -> Vector<T>
@@ -215,7 +215,7 @@ where
 
     fn step_s2<O>(
         prob: &ExplicitInitialValueProblem<T, O>,
-        t: &Vec<T>,
+        t: &[T],
         x: &Vec<Vector<T>>,
         h: T,
     ) -> Vector<T>
@@ -229,13 +229,13 @@ where
         let t_n1: &T = &t[n - 1];
         let ode = prob.ode();
         x_n + &((ode.ode(t_n, x_n) * T::from_f64(3.0 / 2.0)
-            + ode.ode(&t_n1, x_n1) * T::from_f64(-0.5))
+            + ode.ode(t_n1, x_n1) * T::from_f64(-0.5))
             * h)
     }
 
     fn step_s3<O>(
         prob: &ExplicitInitialValueProblem<T, O>,
-        t: &Vec<T>,
+        t: &[T],
         x: &Vec<Vector<T>>,
         h: T,
     ) -> Vector<T>
@@ -259,7 +259,7 @@ where
 
     fn step_s4<O>(
         prob: &ExplicitInitialValueProblem<T, O>,
-        t: &Vec<T>,
+        t: &[T],
         x: &Vec<Vector<T>>,
         h: T,
     ) -> Vector<T>
@@ -286,7 +286,7 @@ where
 
     fn step_s5<O>(
         prob: &ExplicitInitialValueProblem<T, O>,
-        t: &Vec<T>,
+        t: &[T],
         x: &Vec<Vector<T>>,
         h: T,
     ) -> Vector<T>

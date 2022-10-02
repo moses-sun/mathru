@@ -116,7 +116,7 @@ where
 }
 
 /// Add scalar to matrix
-impl<'a, 'b, T> Add<&'a T> for &'a Matrix<T>
+impl<'a, T> Add<&'a T> for &'a Matrix<T>
 where
     T: Field + Scalar,
 {
@@ -140,7 +140,7 @@ where
 }
 
 /// Add scalar to matrix
-impl<'a, 'b, T> Add<&'a T> for &'a mut Matrix<T>
+impl<'a, T> Add<&'a T> for &'a mut Matrix<T>
 where
     T: Field + Scalar,
 {
@@ -157,7 +157,7 @@ where
     /// &mut a + &-4.0;
     /// ```
     fn add(self, rhs: &'a T) -> Self::Output {
-        let _ = self.data.iter_mut().for_each(&|x: &mut T| *x += *rhs);
+        self.data.iter_mut().for_each(&|x: &mut T| *x += *rhs);
         self
     }
 }

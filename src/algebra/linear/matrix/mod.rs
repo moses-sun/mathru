@@ -1,5 +1,5 @@
 #[macro_use]
-pub mod matrix;
+pub mod matrix_impl;
 //mod matrixcolumniterator;
 //mod matrixcolumniteratormut;
 mod matrixintoiterator;
@@ -45,7 +45,7 @@ mod mint;
 
 pub use self::{
     inverse::Inverse,
-    matrix::Matrix,
+    matrix_impl::Matrix,
     //matrixcolumniterator::MatrixColumnIterator,
     //matrixcolumniteratormut::MatrixColumnIteratorMut,
     matrixcolumnintoiterator::MatrixColumnIntoIterator,

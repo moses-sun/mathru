@@ -9,7 +9,9 @@ where
 {
     /// Decomposes the matrix into a upper and a lower matrix
     ///
+    /// ```math
     /// PA = LU
+    /// ```
     ///
     /// # Arguments
     ///
@@ -52,7 +54,7 @@ where
             }
 
             for j in (i + 1)..a.n {
-                let f: T = if a[[i, i]].clone() != T::zero() {
+                let f: T = if a[[i, i]] != T::zero() {
                     a[[j, i]] / a[[i, i]]
                 } else {
                     a[[j, i]]

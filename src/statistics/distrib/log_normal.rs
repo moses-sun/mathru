@@ -52,7 +52,7 @@ where
     /// It is assumed that data are normal distributed.
     ///
     /// data.len() >= 2
-    pub fn from_data(_data: &Vec<T>) -> Self {
+    pub fn from_data(_data: &[T]) -> Self {
         unimplemented!()
     }
 }

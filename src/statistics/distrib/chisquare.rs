@@ -102,15 +102,14 @@ where
         let t1: T = (-x / T::from_f64(2.0)).exp();
 
         let k_natural: u32 = self.k.to_u32();
-        let p: T;
 
-        if k_natural % 2 == 0 {
+        let p: T = if k_natural % 2 == 0 {
             let mut sum: T = T::zero();
             for i in 0..(self.k / T::from_f64(2.0)).to_u32() {
                 sum += (x / T::from_f64(2.0)).pow(T::from_u32(i)) / gamma::gamma(T::from_u32(i + 1))
             }
 
-            p = T::one() - t1 * sum;
+            T::one() - t1 * sum
         } else {
             let mut sum: T = T::zero();
             for i in 0..(self.k / T::from_f64(2.0)).to_u32() {
@@ -118,8 +117,8 @@ where
                     / gamma::gamma(T::from_f64((i as f64) + 1.5));
             }
 
-            p = error::erf((x / T::from_f64(2.0)).sqrt()) - t1 * sum;
-        }
+            error::erf((x / T::from_f64(2.0)).sqrt()) - t1 * sum
+        };
 
         p
     }

@@ -153,28 +153,23 @@ impl Error for f64 {
         if a >= 1.0 {
             if self == 1.0 {
                 return f64::INFINITY;
-            } else {
-                if self == -1.0 {
-                    return f64::NEG_INFINITY;
-                }
+            } else if self == -1.0 {
+                return f64::NEG_INFINITY;
             }
+
             panic!("|self| has to be <= 1.0")
+        } else if a <= 0.75 {
+            let t: f64 = self * self - 0.5625;
+
+            self * horner(t, &factors_leq075_p) / horner(t, &factors_leq075_q)
+        } else if a <= 0.9375 {
+            let t: f64 = self * self - 0.87890625;
+
+            self * horner(t, &factors_leg09375_p) / horner(t, &factors_leg09375_q)
         } else {
-            if a <= 0.75 {
-                let t: f64 = self * self - 0.5625;
+            let t: f64 = 1.0 / (-(1.0 - a).ln()).sqrt();
 
-                self * horner(t, &factors_leq075_p) / horner(t, &factors_leq075_q)
-            } else {
-                if a <= 0.9375 {
-                    let t: f64 = self * self - 0.87890625;
-
-                    self * horner(t, &factors_leg09375_p) / horner(t, &factors_leg09375_q)
-                } else {
-                    let t: f64 = 1.0 / (-(1.0 - a).ln()).sqrt();
-
-                    horner(t, &factors_p) / (copysign(t, self) * horner(t, &factors_q))
-                }
-            }
+            horner(t, &factors_p) / (copysign(t, self) * horner(t, &factors_q))
         }
     }
 
@@ -223,28 +218,23 @@ impl Error for f32 {
         if a >= 1.0 {
             if self == 1.0 {
                 return f32::INFINITY;
-            } else {
-                if self == -1.0 {
-                    return f32::NEG_INFINITY;
-                }
+            } else if self == -1.0 {
+                return f32::NEG_INFINITY;
             }
+
             panic!("|self| has to be <= 1.0")
+        } else if a <= 0.75 {
+            let t: f32 = self * self - 0.5625;
+
+            self * horner(t, &factors_leq075_p) / horner(t, &factors_leq075_q)
+        } else if a <= 0.9375 {
+            let t: f32 = self * self - 0.87890625;
+
+            self * horner(t, &factors_leg09375_p) / horner(t, &factors_leg09375_q)
         } else {
-            if a <= 0.75 {
-                let t: f32 = self * self - 0.5625;
+            let t: f32 = 1.0 / (-(1.0 - a).ln()).sqrt();
 
-                self * horner(t, &factors_leq075_p) / horner(t, &factors_leq075_q)
-            } else {
-                if a <= 0.9375 {
-                    let t: f32 = self * self - 0.87890625;
-
-                    self * horner(t, &factors_leg09375_p) / horner(t, &factors_leg09375_q)
-                } else {
-                    let t: f32 = 1.0 / (-(1.0 - a).ln()).sqrt();
-
-                    horner(t, &factors_p) / (copysign(t, self) * horner(t, &factors_q))
-                }
-            }
+            horner(t, &factors_p) / (copysign(t, self) * horner(t, &factors_q))
         }
     }
 

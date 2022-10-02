@@ -60,16 +60,16 @@ use std::clone::Clone;
 /// impl Optim<f64> for LinearEquation
 /// {
 ///     // A
-///		fn jacobian(&self, _input: &Vector<f64>) -> Matrix<f64>
-///		{
-///			return self.a.clone();
-///		}///
+///     fn jacobian(&self, _input: &Vector<f64>) -> Matrix<f64>
+///     {
+///         return self.a.clone();
+///     }
 ///
 ///     // f = b-Ax
-///		fn eval(&self, x: &Vector<f64>) -> Vector<f64>
-///		{
-///			return self.b.clone() - self.a.clone() * x.clone()
-///		}
+///     fn eval(&self, x: &Vector<f64>) -> Vector<f64>
+///     {
+///         return self.b.clone() - self.a.clone() * x.clone()
+///     }
 ///
 ///     //Computes the Hessian at the given value x
 ///     fn hessian(&self, _x: &Vector<f64>) -> Matrix<f64>

@@ -74,12 +74,11 @@ where
         let y_1s: T = a * (y[1] * y[2]);
         let y_2s: T = b * (y[2] * y[0]);
 
-        let f: T;
-        if *x >= T::from_f64(3.0) * T::pi() && *x <= T::from_f64(4.0) * T::pi() {
-            f = T::from_f64(0.25) * x.sin() * x.sin();
+        let f: T = if *x >= T::from_f64(3.0) * T::pi() && *x <= T::from_f64(4.0) * T::pi() {
+            T::from_f64(0.25) * x.sin() * x.sin()
         } else {
-            f = T::zero();
-        }
+            T::zero()
+        };
         let y_3s: T = c * (y[0] * y[1]) + f;
         vector![y_1s; y_2s; y_3s]
     }

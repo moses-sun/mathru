@@ -75,5 +75,5 @@ pub trait Discrete<T, A, B> {
     fn mean(&self) -> T;
 
     /// Variance
-    fn variance(self: &Self) -> T;
+    fn variance(&self) -> T;
 }

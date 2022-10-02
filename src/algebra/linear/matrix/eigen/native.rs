@@ -21,7 +21,7 @@ where
     /// let a: Matrix<f64> = Matrix::new(3, 3, vec![1.0, -3.0, 3.0, 3.0, -5.0, 3.0, 6.0, -6.0, 4.0]);
     /// let eigen: EigenDec<f64> = a.dec_eigen().unwrap();
     /// ```
-    pub fn dec_eigen(self) -> Result<EigenDec<T>, ()> {
+    pub fn dec_eigen(self) -> Result<EigenDec<T>, String> {
         let (m, n): (usize, usize) = self.dim();
         assert_eq!(
             m, n,

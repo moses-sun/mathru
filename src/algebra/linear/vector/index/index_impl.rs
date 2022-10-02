@@ -33,7 +33,7 @@ impl<T> Index<usize> for Vector<T> {
     }
 }
 
-impl<'a, T> IndexMut<usize> for Vector<T> {
+impl<T> IndexMut<usize> for Vector<T> {
     /// Returns the component
     ///
     /// # Panics

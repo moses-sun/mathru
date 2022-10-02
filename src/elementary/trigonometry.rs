@@ -398,25 +398,19 @@ where
         if self.re == T::zero() {
             if self.im.abs() <= T::one() {
                 re = T::zero()
+            } else if self.im > T::zero() {
+                re = T::pi() / two;
             } else {
-                if self.im > T::zero() {
-                    re = T::pi() / two;
-                } else {
-                    re = -T::pi() / two;
-                }
+                re = -T::pi() / two;
             }
+        } else if self.re > T::zero() {
+            re = (((self.re * self.re + self.im * self.im - T::one()) / (two * self.re)).arctan()
+                + T::pi() / two)
+                / two
         } else {
-            if self.re > T::zero() {
-                re = (((self.re * self.re + self.im * self.im - T::one()) / (two * self.re))
-                    .arctan()
-                    + T::pi() / two)
-                    / two
-            } else {
-                re = (((self.re * self.re + self.im * self.im - T::one()) / (two * self.re))
-                    .arctan()
-                    - T::pi() / two)
-                    / two
-            }
+            re = (((self.re * self.re + self.im * self.im - T::one()) / (two * self.re)).arctan()
+                - T::pi() / two)
+                / two
         }
 
         let im: T =

@@ -36,7 +36,7 @@ where
     /// let l: (Matrix<f64>) = a.dec_cholesky().unwrap().l();
     /// # }
     /// ```
-    pub fn dec_cholesky(&self) -> Result<CholeskyDec<T>, ()> {
+    pub fn dec_cholesky(&self) -> Result<CholeskyDec<T>, String> {
         let (m, n): (usize, usize) = self.dim();
         assert_eq!(m, n);
 

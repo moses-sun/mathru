@@ -101,12 +101,10 @@ where
     fn cdf(&self, x: T) -> T {
         if x < self.a {
             T::zero()
+        } else if x > self.b {
+            T::one()
         } else {
-            if x > self.b {
-                T::one()
-            } else {
-                (x - self.a) / (self.b - self.a)
-            }
+            (x - self.a) / (self.b - self.a)
         }
     }
 

@@ -7,6 +7,7 @@ macro_rules! impl_real
     ($($t:ty, $id:ident);*) =>
     {
     	$(
+        #[allow(clippy::excessive_precision)]
         impl Real for $t
         {
 

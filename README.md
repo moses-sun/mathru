@@ -2,7 +2,7 @@
 
 [![crate](https://img.shields.io/crates/v/mathru.svg)](https://crates.io/crates/mathru)
 [![documentation](https://docs.rs/mathru/badge.svg)](https://docs.rs/mathru)
-![minimum rustc 1.58.0](https://img.shields.io/badge/rustc-1.58.0-green.svg)
+![minimum rustc 1.64.0](https://img.shields.io/badge/rustc-1.64.0-green.svg)
 ![maintenance](https://img.shields.io/badge/maintenance-actively--developed-brightgreen.svg)
 [![pipeline status](https://gitlab.com/matthiaseiholzer/mathru/badges/main/pipeline.svg)](https://gitlab.com/matthiaseiholzer/mathru/-/commits/main)
 ------------
@@ -117,13 +117,13 @@ Add this to your `Cargo.toml` for the native Rust implementation:
 
 ```toml
 [dependencies.mathru]
-version = "0.13"
+version = "0.14"
 ```
 Add the following lines to 'Cargo.toml' if the openblas library should be used:
 
 ```toml
 [dependencies.mathru]
-version = "0.13"
+version = "0.14"
 default-features = false
 features = "openblas"
 ```

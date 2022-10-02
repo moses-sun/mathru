@@ -115,7 +115,7 @@ where
     /// let b: Matrix<f64> = &a - &-4.0;
     /// ```
     fn sub(self, rhs: &T) -> Self::Output {
-        let _ = self.data.iter_mut().for_each(&|x: &mut T| *x -= *rhs);
+        self.data.iter_mut().for_each(&|x: &mut T| *x -= *rhs);
         self
     }
 }

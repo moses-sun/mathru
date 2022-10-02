@@ -43,7 +43,7 @@ where
 {
     /// Replace the epsilon value with the one specified.
     pub fn epsilon(self, epsilon: A::Epsilon) -> AbsDiff<A, B> {
-        AbsDiff { epsilon, ..self }
+        AbsDiff { epsilon }
     }
 
     /// Perform the equality comparison
@@ -67,7 +67,7 @@ where
 
     /// The default tolerance to use when testing values that are close together.
     ///
-    /// This is used when no `epsilon` value is supplied to the [`abs_diff_eq!`], [`relative_eq!`],
+    /// This is used when no `epsilon` value is supplied to the abs_diff_eq!, relative_eq!,
     fn default_epsilon() -> Self::Epsilon;
 
     /// A test for equality that uses the absolute difference to compute the approximate
@@ -163,7 +163,7 @@ macro_rules! __assert_approx {
     }};
 }
 
-/// An assertion that delegates to [`abs_diff_eq!`], and panics with a helpful error on failure.
+/// An assertion that delegates to abs_diff_eq!, and panics with a helpful error on failure.
 #[macro_export(local_inner_macros)]
 macro_rules! assert_abs_diff_eq {
     ($given:expr, $expected:expr $(, $opt:ident = $val:expr)*) => {

@@ -63,12 +63,10 @@ where
     fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
         if self == other {
             Some(Ordering::Equal)
+        } else if self.abs().to_f64() > other.abs().to_f64() {
+            Some(Ordering::Greater)
         } else {
-            if self.abs().to_f64() > other.abs().to_f64() {
-                Some(Ordering::Greater)
-            } else {
-                Some(Ordering::Less)
-            }
+            Some(Ordering::Less)
         }
     }
 }
