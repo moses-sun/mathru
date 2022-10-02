@@ -78,7 +78,7 @@ where
 {
     /// The default relative tolerance for testing values that are far-apart.
     ///
-    /// This is used when no `max_relative` value is supplied to the [`relative_eq`] macro.
+    /// This is used when no `max_relative` value is supplied to the relative_eq macro.
     fn default_max_relative() -> Self::Epsilon;
 
     /// A test for equality that uses a relative comparison if the values are far apart.
@@ -168,7 +168,7 @@ macro_rules! relative_ne {
     };
 }
 
-/// An assertion that delegates to [`relative_eq!`], and panics with a helpful error on failure.
+/// An assertion that delegates to relative_eq!, and panics with a helpful error on failure.
 #[macro_export(local_inner_macros)]
 macro_rules! assert_relative_eq {
     ($given:expr, $expected:expr $(, $opt:ident = $val:expr)*) => {

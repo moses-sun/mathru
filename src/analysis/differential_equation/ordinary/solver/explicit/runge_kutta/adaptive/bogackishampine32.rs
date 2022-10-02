@@ -52,7 +52,7 @@ where
 }
 
 impl<T> ExplicitRKEmbeddedMethod<T> for BogackiShampine32<T> {
-    fn tableau<'a>(&'a self) -> &'a ExplicitRKEmbedded<T> {
+    fn tableau(&self) -> &ExplicitRKEmbedded<T> {
         &self.butcher
     }
 }

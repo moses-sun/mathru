@@ -68,7 +68,7 @@ where
         init_cond: Vector<T>,
     ) -> ImplicitInitialValueProblemBuilder<'a, T, O> {
         ImplicitInitialValueProblemBuilder {
-            ode: ode,
+            ode,
             t_start,
             init_cond,
             callback: None,

@@ -11,7 +11,6 @@ macro_rules! impl_into_mint(
             fn into(self) -> $MV<T> {
                 let (m, n) = self.dim();
                 let $data = self.data;
-                println!("{}, {}", m, n);
                 if (m != 1 && n != $rows) && (m != $rows && n != 1) {
                     panic!("Vector can not be converted into a $MV because it is not a 1 by {} or {} by 1 vector", $rows, $rows)
                 }

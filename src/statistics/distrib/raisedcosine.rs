@@ -99,12 +99,10 @@ where
         if (self.mu - self.s) <= x && x <= (self.mu + self.s) {
             let k: T = (x - self.mu) / self.s;
             (T::one() + k + T::one() / T::pi() * (k * T::pi()).sin()) / T::from_f64(2.0)
+        } else if x < (self.mu - self.s) {
+            T::zero()
         } else {
-            if x < (self.mu - self.s) {
-                T::zero()
-            } else {
-                T::one()
-            }
+            T::one()
         }
     }
 

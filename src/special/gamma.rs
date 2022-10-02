@@ -233,6 +233,7 @@ pub trait Gamma {
 
 macro_rules! impl_gamma {
     ($t: ty, $PI: expr, $E: expr) => {
+        #[allow(clippy::excessive_precision)]
         impl Gamma for $t {
             fn gamma(self) -> Self {
                 if self == 0.0 {

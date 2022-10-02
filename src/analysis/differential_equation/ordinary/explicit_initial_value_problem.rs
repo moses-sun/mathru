@@ -68,7 +68,7 @@ where
         init_cond: Vector<T>,
     ) -> ExplicitInitialValueProblemBuilder<'a, T, O> {
         ExplicitInitialValueProblemBuilder {
-            ode: ode,
+            ode,
             t_start,
             init_cond,
             callback: None,
@@ -95,7 +95,7 @@ where
             panic!("Either callback or t_end has to be set")
         }
 
-        if !self.t_end.is_none() {
+        if self.t_end.is_some() {
             let t_start = self.t_start;
             let t_end_l = self.t_end.unwrap();
 

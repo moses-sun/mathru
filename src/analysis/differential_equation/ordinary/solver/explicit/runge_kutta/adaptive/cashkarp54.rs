@@ -71,7 +71,7 @@ where
 }
 
 impl<T> ExplicitRKEmbeddedMethod<T> for CashKarp54<T> {
-    fn tableau<'a>(&'a self) -> &'a ExplicitRKEmbedded<T> {
+    fn tableau(&self) -> &ExplicitRKEmbedded<T> {
         &self.butcher
     }
 }

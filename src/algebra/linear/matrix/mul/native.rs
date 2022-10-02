@@ -207,7 +207,7 @@ where
     /// let b: Matrix<f64> = &a * &-4.0;
     /// ```
     fn mul(self, rhs: &'b T) -> Self::Output {
-        let _ = self.data.iter_mut().for_each(&|a: &mut T| *a *= *rhs);
+        self.data.iter_mut().for_each(&|a: &mut T| *a *= *rhs);
         self
     }
 }
@@ -258,6 +258,6 @@ where
             m as isize,
         );
 
-        return c;
+        c
     }
 }

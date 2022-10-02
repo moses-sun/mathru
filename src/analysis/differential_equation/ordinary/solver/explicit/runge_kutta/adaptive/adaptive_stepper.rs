@@ -310,12 +310,12 @@ where
         rel_tol: T,
     ) -> ProportionalControlBuilder<T> {
         ProportionalControlBuilder {
-            n_max: n_max,
-            fac: fac,
-            fac_min: fac_min,
-            fac_max: fac_max,
-            abs_tol: abs_tol,
-            rel_tol: rel_tol,
+            n_max,
+            fac,
+            fac_min,
+            fac_max,
+            abs_tol,
+            rel_tol,
             h_0: None,
         }
     }

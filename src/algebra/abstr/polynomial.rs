@@ -280,16 +280,12 @@ where
                     } else {
                         write!(f, " + {}x^{}", a_i, i)?;
                     }
+                } else if i == 0 {
+                    write!(f, "{}", a_i)?;
+                } else if only_zero_terms {
+                    write!(f, "{}x", a_i)?;
                 } else {
-                    if i == 0 {
-                        write!(f, "{}", a_i)?;
-                    } else {
-                        if only_zero_terms {
-                            write!(f, "{}x", a_i)?;
-                        } else {
-                            write!(f, " + {}x", a_i)?
-                        }
-                    }
+                    write!(f, " + {}x", a_i)?
                 }
 
                 only_zero_terms = false

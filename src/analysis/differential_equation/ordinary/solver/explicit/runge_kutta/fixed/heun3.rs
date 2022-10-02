@@ -35,7 +35,7 @@ where
 }
 
 impl<T> ExplicitRKMethod<T> for Heun3<T> {
-    fn tableau<'a>(&'a self) -> &'a ExplicitRK<T> {
+    fn tableau(&self) -> &ExplicitRK<T> {
         &self.butcher
     }
 }

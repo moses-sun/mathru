@@ -10,7 +10,7 @@ mod bernoulli;
 mod beta;
 mod binomial;
 mod chisquare;
-mod distrib;
+mod distrib_impl;
 mod exponential;
 mod gamma;
 mod log_normal;
@@ -25,7 +25,7 @@ pub use self::{
     beta::Beta,
     binomial::Binomial,
     chisquare::ChiSquare,
-    distrib::{Continuous, Discrete, Distribution},
+    distrib_impl::{Continuous, Discrete, Distribution},
     exponential::Exponential,
     gamma::Gamma,
     log_normal::LogNormal,

@@ -165,6 +165,6 @@ where
     /// z)}{\partial z} - I$
     fn jacobian(&self, z: &Vector<T>) -> Matrix<T> {
         let (m, _n): (usize, usize) = z.dim();
-        self.function.jacobian(&self.t, z) * *self.h - Matrix::one(m)
+        self.function.jacobian(self.t, z) * *self.h - Matrix::one(m)
     }
 }

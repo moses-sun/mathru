@@ -310,16 +310,14 @@ where
         if b == T::zero() {
             c = T::one();
             s = T::zero();
+        } else if b.abs() > a.abs() {
+            let tau: T = -a / b;
+            s = T::one() / (T::one() + tau.pow(exponent)).pow(exponent_sqrt);
+            c = s * tau;
         } else {
-            if b.abs() > a.abs() {
-                let tau: T = -a / b;
-                s = T::one() / (T::one() + tau.pow(exponent)).pow(exponent_sqrt);
-                c = s * tau;
-            } else {
-                let tau: T = -b / a;
-                c = T::one() / (T::one() + tau.pow(exponent)).pow(exponent_sqrt);
-                s = c * tau;
-            }
+            let tau: T = -b / a;
+            c = T::one() / (T::one() + tau.pow(exponent)).pow(exponent_sqrt);
+            s = c * tau;
         }
 
         (c, s)
@@ -358,18 +356,15 @@ where
 
         let norm: T = T::from_f64(2.0);
 
-        let alpha: T;
-
         let d_0: T = d[0];
 
-        if d_0 >= T::zero() {
-            alpha = -d.p_norm(&norm);
+        let alpha: T = if d_0 >= T::zero() {
+            -d.p_norm(&norm)
         } else {
-            alpha = d.p_norm(&norm);
-        }
+            d.p_norm(&norm)
+        };
 
         if alpha == T::zero() {
-            println!("norm zero");
             let h: Matrix<T> = Matrix::one(v_m); // v_n
             return h;
         }
@@ -381,7 +376,7 @@ where
         v[0] = (T::from_f64(0.5) * (T::one() - d_0 / alpha)).pow(T::from_f64(0.5));
         let p: T = -alpha * v[0];
 
-        if d_m - 1 >= 1 {
+        if d_m > 1 {
             let temp: Vector<T> = d
                 .get_slice(1, d_m - 1)
                 .apply(&|e: &T| -> T { *e / (T::from_f64(2.0) * p) });
@@ -506,14 +501,14 @@ where
     T: Display,
 {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "\n").unwrap();
+        writeln!(f).unwrap();
         for i in 0..self.m {
             for j in 0..self.n {
                 write!(f, "{} ", self[[i, j]]).unwrap();
             }
-            write!(f, "\n").unwrap();
+            writeln!(f).unwrap();
         }
-        write!(f, "\n")
+        writeln!(f)
     }
 }
 

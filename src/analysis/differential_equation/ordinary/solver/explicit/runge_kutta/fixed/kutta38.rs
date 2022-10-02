@@ -43,7 +43,7 @@ where
 }
 
 impl<T> ExplicitRKMethod<T> for Kutta38<T> {
-    fn tableau<'a>(&'a self) -> &'a ExplicitRK<T> {
+    fn tableau(&self) -> &ExplicitRK<T> {
         &self.butcher
     }
 }

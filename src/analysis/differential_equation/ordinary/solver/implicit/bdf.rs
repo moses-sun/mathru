@@ -1,6 +1,6 @@
 //! Solves an ODE using backward differentiation formula
 use crate::{
-    algebra::{abstr::Real, linear::vector::vector::Vector},
+    algebra::{abstr::Real, linear::vector::Vector},
     analysis::differential_equation::ordinary::{ImplicitInitialValueProblem, ImplicitODE},
 };
 #[cfg(feature = "serde")]
@@ -137,7 +137,7 @@ where
     pub fn solve<O>(
         &self,
         prob: &ImplicitInitialValueProblem<T, O>,
-    ) -> Result<(Vec<T>, Vec<Vector<T>>), ()>
+    ) -> Result<(Vec<T>, Vec<Vector<T>>), String>
     where
         O: ImplicitODE<T>,
     {
@@ -232,7 +232,7 @@ where
 {
     fn step_s1<O>(
         prob: &ImplicitInitialValueProblem<T, O>,
-        t: &Vec<T>,
+        t: &[T],
         x: &Vec<Vector<T>>,
         h: T,
     ) -> Vector<T>
@@ -248,7 +248,7 @@ where
 
     fn step_s2<O>(
         prob: &ImplicitInitialValueProblem<T, O>,
-        t: &Vec<T>,
+        t: &[T],
         x: &Vec<Vector<T>>,
         h: T,
     ) -> Vector<T>
@@ -268,7 +268,7 @@ where
 
     fn step_s3<O>(
         prob: &ImplicitInitialValueProblem<T, O>,
-        t: &Vec<T>,
+        t: &[T],
         x: &Vec<Vector<T>>,
         h: T,
     ) -> Vector<T>
@@ -291,7 +291,7 @@ where
 
     fn step_s4<O>(
         prob: &ImplicitInitialValueProblem<T, O>,
-        t: &Vec<T>,
+        t: &[T],
         x: &Vec<Vector<T>>,
         h: T,
     ) -> Vector<T>
@@ -317,7 +317,7 @@ where
 
     fn step_s5<O>(
         prob: &ImplicitInitialValueProblem<T, O>,
-        t: &Vec<T>,
+        t: &[T],
         x: &Vec<Vector<T>>,
         h: T,
     ) -> Vector<T>
@@ -346,7 +346,7 @@ where
 
     fn step_s6<O>(
         prob: &ImplicitInitialValueProblem<T, O>,
-        t: &Vec<T>,
+        t: &[T],
         x: &Vec<Vector<T>>,
         h: T,
     ) -> Vector<T>
