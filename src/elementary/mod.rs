@@ -1,7 +1,4 @@
-//! Elementary functions
-//!
-//! Fore more information:
-//! <https://en.wikipedia.org/wiki/Elementary_function>
+//! Elementary functions (the ones you learn in high school)
 
 pub mod exponential;
 pub mod hyperbolic;

@@ -9,38 +9,35 @@ impl<T> Matrix<T>
 where
     T: Real,
 {
-    /// Decomposes the symmetric, positive definite quadratic matrix A into a
-    /// lower triangular matrix L A = L L^T
-    ///
-    /// # Arguments
-    ///
-    /// A has to be symmetric and positive definite
+    /// Decomposes a symmetric, positive definite matrix $A$ into a product of
+    /// a lower triangular matrix $L$ and its transpose such that $A = LL^T$.
     ///
     /// # Panics
     ///
-    /// If A is not a quadratic matrix
+    /// If the matrix $A$ is not quadratic or not positive definite.
+    ///
+    /// For efficiency reasons, the function may not check, if the matrix is
+    /// symmetric, but just assume so.
     ///
     /// # Example
     ///
     /// ```
     /// # #[macro_use]
     /// # extern crate mathru;
-    /// # fn main()
-    /// # {
+    /// # fn main() -> Result<(), String> {
     /// use mathru::algebra::linear::Matrix;
-    ///
+    /// use mathru::matrix;
     /// let a: Matrix<f64> = matrix![   2.0, -1.0, 0.0;
     ///                                -1.0, 2.0, -1.0;
     ///                                 0.0, -1.0,  2.0];
-    ///
-    /// let l: (Matrix<f64>) = a.dec_cholesky().unwrap().l();
+    /// let l: Matrix<f64> = a.dec_cholesky()?.l();
+    /// # Ok(())
     /// # }
     /// ```
     pub fn dec_cholesky(&self) -> Result<CholeskyDec<T>, String> {
-        let (m, n): (usize, usize) = self.dim();
+        let (m, n) = self.dim();
         assert_eq!(m, n);
 
-        let (m, n) = self.dim();
         let mut l: Matrix<T> = Matrix::zero(m, n);
 
         for i in 0..n {
@@ -51,8 +48,13 @@ where
                 }
 
                 if i == j {
+                    assert!(
+                        self[[i, i]] - sum >= T::zero(),
+                        "The matrix is not positive definite."
+                    );
                     l[[i, j]] = (self[[i, i]] - sum).sqrt();
                 } else {
+                    assert_ne!(l[[j, j]], T::zero(), "The matrix is not positive definite");
                     l[[i, j]] = (self[[i, j]] - sum) / l[[j, j]];
                 }
             }
@@ -66,38 +68,36 @@ where
     T: Real,
     Complex<T>: Scalar,
 {
-    /// Decomposes the symmetric, positive definite quadratic matrix A into a
-    /// lower triangular matrix L A = L L^T
-    ///
-    /// # Arguments
-    ///
-    /// A has to be symmetric and positive definite
+    /// Decomposes a Hermitian, positive definite matrix $A$ into a product of
+    /// a lower triangular matrix $L$ and its conjugate transpose, such that
+    /// $A = LL^*$.
     ///
     /// # Panics
     ///
-    /// If A is not a quadratic matrix
+    /// If the matrix $A$ is not quadratic or not positive definite.
+    ///
+    /// For efficiency reasons, the function may not check if the matrix is
+    /// Hermitian, but just assume so.
     ///
     /// # Example
     ///
     /// ```
     /// # #[macro_use]
     /// # extern crate mathru;
-    /// # fn main()
-    /// # {
+    /// # fn main() -> Result<(), String> {
+    /// use mathru::algebra::abstr::Complex;
     /// use mathru::algebra::linear::Matrix;
-    ///
-    /// let a: Matrix<f64> = matrix![   2.0, -1.0, 0.0;
-    ///                                -1.0, 2.0, -1.0;
-    ///                                 0.0, -1.0,  2.0];
-    ///
-    /// let l: (Matrix<f64>) = a.dec_cholesky().unwrap().l();
+    /// use mathru::matrix;
+    /// let a = matrix![Complex::new(2.0,  0.0), Complex::new(0.0, 1.0);
+    ///                 Complex::new(0.0, -1.0), Complex::new(2.0, 0.0)];
+    /// let l = a.dec_cholesky()?.l();
+    /// # Ok(())
     /// # }
     /// ```
-    pub fn dec_cholesky(&self) -> Result<CholeskyDec<Complex<T>>, ()> {
-        let (m, n): (usize, usize) = self.dim();
+    pub fn dec_cholesky(&self) -> Result<CholeskyDec<Complex<T>>, String> {
+        let (m, n) = self.dim();
         assert_eq!(m, n);
 
-        let (m, n) = self.dim();
         let mut l: Matrix<Complex<T>> = Matrix::zero(m, n);
 
         for i in 0..n {
@@ -108,8 +108,21 @@ where
                 }
 
                 if i == j {
+                    assert!(
+                        (self[[i, i]] - sum).re >= T::zero(),
+                        "The matrix is not positive definite."
+                    );
+                    assert!(
+                        (self[[i, i]] - sum).im == T::zero(),
+                        "The matrix is not Hermitian."
+                    );
                     l[[i, j]] = (self[[i, i]] - sum).sqrt();
                 } else {
+                    assert_ne!(
+                        l[[j, j]],
+                        Complex::new(T::zero(), T::zero()),
+                        "The matrix is not positive definite"
+                    );
                     l[[i, j]] = (self[[i, j]] - sum) / l[[j, j]];
                 }
             }

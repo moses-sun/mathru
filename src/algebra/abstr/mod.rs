@@ -1,6 +1,4 @@
-//! Abstract algebra
-//!
-//! <https://en.wikipedia.org/wiki/Abstract_algebra>
+//! Traits for abstract algebraic structures and implementations.
 
 #[cfg(feature = "native")]
 pub use self::scalar::MatrixMultiply;

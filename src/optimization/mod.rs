@@ -1,14 +1,10 @@
-//! Optimization
-//!
-//! This module provides functions for minimizing objective functions. It
-//! includes solvers for nonlinear problems, nonlinear least-squares.
+//! Algorithms for minimizing objective functions.
 
 mod conjugategradient;
 mod gaussnewton;
 mod gradient;
 mod levenbergmarquardt;
 mod newton;
-mod nonlinearcg;
 mod optim;
 mod optimresult;
 
