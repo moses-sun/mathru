@@ -1,9 +1,5 @@
-//! Analysis
-//!
-//! Fore more information: <br>
-//! <https://en.wikipedia.org/wiki/Analysis>
+//! Interpolations, integration, differential equations, etc.
 
-//pub mod interpolation;
 #[macro_use]
 mod function;
 mod hessian;

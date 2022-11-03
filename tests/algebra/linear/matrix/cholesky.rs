@@ -33,6 +33,25 @@ fn cholesky_f64() {
 }
 
 #[test]
+fn cholesky_f32_randomized() {
+    use crate::mathru::algebra::linear::matrix::Transpose;
+    use rand::distributions::OpenClosed01;
+    use rand::{thread_rng, Rng};
+
+    for _i in 0..100 {
+        let r = || thread_rng().sample(OpenClosed01);
+        let l = Matrix::new(
+            3,
+            3,
+            vec![1.0 + r(), r(), r(), 0.0, 1. + r(), r(), 0.0, 0.0, 1.0 + r()],
+        );
+        let a = l.clone() * l.clone().transpose();
+        let k = a.dec_cholesky().unwrap().l();
+        assert_relative_eq!(l, k, epsilon = 1.0e-10);
+    }
+}
+
+#[test]
 fn cholesky_complex_f32() {
     let a: Matrix<Complex<f32>> = matrix![  Complex::new(2.0, 0.0), Complex::new(-1.0, 0.0), Complex::zero();
                                             Complex::new(-1.0, 0.0), Complex::new(2.0, 0.0), Complex::new(-1.0, 0.0);

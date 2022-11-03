@@ -7,34 +7,33 @@ impl<T> Matrix<T>
 where
     T: Field + Scalar,
 {
-    /// Decomposes the symmetric, positive definite quadratic matrix A into a
-    /// lower triangular matrix L A = L L^T
-    ///
-    /// # Arguments
-    ///
-    /// A has to be symmetric and positive definite
+    /// Decomposes a Hermitian, positive definite matrix $A$ into a product of
+    /// a lower triangular matrix $L$ and its conjugate transpose such that
+    /// $A = LL^T$.
     ///
     /// # Panics
     ///
-    /// If A is not a quadratic matrix
+    /// If the matrix $A$ is not quadratic or not positive definite.
+    ///
+    /// For efficiency reasons, the function may not check, if the matrix is
+    /// Hermitian, but just assume so.
     ///
     /// # Example
     ///
     /// ```
     /// # #[macro_use]
     /// # extern crate mathru;
-    /// # fn main()
-    /// # {
+    /// # fn main() -> Result<(), String> {
     /// use mathru::algebra::linear::Matrix;
-    ///
+    /// use mathru::matrix;
     /// let a: Matrix<f64> = matrix![   2.0, -1.0, 0.0;
     ///                                -1.0, 2.0, -1.0;
     ///                                 0.0, -1.0,  2.0];
-    ///
-    /// let l: (Matrix<f64>) = a.dec_cholesky().unwrap().l();
+    /// let l: Matrix<f64> = a.dec_cholesky()?.l();
+    /// # Ok(())
     /// # }
     /// ```
-    pub fn dec_cholesky(&self) -> Result<CholeskyDec<T>, ()> {
+    pub fn dec_cholesky(&self) -> Result<CholeskyDec<T>, String> {
         let (m, n): (usize, usize) = self.dim();
         assert_eq!(m, n);
 
@@ -48,7 +47,7 @@ where
         T::xpotrf('L', n_i32, l_data.as_mut_slice(), n_i32, &mut info);
 
         if info < 0 {
-            return Err(());
+            return Err(String::from("LAPACK reported illegal argument."));
         }
 
         let mut l: Matrix<T> = Matrix::new(n, n, l_data);
