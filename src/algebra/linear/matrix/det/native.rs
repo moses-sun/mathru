@@ -1,10 +1,9 @@
 use crate::algebra::abstr::{Field, Scalar};
 use crate::algebra::linear::Matrix;
-use crate::elementary::Power;
 
 impl<T> Matrix<T>
 where
-    T: Field + Scalar + Power,
+    T: Field + Scalar,
 {
     /// Calculates the determinant
     ///
@@ -43,18 +42,32 @@ where
             det *= u[[i, i]];
         }
 
-        let mut counter: usize = 0;
-        for i in 0..self.m {
-            if p[[i, i]] != T::one() {
-                counter += 1;
+        // Determine the sign of the determinant due to the permutation matrix `p`.
+        // If the number of even-sized cycles of the permutation `p` is odd,
+        // then the sign of the determinant needs to be inverted.
+        // See https://math.stackexchange.com/a/65938.
+        let mut negated = false;
+        let mut visited = vec![false; p.m];
+        for i in 0..p.m {
+            if visited[i] {
+                continue;
+            }
+            let mut j = i;
+            while p[[i, j]] == T::zero() {
+                negated = !negated;
+                for k in 0..p.m {
+                    if p[[k, j]] != T::zero() {
+                        j = k;
+                        break;
+                    }
+                }
+                visited[j] = true;
             }
         }
-
-        let mut perm: T = T::one();
-        if counter != 0 {
-            perm = (-T::one()).pow(T::from_u128(counter as u128 - 1));
+        if negated {
+            det = -det;
         }
 
-        perm * det
+        det
     }
 }
