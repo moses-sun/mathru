@@ -361,3 +361,59 @@ fn from_bernstein_4() {
 
     assert_eq!(p_ref, p);
 }
+
+#[test]
+fn from_bessel_0() {
+    let p = Polynomial::from_bessel(0);
+    let p_ref = Polynomial::from_coef(vec![1.0]);
+
+    assert_eq!(p_ref, p);
+}
+
+#[test]
+fn from_bessel_1() {
+    let p = Polynomial::from_bessel(1);
+    let p_ref = Polynomial::from_coef(vec![1.0, 1.0]);
+
+    assert_eq!(p_ref, p);
+}
+
+#[test]
+fn from_bessel_2() {
+    let p = Polynomial::from_bessel(2);
+    let p_ref = Polynomial::from_coef(vec![3.0, 3.0, 1.0]);
+
+    assert_eq!(p_ref, p);
+}
+
+#[test]
+fn from_bessel_5() {
+    let p = Polynomial::from_bessel(5);
+    let p_ref = Polynomial::from_coef(vec![945.0, 945.0, 420.0, 105.0, 15.0, 1.0]);
+
+    assert_eq!(p_ref, p);
+}
+
+#[test]
+fn from_bessel_reverse_0() {
+    let p = Polynomial::from_bessel_reverse(0);
+    let p_ref = Polynomial::from_coef(vec![1.0]);
+
+    assert_eq!(p_ref, p);
+}
+
+#[test]
+fn from_bessel_reverse_1() {
+    let p = Polynomial::from_bessel_reverse(1);
+    let p_ref = Polynomial::from_coef(vec![1.0, 1.0]);
+
+    assert_eq!(p_ref, p);
+}
+
+#[test]
+fn from_bessel_3() {
+    let p = Polynomial::from_bessel_reverse(3);
+    let p_ref = Polynomial::from_coef(vec![1.0, 6.0, 15.0, 15.0]);
+
+    assert_eq!(p_ref, p);
+}

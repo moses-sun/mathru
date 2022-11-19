@@ -3,6 +3,10 @@ All notable changes starting with the version 0.6.9 are documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com) and this project adheres to [Semantic Versioning](https://semver.org).
 
+## [0.15.0]
+### Added
+- Bessel polynomials
+
 ## [0.14.0] - 2022-10-02
 ### Added
 - ExplicitInitialValueProblem and corresponding ExplicitInitialValueProblemBuilder as structs for explicit IVPs
