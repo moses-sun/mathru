@@ -12,6 +12,7 @@ use crate::algebra::abstr::{
 use crate::algebra::abstr::{Field, Scalar};
 use crate::elementary::Power;
 use crate::statistics::combins::binom;
+use crate::statistics::combins::factorial;
 use std::fmt::{Display, Formatter, Result};
 use std::ops::{Add, AddAssign, Div, Mul, MulAssign, Neg, Sub, SubAssign};
 
@@ -262,6 +263,63 @@ impl<T> Polynomial<T> {
                 p_1 * Polynomial::from_chebyshev_u(n - 1) - Polynomial::from_chebyshev_u(n - 2)
             }
         }
+    }
+
+    /// Creates a Bessel polynom with the given degree
+    ///
+    /// # Example
+    /// ```
+    /// use mathru::algebra::abstr::Polynomial;
+    ///
+    /// let p = Polynomial::from_bessel(5);
+    /// let p_ref = Polynomial::from_coef(vec![945.0, 945.0, 420.0, 105.0, 15.0, 1.0]);
+    ///
+    /// assert_eq!(p_ref, p);
+    /// ```
+    pub fn from_bessel(n: u32) -> Polynomial<T>
+    where
+        T: Field + Scalar + Power,
+    {
+        let mut coef = Vec::with_capacity(n as usize + 1);
+
+        for k in (0..=n).rev() {
+            let numerator = factorial(n + k);
+            let denominator =
+                T::from_u64(factorial(n - k) * factorial(k)) * T::from_f64(2.0).pow(T::from_u32(k));
+            let factor = T::from_u64(numerator) / denominator;
+
+            coef.push(factor);
+        }
+
+        Polynomial::from_coef(coef)
+    }
+
+    /// Creates a reverse Bessel polynom with the given degree
+    ///
+    /// # Example
+    /// ```
+    /// use mathru::algebra::abstr::Polynomial;
+    ///
+    /// let p = Polynomial::from_bessel_reverse(3);
+    /// let p_ref = Polynomial::from_coef(vec![1.0, 6.0, 15.0, 15.0]);
+    /// assert_eq!(p_ref, p);
+    /// ```
+    pub fn from_bessel_reverse(n: u32) -> Polynomial<T>
+    where
+        T: Field + Scalar + Power,
+    {
+        let mut coef = Vec::with_capacity(n as usize + 1);
+
+        for k in 0..=n {
+            let numerator = factorial(n + k);
+            let denominator =
+                T::from_u64(factorial(n - k) * factorial(k)) * T::from_f64(2.0).pow(T::from_u32(k));
+            let factor = T::from_u64(numerator) / denominator;
+
+            coef.push(factor);
+        }
+
+        Polynomial::from_coef(coef)
     }
 }
 
