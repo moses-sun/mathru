@@ -1,6 +1,6 @@
 use mathru::analysis::{Function, Jacobian, NewtonRaphson};
 use mathru::{
-    algebra::linear::{Matrix, Vector},
+    algebra::linear::{matrix::General, Vector},
     vector,
 };
 
@@ -43,8 +43,8 @@ impl Sqrt {
 }
 
 impl Jacobian<f64> for Sqrt {
-    fn jacobian(&self, x: &Vector<f64>) -> Matrix<f64> {
-        return Matrix::from(x.clone().transpose()) * 2.0;
+    fn jacobian(&self, x: &Vector<f64>) -> General<f64> {
+        return General::from(x.clone().transpose()) * 2.0;
     }
 }
 

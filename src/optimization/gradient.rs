@@ -1,5 +1,5 @@
 use crate::{
-    algebra::linear::Vector,
+    algebra::linear::vector::Vector,
     optimization::{Optim, OptimResult},
 };
 extern crate rand;

@@ -5,7 +5,7 @@ use crate::analysis::differential_equation::ordinary::ImplicitODE;
 use crate::{
     algebra::{
         abstr::Real,
-        linear::{Matrix, Vector},
+        linear::{matrix::General, Vector},
     },
     analysis::{Function, Jacobian, NewtonRaphson},
 };
@@ -36,7 +36,7 @@ use std::clone::Clone;
 /// # fn main()
 /// # {
 /// use mathru::{
-///     algebra::linear::{Matrix, Vector},
+///     algebra::linear::{matrix::General, Vector},
 ///     analysis::differential_equation::ordinary::{solver::implicit::runge_kutta::{ImplicitEuler, ImplicitFixedStepper}, ImplicitODE,
 ///     ImplicitInitialValueProblemBuilder},
 /// };
@@ -53,7 +53,7 @@ use std::clone::Clone;
 ///         return result;
 ///     }
 ///
-///     fn jacobian(&self, _t: &f64, _input: &Vector<f64>) -> Matrix<f64>
+///     fn jacobian(&self, _t: &f64, _input: &Vector<f64>) -> General<f64>
 ///     {
 ///         let jacobian = matrix![-4.0];
 ///         return jacobian;
@@ -163,8 +163,8 @@ where
 {
     /// $ \frac{\partial g(z)}{\partial z} = h \frac{\partial f(t_{n+1},
     /// z)}{\partial z} - I$
-    fn jacobian(&self, z: &Vector<T>) -> Matrix<T> {
+    fn jacobian(&self, z: &Vector<T>) -> General<T> {
         let (m, _n): (usize, usize) = z.dim();
-        self.function.jacobian(self.t, z) * *self.h - Matrix::one(m)
+        self.function.jacobian(self.t, z) * *self.h - General::one(m)
     }
 }

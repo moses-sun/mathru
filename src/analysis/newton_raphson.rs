@@ -2,7 +2,10 @@
 use crate::{
     algebra::{
         abstr::Real,
-        linear::{matrix::Solve, Matrix, Vector},
+        linear::{
+            matrix::{General, Solve},
+            Vector,
+        },
     },
     analysis::{Function, Jacobian},
 };
@@ -55,7 +58,7 @@ where
         for _i in 0..self.iters {
             let func_x: Vector<T> = func.eval(&x);
 
-            let jacobian_x: Matrix<T> = func.jacobian(&x);
+            let jacobian_x: General<T> = func.jacobian(&x);
 
             let b: Vector<T> = jacobian_x.solve(&func_x).unwrap();
 

@@ -4,7 +4,7 @@ use lapack_sys as ffi;
 use std::os::raw::c_char;
 
 macro_rules! lapack_real (
-    ($T: ty, $xgehrd: path, $xorghr: path, $xgeev: path, $xgetrf: path, $xgeqrf: path, $xorgqr: path, $xgetri: path, $xpotrf: path,
+    ($T: ty, $xgehrd: path, $xorghr: path, $xgeev: path, $xgetrf: path, $xgeqrf: path, $xorgqr: path, $xgetri: path, $xtrtri: path, $xpotrf: path,
     $xgetrs: path)
     => (
         impl Lapack for $T
@@ -147,6 +147,7 @@ lapack_real!(
     lapack::sgeqrf,
     lapack::sorgqr,
     lapack::sgetri,
+    lapack::strtri,
     lapack::spotrf,
     lapack::sgetrs
 );
@@ -160,12 +161,13 @@ lapack_real!(
     lapack::dgeqrf,
     lapack::dorgqr,
     lapack::dgetri,
+    lapack::dtrtri,
     lapack::dpotrf,
     lapack::dgetrs
 );
 
 macro_rules! lapack_complex (
-    ($T: ty, $xgehrd: path, $xorghr: path, $xgeev: path, $xgetrf: path, $xgeqrf: path, $xorgqr: path, $xgetri: path, $xpotrf: path, $xgetrs: path)
+    ($T: ty, $xgehrd: path, $xorghr: path, $xgeev: path, $xgetrf: path, $xgeqrf: path, $xorgqr: path, $xgetri: path, $xtrtri: path, $xpotrf: path, $xgetrs: path)
     => (
 		impl Lapack for Complex<$T>
 		{
@@ -358,6 +360,7 @@ lapack_complex!(
     ffi::cgeqrf_,
     ffi::cungqr_,
     ffi::cgetri_,
+    ffi::ctrtri_,
     ffi::cpotrf_,
     ffi::cgetrs_
 );
@@ -371,6 +374,7 @@ lapack_complex!(
     ffi::zgeqrf_,
     ffi::zungqr_,
     ffi::zgetri_,
+    ffi::ztrtri_,
     ffi::zpotrf_,
     ffi::zgetrs_
 );

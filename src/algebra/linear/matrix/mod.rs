@@ -1,5 +1,4 @@
 #[macro_use]
-pub mod matrix_impl;
 //mod matrixcolumniterator;
 //mod matrixcolumniteratormut;
 mod matrixintoiterator;
@@ -7,45 +6,48 @@ mod matrixiterator;
 mod matrixiteratormut;
 //mod matrixrowiterator;
 //mod matrixrowiteratormut;
-mod eigen;
+mod eigendec;
 mod matrixcolumnintoiterator;
 mod matrixrowintoiterator;
-pub use self::eigen::EigenDec;
+pub use self::eigendec::{EigenDec, EigenDecomposition};
 
-mod hessenberg;
-pub use self::hessenberg::HessenbergDec;
+mod hessenbergdec;
+pub use hessenbergdec::{HessenbergDec, HessenbergDecomposition};
 
-mod lu;
-pub use self::lu::LUDec;
+mod ludec;
+pub use ludec::LUDec;
 
-mod qr;
-pub use self::qr::QRDec;
+mod qrdec;
+pub use qrdec::QRDec;
 
-mod add;
-mod add_assign;
-mod div;
+mod schurdec;
+pub use schurdec::SchurDec;
+
 mod inverse;
-mod mul;
-mod mul_assign;
-mod sub;
-mod sub_assign;
 
-mod cholesky;
+mod choleskydec;
+pub use choleskydec::CholeskyDec;
+
 mod det;
-mod singular;
-pub use self::cholesky::CholeskyDec;
-mod index;
+pub use det::Determinant;
 
 mod solve;
 mod substitute;
 mod transpose;
 
-#[cfg(feature = "convert-mint")]
-mod mint;
+mod diagonal;
+mod general;
+mod lowertriangular;
+mod unitlowertriangular;
+mod unituppertriangular;
+mod upperhessenberg;
+mod uppertriangular;
 
 pub use self::{
+    diagonal::Diagonal,
+    general::General,
     inverse::Inverse,
-    matrix_impl::Matrix,
+    lowertriangular::LowerTriangular,
     //matrixcolumniterator::MatrixColumnIterator,
     //matrixcolumniteratormut::MatrixColumnIteratorMut,
     matrixcolumnintoiterator::MatrixColumnIntoIterator,
@@ -56,6 +58,10 @@ pub use self::{
     //matrixrowiteratormut::MatrixRowIteratorMut,
     matrixrowintoiterator::MatrixRowIntoIterator,
     solve::Solve,
-    substitute::Substitute,
+    substitute::{SubstituteBackward, SubstituteForward},
     transpose::Transpose,
+    unitlowertriangular::UnitLowerTriangular,
+    unituppertriangular::UnitUpperTriangular,
+    upperhessenberg::UpperHessenberg,
+    uppertriangular::UpperTriangular,
 };

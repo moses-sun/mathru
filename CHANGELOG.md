@@ -3,9 +3,19 @@ All notable changes starting with the version 0.6.9 are documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com) and this project adheres to [Semantic Versioning](https://semver.org).
 
+
 ## [0.15.0]
 ### Added
 - Bessel polynomials
+- Implement special matrix types like diagonal, lower triangular etc., which allow for fast computation with specialized routines for particular matrix types
+
+### Changed
+- Upgrade blas-src to version 0.9.0
+- Upgrade lapack-src to version 0.9.0
+- Update KaTeX dependency to version 0.16.7
+
+### Fixed
+- Bug in calculating the determinant of a permuation matrix [Issue #15](https://gitlab.com/matthiaseiholzer/mathru/-/issues/15)
 
 ## [0.14.0] - 2022-10-02
 ### Added

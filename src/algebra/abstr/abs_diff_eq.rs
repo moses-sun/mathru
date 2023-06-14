@@ -1,5 +1,3 @@
-use std::{f32, f64};
-
 /// The requisite parameters for testing for approximate equality using a
 /// absolute difference based comparison.
 ///
@@ -81,12 +79,12 @@ where
 }
 
 macro_rules! impl_abs_diff_eq {
-    ($T:ident, $default_epsilon:expr) => {
+    ($T:ident) => {
         impl AbsDiffEq for $T {
             type Epsilon = $T;
 
             fn default_epsilon() -> $T {
-                $default_epsilon
+                $T::EPSILON
             }
 
             fn abs_diff_eq(&self, other: &$T, epsilon: $T) -> bool {
@@ -100,8 +98,8 @@ macro_rules! impl_abs_diff_eq {
     };
 }
 
-impl_abs_diff_eq!(f32, f32::EPSILON);
-impl_abs_diff_eq!(f64, f64::EPSILON);
+impl_abs_diff_eq!(f32);
+impl_abs_diff_eq!(f64);
 
 /// Approximate equality using the absolute difference.
 #[macro_export]

@@ -1,11 +1,11 @@
 use crate::algebra::{
     abstr::Real,
-    linear::{Matrix, Vector},
+    linear::{matrix::General, Vector},
 };
 
 pub trait Jacobian<T>
 where
     T: Real,
 {
-    fn jacobian(&self, input: &Vector<T>) -> Matrix<T>;
+    fn jacobian(&self, input: &Vector<T>) -> General<T>;
 }

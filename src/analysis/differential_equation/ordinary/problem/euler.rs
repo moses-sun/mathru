@@ -1,7 +1,8 @@
+use crate::matrix;
 use crate::{
     algebra::{
         abstr::Real,
-        linear::{Matrix, Vector},
+        linear::{matrix::General, Vector},
     },
     analysis::differential_equation::ordinary::{ExplicitODE, ImplicitODE},
 };
@@ -83,7 +84,7 @@ where
         vector![y_1s; y_2s; y_3s]
     }
 
-    fn jacobian(&self, _x: &T, y: &Vector<T>) -> Matrix<T> {
+    fn jacobian(&self, _x: &T, y: &Vector<T>) -> General<T> {
         let a: T = (self.i2 - self.i3) / self.i1;
         let b: T = (self.i3 - self.i1) / self.i2;
         let c: T = (self.i1 - self.i2) / self.i3;

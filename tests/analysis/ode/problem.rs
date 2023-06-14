@@ -1,6 +1,6 @@
 //! Often used ODEs
 use mathru::{
-    algebra::linear::{Matrix, Vector},
+    algebra::linear::{General, Vector},
     analysis::differential_equation::ordinary::{
         ExplicitInitialValueProblem, ExplicitInitialValueProblemBuilder, ExplicitODE,
         ImplicitInitialValueProblem, ImplicitInitialValueProblemBuilder, ImplicitODE,
@@ -34,8 +34,8 @@ impl ImplicitODE<f64> for TestOde {
         })
     }
 
-    fn jacobian(&self, x: &f64, y: &Vector<f64>) -> Matrix<f64> {
-        Matrix::new(
+    fn jacobian(&self, x: &f64, y: &Vector<f64>) -> General<f64> {
+        General::new(
             1,
             1,
             y.clone()

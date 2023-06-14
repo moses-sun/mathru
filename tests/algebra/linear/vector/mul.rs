@@ -1,4 +1,4 @@
-use mathru::algebra::linear::{Matrix, Vector};
+use mathru::algebra::linear::{matrix::General, Vector};
 
 #[test]
 fn matrix_owner() {
@@ -13,7 +13,7 @@ fn matrix_owner() {
 
 #[test]
 fn matrix_borrow() {
-    let m: Matrix<f64> = matrix![1.0, 2.0; 3.0, 4.0];
+    let m: General<f64> = matrix![1.0, 2.0; 3.0, 4.0];
     let v: Vector<f64> = vector![1.0, 2.0];
     let prod_ref: Vector<f64> = vector![7.0, 10.0];
 

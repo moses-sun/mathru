@@ -1,7 +1,7 @@
 use crate::{
     algebra::{
         abstr::Real,
-        linear::{Matrix, Vector},
+        linear::{matrix::General, Vector},
     },
     optimization::{Optim, OptimResult},
 };
@@ -48,7 +48,7 @@ where
         let mut x_n: Vector<T> = x_0.clone();
 
         for _i in 0..self.iters {
-            let jacobian_x_n: Matrix<T> = func.jacobian(&x_n);
+            let jacobian_x_n: General<T> = func.jacobian(&x_n);
             let f_x_n: Vector<T> = func.eval(&x_n);
             let pinv = match jacobian_x_n.pinv() {
                 Ok(pinv) => pinv,

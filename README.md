@@ -15,6 +15,8 @@ The following features are implemented in this create:
         * [Polynomial](https://matthiaseiholzer.gitlab.io/mathru/documentation/algebra/abstract/polynomial/)
             * Legendre polynomial
             * Chebyshev polynomial first & second kind
+            * Bernstein polynomial
+            * Bessel polynomial
     * [Linear algebra](https://matthiaseiholzer.gitlab.io/mathru/documentation/algebra/linear/)
         * [Vector](https://matthiaseiholzer.gitlab.io/mathru/documentation/algebra/linear/vector/)
         * [Matrix](https://matthiaseiholzer.gitlab.io/mathru/documentation/algebra/linear/matrix/)
@@ -119,13 +121,13 @@ Add this to your `Cargo.toml` for the native Rust implementation:
 
 ```toml
 [dependencies.mathru]
-version = "0.14"
+version = "0.15"
 ```
 Add the following lines to 'Cargo.toml' if the openblas library should be used:
 
 ```toml
 [dependencies.mathru]
-version = "0.14"
+version = "0.15"
 default-features = false
 features = "openblas"
 ```
@@ -152,7 +154,7 @@ use mathru::{
 /// Solves a system of linear equations
 fn main()
 {
-    let a: Matrix<f64> = matrix![6.0, 2.0, -1.0; -3.0, 5.0, 3.0; -2.0, 1.0, 3.0];
+    let a: General<f64> = matrix![6.0, 2.0, -1.0; -3.0, 5.0, 3.0; -2.0, 1.0, 3.0];
     let b: Vector<f64> = vector![48.0; 49.0; 24.0];
 
     // Decompose a into a lower and upper matrix

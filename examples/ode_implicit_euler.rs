@@ -1,5 +1,5 @@
 use mathru::{
-    algebra::linear::{Matrix, Vector},
+    algebra::linear::{matrix::General, Vector},
     analysis::differential_equation::ordinary::{
         solver::implicit::runge_kutta::{ImplicitEuler, ImplicitFixedStepper},
         ImplicitInitialValueProblemBuilder, ImplicitODE,
@@ -39,7 +39,7 @@ fn main() {
             vector![y_1s; y_2s; y_3s]
         }
 
-        fn jacobian(&self, _x: &f64, y: &Vector<f64>) -> Matrix<f64> {
+        fn jacobian(&self, _x: &f64, y: &Vector<f64>) -> General<f64> {
             let a: f64 = (self.i2 - self.i3) / self.i1;
             let b: f64 = (self.i3 - self.i1) / self.i2;
             let c: f64 = (self.i1 - self.i2) / self.i3;

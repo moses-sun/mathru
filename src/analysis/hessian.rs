@@ -1,11 +1,11 @@
 use crate::algebra::{
     abstr::Real,
-    linear::{Matrix, Vector},
+    linear::{matrix::General, Vector},
 };
 
 pub trait Hessian<T>
 where
     T: Real,
 {
-    fn hessian(&self, input: &Vector<T>) -> Matrix<T>;
+    fn hessian(&self, input: &Vector<T>) -> General<T>;
 }

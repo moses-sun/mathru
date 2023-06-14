@@ -1,6 +1,6 @@
 use crate::algebra::{
     abstr::Real,
-    linear::{Matrix, Vector},
+    linear::{matrix::General, Vector},
 };
 
 pub trait Optim<T>
@@ -12,12 +12,12 @@ where
     }
 
     // Computes the Jacobian at the given x
-    fn jacobian(&self, _x: &Vector<T>) -> Matrix<T> {
+    fn jacobian(&self, _x: &Vector<T>) -> General<T> {
         unimplemented!();
     }
 
     /// Computes the Hessian at the given value x
-    fn hessian(&self, _x: &Vector<T>) -> Matrix<T> {
+    fn hessian(&self, _x: &Vector<T>) -> General<T> {
         unimplemented!();
     }
 }

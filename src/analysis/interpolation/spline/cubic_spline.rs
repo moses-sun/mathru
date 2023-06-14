@@ -1,7 +1,7 @@
 use crate::algebra::abstr::Polynomial;
 use crate::algebra::abstr::Real;
 use crate::algebra::linear::matrix::Solve;
-use crate::algebra::linear::{Matrix, Vector};
+use crate::algebra::linear::{matrix::General, Vector};
 use std::cmp::Ordering;
 use std::fmt::{Display, Formatter, Result as FmtResult};
 
@@ -108,7 +108,7 @@ where
             let y_1 = y[1];
             let y_2 = y[2];
 
-            let mut a: Matrix<T> = Matrix::zero(n - 1, n - 1);
+            let mut a: General<T> = General::zero(n - 1, n - 1);
             let mut b: Vector<T> = Vector::zero(n - 1);
 
             a[[0, 0]] = T::from_f64(2.0) * (h_0 + h_1);
@@ -173,7 +173,7 @@ where
             let y_0 = y[0];
             let y_1 = y[1];
 
-            let mut a: Matrix<T> = Matrix::zero(n, n);
+            let mut a: General<T> = General::zero(n, n);
             let mut b: Vector<T> = Vector::zero(n);
 
             a[[0, 0]] = T::from_f64(2.0) * (h_1n + h_0);
@@ -203,8 +203,7 @@ where
 
             let d = a.dec_lu().unwrap().solve(&b).unwrap();
 
-            let m = d.convert_to_vec();
-            m
+            d.convert_to_vec()
         } else {
             if n == 1 {
                 let h_0 = x[1] - x[0];
@@ -233,7 +232,7 @@ where
                 let y_1 = y[1];
                 let y_2 = y[2];
 
-                let mut a: Matrix<T> = Matrix::zero(n, n);
+                let mut a: General<T> = General::zero(n, n);
                 let mut b: Vector<T> = Vector::zero(n);
 
                 a[[0, 0]] = T::from_f64(2.0) * (h_1n + h_0);
@@ -249,8 +248,7 @@ where
 
                 let d = a.dec_lu().unwrap().solve(&b).unwrap();
 
-                let m = d.convert_to_vec();
-                m
+                d.convert_to_vec()
             }
         };
 
@@ -342,9 +340,9 @@ where
             let polynomial = &p_i.1;
 
             if i == 0 {
-                write!(f, "{}\t, if x in [{}, {}]\n", polynomial, range.0, range.1)?;
+                writeln!(f, "{}\t, if x in [{}, {}]", polynomial, range.0, range.1)?;
             } else {
-                write!(f, "{}\t, if x in ({}, {}]\n", polynomial, range.0, range.1)?;
+                writeln!(f, "{}\t, if x in ({}, {}]", polynomial, range.0, range.1)?;
             }
         }
 

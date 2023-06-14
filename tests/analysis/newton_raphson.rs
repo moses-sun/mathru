@@ -1,4 +1,4 @@
-use mathru::algebra::linear::{Matrix, Vector};
+use mathru::algebra::linear::{matrix::General, Vector};
 use mathru::analysis::NewtonRaphson;
 use mathru::analysis::{Function, Jacobian};
 
@@ -21,7 +21,7 @@ impl Function<Vector<f64>> for Func1 {
 }
 
 impl Jacobian<f64> for Func1 {
-    fn jacobian(&self, input: &Vector<f64>) -> Matrix<f64> {
+    fn jacobian(&self, input: &Vector<f64>) -> General<f64> {
         let x: f64 = input[0];
 
         return matrix![2.0 * x];

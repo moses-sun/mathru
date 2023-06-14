@@ -60,71 +60,43 @@ pub trait ToPrimitive {
 
 /// A generic trait for converting a number to a value.
 pub trait FromPrimitive: Sized {
-    /// Convert an `i8` to return an optional value of this type. If the
-    /// type cannot be represented by this value, the `None` is returned.
     fn from_i8(n: i8) -> Self {
         FromPrimitive::from_i64(n as i64)
     }
 
-    /// Convert an `i16` to return an optional value of this type. If the
-    /// type cannot be represented by this value, the `None` is returned.
     fn from_i16(n: i16) -> Self {
         FromPrimitive::from_i64(n as i64)
     }
 
-    /// Convert an `i32` to return an optional value of this type. If the
-    /// type cannot be represented by this value, the `None` is returned.
     fn from_i32(n: i32) -> Self {
         FromPrimitive::from_i64(n as i64)
     }
 
-    /// Convert an `i64` to return an optional value of this type. If the
-    /// type cannot be represented by this value, the `None` is returned.
     fn from_i64(n: i64) -> Self;
 
-    /// Convert an `i128` to return an optional value of this type. If the
-    /// type cannot be represented by this value, the `None` is returned.
     fn from_i128(n: i128) -> Self;
 
-    /// Convert an `u8` to return an optional value of this type. If the
-    /// type cannot be represented by this value, the `None` is returned.
     fn from_u8(n: u8) -> Self {
         FromPrimitive::from_u64(n as u64)
     }
-
-    /// Convert an `u16` to return an optional value of this type. If the
-    /// type cannot be represented by this value, the `None` is returned.
 
     fn from_u16(n: u16) -> Self {
         FromPrimitive::from_u64(n as u64)
     }
 
-    /// Convert an `u32` to return an optional value of this type. If the
-    /// type cannot be represented by this value, the `None` is returned.
     fn from_u32(n: u32) -> Self {
         FromPrimitive::from_u64(n as u64)
     }
 
-    /// Convert an `u64` to return an optional value of this type. If the
-    /// type cannot be represented by this value, the `None` is returned.
     fn from_u64(n: u64) -> Self;
 
-    /// Convert an `u128` to return an optional value of this type. If the
-    /// type cannot be represented by this value, the `None` is returned.
     fn from_u128(n: u128) -> Self;
 
-    /// Convert a `f32` to return an optional value of this type. If the
-    /// type cannot be represented by this value, the `None` is returned.
     fn from_f32(n: f32) -> Self {
         FromPrimitive::from_f64(n as f64)
     }
 
-    /// Convert a `f64` to return an optional value of this type. If the
-    /// type cannot be represented by this value, the `None` is returned.
     fn from_f64(n: f64) -> Self;
-    //	{
-    //		FromPrimitive::from_f64(n as f64)
-    //	}
 }
 
 /// Cast from one machine scalar to another.
