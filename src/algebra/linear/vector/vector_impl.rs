@@ -5,8 +5,7 @@ use crate::{
     algebra::{
         abstr::{AbsDiffEq, RelativeEq},
         abstr::{Field, Scalar, Sign},
-        linear::matrix::Transpose,
-        linear::Matrix,
+        linear::matrix::{General, Transpose},
     },
     elementary::{Exponential, Power},
 };
@@ -52,7 +51,7 @@ macro_rules! vector
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[derive(Debug, Clone)]
 pub struct Vector<T> {
-    pub data: Matrix<T>,
+    pub data: General<T>,
 }
 
 impl<T> IntoIterator for Vector<T>
@@ -67,7 +66,7 @@ where
     }
 }
 
-//impl<T> FromIterator for Matrix<T>
+//impl<T> FromIterator for General<T>
 //    where T: Field + Scalar
 //{
 //    fn from_iter<T>(iter: T) -> Se
@@ -180,7 +179,7 @@ where
     /// ```
     pub fn new_row(data: Vec<T>) -> Self {
         Vector {
-            data: Matrix::new(1, data.len(), data),
+            data: General::new(1, data.len(), data),
         }
     }
 
@@ -195,7 +194,7 @@ where
     /// ```
     pub fn new_column(data: Vec<T>) -> Self {
         Vector {
-            data: Matrix::new(data.len(), 1, data),
+            data: General::new(data.len(), 1, data),
         }
     }
 
@@ -220,7 +219,7 @@ where
     /// ```
     pub fn new_row_random(n: usize) -> Self {
         Vector {
-            data: Matrix::new_random(1, n),
+            data: General::new_random(1, n),
         }
     }
 
@@ -235,7 +234,7 @@ where
     /// ```
     pub fn new_column_random(m: usize) -> Self {
         Vector {
-            data: Matrix::new_random(m, 1),
+            data: General::new_random(m, 1),
         }
     }
 }
@@ -289,7 +288,7 @@ where
         assert_eq!(lhs_n, rhs_n);
 
         let temp: Vector<T> = self.clone().transpose();
-        let res: Matrix<T> = &temp.data * &rhs.data;
+        let res: General<T> = &temp.data * &rhs.data;
 
         res[[0, 0]]
     }
@@ -372,17 +371,17 @@ where
     /// # Example
     ///
     /// ```
-    /// use mathru::algebra::linear::{Matrix, Vector};
+    /// use mathru::algebra::linear::{matrix::General, Vector};
     ///
     /// let a: Vector<f64> = Vector::new_row(vec![1.0, 0.0, 3.0, -2.0]);
     /// let b: Vector<f64> = Vector::new_column(vec![-1.0, 2.0, 3.0, 5.0]);
     ///
-    /// let m: Matrix<f64> = a.dyadp(&b);
+    /// let m: General<f64> = a.dyadp(&b);
     /// ```
-    pub fn dyadp(&self, rhs: &Self) -> Matrix<T> {
+    pub fn dyadp(&self, rhs: &Self) -> General<T> {
         let (x_m, _x_n): (usize, usize) = self.dim();
         let (y_m, _y_n): (usize, usize) = rhs.dim();
-        let mut c: Matrix<T> = Matrix::zero(x_m, y_m);
+        let mut c: General<T> = General::zero(x_m, y_m);
 
         for i in 0..x_m {
             for j in 0..y_m {
@@ -429,7 +428,7 @@ where
     /// ```
     pub fn zero(m: usize) -> Self {
         Vector {
-            data: Matrix::zero(m, 1),
+            data: General::zero(m, 1),
         }
     }
 }

@@ -32,7 +32,7 @@ macro_rules! impl_magma
 impl_magma!(Addition; add; u8, u16, u32, u64, u128, i8, i16, i32, i64, i128, f32, f64);
 impl_magma!(Multiplication; mul; u8, u16, u32, u64, u128, i8, i16, i32, i64, i128, f32, f64);
 
-/// Syntactic sugar for Magma::<Addition>::operate(a, b)
+/// Syntactic sugar for `Magma::<Addition>::operate(a, b)`
 pub trait MagmaAdd: Magma<Addition> + Add<Self, Output = Self> + AddAssign<Self> {}
 
 macro_rules! impl_magmaadd
@@ -50,7 +50,7 @@ macro_rules! impl_magmaadd
 
 impl_magmaadd!(u8, u16, u32, u64, u128, i8, i16, i32, i64, i128, f32, f64);
 
-/// Syntactic sugar for Magma::<Multiplication>::operate(a, b)
+/// Syntactic sugar for `Magma::<Multiplication>::operate(a, b)`
 pub trait MagmaMul: Magma<Multiplication> + Mul<Self, Output = Self> + MulAssign<Self> {}
 
 macro_rules! impl_magmamul

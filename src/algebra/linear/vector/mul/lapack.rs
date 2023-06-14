@@ -1,27 +1,27 @@
 use crate::algebra::{
     abstr::{Field, Scalar},
-    linear::{Matrix, Vector},
+    linear::{matrix::General, Vector},
 };
 use std::ops::Mul;
 
-impl<T> Mul<Matrix<T>> for Vector<T>
+impl<T> Mul<General<T>> for Vector<T>
 where
     T: Field + Scalar,
 {
     type Output = Vector<T>;
 
-    fn mul(self, rhs: Matrix<T>) -> Self::Output {
+    fn mul(self, rhs: General<T>) -> Self::Output {
         &self * &rhs
     }
 }
 
-impl<'a, 'b, T> Mul<&'b Matrix<T>> for &'a Vector<T>
+impl<'a, 'b, T> Mul<&'b General<T>> for &'a Vector<T>
 where
     T: Field + Scalar,
 {
     type Output = Vector<T>;
 
-    fn mul(self, rhs: &'b Matrix<T>) -> Self::Output {
+    fn mul(self, rhs: &'b General<T>) -> Self::Output {
         let (rhs_m, _): (usize, usize) = rhs.dim();
         let (_m, n): (usize, usize) = self.dim();
 

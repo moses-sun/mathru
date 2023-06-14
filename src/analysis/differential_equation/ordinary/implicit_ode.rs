@@ -2,7 +2,7 @@
 
 use crate::algebra::{
     abstr::Real,
-    linear::{Matrix, Vector},
+    linear::{matrix::General, Vector},
 };
 
 /// Implicit ordinary differential equation
@@ -12,5 +12,5 @@ where
 {
     fn ode(&self, t: &T, x: &Vector<T>) -> Vector<T>;
 
-    fn jacobian(&self, t: &T, x: &Vector<T>) -> Matrix<T>;
+    fn jacobian(&self, t: &T, x: &Vector<T>) -> General<T>;
 }

@@ -2,7 +2,7 @@ use mathru::{
     algebra::{
         abstr::Sign,
         linear::vector::{VectorIntoIterator, VectorIterator, VectorIteratorMut},
-        linear::{Matrix, Vector},
+        linear::{matrix::General, Vector},
     },
     elementary::Power,
 };
@@ -141,11 +141,11 @@ fn dyadp() {
 
     let y: Vector<f32> = Vector::new_column(vec![2.0, 1.0, 0.0, 3.0]);
 
-    let dyadp_ref: Matrix<f32> = matrix![  2.0, 1.0, 0.0, 3.0;
+    let dyadp_ref: General<f32> = matrix![  2.0, 1.0, 0.0, 3.0;
                                             6.0, 3.0, 0.0, 9.0;
                                             4.0, 2.0, 0.0, 6.0];
 
-    let p: Matrix<f32> = x.dyadp(&y);
+    let p: General<f32> = x.dyadp(&y);
 
     assert_relative_eq!(dyadp_ref, p);
 }

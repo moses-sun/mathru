@@ -1,10 +1,10 @@
 use mathru::{
-    algebra::linear::{Matrix, Vector},
+    algebra::linear::{matrix::General, Vector},
     optimization::Optim,
 };
 
 pub struct LinearEquation {
-    a: Matrix<f64>,
+    a: General<f64>,
     b: Vector<f64>,
 }
 
@@ -25,7 +25,7 @@ impl Optim<f64> for LinearEquation {
     }
 
     // A
-    fn jacobian(&self, _input: &Vector<f64>) -> Matrix<f64> {
+    fn jacobian(&self, _input: &Vector<f64>) -> General<f64> {
         return self.a.clone();
     }
 }
@@ -46,7 +46,7 @@ impl Optim<f64> for Rosenbrock {
         return vector![(1.0 - x_1) * (1.0 - x_1) + 100.0 * (x_2 - x_1 * x_1) * (x_2 - x_1 * x_1)];
     }
 
-    fn jacobian(&self, input: &Vector<f64>) -> Matrix<f64> {
+    fn jacobian(&self, input: &Vector<f64>) -> General<f64> {
         let x_1: f64 = input[0];
         let x_2: f64 = input[1];
 
@@ -56,7 +56,7 @@ impl Optim<f64> for Rosenbrock {
         ];
     }
 
-    fn hessian(&self, input: &Vector<f64>) -> Matrix<f64> {
+    fn hessian(&self, input: &Vector<f64>) -> General<f64> {
         let x_1: f64 = input[0];
         let x_2: f64 = input[1];
         return matrix![1200.0 * x_1 * x_1 - 400.0 * x_2  + 2.0, -400.0 * x_1
@@ -78,8 +78,8 @@ impl Optim<f64> for QuadraticFunction {
         return vector![x.dotp(x) * x.dotp(x) * 0.5];
     }
 
-    fn jacobian(&self, input: &Vector<f64>) -> Matrix<f64> {
-        let mut jacobian: Matrix<f64> = Matrix::zero(1, 2);
+    fn jacobian(&self, input: &Vector<f64>) -> General<f64> {
+        let mut jacobian: General<f64> = General::zero(1, 2);
 
         let quadratic: f64 = input.dotp(input);
         jacobian[[0, 0]] = input[0] * quadratic;

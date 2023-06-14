@@ -2,8 +2,8 @@ use crate::{
     algebra::{
         abstr::Real,
         linear::{
-            matrix::{Solve, Transpose},
-            Matrix, Vector,
+            matrix::{General, Solve, Transpose},
+            Vector,
         },
     },
     optimization::{Optim, OptimResult},
@@ -68,20 +68,22 @@ where
     {
         let mut x_n: Vector<T> = x_0.clone();
         let mut mu_n: T = T::from_f64(0.5);
-        //let mut lambda_n: T = T::from_f64(0.4);
+
         for _n in 0..self.iters {
             let mut d_n: Vector<T>;
             loop {
-                let jacobian_x_n: Matrix<T> = func.jacobian(&x_n);
-                let jacobian_x_n_tran: Matrix<T> = jacobian_x_n.clone().transpose();
+                let jacobian_x_n: General<T> = func.jacobian(&x_n);
+                let jacobian_x_n_tran: General<T> = jacobian_x_n.clone().transpose();
                 let f_x_n: Vector<T> = func.eval(&x_n);
 
                 let p_n: Vector<T> = -(&jacobian_x_n_tran * &f_x_n);
                 let (_j_m, j_n) = jacobian_x_n.dim();
-                let left_n: Matrix<T> =
-                    &jacobian_x_n_tran * &jacobian_x_n + Matrix::one(j_n) * mu_n * mu_n;
-                d_n = left_n.solve(&p_n).unwrap();
+                let left_n: General<T> =
+                    &jacobian_x_n_tran * &jacobian_x_n + General::one(j_n) * mu_n * mu_n;
 
+                println!("left_n: {}, p_n: {}", left_n, p_n);
+                d_n = left_n.solve(&p_n).unwrap();
+                println!("d_n: {}", d_n);
                 let x_n_1 = &x_n + &d_n;
                 let f_x_n_1: Vector<T> = func.eval(&x_n_1);
 

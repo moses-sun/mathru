@@ -6,7 +6,6 @@ extern crate mathru;
 extern crate criterion;
 
 mod algebra;
-mod analysis;
 
 criterion_main!(
     algebra::linear::vector::add::vector_add,
@@ -18,7 +17,5 @@ criterion_main!(
     algebra::linear::matrix::sub::sub,
     algebra::linear::matrix::mul::mul,
     // analysis::vector_bench::euler,
-    analysis::ode::dormandprince::dormandprince,
     algebra::linear::matrix::matrix,
-    analysis::ode::ode,
 );

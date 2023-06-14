@@ -1,18 +1,17 @@
 [package]
 name = "mathru"
-version = "0.14.0"
-description = "Mathematics library written in Rust"
+version = "0.15.0"
+description = "Fundamental algorithms for scientific computing in Rust"
 authors = ["Matthias Eiholzer <matthias.eiholzer@gmail.com>"]
 exclude = ["literature/*", "tests/*", ".gitignore"]
-keywords = ["optimization", "statistics", "algebra", "matrix", "ode"]
-categories = ["mathematics", "science", "algorithms"]
+keywords = ["optimization", "statistics", "algebra", "matrix", "differential equation"]
+categories = ["mathematics", "science"]
 readme = "README.md"
 license = "MIT"
-homepage = "https://matthiaseiholzer.gitlab.io/mathru"
+#homepage = "https://matthiaseiholzer.gitlab.io/mathru"
 repository = "https://gitlab.com/matthiaseiholzer/mathru"
 documentation = "https://docs.rs/crate/mathru/latest/"
 autobenches = false
-rust-version = "1.64"
 edition = "2021"
 
 [package.metadata.docs.rs]
@@ -57,7 +56,7 @@ debug = false
 version = "^0.8"
 
 [dependencies.matrixmultiply]
-version = "0.3.2"
+version = "0.3.7"
 features = ["cgemm"]
 
 [dependencies.serde]
@@ -74,7 +73,7 @@ version = "^0.14"
 optional = true
 
 [dependencies.lapack-src]
-version = "^0.8"
+version = "^0.9"
 optional = true
 
 [dependencies.blas]
@@ -86,7 +85,7 @@ version = "^0.7"
 optional = true
 
 [dependencies.blas-src]
-version = "^0.8"
+version = "^0.9"
 optional = true
 
 [dependencies.mint]
@@ -97,7 +96,8 @@ optional = true
 version = "^1.0"
 
 [dev-dependencies.criterion]
-version = "0.3.5"
+version = "^0.3"
+features = ["html_reports"]
 
 [dev-dependencies.plotters]
 version = "^0.3"

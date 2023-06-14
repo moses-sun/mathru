@@ -1,13 +1,13 @@
 use crate::algebra::abstr::{Field, Scalar};
-use crate::algebra::linear::{Matrix, Vector};
+use crate::algebra::linear::{matrix::General, Vector};
 
 pub struct MatrixRowIntoIterator<'a, T> {
-    m: &'a Matrix<T>,
+    m: &'a General<T>,
     row: usize,
 }
 
 impl<'a, T> MatrixRowIntoIterator<'a, T> {
-    pub fn new(m: &'a Matrix<T>) -> MatrixRowIntoIterator<'a, T> {
+    pub fn new(m: &'a General<T>) -> MatrixRowIntoIterator<'a, T> {
         MatrixRowIntoIterator { m, row: 0 }
     }
 }

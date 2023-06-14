@@ -2,6 +2,7 @@
 //!
 //! <a href="https://en.wikipedia.org/wiki/Abstract_algebra">https://en.wikipedia.org/wiki/Abstract_algebra</a>
 
+mod abs_diff_eq;
 //mod number;
 //pub mod cast;
 //mod field;

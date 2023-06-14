@@ -1,5 +1,5 @@
 use criterion::Criterion;
-use mathru::algebra::linear::Matrix;
+use mathru::algebra::linear::matrix::General;
 
 criterion_group!(
     mul,
@@ -14,16 +14,16 @@ criterion_group!(
 fn bench_mul_matrix_own(bench: &mut Criterion) {
     bench.bench_function("mul matrix own", move |bh| {
         bh.iter(|| {
-            let a: Matrix<f64> = Matrix::new(100, 100, vec![3.0; 10000]);
-            let b: Matrix<f64> = Matrix::new(100, 100, vec![3.0; 10000]);
+            let a: General<f64> = General::new(100, 100, vec![3.0; 10000]);
+            let b: General<f64> = General::new(100, 100, vec![3.0; 10000]);
             let _ = a * b;
         });
     });
 }
 
 fn bench_mul_matrix_borrow(bench: &mut Criterion) {
-    let a: Matrix<f64> = Matrix::new(100, 100, vec![3.0; 10000]);
-    let b: Matrix<f64> = Matrix::new(100, 100, vec![3.0; 10000]);
+    let a: General<f64> = General::new(100, 100, vec![3.0; 10000]);
+    let b: General<f64> = General::new(100, 100, vec![3.0; 10000]);
 
     bench.bench_function("mul matrix borrow", move |bh| {
         bh.iter(|| {
@@ -33,8 +33,8 @@ fn bench_mul_matrix_borrow(bench: &mut Criterion) {
 }
 
 fn bench_mul_matrix_mut_borrow(bench: &mut Criterion) {
-    let mut a: Matrix<f64> = Matrix::new(100, 100, vec![3.0; 10000]);
-    let b: Matrix<f64> = Matrix::new(100, 100, vec![3.0; 10000]);
+    let mut a: General<f64> = General::new(100, 100, vec![3.0; 10000]);
+    let b: General<f64> = General::new(100, 100, vec![3.0; 10000]);
 
     bench.bench_function("mul matrix mut borrow", move |bh| {
         bh.iter(|| {
@@ -46,14 +46,14 @@ fn bench_mul_matrix_mut_borrow(bench: &mut Criterion) {
 fn bench_mul_scalar_own(bench: &mut Criterion) {
     bench.bench_function("mul scalar own", move |bh| {
         bh.iter(|| {
-            let matrix: Matrix<f64> = Matrix::new(100, 100, vec![3.0; 10000]);
+            let matrix: General<f64> = General::new(100, 100, vec![3.0; 10000]);
             let _ = matrix * 3.0f64;
         });
     });
 }
 
 fn bench_mul_scalar_borrow(bench: &mut Criterion) {
-    let matrix: Matrix<f64> = Matrix::new(100, 100, vec![3.0; 10000]);
+    let matrix: General<f64> = General::new(100, 100, vec![3.0; 10000]);
     bench.bench_function("mul scalar borrow", move |bh| {
         bh.iter(|| {
             let _ = &matrix * &3.0f64;
@@ -62,7 +62,7 @@ fn bench_mul_scalar_borrow(bench: &mut Criterion) {
 }
 
 fn bench_mul_scalar_mut_borrow(bench: &mut Criterion) {
-    let mut matrix: Matrix<f64> = Matrix::new(100, 100, vec![3.0; 10000]);
+    let mut matrix: General<f64> = General::new(100, 100, vec![3.0; 10000]);
     bench.bench_function("mul scalar mut borrow", move |bh| {
         bh.iter(|| {
             let _ = (&mut matrix) * &3.0f64;

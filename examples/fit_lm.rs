@@ -1,5 +1,5 @@
 use mathru::{
-    algebra::linear::{Matrix, Vector},
+    algebra::linear::{matrix::General, Vector},
     optimization::{LevenbergMarquardt, Optim},
     statistics::distrib::{Distribution, Normal},
     *,
@@ -35,11 +35,11 @@ impl Optim<f64> for Example {
         return vector![r.dotp(&r)];
     }
 
-    fn jacobian(&self, beta: &Vector<f64>) -> Matrix<f64> {
+    fn jacobian(&self, beta: &Vector<f64>) -> General<f64> {
         let (x_m, _x_n) = self.x.dim();
         let (beta_m, _beta_n) = beta.dim();
 
-        let mut jacobian_f: Matrix<f64> = Matrix::zero(x_m, beta_m);
+        let mut jacobian_f: General<f64> = General::zero(x_m, beta_m);
 
         let f_x = self.x.clone().apply(&|x: &f64| Example::function(*x, beta));
         let residual: Vector<f64> = &self.y - &f_x;
@@ -55,7 +55,7 @@ impl Optim<f64> for Example {
             jacobian_f[[i, 2]] = beta_1 * x_i * (beta_2 * x_i).exp();
         }
 
-        let jacobian: Matrix<f64> = (residual.transpose() * jacobian_f * -2.0).into();
+        let jacobian: General<f64> = (residual.transpose() * jacobian_f * -2.0).into();
         return jacobian;
     }
 }

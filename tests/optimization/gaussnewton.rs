@@ -1,5 +1,5 @@
 use mathru::{
-    algebra::linear::{Matrix, Vector},
+    algebra::linear::{matrix::General, Vector},
     optimization::{GaussNewton, Optim},
 };
 
@@ -20,7 +20,7 @@ impl Optim<f64> for Rosenbrock {
                         f64::sqrt(200.0) * (x_2 - x_1 * x_1)];
     }
 
-    fn jacobian(&self, input: &Vector<f64>) -> Matrix<f64> {
+    fn jacobian(&self, input: &Vector<f64>) -> General<f64> {
         return matrix![	-f64::sqrt(2.0), 0.0;
                         -f64::sqrt(2.0) * input[0] * f64::sqrt(200.0), f64::sqrt(200.0)];
     }

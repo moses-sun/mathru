@@ -78,7 +78,6 @@ fn interpolate_periodic_2() {
 
     let periodic_spline = CubicSpline::interpolate(&x, &y, CubicSplineConstraint::Periodic);
 
-    println!("{}", periodic_spline);
     assert_relative_eq!(6.0, periodic_spline.eval(-2.0));
     assert_relative_eq!(2.0, periodic_spline.eval(0.0), epsilon = 0.00000000000001);
 }

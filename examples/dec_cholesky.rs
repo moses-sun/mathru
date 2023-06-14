@@ -1,9 +1,11 @@
-use mathru::{algebra::linear::Matrix, matrix};
+use mathru::algebra::linear::matrix::General;
+use mathru::algebra::linear::matrix::LowerTriangular;
+use mathru::matrix;
 
 fn main() {
-    let a: Matrix<f64> = matrix![   2.0, -1.0, 0.0;
+    let a: General<f64> = matrix![  2.0, -1.0, 0.0;
                                 	-1.0, 2.0, -1.0;
                                 	0.0, -1.0,  2.0];
 
-    let _l: Matrix<f64> = a.dec_cholesky().unwrap().l();
+    let _l: LowerTriangular<f64> = a.dec_cholesky().unwrap().l();
 }

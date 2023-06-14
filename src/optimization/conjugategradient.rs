@@ -1,7 +1,7 @@
 use crate::{
     algebra::{
         abstr::Real,
-        linear::{Matrix, Vector},
+        linear::{matrix::General, Vector},
     },
     optimization::{Optim, OptimResult},
 };
@@ -35,12 +35,12 @@ use std::clone::Clone;
 ///
 /// ```
 /// use mathru::*;
-/// use mathru::algebra::linear::{Vector, Matrix};
+/// use mathru::algebra::linear::{Vector, matrix::General};
 /// use mathru::optimization::{Optim, ConjugateGradient};
 ///
 /// struct LinearEquation
 /// { ///
-///     a: Matrix<f64>,
+///     a: General<f64>,
 ///     b: Vector<f64>,
 /// }
 ///
@@ -60,7 +60,7 @@ use std::clone::Clone;
 /// impl Optim<f64> for LinearEquation
 /// {
 ///     // A
-///     fn jacobian(&self, _input: &Vector<f64>) -> Matrix<f64>
+///     fn jacobian(&self, _input: &Vector<f64>) -> General<f64>
 ///     {
 ///         return self.a.clone();
 ///     }
@@ -72,7 +72,7 @@ use std::clone::Clone;
 ///     }
 ///
 ///     //Computes the Hessian at the given value x
-///     fn hessian(&self, _x: &Vector<f64>) -> Matrix<f64>
+///     fn hessian(&self, _x: &Vector<f64>) -> General<f64>
 ///     {
 ///         unimplemented!();
 ///     }
@@ -131,7 +131,7 @@ where
         let mut r_n: Vector<T> = d_n.clone();
 
         for _i in 0..self.iters {
-            let jacobian: Matrix<T> = func.jacobian(&x_n);
+            let jacobian: General<T> = func.jacobian(&x_n);
 
             let temp: Vector<T> = d_n.clone().transpose() * jacobian.clone();
 

@@ -7,7 +7,7 @@
 //! BLAS/LAPACK support can be enable in the `Cargo.toml` file like so:
 //! ```text
 //! [dependencies.mathru]
-//! version = "^0.14"
+//! version = "^0.15"
 //! default-features = false
 //! features = "openblas"
 //! ```
@@ -24,7 +24,7 @@
 //!     large-scale mathematical computations and image calculations, optimized
 //!     for high performance and low-energy consumption. (macOS only)
 
-pub use self::{matrix::Matrix, vector::Vector};
+pub use self::{matrix::General, vector::Vector};
 
 #[macro_use]
 pub mod vector;

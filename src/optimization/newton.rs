@@ -1,7 +1,10 @@
 use crate::{
     algebra::{
         abstr::Real,
-        linear::{matrix::Solve, Matrix, Vector},
+        linear::{
+            matrix::{General, Solve},
+            Vector,
+        },
     },
     optimization::{Optim, OptimResult},
 };
@@ -79,7 +82,7 @@ where
         let mut x_n: Vector<T> = x_0.clone();
 
         for _i in 0..self.iters {
-            let hessian_x_n: Matrix<T> = func.hessian(&x_n);
+            let hessian_x_n: General<T> = func.hessian(&x_n);
             let grad_x_n: Vector<T> = func.jacobian(&x_n).get_row(0).transpose();
             let res_solve: Result<Vector<T>, ()> = hessian_x_n.solve(&-grad_x_n.clone());
             let d_k: Vector<T>;
