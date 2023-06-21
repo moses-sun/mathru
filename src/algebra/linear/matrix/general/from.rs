@@ -5,7 +5,7 @@ use crate::algebra::{
             Diagonal, LowerTriangular, UnitLowerTriangular, UnitUpperTriangular, UpperHessenberg,
             UpperTriangular,
         },
-        Vector,
+        vector::Vector,
     },
 };
 

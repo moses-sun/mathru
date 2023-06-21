@@ -3,6 +3,12 @@ All notable changes starting with the version 0.6.9 are documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com) and this project adheres to [Semantic Versioning](https://semver.org).
 
+## [0.15.1]
+### Changed
+- Implement benchmarks for basic vector and matrix operations
+- Improve performance of basic vector and matrix operations
+- Improve differential equation solver speed
+- Update Criterion dependency to version ^0.5
 
 ## [0.15.0]
 ### Added

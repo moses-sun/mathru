@@ -1,4 +1,4 @@
-use mathru::algebra::linear::Vector;
+use mathru::algebra::linear::vector::Vector;
 
 #[test]
 fn transpose() {

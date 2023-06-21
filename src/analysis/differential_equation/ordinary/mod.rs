@@ -40,7 +40,7 @@
 //! # fn main()
 //! # {
 //! use mathru::{
-//!     algebra::linear::Vector,
+//!     algebra::linear::vector::Vector,
 //!     analysis::differential_equation::ordinary::{ExplicitODE, ExplicitInitialValueProblem, ExplicitInitialValueProblemBuilder, solver::explicit::runge_kutta::adaptive::{DormandPrince54, ProportionalControl}},
 //! };
 //!

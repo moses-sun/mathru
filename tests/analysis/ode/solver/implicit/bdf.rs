@@ -1,6 +1,7 @@
 use crate::analysis::ode::problem::implicit_ode;
 use mathru::{
-    algebra::linear::Vector, analysis::differential_equation::ordinary::solver::implicit::BDF,
+    algebra::linear::vector::Vector,
+    analysis::differential_equation::ordinary::solver::implicit::BDF,
 };
 
 #[test]

@@ -1,6 +1,6 @@
 use crate::algebra::{
     abstr::{Field, Scalar},
-    linear::{matrix::General, Vector},
+    linear::{matrix::General, vector::Vector},
 };
 use std::ops::Mul;
 
@@ -103,7 +103,7 @@ where
         let (self_rows, self_cols) = self.dim();
         let (rhs_rows, rhs_cols) = rhs.dim();
 
-        assert_eq!(self_cols, rhs_rows);
+        debug_assert_eq!(self_cols, rhs_rows);
 
         let m = self_rows as i32;
         let n = rhs_cols as i32;
@@ -141,7 +141,7 @@ where
     /// # Example
     ///
     /// ```
-    /// use mathru::algebra::linear::Geneleral;
+    /// use mathru::algebra::linear::matrix::General;
     ///
     /// let mut a: General<f64> = General::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
     /// let b: General<f64> = General::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
@@ -152,7 +152,7 @@ where
         let (self_rows, self_cols) = self.dim();
         let (rhs_rows, rhs_cols) = rhs.dim();
 
-        assert_eq!(self_cols, rhs_rows);
+        debug_assert_eq!(self_cols, rhs_rows);
 
         let m = self_rows as i32;
         let n = rhs_cols as i32;
@@ -233,7 +233,7 @@ where
     /// # Example
     ///
     /// ```
-    /// use mathru::algebra::linear::Matrix;
+    /// use mathru::algebra::linear::matrix::General;
     ///
     /// let a: General<f64> = General::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
     /// let res_ref: General<f64> = General::new(2, 2, vec![4.0, 0.0, 12.0, -28.0]);
@@ -257,7 +257,7 @@ where
     /// # Example
     ///
     /// ```
-    /// use mathru::algebra::linear::Matrix;
+    /// use mathru::algebra::linear::matrix::General;
     ///
     /// let mut a: General<f64> = General::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
     /// let res_ref: General<f64> = General::new(2, 2, vec![4.0, 0.0, 12.0, -28.0]);

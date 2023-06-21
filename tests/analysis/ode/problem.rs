@@ -1,6 +1,6 @@
 //! Often used ODEs
 use mathru::{
-    algebra::linear::{General, Vector},
+    algebra::linear::{matrix::General, vector::Vector},
     analysis::differential_equation::ordinary::{
         ExplicitInitialValueProblem, ExplicitInitialValueProblemBuilder, ExplicitODE,
         ImplicitInitialValueProblem, ImplicitInitialValueProblemBuilder, ImplicitODE,

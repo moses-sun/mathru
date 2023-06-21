@@ -1,5 +1,5 @@
 use crate::optimization::problem::{QuadraticFunction, Rosenbrock};
-use mathru::{algebra::linear::Vector, optimization::Gradient};
+use mathru::{algebra::linear::vector::Vector, optimization::Gradient};
 
 #[test]
 fn minimization_quadratic() {

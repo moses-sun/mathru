@@ -1,20 +1,19 @@
 use crate::algebra::{
     abstr::{Field, Scalar},
-    linear::Vector,
+    linear::vector::Vector,
 };
 use std::ops::AddAssign;
 
-// Add vector to vector
 impl<T> AddAssign<Vector<T>> for Vector<T>
 where
     T: Field + Scalar,
 {
-    /// Add a vector to the vector
+    /// Add a vector rhs to the vector self and assign the sum to self
     ///
     /// # Example
     ///
     /// ```
-    /// use mathru::algebra::linear::Vector;
+    /// use mathru::algebra::linear::vector::Vector;
     ///
     /// let mut a: Vector<f64> = Vector::new_column(vec![1.0, 0.0, 3.0, -7.0]);
     /// let b: Vector<f64> = Vector::new_column(vec![2.0, 3.0, -5.0, 2.0]);
@@ -25,17 +24,16 @@ where
     }
 }
 
-// Add scalar to vector
 impl<T> AddAssign<T> for Vector<T>
 where
     T: Field + Scalar,
 {
-    /// Add a scalar to the vector
+    /// Add a vector rhs to the vector self and assign the sum to self
     ///
     /// # Example
     ///
     /// ```
-    /// use mathru::algebra::linear::Vector;
+    /// use mathru::algebra::linear::vector::Vector;
     ///
     /// let mut a: Vector<f64> = Vector::new_column(vec![1.0, 0.0, 3.0, -7.0]);
     /// a += -4.0;

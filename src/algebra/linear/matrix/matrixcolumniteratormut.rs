@@ -1,5 +1,5 @@
 use crate::algebra::abstr::{Field, Scalar};
-use crate::algebra::linear::Vector;
+use crate::algebra::linear::vector::Vector;
 use std::slice::IterMut;
 
 pub struct MatrixColumnIteratorMut<'a, T>

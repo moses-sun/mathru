@@ -13,6 +13,7 @@ mod inverse;
 mod ludec;
 mod mul;
 mod mul_assign;
+mod partial_eq;
 mod qrdec;
 mod relative_eq;
 mod singular;

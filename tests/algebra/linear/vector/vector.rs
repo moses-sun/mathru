@@ -2,7 +2,7 @@ use mathru::{
     algebra::{
         abstr::Sign,
         linear::vector::{VectorIntoIterator, VectorIterator, VectorIteratorMut},
-        linear::{matrix::General, Vector},
+        linear::{matrix::General, vector::Vector},
     },
     elementary::Power,
 };

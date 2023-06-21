@@ -19,15 +19,14 @@ where
     /// # Example
     ///
     /// ```
-    /// use mathru::algebra::linear::Matrix;
-    ///
+    /// use mathru::algebra::linear::matrix::{General, UnitLowerTriangular, UpperTriangular};
     /// let a: General<f64> = General::new(2, 2, vec![1.0, -2.0, 3.0, -7.0]);
     ///
-    /// let (l, u, p): (General<f64>, General<f64>, General<f64>) = a.dec_lu().unwrap().lup();
+    /// let (l, u, p): (UnitLowerTriangular<f64>, UpperTriangular<f64>, General<f64>) = a.dec_lu().unwrap().lup();
     /// ```
     pub fn dec_lu(&self) -> Result<LUDec<T>, ()> {
         let (m, n): (usize, usize) = self.dim();
-        assert_eq!(m, n);
+        debug_assert_eq!(m, n);
 
         let (m, n): (usize, usize) = self.dim();
         let m_i32: i32 = m as i32;

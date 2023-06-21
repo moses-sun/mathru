@@ -1,5 +1,5 @@
-mod gauss_legendre_impl;
+mod gauss_legendre;
 mod root_weight;
 
-pub use gauss_legendre_impl::GaussLegendre;
+pub use gauss_legendre::GaussLegendre;
 pub use root_weight::RootWeight;

@@ -1,7 +1,7 @@
+use mathru::algebra::linear::matrix::General;
 use mathru::algebra::linear::matrix::SubstituteForward;
 use mathru::algebra::linear::matrix::UnitLowerTriangular;
-use mathru::algebra::linear::General;
-use mathru::algebra::linear::Vector;
+use mathru::algebra::linear::vector::Vector;
 
 #[test]
 fn subst_forward() {

@@ -7,18 +7,13 @@
 //! Here is an example on how to compute the Cholesky decomposition of a real
 //! valued matrix:
 //! ```
-//! # #[macro_use]
-//! # extern crate mathru;
-//! # fn main() -> Result<(), String> {
 //! use mathru::algebra::linear::matrix::{General, LowerTriangular};
 //! use mathru::matrix;
 //!
 //! let a: General<f64> = matrix![   2.0, -1.0, 0.0;
 //!                                -1.0, 2.0, -1.0;
 //!                                 0.0, -1.0,  2.0];
-//! let l: LowerTriangular<f64> = a.dec_cholesky()?.l();
-//! # Ok(())
-//! # }
+//! let l: LowerTriangular<f64> = a.dec_cholesky().unwrap().l();
 //! ```
 
 use super::LowerTriangular;

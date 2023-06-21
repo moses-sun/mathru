@@ -3,7 +3,7 @@ use crate::algebra::abstr::Field;
 use crate::algebra::abstr::Scalar;
 use crate::algebra::linear::matrix::substitute::SubstituteForward;
 use crate::algebra::linear::matrix::{General, UnitLowerTriangular};
-use crate::algebra::linear::Vector;
+use crate::algebra::linear::vector::Vector;
 
 impl<T> SubstituteForward<Vector<T>> for UnitLowerTriangular<T>
 where

@@ -1,6 +1,6 @@
 use crate::algebra::{
     abstr::{Field, Scalar},
-    linear::General,
+    linear::matrix::General,
 };
 use std::ops::Sub;
 
@@ -23,15 +23,18 @@ where
     /// # Example
     ///
     /// ```
-    /// use mathru::algebra::linear::Matrix;
+    /// use mathru::algebra::linear::matrix::General;
+    /// use mathru::matrix;
     ///
-    /// let a: General<f64> = Matrix::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
-    /// let b: General<f64> = Matrix::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
+    /// let a: General<f64> = matrix![1.0, 0.0;  
+    ///                               3.0, -7.0];
+    /// let b: General<f64> = matrix![1.0, 0.0;
+    ///                              3.0, -7.0];
     ///
     /// let c: General<f64> = a - b;
     /// ```
     fn sub(self, rhs: Self) -> Self::Output {
-        assert_eq!(self.dim(), rhs.dim());
+        debug_assert_eq!(self.dim(), rhs.dim());
 
         let (m, n): (usize, usize) = rhs.dim();
 
@@ -57,7 +60,7 @@ where
     type Output = General<T>;
 
     fn sub(self, rhs: &'b General<T>) -> Self::Output {
-        assert_eq!(self.dim(), rhs.dim());
+        debug_assert_eq!(self.dim(), rhs.dim());
 
         let (m, n): (usize, usize) = rhs.dim();
 
@@ -83,7 +86,7 @@ where
     type Output = &'a mut General<T>;
 
     fn sub(self, rhs: &'b General<T>) -> Self::Output {
-        assert_eq!(self.dim(), rhs.dim());
+        debug_assert_eq!(self.dim(), rhs.dim());
 
         let (m, n): (usize, usize) = rhs.dim();
 
@@ -111,9 +114,11 @@ where
     /// # Example
     ///
     /// ```
-    /// use mathru::algebra::linear::Matrix;
+    /// use mathru::algebra::linear::matrix::General;
+    /// use mathru::matrix;
     ///
-    /// let a: General<f64> = Matrix::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
+    /// let a: General<f64> = matrix![1.0, 0.0;
+    ///                              3.0, -7.0];
     /// let b: General<f64> = a - -4.0;
     /// ```
     fn sub(self, rhs: T) -> Self::Output {
@@ -134,9 +139,12 @@ where
     /// # Example
     ///
     /// ```
-    /// use mathru::algebra::linear::Matrix;
+    /// use mathru::algebra::linear::matrix::General;
+    /// use mathru::matrix;
     ///
-    /// let a: General<f64> = Matrix::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
+    /// let a: General<f64> = matrix![1.0, 0.0;
+    ///                               3.0, -7.0];
+    ///
     /// let b: General<f64> = &a - &-4.0;
     /// ```
     fn sub(self, rhs: &T) -> Self::Output {
@@ -157,9 +165,12 @@ where
     /// # Example
     ///
     /// ```
-    /// use mathru::algebra::linear::Matrix;
+    /// use mathru::algebra::linear::matrix::General;
+    /// use mathru::matrix;
     ///
-    /// let a: General<f64> = Matrix::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
+    /// let a: General<f64> = matrix![1.0, 0.0;
+    ///                               3.0, -7.0];
+    ///
     /// let b: General<f64> = &a - &-4.0;
     /// ```
     fn sub(self, rhs: &T) -> Self::Output {

@@ -1,5 +1,5 @@
 use crate::algebra::abstr::Real;
-use crate::algebra::linear::Vector;
+use crate::algebra::linear::vector::Vector;
 use crate::analysis::differential_equation::ordinary::ExplicitODE;
 #[cfg(feature = "serde")]
 use serde::{Deserialize, Serialize};

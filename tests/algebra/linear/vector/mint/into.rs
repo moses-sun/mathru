@@ -1,4 +1,4 @@
-use mathru::algebra::linear::Vector;
+use mathru::algebra::linear::vector::Vector;
 use mint::{Vector2, Vector3, Vector4};
 
 #[test]

@@ -1,5 +1,5 @@
 use crate::optimization::problem::Rosenbrock;
-use mathru::{algebra::linear::Vector, optimization::Newton};
+use mathru::{algebra::linear::vector::Vector, optimization::Newton};
 
 #[test]
 fn test_minimization() {

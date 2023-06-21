@@ -1,6 +1,6 @@
 use mathru::algebra::abstr::cast::FromPrimitive;
 use mathru::algebra::abstr::Complex;
-use mathru::algebra::linear::{matrix::General, Vector};
+use mathru::algebra::linear::{matrix::General, vector::Vector};
 
 #[test]
 fn matrix_owner() {

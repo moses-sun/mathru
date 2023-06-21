@@ -1,5 +1,5 @@
 use mathru::{
-    algebra::linear::Vector,
+    algebra::linear::vector::Vector,
     analysis::differential_equation::ordinary::{
         problem::Euler,
         solver::explicit::runge_kutta::adaptive::{DormandPrince54, ProportionalControl},

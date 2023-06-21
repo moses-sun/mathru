@@ -3,7 +3,7 @@ use crate::{
         abstr::Real,
         linear::{
             matrix::{General, Solve},
-            Vector,
+            vector::Vector,
         },
     },
     optimization::{Optim, OptimResult},

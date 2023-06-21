@@ -2,7 +2,7 @@ use crate::algebra::abstr::{Field, Scalar};
 use crate::algebra::linear::matrix::substitute::SubstituteBackward;
 use crate::algebra::linear::{
     matrix::{General, UnitUpperTriangular},
-    Vector,
+    vector::Vector,
 };
 
 impl<T> SubstituteBackward<Vector<T>> for UnitUpperTriangular<T>

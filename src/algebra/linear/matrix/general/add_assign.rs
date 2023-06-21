@@ -4,15 +4,13 @@ use crate::algebra::{
 };
 use std::ops::AddAssign;
 
-// Add scalar to matrix
 impl<T> AddAssign<General<T>> for General<T>
 where
     T: Field + Scalar,
 {
-    /// Add a scalar to the matrix
+    /// Add the matrix rhs to matrix self and assign the sum to self
     ///
     /// # Example
-    ///
     /// ```
     /// use mathru::algebra::linear::matrix::General;
     ///
@@ -28,12 +26,11 @@ where
     }
 }
 
-// Add scalar to matrix
 impl<T> AddAssign<T> for General<T>
 where
     T: Field + Scalar,
 {
-    /// Add a scalar to the matrix
+    /// Add a scalar rhs to matrix self and assign result to self
     ///
     /// # Example
     ///

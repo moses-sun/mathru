@@ -25,7 +25,10 @@ where
     /// assert_eq!(sum, c);
     /// ```
     fn add(mut self, rhs: Self) -> Self::Output {
-        let _ = (&mut self).add(&rhs);
+        self.data
+            .iter_mut()
+            .zip(rhs.data.iter())
+            .for_each(|(x, y)| *x += *y);
         self
     }
 }
@@ -51,7 +54,7 @@ where
     /// assert_eq!(sum, c)
     /// ```
     fn add(self, rhs: &'b General<T>) -> Self::Output {
-        assert_eq!(self.dim(), rhs.dim());
+        debug_assert_eq!(self.dim(), rhs.dim());
         let (m, n) = self.dim();
         General {
             m,
@@ -87,7 +90,7 @@ where
     /// assert_eq!(&sum, c)
     /// ```
     fn add(self, rhs: &'b General<T>) -> Self::Output {
-        assert_eq!(self.dim(), rhs.dim());
+        debug_assert_eq!(self.dim(), rhs.dim());
         self.data
             .iter_mut()
             .zip(rhs.data.iter())

@@ -3,7 +3,7 @@ use crate::{
         abstr::Real,
         linear::{
             matrix::{General, Solve, Transpose},
-            Vector,
+            vector::Vector,
         },
     },
     optimization::{Optim, OptimResult},
@@ -81,9 +81,7 @@ where
                 let left_n: General<T> =
                     &jacobian_x_n_tran * &jacobian_x_n + General::one(j_n) * mu_n * mu_n;
 
-                println!("left_n: {}, p_n: {}", left_n, p_n);
                 d_n = left_n.solve(&p_n).unwrap();
-                println!("d_n: {}", d_n);
                 let x_n_1 = &x_n + &d_n;
                 let f_x_n_1: Vector<T> = func.eval(&x_n_1);
 

@@ -1,6 +1,6 @@
 //! Butcher tableau
 use crate::analysis::differential_equation::ordinary::ExplicitODE;
-use crate::algebra::linear::Vector;
+use crate::algebra::linear::vector::Vector;
 use crate::algebra::abstr::Real;
 use std::fmt::Debug;
 #[cfg(feature = "serde")]

@@ -4,3 +4,5 @@ mod unitlowertriangular;
 mod unituppertriangular;
 mod upperhessenberg;
 mod uppertriangular;
+
+mod diagonal;

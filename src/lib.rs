@@ -9,11 +9,9 @@
 //! mathru = "0.15"
 //! ```
 //! You can check, if it works with a simple program like this:
-//!``` rust
-//! # #[macro_use]
-//! # extern crate mathru;
+//!```rust
 //! use mathru::vector;
-//! use mathru::algebra::linear::{Vector, matrix::General};
+//! use mathru::algebra::linear::{vector::Vector, matrix::General};
 //! use mathru::algebra::linear::matrix::{Solve};
 //!
 //! fn main() {

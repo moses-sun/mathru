@@ -1,5 +1,5 @@
 use criterion::Criterion;
-use mathru::algebra::linear::Vector;
+use mathru::algebra::linear::vector::Vector;
 
 criterion_group!(vector_mul, bench_vector_mul_scalar, bench_vec_mul_scalar);
 

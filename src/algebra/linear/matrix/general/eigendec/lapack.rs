@@ -12,27 +12,27 @@ where
 {
     /// Computes the eigenvalues of a real matrix
     ///
-    ///
     /// # Arguments
-    ///
-    ///
-    ///
     ///
     /// # Example
     ///
     /// ```
-    /// use mathru::algebra::linear::{matrix::EigenDec, Matrix, Vector};
+    /// use mathru::algebra::linear::matrix::{EigenDec, EigenDecomposition, General};
+    /// use mathru::matrix;
     ///
-    /// let a: General<f64> = Matrix::new(3, 3, vec![1.0, -3.0, 3.0, 3.0, -5.0, 3.0, 6.0, -6.0, 4.0]);
+    /// let a: General<f64> = matrix![  1.0, -3.0, 3.0;
+    ///                                 3.0, -5.0, 3.0;
+    ///                                 6.0, -6.0, 4.0];
+    ///
     /// let eigen: EigenDec<f64> = a.dec_eigen().unwrap();
     /// ```
     fn dec_eigen(&self) -> Result<EigenDec<T>, String> {
         let (m, n): (usize, usize) = self.dim();
-        assert_eq!(
+        debug_assert_eq!(
             m, n,
             "Unable to compute the eigen value of a non-square matrix"
         );
-        assert_ne!(
+        debug_assert_ne!(
             m, 0,
             "Unable to compute the eigen value of an empty matrix."
         );

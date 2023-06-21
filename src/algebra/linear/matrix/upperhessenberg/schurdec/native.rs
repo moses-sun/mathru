@@ -1,6 +1,6 @@
 use crate::algebra::abstr::AbsDiffEq;
 use crate::algebra::linear::matrix::UpperHessenberg;
-use crate::algebra::linear::Vector;
+use crate::algebra::linear::vector::Vector;
 use crate::matrix;
 use crate::{
     algebra::{
@@ -63,8 +63,6 @@ where
         let mut p: usize = n;
 
         while p > 2 {
-            println!("H1: {}", self);
-
             let q = p - 1;
 
             // Bulge generating
@@ -91,8 +89,6 @@ where
             for k in 0..=(p - 3) {
                 let b: Vector<T> = Vector::new_column(vec![x, y, z]);
                 let hr: General<T> = General::householder(&b, 0);
-
-                println!("x: {}, y: {}, z: {}, hr: {}", x, y, z, hr);
 
                 //Determine the Householder reflector P with P^T [x; y; z]^T = αe1 ;
                 {
@@ -139,8 +135,6 @@ where
                 let u_slice = &self.get_slice(0, p - 1, p - 2, p - 1) * &g_trans;
                 u = u.set_slice(&u_slice, 0, p - 2);
             }
-
-            println!("H3: {}", self);
 
             // check for convergence
             let m: T = self[[q - 1, q - 1]].abs();

@@ -18,7 +18,7 @@ fn schurdec() {
                                     0.0, 0.0, 0.0, 0.0, 3.9995, 4.9227;
                                     0.0, 0.0, 0.0, 0.0, 0.0, 3.0004];
 
-    let (q, u) = h.dec_schur().unwrap().qu();
+    let (_q, u) = h.dec_schur().unwrap().qu();
 
     assert_abs_diff_eq!(u, u_ref.into(), epsilon = 1.0e-4);
     //assert_abs_diff_eq!(Into::<General<f64>>::into(h), &(&q * &Into::<General<f64>>::into(u)) * &q.transpose() , epsilon = 1.0e-4);

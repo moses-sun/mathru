@@ -1,7 +1,7 @@
 use crate::algebra::abstr::Polynomial;
 use crate::algebra::abstr::Real;
 use crate::algebra::linear::matrix::Solve;
-use crate::algebra::linear::{matrix::General, Vector};
+use crate::algebra::linear::{matrix::General, vector::Vector};
 use std::cmp::Ordering;
 use std::fmt::{Display, Formatter, Result as FmtResult};
 

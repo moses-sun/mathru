@@ -20,7 +20,7 @@ use std::{fmt, fmt::Display, iter::IntoIterator, ops::Neg};
 /// # extern crate mathru;
 /// # fn main()
 /// # {
-/// use mathru::algebra::linear::Vector;
+/// use mathru::algebra::linear::vector::Vector;
 ///
 /// // Construct a column vector of f64
 /// let v1: Vector<f64> = vector![1.0; 2.0; 3.0];
@@ -100,7 +100,7 @@ where
     /// # Example
     ///
     /// ```
-    /// use mathru::algebra::linear::Vector;
+    /// use mathru::algebra::linear::vector::Vector;
     ///
     /// let a: Vector<f64> = Vector::new_column(vec![1.0, 0.0, 3.0, -2.0]);
     /// let p: f64 = 2.0;
@@ -110,7 +110,7 @@ where
     /// assert_eq!(norm_ref, norm);
     /// ```
     pub fn p_norm(&self, p: &T) -> T {
-        assert!(*p >= T::one());
+        debug_assert!(*p >= T::one());
 
         let (m, n): (usize, usize) = self.dim();
         let mut sum: T = T::zero();
@@ -149,7 +149,7 @@ where
     /// # Example
     ///
     /// ```
-    /// use mathru::algebra::linear::Vector;
+    /// use mathru::algebra::linear::vector::Vector;
     ///
     /// let a: Vector<f64> = Vector::new_column(vec![1.0, 0.0, 3.0, -2.0]);
     /// let norm_ref: f64 = 3.7416573867739413;
@@ -173,7 +173,7 @@ where
     /// # Example
     ///
     /// ```
-    /// use mathru::algebra::linear::Vector;
+    /// use mathru::algebra::linear::vector::Vector;
     ///
     /// let a: Vector<f64> = Vector::new_row(vec![1.0, 0.0, 3.0, -2.0]);
     /// ```
@@ -188,7 +188,7 @@ where
     /// # Example
     ///
     /// ```
-    /// use mathru::algebra::linear::Vector;
+    /// use mathru::algebra::linear::vector::Vector;
     ///
     /// let a: Vector<f64> = Vector::new_column(vec![1.0, 0.0, 3.0, -2.0]);
     /// ```
@@ -213,7 +213,7 @@ where
     /// # Example
     ///
     /// ```
-    /// use mathru::algebra::linear::Vector;
+    /// use mathru::algebra::linear::vector::Vector;
     ///
     /// let a: Vector<f64> = Vector::new_row_random(4);
     /// ```
@@ -228,7 +228,7 @@ where
     /// # Example
     ///
     /// ```
-    /// use mathru::algebra::linear::Vector;
+    /// use mathru::algebra::linear::vector::Vector;
     ///
     /// let a: Vector<f64> = Vector::new_column_random(4);
     /// ```
@@ -248,7 +248,7 @@ where
     /// # Example
     ///
     /// ```
-    /// use mathru::algebra::linear::Vector;
+    /// use mathru::algebra::linear::vector::Vector;
     ///
     /// let a: Vector<f64> = Vector::new_column(vec![1.0, 0.0, 3.0, -2.0]);
     /// let b: Vector<f64> = a.transpose();
@@ -269,7 +269,7 @@ where
     /// # Example
     ///
     /// ```
-    /// use mathru::algebra::linear::Vector;
+    /// use mathru::algebra::linear::vector::Vector;
     ///
     /// let a: Vector<f64> = Vector::new_column(vec![1.0, 0.0, 3.0, -2.0]);
     /// let b: Vector<f64> = Vector::new_column(vec![-1.0, 2.0, 3.0, 5.0]);
@@ -282,10 +282,10 @@ where
     pub fn dotp(&self, rhs: &Self) -> T {
         let (lhs_m, lhs_n) = self.dim();
         let (rhs_m, rhs_n) = rhs.dim();
-        assert_ne!(lhs_m, 0);
-        assert_eq!(lhs_n, 1);
-        assert_eq!(lhs_m, rhs_m);
-        assert_eq!(lhs_n, rhs_n);
+        debug_assert_ne!(lhs_m, 0);
+        debug_assert_eq!(lhs_n, 1);
+        debug_assert_eq!(lhs_m, rhs_m);
+        debug_assert_eq!(lhs_n, rhs_n);
 
         let temp: Vector<T> = self.clone().transpose();
         let res: General<T> = &temp.data * &rhs.data;
@@ -300,7 +300,7 @@ where
     /// # Examples
     ///
     /// ```
-    /// use mathru::algebra::linear::Vector;
+    /// use mathru::algebra::linear::vector::Vector;
     ///
     /// let a = Vector::new_column(vec![1.0, 2.0, -3.0, 5.0]);
     /// let idx = a.argmax();
@@ -314,7 +314,7 @@ where
 
         let limit: usize = m.max(n);
 
-        assert_ne!(limit, 0);
+        debug_assert_ne!(limit, 0);
 
         for idx in 0..limit {
             let element: T = self[idx];
@@ -334,7 +334,7 @@ where
     /// # Examples
     ///
     /// ```
-    /// use mathru::algebra::linear::Vector;
+    /// use mathru::algebra::linear::vector::Vector;
     ///
     /// let a = Vector::new_column(vec![1.0, -2.0, -6.0, 75.0]);
     /// let b = a.argmin();
@@ -348,7 +348,7 @@ where
 
         let limit: usize = m.max(n);
 
-        assert_ne!(limit, 0);
+        debug_assert_ne!(limit, 0);
 
         for idx in 0..limit {
             let element: T = self[idx];
@@ -371,7 +371,7 @@ where
     /// # Example
     ///
     /// ```
-    /// use mathru::algebra::linear::{matrix::General, Vector};
+    /// use mathru::algebra::linear::{matrix::General, vector::Vector};
     ///
     /// let a: Vector<f64> = Vector::new_row(vec![1.0, 0.0, 3.0, -2.0]);
     /// let b: Vector<f64> = Vector::new_column(vec![-1.0, 2.0, 3.0, 5.0]);
@@ -419,7 +419,7 @@ where
     /// # Example
     ///
     /// ```
-    /// use mathru::algebra::linear::Vector;
+    /// use mathru::algebra::linear::vector::Vector;
     ///
     /// let a: Vector<f64> = Vector::new_column(vec![0.0, 0.0, 0.0, 0.0]);
     /// let b: Vector<f64> = Vector::zero(4);
@@ -442,7 +442,7 @@ where
     /// # Example
     ///
     /// ```
-    /// use mathru::algebra::linear::Vector;
+    /// use mathru::algebra::linear::vector::Vector;
     ///
     /// let a: Vector<f64> = Vector::new_column(vec![1.0, 1.0, 1.0, 1.0]);
     /// let b: Vector<f64> = Vector::one(4);
@@ -466,7 +466,7 @@ impl<T> Vector<T> {
     /// # Example
     ///
     /// ```
-    /// use mathru::algebra::linear::Vector;
+    /// use mathru::algebra::linear::vector::Vector;
     ///
     /// let a: Vector<f64> = Vector::new_column(vec![1.0, 2.0, 3.0, 4.0]);
     /// let (m, n): (usize, usize) = a.dim();
@@ -499,7 +499,7 @@ where
     /// # Example
     ///
     /// ```
-    /// use mathru::algebra::linear::Vector;
+    /// use mathru::algebra::linear::vector::Vector;
     ///
     /// let mut a: Vector<f64> = Vector::new_column(vec![1.0, -2.0, 3.0, -7.0]);
     /// a = a.get_slice(1, 2);
@@ -511,11 +511,11 @@ where
     pub fn get_slice(&self, s: usize, e: usize) -> Vector<T> {
         let (m, n): (usize, usize) = self.dim();
         if m == 1 {
-            assert!(s < n);
-            assert!(e < n);
+            debug_assert!(s < n);
+            debug_assert!(e < n);
         } else {
-            assert!(s < m);
-            assert!(e < m);
+            debug_assert!(s < m);
+            debug_assert!(e < m);
         }
 
         let mut slice: Vector<T> = Vector::zero(e - s + 1);
@@ -538,7 +538,7 @@ where
     /// # Example
     ///
     /// ```
-    /// use mathru::algebra::linear::Vector;
+    /// use mathru::algebra::linear::vector::Vector;
     ///
     /// let mut a: Vector<f64> = Vector::new_column(vec![1.0, -2.0, 3.0, -7.0]);
     /// let b: Vector<f64> = Vector::new_column(vec![-5.0, 4.0]);
@@ -551,7 +551,7 @@ where
     pub fn set_slice(&mut self, rhs: &Self, s: usize) {
         let (m, _n): (usize, usize) = self.dim();
         let (s_m, _s_n): (usize, usize) = rhs.dim();
-        assert!(s + s_m <= m);
+        debug_assert!(s + s_m <= m);
 
         for r in s..(s + s_m) {
             self[r] = rhs[r - s];
@@ -568,7 +568,7 @@ where
     /// # Example
     ///
     /// ```
-    /// use mathru::algebra::linear::Vector;
+    /// use mathru::algebra::linear::vector::Vector;
     ///
     /// let a: Vector<f64> = Vector::new_column(vec![0.0, 0.0, 0.0, 0.0]);
     /// let b: Vector<f64> = Vector::zero(4);

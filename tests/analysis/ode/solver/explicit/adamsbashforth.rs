@@ -1,6 +1,6 @@
 use super::super::super::problem::{explicit_ode, explicit_ode1};
 use mathru::{
-    algebra::linear::Vector,
+    algebra::linear::vector::Vector,
     analysis::differential_equation::ordinary::solver::explicit::AdamsBashforth,
 };
 

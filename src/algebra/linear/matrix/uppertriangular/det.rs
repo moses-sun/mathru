@@ -21,7 +21,7 @@ where
     /// ```
     fn det(&self) -> T {
         let (m, n) = self.matrix.dim();
-        assert_eq!(m, n);
+        debug_assert_eq!(m, n);
 
         let mut det = T::one();
         for i in 0..m {

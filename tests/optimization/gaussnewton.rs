@@ -1,5 +1,5 @@
 use mathru::{
-    algebra::linear::{matrix::General, Vector},
+    algebra::linear::{matrix::General, vector::Vector},
     optimization::{GaussNewton, Optim},
 };
 

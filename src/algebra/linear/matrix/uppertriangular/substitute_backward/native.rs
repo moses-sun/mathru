@@ -3,7 +3,7 @@ use crate::algebra::abstr::{Field, Scalar};
 use crate::algebra::linear::matrix::substitute::SubstituteBackward;
 use crate::algebra::linear::{
     matrix::{General, UpperTriangular},
-    Vector,
+    vector::Vector,
 };
 use crate::relative_eq;
 

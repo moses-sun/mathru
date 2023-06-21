@@ -1,6 +1,6 @@
 use super::problem::ExplicitODE2;
 use mathru::{
-    algebra::linear::Vector,
+    algebra::linear::vector::Vector,
     analysis::differential_equation::ordinary::solver::explicit::runge_kutta::{ExplicitRKEmbeddedMethod, Tsitouras54},
 };
 

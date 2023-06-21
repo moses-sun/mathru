@@ -24,8 +24,6 @@
 //!     large-scale mathematical computations and image calculations, optimized
 //!     for high performance and low-energy consumption. (macOS only)
 
-pub use self::{matrix::General, vector::Vector};
-
 #[macro_use]
 pub mod vector;
 #[macro_use]

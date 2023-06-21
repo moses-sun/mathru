@@ -21,21 +21,24 @@ where
     /// # Example
     ///
     /// ```
-    /// # #[macro_use]
-    /// # extern crate mathru;
-    /// # fn main() -> Result<(), String> {
-    /// use mathru::algebra::linear::Matrix;
+    /// use mathru::algebra::linear::matrix::{General, LowerTriangular};
+    /// use mathru::{matrix, assert_abs_diff_eq};
     ///
-    /// let a: General<f64> = matrix![   2.0, -1.0, 0.0;
-    ///                                -1.0, 2.0, -1.0;
-    ///                                 0.0, -1.0,  2.0];
+    /// let a: General<f64> = matrix![2.0, -1.0, 0.0;
+    ///                               -1.0, 2.0, -1.0;
+    ///                               0.0, -1.0,  2.0];
     ///
-    /// let l: (General<f64>) = a.dec_cholesky().unwrap().l();
-    /// # }
+    /// let l: LowerTriangular<f64> = a.dec_cholesky().unwrap().l();
+    ///
+    /// let l_ref: LowerTriangular<f64> = matrix![1.4142, 0.0, 0.0;
+    ///                                           -0.7071, 1.2247, 0.0;
+    ///                                           0.0, -0.8165, 1.1547].into();
+    ///
+    /// assert_abs_diff_eq!(l_ref, l, epsilon=0.001);
     /// ```
     pub fn dec_cholesky(&self) -> Result<CholeskyDec<T>, String> {
         let (m, n): (usize, usize) = self.dim();
-        assert_eq!(m, n);
+        debug_assert_eq!(m, n);
 
         let (_m, n) = self.dim();
         let n_i32: i32 = n as i32;

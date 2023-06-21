@@ -146,7 +146,7 @@ One of the following implementations for linear algebra can be activated as a fe
 use mathru::{
     algebra::linear::{
         matrix::{LUDec, Solve},
-        Matrix, Vector,
+        General, Vector,
     },
     matrix, vector,
 };
@@ -172,7 +172,7 @@ fn main()
 
 ```rust
 use mathru::{
-    algebra::linear::Vector,
+    algebra::linear::vector::Vector,
     analysis::differential_equation::ordinary::{problem, DormandPrince54, ExplicitODE},
 };
 

@@ -1,7 +1,7 @@
 use crate::algebra::abstr::AbsDiffEq;
 use crate::algebra::abstr::Field;
 use crate::algebra::abstr::Scalar;
-use crate::algebra::linear::General;
+use crate::algebra::linear::matrix::General;
 
 impl<T> AbsDiffEq for General<T>
 where

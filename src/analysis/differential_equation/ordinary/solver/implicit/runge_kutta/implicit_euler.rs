@@ -5,7 +5,7 @@ use crate::analysis::differential_equation::ordinary::ImplicitODE;
 use crate::{
     algebra::{
         abstr::Real,
-        linear::{matrix::General, Vector},
+        linear::{matrix::General, vector::vector::Vector},
     },
     analysis::{Function, Jacobian, NewtonRaphson},
 };
@@ -31,14 +31,11 @@ use std::clone::Clone;
 /// ```
 ///
 /// ```
-/// # #[macro_use]
-/// # extern crate mathru;
-/// # fn main()
-/// # {
 /// use mathru::{
-///     algebra::linear::{matrix::General, Vector},
+///     algebra::linear::{matrix::General, vector::Vector},
 ///     analysis::differential_equation::ordinary::{solver::implicit::runge_kutta::{ImplicitEuler, ImplicitFixedStepper}, ImplicitODE,
 ///     ImplicitInitialValueProblemBuilder},
+///     matrix, vector
 /// };
 ///
 /// pub struct ImplicitODEExample
@@ -71,8 +68,6 @@ use std::clone::Clone;
 ///
 /// // Solve the ODE
 /// let (t, x): (Vec<f64>, Vec<Vector<f64>>) = solver.solve(&problem, &ImplicitEuler::default()).unwrap();
-///
-/// # }
 /// ```
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[derive(Clone, Copy, Debug)]

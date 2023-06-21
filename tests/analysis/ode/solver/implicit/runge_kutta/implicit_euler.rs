@@ -1,6 +1,6 @@
 use crate::analysis::ode::problem::TestOde;
 use mathru::{
-    algebra::linear::Vector,
+    algebra::linear::vector::Vector,
     analysis::differential_equation::ordinary::solver::implicit::runge_kutta::{
         ImplicitEuler, ImplicitFixedStepSizeMethod,
     },

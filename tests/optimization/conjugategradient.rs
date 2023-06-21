@@ -1,5 +1,5 @@
 use crate::optimization::problem::LinearEquation;
-use mathru::{algebra::linear::Vector, optimization::ConjugateGradient};
+use mathru::{algebra::linear::vector::Vector, optimization::ConjugateGradient};
 
 #[test]
 fn linear_equation_minimization() {

@@ -2,7 +2,7 @@ use mathru::algebra::linear::matrix::{
     MatrixColumnIntoIterator, MatrixIntoIterator, MatrixIterator, MatrixIteratorMut,
     MatrixRowIntoIterator,
 };
-use mathru::algebra::linear::{matrix::General, Vector};
+use mathru::algebra::linear::{matrix::General, vector::Vector};
 use mathru::{matrix, vector};
 
 #[test]

@@ -1,7 +1,7 @@
 use mathru::{
     algebra::linear::{
         matrix::{General, LUDec, Solve},
-        Vector,
+        vector::Vector,
     },
     matrix, vector,
 };

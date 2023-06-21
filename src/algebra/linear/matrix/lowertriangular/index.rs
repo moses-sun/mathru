@@ -40,7 +40,7 @@ impl<T> IndexMut<[usize; 2]> for LowerTriangular<T> {
     /// assert_eq!(-2.0, m[[1, 0]])
     /// ```
     fn index_mut(&mut self, index: [usize; 2]) -> &mut Self::Output {
-        assert!(index[1] <= index[0]);
+        debug_assert!(index[1] <= index[0]);
         &mut self.matrix[index]
     }
 }
