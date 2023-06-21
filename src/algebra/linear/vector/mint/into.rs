@@ -1,5 +1,5 @@
 use crate::algebra::abstr::Real;
-use crate::algebra::linear::Vector;
+use crate::algebra::linear::vector::Vector;
 use mint::{Vector2, Vector3, Vector4};
 
 macro_rules! impl_into_mint(

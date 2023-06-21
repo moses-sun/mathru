@@ -6,7 +6,7 @@ use mathru::algebra::linear::{
         General, Inverse, LUDec, Solve, SubstituteBackward, SubstituteForward, UnitLowerTriangular,
         UpperTriangular,
     },
-    Vector,
+    vector::Vector,
 };
 
 #[test]
@@ -187,32 +187,7 @@ fn dec_complex_f64() {
     assert_relative_eq!(l, l_ref);
     assert_relative_eq!(u, u_ref);
     assert_relative_eq!(p, p_ref);
-
-    //assert_relative_eq!(p * l * u, a);
 }
-
-// #[test]
-// fn dec_complex_f64_2()
-// {
-//     let a: General<f64> = matrix![  -3.0, -3.0, 3.0;
-//                                     3.0, -9.0, 3.0;
-//                                     6.0, -6.0, 0.0];
-//
-//     let (l, u, _p): (General<f64>, General<f64>, General<f64>) = a.dec_lu().unwrap().lup();
-//
-//     let l_ref: General<f64> = matrix![   1.0, 0.0, 0.0;
-//                                         0.5, 1.0, 0.0;
-//                                         -0.5, 1.0, 1.0];
-//
-//     let u_ref: General<f64> = matrix![   6.0, -6.0, 0.0;
-//                                         0.0, -6.0, 3.0;
-//                                         0.0, 0.0, 0.0];
-//
-//     assert_relative_eq!(l, l_ref, epsilon=10e-10);
-//     assert_relative_eq!(u, u_ref, epsilon=10e-10);
-//     println!("l: {}", l);
-//     println!("u: {}", u);
-// }
 
 #[test]
 fn solve_0() {

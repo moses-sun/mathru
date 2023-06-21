@@ -1,5 +1,5 @@
 use crate::algebra::abstr::{Field, Scalar};
-use crate::algebra::linear::{matrix::General, Vector};
+use crate::algebra::linear::{matrix::General, vector::vector::Vector};
 
 pub struct MatrixColumnIntoIterator<'a, T> {
     m: &'a General<T>,

@@ -1,6 +1,6 @@
 use crate::algebra::{
     abstr::{Field, Scalar},
-    linear::{matrix::General, Vector},
+    linear::{matrix::General, vector::vector::Vector},
 };
 use std::ops::Mul;
 
@@ -49,11 +49,11 @@ where
         let (l_rows, l_cols) = self.dim();
         let (r_rows, r_cols): (usize, usize) = rhs.dim();
 
-        assert_eq!(l_cols, r_rows);
+        debug_assert_eq!(l_cols, r_rows);
 
-        let m = l_rows as usize;
-        let n = r_cols as usize;
-        let k = l_cols as usize;
+        let m = l_rows;
+        let n = r_cols;
+        let k = l_cols;
 
         T::xgemm(
             m,
@@ -234,12 +234,12 @@ where
         let (self_rows, self_cols) = self.dim();
         let (rhs_rows, rhs_cols) = rhs.dim();
 
-        assert_eq!(self_cols, rhs_rows);
+        debug_assert_eq!(self_cols, rhs_rows);
 
-        let m = self_rows as usize;
-        let n = rhs_cols as usize;
-        let k = self_cols as usize;
-        let mut c: General<T> = General::zero(m as usize, n as usize);
+        let m = self_rows;
+        let n = rhs_cols;
+        let k = self_cols;
+        let mut c: General<T> = General::zero(m, n);
 
         T::xgemm(
             m,

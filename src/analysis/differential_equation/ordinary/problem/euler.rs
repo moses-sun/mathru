@@ -2,7 +2,7 @@ use crate::matrix;
 use crate::{
     algebra::{
         abstr::Real,
-        linear::{matrix::General, Vector},
+        linear::{matrix::General, vector::vector::Vector},
     },
     analysis::differential_equation::ordinary::{ExplicitODE, ImplicitODE},
 };

@@ -61,8 +61,8 @@ where
     /// let gd = Gradient::new(0.3, 10000);
     /// ```
     pub fn new(sigma: T, iters: usize) -> Gradient<T> {
-        assert!(sigma <= T::one() && sigma > T::zero());
-        assert!(iters > 0);
+        debug_assert!(sigma <= T::one() && sigma > T::zero());
+        debug_assert!(iters > 0);
         Gradient { sigma, iters }
     }
 }

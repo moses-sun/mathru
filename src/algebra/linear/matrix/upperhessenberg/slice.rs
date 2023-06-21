@@ -1,6 +1,6 @@
 use crate::algebra::{
     abstr::{Field, Scalar},
-    linear::General,
+    linear::matrix::General,
 };
 
 use super::UpperHessenberg;
@@ -39,10 +39,10 @@ where
         column_s: usize,
         column_e: usize,
     ) -> General<T> {
-        assert!(row_s < self.matrix.m);
-        assert!(row_e < self.matrix.m);
-        assert!(column_s < self.matrix.n);
-        assert!(column_e < self.matrix.n);
+        debug_assert!(row_s < self.matrix.m);
+        debug_assert!(row_e < self.matrix.m);
+        debug_assert!(column_s < self.matrix.n);
+        debug_assert!(column_e < self.matrix.n);
 
         let mut slice: General<T> = General::zero(row_e - row_s + 1, column_e - column_s + 1);
 
@@ -78,8 +78,8 @@ where
     ) -> UpperHessenberg<T> {
         let (s_m, s_n): (usize, usize) = slice.dim();
         let (m, n): (usize, usize) = self.matrix.dim();
-        assert!(row + s_m <= m);
-        assert!(column + s_n <= n);
+        debug_assert!(row + s_m <= m);
+        debug_assert!(column + s_n <= n);
 
         for r in row..(row + s_m) {
             for c in column..(column + s_n) {

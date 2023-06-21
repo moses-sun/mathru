@@ -3,7 +3,7 @@ use crate::{
         abstr::{Field, Scalar},
         linear::{
             matrix::{General, HessenbergDec, HessenbergDecomposition, Transpose, UpperHessenberg},
-            Vector,
+            vector::Vector,
         },
     },
     elementary::Power,
@@ -37,11 +37,11 @@ where
     /// ```
     fn dec_hessenberg(&self) -> HessenbergDec<T> {
         let (m, n): (usize, usize) = self.dim();
-        assert_eq!(
+        debug_assert_eq!(
             m, n,
             "Unable to compute the hessenberg decomposition of a non-square matrix"
         );
-        assert_ne!(
+        debug_assert_ne!(
             m, 0,
             "Unable to compute the hessenberg decomposition of an empty matrix."
         );

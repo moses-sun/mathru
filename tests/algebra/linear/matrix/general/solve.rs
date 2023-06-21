@@ -1,7 +1,7 @@
 use mathru::algebra::abstr::Complex;
 use mathru::algebra::linear::{
     matrix::{General, Solve},
-    Vector,
+    vector::Vector,
 };
 
 #[test]

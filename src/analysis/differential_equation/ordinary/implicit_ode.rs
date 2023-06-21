@@ -2,7 +2,7 @@
 
 use crate::algebra::{
     abstr::Real,
-    linear::{matrix::General, Vector},
+    linear::{matrix::General, vector::vector::Vector},
 };
 
 /// Implicit ordinary differential equation

@@ -13,7 +13,7 @@ where
     /// # Example
     ///
     /// ```
-    /// use mathru::algebra::linear::{matrix::*, General};
+    /// use mathru::algebra::linear::{matrix::*, matrix::General};
     ///
     /// let a: General<f64> = General::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
     /// let b_inv: General<f64> = a.inv().unwrap();

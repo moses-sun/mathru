@@ -1,6 +1,6 @@
 use crate::statistics::distrib::Discrete;
 use crate::statistics::combins;
-use crate::algebra::linear::Vector;
+use crate::algebra::linear::vector::Vector;
 use crate::algebra::abstr::Real;
 
 /// Multinomial distribution
@@ -33,7 +33,7 @@ impl<T> Multinomial<T>
     ///
     /// ```
     /// use mathru::*;
-    /// use mathru::algebra::linear::Vector;
+    /// use mathru::algebra::linear::vector::Vector;
     /// use mathru::statistics::distrib::Multinomial;
     ///
     /// let distrib: Multinomial<f64> = Multinomial::new(vector![0.3; 0.2; 0.5]);
@@ -61,7 +61,7 @@ impl<T> Discrete<T, Vector<u32>, Vector<T>> for Multinomial<T>
     /// ```
     /// use mathru::*;
     /// use mathru::statistics::distrib::{Discrete, Multinomial};
-    /// use mathru::algebra::linear::Vector;
+    /// use mathru::algebra::linear::vector::Vector;
     ///
     /// let p: Vector<f64> = vector![0.3; 0.7];
     /// let distrib: Multinomial<f64> = Multinomial::new(p);
@@ -70,7 +70,7 @@ impl<T> Discrete<T, Vector<u32>, Vector<T>> for Multinomial<T>
     /// ```
 	fn pmf(&self, x: Vector<u32>) -> T
     {
-        assert_eq!(self.p.dim(), x.dim());
+        debug_assert_eq!(self.p.dim(), x.dim());
         let (m, _n) = x.dim();
 
         let mut prod: T = T::one();

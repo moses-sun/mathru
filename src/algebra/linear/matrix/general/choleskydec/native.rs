@@ -39,7 +39,7 @@ where
     /// ```
     pub fn dec_cholesky(&self) -> Result<CholeskyDec<T>, String> {
         let (m, n) = self.dim();
-        assert_eq!(m, n);
+        debug_assert_eq!(m, n);
 
         let (m, n) = self.dim();
         let mut l: General<T> = General::zero(m, n);
@@ -102,7 +102,7 @@ where
     /// ```
     pub fn dec_cholesky(&self) -> Result<CholeskyDec<Complex<T>>, String> {
         let (m, n) = self.dim();
-        assert_eq!(m, n);
+        debug_assert_eq!(m, n);
 
         let (m, n) = self.dim();
         let mut l: General<Complex<T>> = General::zero(m, n);

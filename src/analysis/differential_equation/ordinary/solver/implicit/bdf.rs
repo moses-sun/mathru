@@ -1,6 +1,6 @@
 //! Solves an ODE using backward differentiation formula
 use crate::{
-    algebra::{abstr::Real, linear::vector::Vector},
+    algebra::{abstr::Real, linear::vector::vector::Vector},
     analysis::differential_equation::ordinary::{ImplicitInitialValueProblem, ImplicitODE},
 };
 #[cfg(feature = "serde")]
@@ -29,7 +29,7 @@ use std::clone::Clone;
 /// # fn main()
 /// # {
 /// use mathru::{
-///     algebra::linear::{matrix::General, Vector},
+///     algebra::linear::{matrix::General, vector::Vector},
 ///     analysis::differential_equation::ordinary::{ImplicitODE, ImplicitInitialValueProblem, ImplicitInitialValueProblemBuilder, solver::implicit::BDF},
 ///     elementary::Trigonometry
 /// };

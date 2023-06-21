@@ -1,5 +1,5 @@
 use crate::algebra::abstr::{Field, Scalar, Zero};
-use crate::algebra::linear::{Vector};
+use crate::algebra::linear::{vector::Vector};
 use std::slice::Iter;
 
 pub struct MatrixRowIterator<'a, T>

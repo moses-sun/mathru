@@ -1,6 +1,6 @@
 use mathru::analysis::{Function, Jacobian, NewtonRaphson};
 use mathru::{
-    algebra::linear::{matrix::General, Vector},
+    algebra::linear::{matrix::General, vector::Vector},
     vector,
 };
 

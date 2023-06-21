@@ -1,5 +1,5 @@
 use crate::algebra::abstr::{Field, Scalar, Zero};
-use crate::algebra::linear::{Vector};
+use crate::algebra::linear::{vector::Vector};
 use crate::vector;
 use std::slice::IterMut;
 

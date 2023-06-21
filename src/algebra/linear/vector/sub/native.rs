@@ -1,6 +1,6 @@
 use crate::algebra::{
     abstr::{Field, Scalar},
-    linear::Vector,
+    linear::vector::Vector,
 };
 use std::ops::Sub;
 
@@ -16,7 +16,7 @@ where
     /// # Example
     ///
     /// ```
-    /// use mathru::algebra::linear::Vector;
+    /// use mathru::algebra::linear::vector::Vector;
     ///
     /// let a: Vector<f64> = Vector::new_column(vec![1.0, 2.0, 3.0, 4.0]);
     /// let b: Vector<f64> = Vector::new_column(vec![3.0, -4.0, 5.0, 4.0]);
@@ -25,7 +25,9 @@ where
     /// assert_eq!(res_ref, a - b)
     /// ```
     fn sub(self, rhs: Vector<T>) -> Self::Output {
-        &self - &rhs
+        Vector {
+            data: self.data.sub(rhs.data),
+        }
     }
 }
 
@@ -40,7 +42,7 @@ where
     /// # Example
     ///
     /// ```
-    /// use mathru::algebra::linear::Vector;
+    /// use mathru::algebra::linear::vector::Vector;
     ///
     /// let a: Vector<f64> = Vector::new_column(vec![1.0, 2.0, 3.0, 4.0]);
     /// let b: Vector<f64> = Vector::new_column(vec![3.0, -4.0, 5.0, 4.0]);
@@ -66,7 +68,7 @@ where
     /// # Example
     ///
     /// ```
-    /// use mathru::algebra::linear::Vector;
+    /// use mathru::algebra::linear::vector::Vector;
     ///
     /// let mut a: Vector<f64> = Vector::new_column(vec![1.0, 2.0, 3.0, 4.0]);
     /// let b: Vector<f64> = Vector::new_column(vec![3.0, -4.0, 5.0, 4.0]);
@@ -91,7 +93,7 @@ where
     /// # Example
     ///
     /// ```
-    /// use mathru::algebra::linear::Vector;
+    /// use mathru::algebra::linear::vector::Vector;
     ///
     /// let a: Vector<f64> = Vector::new_column(vec![1.0, 2.0, 3.0, 4.0]);
     /// let res_ref: Vector<f64> = Vector::new_column(vec![6.0, 7.0, 8.0, 9.0]);
@@ -115,7 +117,7 @@ where
     /// # Example
     ///
     /// ```
-    /// use mathru::algebra::linear::Vector;
+    /// use mathru::algebra::linear::vector::Vector;
     ///
     /// let a: Vector<f64> = Vector::new_column(vec![1.0, 2.0, 3.0, 4.0]);
     /// let res_ref: Vector<f64> = Vector::new_column(vec![-4.0, -3.0, -2.0, -1.0]);
@@ -140,7 +142,7 @@ where
     /// # Example
     ///
     /// ```
-    /// use mathru::algebra::linear::Vector;
+    /// use mathru::algebra::linear::vector::Vector;
     ///
     /// let mut a: Vector<f64> = Vector::new_column(vec![1.0, 2.0, 3.0, 4.0]);
     /// let res_ref: Vector<f64> = Vector::new_column(vec![-4.0, -3.0, -2.0, -1.0]);

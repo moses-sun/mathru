@@ -6,8 +6,8 @@ impl<T> Index<[usize; 2]> for UpperHessenberg<T> {
     type Output = T;
 
     fn index(&self, index: [usize; 2]) -> &Self::Output {
-        assert!(index[0] < self.matrix.m);
-        assert!(index[1] < self.matrix.n);
+        debug_assert!(index[0] < self.matrix.m);
+        debug_assert!(index[1] < self.matrix.n);
 
         &self.matrix[index]
     }
@@ -15,8 +15,8 @@ impl<T> Index<[usize; 2]> for UpperHessenberg<T> {
 
 impl<T> IndexMut<[usize; 2]> for UpperHessenberg<T> {
     fn index_mut(&mut self, index: [usize; 2]) -> &mut Self::Output {
-        assert!(index[0] < self.matrix.m);
-        assert!(index[1] < self.matrix.n);
+        debug_assert!(index[0] < self.matrix.m);
+        debug_assert!(index[1] < self.matrix.n);
 
         &mut self.matrix[index]
     }

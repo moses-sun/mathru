@@ -1,5 +1,5 @@
 use crate::algebra::abstr::Real;
-use crate::algebra::linear::Vector;
+use crate::algebra::linear::vector::Vector;
 
 macro_rules! impl_from_mint_v(
     ($($rows: literal => $MV: ident, $v: ident, $ret: expr);* $(;)*) => {$(

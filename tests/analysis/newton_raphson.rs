@@ -1,4 +1,4 @@
-use mathru::algebra::linear::{matrix::General, Vector};
+use mathru::algebra::linear::{matrix::General, vector::Vector};
 use mathru::analysis::NewtonRaphson;
 use mathru::analysis::{Function, Jacobian};
 

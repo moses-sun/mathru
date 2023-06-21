@@ -1,4 +1,4 @@
-use crate::algebra::{abstr::Real, linear::Vector};
+use crate::algebra::{abstr::Real, linear::vector::vector::Vector};
 use crate::analysis::differential_equation::ordinary::ImplicitODE;
 
 pub trait ImplicitFixedStepSizeMethod<T>

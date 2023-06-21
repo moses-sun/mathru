@@ -1,6 +1,6 @@
 //! Explicit Ordinary Differential Equation
 
-use crate::algebra::{abstr::Real, linear::Vector};
+use crate::algebra::{abstr::Real, linear::vector::vector::Vector};
 
 /// Explicit ordinary differential equation
 pub trait ExplicitODE<T>

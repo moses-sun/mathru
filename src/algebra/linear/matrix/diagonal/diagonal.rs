@@ -24,8 +24,37 @@ where
         }
         Diagonal { matrix: g }
     }
-
+}
+impl<T> Diagonal<T> {
     pub fn dim(&self) -> (usize, usize) {
         self.matrix.dim()
+    }
+}
+
+impl<T> Diagonal<T>
+where
+    T: Clone,
+{
+    /// Applies the function f on every diagonal element in the matrix
+    pub fn apply_mut(mut self: Diagonal<T>, f: &dyn Fn(&T) -> T) -> Diagonal<T> {
+        let (m, n) = self.dim();
+        let k = m.min(n);
+        for i in 0..k {
+            self[[i, i]] = f(&self[[i, i]]);
+        }
+
+        self
+    }
+
+    pub fn apply(self: &Diagonal<T>, f: &dyn Fn(&T) -> T) -> Diagonal<T> {
+        (self.clone()).apply_mut(f)
+    }
+
+    pub fn mut_apply(self: &mut Diagonal<T>, f: &dyn Fn(&mut T) -> T) {
+        let (m, n) = self.dim();
+        let k = m.min(n);
+        for i in 0..k {
+            self[[i, i]] = f(&mut self[[i, i]]);
+        }
     }
 }

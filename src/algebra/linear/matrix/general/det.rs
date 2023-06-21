@@ -18,7 +18,7 @@ where
     /// assert_eq!(det, -1.0)
     /// ```
     fn det(&self) -> T {
-        assert_eq!(self.m, self.n);
+        debug_assert_eq!(self.m, self.n);
 
         if self.m == 1 {
             return self[[0, 0]];

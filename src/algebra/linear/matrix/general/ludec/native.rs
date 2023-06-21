@@ -28,7 +28,7 @@ where
     /// ```
     pub fn dec_lu(&self) -> Result<LUDec<T>, ()> {
         let (m, n): (usize, usize) = self.dim();
-        assert_eq!(m, n);
+        debug_assert_eq!(m, n);
 
         let mut l: General<T> = General::one(self.m);
         let mut u: General<T> = General::one(self.n);
@@ -79,8 +79,6 @@ where
                 u.data[k * a.m + i] = a.data[k * a.m + i];
             }
         }
-
-        //println!("L: {}, U: {}, P: {}", l, u, p);
 
         Ok(LUDec::new(
             UnitLowerTriangular::new(l),

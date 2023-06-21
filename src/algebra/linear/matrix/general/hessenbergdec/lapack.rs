@@ -27,18 +27,18 @@ where
     /// # Example
     ///
     /// ```
-    /// use mathru::algebra::linear::Matrix;
+    /// use mathru::algebra::linear::matrix::{General, UpperHessenberg, HessenbergDecomposition};
     ///
     /// let a: General<f64> = General::new(3, 3, vec![1.0, 5.0, 3.0, 1.0, 0.0, -7.0, 3.0, 8.0, 9.0]);
-    /// let (q, h): (General<f64>, General<f64>) = a.dec_hessenberg().qh();
+    /// let (q, h): (General<f64>, UpperHessenberg<f64>) = a.dec_hessenberg().qh();
     /// ```
     pub fn dec_hessenberg(&self) -> HessenbergDec<T> {
         let (m, n): (usize, usize) = self.dim();
-        assert_eq!(
+        debug_assert_eq!(
             m, n,
             "Unable to compute the hessenberg decomposition of a non-square matrix"
         );
-        assert_ne!(
+        debug_assert_ne!(
             m, 0,
             "Unable to compute the hessenberg decomposition of an empty matrix."
         );
@@ -62,7 +62,7 @@ where
             &mut info,
         );
 
-        assert_eq!(0, info);
+        debug_assert_eq!(0, info);
 
         let mut work_xgehrd: Vec<T> = vec![T::zero(); lwork as usize];
 
@@ -78,7 +78,7 @@ where
             &mut info,
         );
 
-        assert_eq!(0, info);
+        debug_assert_eq!(0, info);
 
         let h: General<T> = General::new(n, n, self_data.clone()).h();
         let mut q = self_data;
@@ -89,7 +89,7 @@ where
             T::xorghr_work_size(n_i32, 1, n_i32, &mut q[..], n_i32, tau.as_mut(), &mut info);
         let mut work_xorghr = vec![T::zero(); lwork as usize];
 
-        assert_eq!(0, info);
+        debug_assert_eq!(0, info);
 
         T::xorghr(
             n_i32,
@@ -103,7 +103,7 @@ where
             &mut info,
         );
 
-        assert_eq!(0, info);
+        debug_assert_eq!(0, info);
 
         HessenbergDec::new(General::new(m, n, q), UpperHessenberg::new(h))
     }

@@ -1,5 +1,5 @@
 //! Adaptive step size stepper
-use crate::algebra::{abstr::Real, linear::Vector};
+use crate::algebra::{abstr::Real, linear::vector::vector::Vector};
 use crate::analysis::differential_equation::ordinary::solver::explicit::runge_kutta::adaptive::ExplicitRKEmbeddedMethod;
 use crate::analysis::differential_equation::ordinary::ExplicitInitialValueProblem;
 use crate::analysis::differential_equation::ordinary::ExplicitODE;
@@ -208,23 +208,16 @@ where
     fn calc_error(&self, y: &Vector<T>, y_h: &Vector<T>, y_p: &Vector<T>) -> T {
         let (m, _n) = y.dim();
 
-        let mut sum: T = T::zero();
+        let sum =
+            y.iter()
+                .zip(y_h.iter().zip(y_p.iter()))
+                .fold(T::zero(), |s, (y_i, (y_h_i, y_p_i))| {
+                    let y_max_i = y_i.abs().max(y_p_i.abs());
+                    let sc_i: T = self.abs_tol + y_max_i * self.rel_tol;
 
-        for i in 0..m {
-            let y_i: T = y[i];
-            let y_h_i: T = y_h[i];
-            let y_p_i: T = y_p[i];
-
-            let y_max_i = if y_i.abs() > y_p_i.abs() {
-                y_i.abs()
-            } else {
-                y_p_i.abs()
-            };
-            let sc_i: T = self.abs_tol + y_max_i * self.rel_tol;
-
-            let k: T = (y_i - y_h_i) / sc_i;
-            sum += k * k;
-        }
+                    let k: T = (*y_i - *y_h_i) / sc_i;
+                    s + k * k
+                });
 
         (sum / T::from_f64(m as f64)).sqrt()
     }
@@ -267,15 +260,11 @@ where
     fn norm(&self, x: &Vector<T>) -> T {
         let (m, _n) = x.dim();
 
-        let mut sum: T = T::zero();
-
-        for i in 0..m {
-            let x_i: T = x[i];
+        let sum = x.iter().fold(T::zero(), |s, x_i| {
             let sc_i: T = self.abs_tol + x_i.abs() * self.rel_tol;
-
-            let k: T = x_i / sc_i;
-            sum += k * k;
-        }
+            let k: T = *x_i / sc_i;
+            s + k * k
+        });
 
         (sum / T::from_f64(m as f64)).sqrt()
     }

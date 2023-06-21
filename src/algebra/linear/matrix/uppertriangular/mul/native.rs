@@ -2,7 +2,7 @@ use std::ops::Mul;
 
 use crate::algebra::{
     abstr::{Field, Scalar},
-    linear::{matrix::UpperTriangular, Vector},
+    linear::{matrix::UpperTriangular, vector::vector::Vector},
 };
 
 /// Multiplies matrix by vector.

@@ -1,6 +1,6 @@
 use crate::analysis::ode::problem::explicit_ode;
 use mathru::{
-    algebra::linear::Vector,
+    algebra::linear::vector::Vector,
     analysis::differential_equation::ordinary::solver::explicit::runge_kutta::fixed::{
         ExplicitRKMethod, Ralston3,
     },

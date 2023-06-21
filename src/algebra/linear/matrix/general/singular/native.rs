@@ -1,6 +1,6 @@
 use crate::algebra::abstr::{Field, Scalar};
 use crate::algebra::linear::matrix::Transpose;
-use crate::algebra::linear::{matrix::General, Vector};
+use crate::algebra::linear::{matrix::General, vector::Vector};
 use crate::elementary::Power;
 
 impl<T> General<T>
@@ -18,7 +18,7 @@ where
     /// # Example
     ///
     /// ```
-    /// use mathru::algebra::linear::General;
+    /// use mathru::algebra::linear::matrix::General;
     ///
     /// let a: General<f64> = General::new(4,
     ///                                  4,

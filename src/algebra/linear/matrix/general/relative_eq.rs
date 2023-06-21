@@ -2,7 +2,7 @@ use crate::algebra::abstr::AbsDiffEq;
 use crate::algebra::abstr::Field;
 use crate::algebra::abstr::RelativeEq;
 use crate::algebra::abstr::Scalar;
-use crate::algebra::linear::General;
+use crate::algebra::linear::matrix::General;
 
 impl<T> RelativeEq for General<T>
 where

@@ -4,12 +4,11 @@ use crate::algebra::{
 };
 use std::ops::SubAssign;
 
-// Subtract matrix from a matrix
 impl<T> SubAssign<General<T>> for General<T>
 where
     T: Field + Scalar,
 {
-    /// Subtract matrix from a matrix
+    /// Subtract the matrix rhs from matrix self and assign the difference to self
     ///
     /// # Example
     ///
@@ -28,12 +27,11 @@ where
     }
 }
 
-// Subtract scalar from matrix
 impl<T> SubAssign<T> for General<T>
 where
     T: Field + Scalar,
 {
-    /// Subtract a scalar from matrix
+    /// Subtract the scalar rhs from matrix self and assign the difference to self
     ///
     /// # Example
     ///

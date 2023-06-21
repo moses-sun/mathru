@@ -4,7 +4,7 @@ use crate::algebra::linear::{
     matrix::{
         EigenDec, EigenDecomposition, General, HessenbergDecomposition, Solve, UpperHessenberg,
     },
-    Vector,
+    vector::Vector,
 };
 use crate::elementary::Power;
 
@@ -27,7 +27,7 @@ where
     /// # Example
     ///
     /// ```
-    /// use mathru::algebra::linear::{matrix::{EigenDec, EigenDecomposition, General}, Vector};
+    /// use mathru::algebra::linear::{matrix::{EigenDec, EigenDecomposition, General}, vector::Vector};
     /// use mathru::matrix;
     ///
     /// let a: General<f64> = matrix![  1.0, -3.0, 3.0;
@@ -38,11 +38,11 @@ where
     /// ```
     fn dec_eigen(&self) -> Result<EigenDec<T>, String> {
         let (m, n): (usize, usize) = self.dim();
-        assert_eq!(
+        debug_assert_eq!(
             m, n,
             "Unable to compute the eigen value of a non-square matrix"
         );
-        assert_ne!(
+        debug_assert_ne!(
             m, 0,
             "Unable to compute the eigen value of an empty matrix."
         );

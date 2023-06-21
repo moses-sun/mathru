@@ -6,7 +6,7 @@ use crate::algebra::{
     abstr::{Field, Scalar},
     linear::{
         matrix::{General, Inverse, Solve, UnitLowerTriangular, UpperTriangular},
-        Vector,
+        vector::Vector,
     },
 };
 
@@ -51,7 +51,6 @@ impl<T> LUDec<T> {
     }
 }
 
-// TODO
 impl<T> Inverse<T> for LUDec<T>
 where
     T: Field + Scalar + AbsDiffEq,
@@ -98,11 +97,8 @@ where
     /// U * x = c\\
     /// ```
     fn solve(&self, rhs: &Vector<T>) -> Result<Vector<T>, ()> {
-        println!("l: {}, u: {}", self.l, self.u);
         let b_hat: Vector<T> = &self.p * rhs;
-        println!("b_hat: {}", b_hat);
         let c: Vector<T> = self.l.substitute_forward(b_hat)?;
-        println!("c: {}", c);
         self.u.substitute_backward(c)
     }
 }

@@ -1,6 +1,6 @@
 use crate::algebra::{
     abstr::{Field, Scalar},
-    linear::Vector,
+    linear::vector::Vector,
 };
 use std::ops::Div;
 
@@ -15,7 +15,7 @@ where
     /// # Example
     ///
     /// ```
-    /// use mathru::algebra::linear::Vector;
+    /// use mathru::algebra::linear::vector::Vector;
     ///
     /// let a: Vector<f64> = Vector::new_column(vec![-5.0, -10.0, -15.0, -20.0]);
     /// let res_ref: Vector<f64> = Vector::new_column(vec![1.0, 2.0, 3.0, 4.0]);
@@ -40,7 +40,7 @@ where
     /// # Example
     ///
     /// ```
-    /// use mathru::algebra::linear::Vector;
+    /// use mathru::algebra::linear::vector::Vector;
     ///
     /// let a: Vector<f64> = Vector::new_column(vec![5.0, 10.0, 15.0, 20.0]);
     /// let res_ref: Vector<f64> = Vector::new_column(vec![1.0, 2.0, 3.0, 4.0]);

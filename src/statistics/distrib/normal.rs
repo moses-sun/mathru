@@ -54,8 +54,6 @@ where
     }
 
     /// It is assumed that data are normal distributed.
-    ///
-    /// data.len() >= 2
     pub fn from_data(data: &Vec<T>) -> Self {
         let n: usize = data.len();
         if n < 2 {

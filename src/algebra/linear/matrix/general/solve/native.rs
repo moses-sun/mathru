@@ -1,6 +1,6 @@
 use crate::algebra::{
     abstr::{AbsDiffEq, Field, RelativeEq, Scalar},
-    linear::{matrix::General, Vector},
+    linear::{matrix::General, vector::vector::Vector},
 };
 
 use crate::algebra::linear::matrix::Solve;

@@ -1,5 +1,5 @@
 use crate::algebra::abstr::Real;
-use crate::algebra::linear::Vector;
+use crate::algebra::linear::vector::Vector;
 use crate::analysis::differential_equation::ordinary::ExplicitODE;
 #[cfg(feature = "serde")]
 use serde::{Deserialize, Serialize};
@@ -51,31 +51,19 @@ where
             let i_b = (j - 1) * j / 2;
             let i_e = i_b + j;
 
-            let sum = self.a[i_b..i_e]
-                .iter()
-                .zip(k.iter())
-                .map(|(a_jl, k_l)| k_l * a_jl)
-                .fold(Vector::zero(rows), |a, b| a + b);
+            let sum = ExplicitRKEmbedded::add_special(Vector::zero(rows), &k, &self.a[i_b..i_e]);
 
             let k_i = ode.ode(&(*t_n + self.c[j - 1] * *h), &(x_n + &(&sum * h)));
 
             k.push(k_i);
         }
 
-        let sum: Vector<T> = self
-            .b
-            .iter()
-            .zip(k.iter())
-            .map(|(b, k_j)| k_j * b)
-            .fold(Vector::zero(rows), |a, b| a + b);
+        let sum = ExplicitRKEmbedded::add_special(Vector::zero(rows), &k, &self.b);
+
         let x_n_1 = x_n + &(&sum * h);
 
-        let sum_s: Vector<T> = self
-            .b_s
-            .iter()
-            .zip(k.iter())
-            .map(|(b, k_j)| k_j * b)
-            .fold(Vector::zero(rows), |a, b| a + b);
+        let sum_s = ExplicitRKEmbedded::add_special(Vector::zero(rows), &k, &self.b_s);
+
         let x_s_n_1 = x_n + &(&sum_s * h);
 
         (x_n_1, x_s_n_1)
@@ -83,5 +71,22 @@ where
 
     pub fn order(&self) -> (u8, u8) {
         (self.b_order, self.b_s_order)
+    }
+}
+
+impl<T> ExplicitRKEmbedded<T>
+where
+    T: Real,
+{
+    fn add_special(mut s: Vector<T>, k: &Vec<Vector<T>>, b: &[T]) -> Vector<T> {
+        let (m, _n) = s.dim();
+
+        k.iter().zip(b.iter()).for_each(|(k_i, b_i)| {
+            for l in 0..m {
+                s[l] += k_i[l] * *b_i;
+            }
+        });
+
+        s
     }
 }

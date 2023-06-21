@@ -31,7 +31,7 @@ where
     /// ```
     pub fn dec_qr(&self) -> Result<QRDec<T>, ()> {
         let (m, n) = self.dim();
-        assert!(m >= n);
+        debug_assert!(m >= n);
 
         let (m, n): (usize, usize) = self.dim();
 

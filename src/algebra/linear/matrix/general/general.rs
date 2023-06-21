@@ -17,7 +17,7 @@ use crate::{
     algebra::{
         abstr::AbsDiffEq,
         abstr::{Addition, Field, Identity, Multiplication, Scalar},
-        linear::{matrix::Transpose, Vector},
+        linear::{matrix::Transpose, vector::Vector},
     },
     elementary::Power,
 };
@@ -412,7 +412,7 @@ where
 {
     // returns column vector
     pub fn get_column(&self, i: usize) -> Vector<T> {
-        assert!(i < self.n);
+        debug_assert!(i < self.n);
 
         let mut v: Vector<T> = Vector::zero(self.m);
 
@@ -427,7 +427,7 @@ where
     ///
     /// i: row
     pub fn get_row(&self, i: usize) -> Vector<T> {
-        assert!(i < self.m);
+        debug_assert!(i < self.m);
 
         let mut v: Vector<T> = Vector::zero(self.n);
         v = v.transpose();
@@ -442,9 +442,7 @@ where
     /// set column
     pub fn set_column(&mut self, column: &Vector<T>, i: usize) {
         let (m, _n) = column.dim();
-        if m != self.m {
-            panic!("Dimensions do not match");
-        }
+        debug_assert!(m == self.m);
 
         for k in 0..self.m {
             self[[k, i]] = column[k];
@@ -460,9 +458,7 @@ where
     /// # Panics
     pub fn set_row(&mut self, row: &Vector<T>, i: usize) {
         let (_m, n): (usize, usize) = row.dim();
-        if n != self.n {
-            panic!("Dimensions do not match");
-        }
+        debug_assert!(n == self.n);
 
         for k in 0..self.n {
             self[[i, k]] = row[k];
@@ -476,9 +472,7 @@ where
 {
     ///
     pub fn givens(m: usize, i: usize, j: usize, c: T, s: T) -> Self {
-        if i >= m || j >= m {
-            panic!("Index out of bounds");
-        }
+        debug_assert!(i < m && j < m);
 
         let mut givens: General<T> = General::one(m);
         givens[[i, i]] = c;
@@ -529,13 +523,9 @@ where
     /// if index out of bounds
     pub fn householder(v: &Vector<T>, k: usize) -> Self {
         let (v_m, _v_n): (usize, usize) = v.dim();
-        if k >= v_m {
-            panic!("Index k out of bounds");
-        }
 
-        if v_m == 0 {
-            panic!();
-        }
+        debug_assert!(k < v_m);
+        debug_assert!(v_m != 0);
 
         if v_m == 1 {
             return General::one(v_m);
@@ -627,10 +617,10 @@ where
         column_s: usize,
         column_e: usize,
     ) -> General<T> {
-        assert!(row_s < self.m);
-        assert!(row_e < self.m);
-        assert!(column_s < self.n);
-        assert!(column_e < self.n);
+        debug_assert!(row_s < self.m);
+        debug_assert!(row_e < self.m);
+        debug_assert!(column_s < self.n);
+        debug_assert!(column_e < self.n);
 
         let mut slice: General<T> = General::zero(row_e - row_s + 1, column_e - column_s + 1);
 
@@ -652,11 +642,8 @@ where
     /// # Example
     ///
     /// ```
-    /// # #[macro_use]
-    /// # extern crate mathru;
-    /// # fn main()
-    /// # {
     /// use mathru::algebra::linear::matrix::General;
+    /// use mathru::matrix;
     ///
     /// let mut a: General<f64> = matrix![   1.0, 0.0;
     ///                                     3.0, -7.0];
@@ -668,13 +655,12 @@ where
     ///                                         3.0, -7.0];
     ///
     /// assert_eq!(a_updated, a);
-    /// # }
     /// ```
     pub fn set_slice(mut self, slice: &Self, row: usize, column: usize) -> General<T> {
         let (s_m, s_n): (usize, usize) = slice.dim();
         let (m, n): (usize, usize) = self.dim();
-        assert!(row + s_m <= m);
-        assert!(column + s_n <= n);
+        debug_assert!(row + s_m <= m);
+        debug_assert!(column + s_n <= n);
 
         for r in row..(row + s_m) {
             for c in column..(column + s_n) {
@@ -682,34 +668,5 @@ where
             }
         }
         self
-    }
-}
-
-impl<T> PartialEq for General<T>
-where
-    T: PartialEq,
-{
-    /// Checks if two matrices are equal
-    ///
-    /// # Example
-    ///
-    /// ```
-    /// use mathru::algebra::linear::matrix::General;
-    ///
-    /// let a: General<f64> = General::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
-    /// let b: General<f64> = General::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
-    ///
-    /// assert_eq!(true, a == b);
-    /// ```
-    fn eq(&self, other: &Self) -> bool {
-        if self.dim() != other.dim() {
-            return false;
-        }
-
-        if self.data == other.data {
-            return true;
-        }
-
-        false
     }
 }

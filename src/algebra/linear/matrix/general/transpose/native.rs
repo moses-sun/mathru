@@ -40,18 +40,14 @@ where
     /// # Example
     ///
     /// ```
-    /// #[macro_use]
-    /// # extern crate mathru;
-    /// # fn main()
-    /// # {
     /// use mathru::algebra::linear::matrix::{Transpose, General};
+    /// use mathru::assert_relative_eq;
     ///
     /// let mut uut: General<f64> = General::new(4, 2, vec![1.0, 0.0, 3.0, 0.0, 1.0, -7.0, 0.5, 0.25]);
     /// uut = uut.transpose();
     ///
     /// let refer: General<f64> = General::new(2, 4, vec![1.0, 1.0, 0.0, -7.0, 3.0, 0.5, 0.0, 0.25]);
     /// assert_relative_eq!(refer, uut);
-    /// # }
     /// ```
     fn transpose(mut self) -> General<T> {
         let gcdiv: usize = General::<T>::gcd(self.m, self.n);

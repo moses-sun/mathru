@@ -1,5 +1,5 @@
 use criterion::Criterion;
-use mathru::{algebra::linear::Vector, vector};
+use mathru::{algebra::linear::vector::Vector, vector};
 use mathru::algebra::abstr::cast::FromPrimitive;
 
 criterion_group!(vector_one1, bench_one, bench_one_1, bench_one_2, bench_one_3, bench_one_4);

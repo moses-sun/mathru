@@ -1,5 +1,5 @@
 /// Fixed step size Stepper
-use crate::algebra::{abstr::Real, linear::Vector};
+use crate::algebra::{abstr::Real, linear::vector::vector::Vector};
 use crate::analysis::differential_equation::ordinary::solver::implicit::runge_kutta::ImplicitFixedStepSizeMethod;
 use crate::analysis::differential_equation::ordinary::{ImplicitInitialValueProblem, ImplicitODE};
 #[cfg(feature = "serde")]

@@ -1,5 +1,5 @@
 use crate::optimization::problem::QuadraticFunction;
-use mathru::{algebra::linear::Vector, optimization::LevenbergMarquardt};
+use mathru::{algebra::linear::vector::Vector, optimization::LevenbergMarquardt};
 
 #[test]
 fn minimization() {

@@ -1,7 +1,7 @@
 use crate::{
     algebra::{
         abstr::Real,
-        linear::{Matrix, Vector},
+        linear::{Matrix, vector::Vector},
     },
     analysis::differential_equation::ordinary::{
         ImplicitInitialValueProblem, ImplicitInitialValueProblemBuilder,

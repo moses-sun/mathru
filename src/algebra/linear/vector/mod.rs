@@ -1,5 +1,5 @@
 #[macro_use]
-pub mod vector_impl;
+pub mod vector;
 pub mod vectorintoiterator;
 pub mod vectoriterator;
 pub mod vectoriteratormut;
@@ -17,6 +17,6 @@ mod sub_assign;
 mod mint;
 
 pub use self::{
-    vector_impl::Vector, vectorintoiterator::VectorIntoIterator, vectoriterator::VectorIterator,
+    vector::Vector, vectorintoiterator::VectorIntoIterator, vectoriterator::VectorIterator,
     vectoriteratormut::VectorIteratorMut,
 };

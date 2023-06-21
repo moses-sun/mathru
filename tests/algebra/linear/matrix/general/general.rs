@@ -1,6 +1,6 @@
 use mathru::algebra::linear::{
     matrix::{General, Solve, Transpose},
-    Vector,
+    vector::Vector,
 };
 
 #[test]

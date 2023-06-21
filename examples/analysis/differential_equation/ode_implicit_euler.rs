@@ -1,5 +1,5 @@
 use mathru::{
-    algebra::linear::{matrix::General, Vector},
+    algebra::linear::{matrix::General, vector::Vector},
     analysis::differential_equation::ordinary::{
         solver::implicit::runge_kutta::{ImplicitEuler, ImplicitFixedStepper},
         ImplicitInitialValueProblemBuilder, ImplicitODE,

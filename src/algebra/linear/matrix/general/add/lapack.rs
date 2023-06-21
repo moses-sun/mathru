@@ -1,6 +1,6 @@
 use crate::algebra::{
     abstr::{Field, Scalar},
-    linear::General,
+    linear::matrix::General,
 };
 use std::ops::Add;
 
@@ -15,14 +15,17 @@ where
     /// # Example
     ///
     /// ```
-    /// use mathru::algebra::linear::Matrix;
+    /// use mathru::algebra::linear::matrix::General;
     ///
-    /// let a: General<f64> = Matrix::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
-    /// let b: General<f64> = Matrix::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
-    /// let c = a + b;
+    /// let a: General<f64> = General::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
+    /// let b: General<f64> = General::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
+    /// let sum: General<f64> = General::new(2, 2, vec![2.0, 0.0, 6.0, -14.0]);
+    ///
+    /// let c: General<f64> = a + b;
+    /// assert_eq!(sum, c);
     /// ```
     fn add(self, rhs: Self) -> Self::Output {
-        assert_eq!(self.dim(), rhs.dim());
+        debug_assert_eq!(self.dim(), rhs.dim());
 
         let (m, n): (usize, usize) = rhs.dim();
 
@@ -54,13 +57,17 @@ where
     /// # Example
     ///
     /// ```
-    /// use mathru::algebra::linear::Matrix;
+    /// use mathru::algebra::linear::matrix::General;
     ///
-    /// let a: General<f64> = Matrix::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
-    /// let b: General<f64> = Matrix::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
+    /// let a: General<f64> = General::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
+    /// let b: General<f64> = General::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
+    /// let sum: General<f64> = General::new(2, 2, vec![2.0, 0.0, 6.0, -14.0]);
+    ///
+    /// let c: General<f64> = &b + &a;
+    /// assert_eq!(sum, c)
     /// ```
     fn add(self, rhs: &'b General<T>) -> Self::Output {
-        assert_eq!(self.dim(), rhs.dim());
+        debug_assert_eq!(self.dim(), rhs.dim());
 
         let (m, n): (usize, usize) = rhs.dim();
 
@@ -92,14 +99,17 @@ where
     /// # Example
     ///
     /// ```
-    /// use mathru::algebra::linear::Matrix;
+    /// use mathru::algebra::linear::matrix::General;
     ///
-    /// let mut a: General<f64> = Matrix::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
-    /// let b: General<f64> = Matrix::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
-    /// let _ = &mut a + & b;
+    /// let mut a: General<f64> = General::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
+    /// let b: General<f64> = General::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
+    /// let sum: General<f64> = General::new(2, 2, vec![2.0, 0.0, 6.0, -14.0]);
+    ///
+    /// let c = &mut a + &b;
+    /// assert_eq!(&sum, c)
     /// ```
     fn add(self, rhs: &'b General<T>) -> Self::Output {
-        assert_eq!(self.dim(), rhs.dim());
+        debug_assert_eq!(self.dim(), rhs.dim());
 
         let (m, n): (usize, usize) = rhs.dim();
 
@@ -129,11 +139,10 @@ where
     /// # Example
     ///
     /// ```
-    /// use mathru::algebra::linear::Matrix;
+    /// use mathru::algebra::linear::matrix::General;
     ///
-    /// let a: General<f64> = Matrix::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
-    /// let b: General<f64> = Matrix::new(2, 2, vec![-3.0, -4.0, -1.0, -11.0]);
-    ///
+    /// let a: General<f64> = General::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
+    /// let b: General<f64> = a + -4.0;
     /// ```
     fn add(mut self, rhs: T) -> Self::Output {
         let _ = &mut self + &rhs;
@@ -154,10 +163,10 @@ where
     /// # Example
     ///
     /// ```
-    /// use mathru::algebra::linear::Matrix;
+    /// use mathru::algebra::linear::matrix::General;
     ///
-    /// let a: General<f64> = Matrix::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
-    /// let b: General<f64> = Matrix::new(2, 2, vec![-3.0, -4.0, -1.0, -11.0]);
+    /// let a: General<f64> = General::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
+    /// let b: General<f64> = &a + &-4.0;
     /// ```
     fn add(self, rhs: &T) -> Self::Output {
         let mut a: General<T> = self.clone();
@@ -179,10 +188,10 @@ where
     /// # Example
     ///
     /// ```
-    /// use mathru::algebra::linear::Matrix;
+    /// use mathru::algebra::linear::matrix::General;
     ///
-    /// let a: General<f64> = Matrix::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
-    /// let b: General<f64> = Matrix::new(2, 2, vec![-3.0, -4.0, -1.0, -11.0]);
+    /// let mut a: General<f64> = General::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
+    /// let b = &mut a + &-4.0;
     /// ```
     fn add(self, rhs: &T) -> Self::Output {
         self.data.iter_mut().for_each(|x: &mut T| *x += *rhs);

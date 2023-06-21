@@ -1,6 +1,6 @@
 //! Solves an ODE using Adams-Bashforth method.
 use crate::{
-    algebra::{abstr::Real, linear::vector::Vector},
+    algebra::{abstr::Real, linear::vector::vector::Vector},
     analysis::differential_equation::ordinary::{ExplicitInitialValueProblem, ExplicitODE},
 };
 
@@ -35,7 +35,7 @@ use std::clone::Clone;
 /// # fn main()
 /// # {
 /// use mathru::{
-///     algebra::linear::Vector,
+///     algebra::linear::vector::Vector,
 ///     analysis::differential_equation::ordinary::{ExplicitODE, ExplicitInitialValueProblemBuilder, solver::explicit::AdamsBashforth},
 /// };
 ///

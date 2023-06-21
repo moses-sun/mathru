@@ -1,7 +1,7 @@
 use crate::{
     algebra::{
         abstr::Real,
-        linear::{matrix::General, Vector},
+        linear::{matrix::General, vector::vector::Vector},
     },
     optimization::{Optim, OptimResult},
 };
@@ -35,7 +35,7 @@ use std::clone::Clone;
 ///
 /// ```
 /// use mathru::*;
-/// use mathru::algebra::linear::{Vector, matrix::General};
+/// use mathru::algebra::linear::{vector::Vector, matrix::General};
 /// use mathru::optimization::{Optim, ConjugateGradient};
 ///
 /// struct LinearEquation
