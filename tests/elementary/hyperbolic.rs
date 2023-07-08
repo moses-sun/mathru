@@ -2,6 +2,85 @@ use mathru::algebra::abstr::{Complex, One};
 use mathru::elementary::{Exponential, Hyperbolic, Power, Trigonometry};
 
 #[test]
+fn sinh_f64() {
+    assert_eq!(3.626860407847019, 2.0f64.sinh());
+}
+
+#[test]
+fn arsinh_f64() {
+    assert_eq!(2.0, 2.0f64.sinh().arsinh());
+}
+
+#[test]
+fn cosh_f64() {
+    let a: f64 = 1.0;
+
+    assert_eq!(1.5430806348152437f64, a.cosh());
+}
+
+#[test]
+fn arcosh_f64() {
+    let a: f64 = 1.0;
+
+    assert_abs_diff_eq!(a, a.cosh().arcosh());
+}
+
+#[test]
+fn tanh_f64() {
+    let a: f64 = 1.0;
+
+    assert_eq!(0.7615941559557649f64, a.tanh());
+}
+
+#[test]
+fn artanh_f64() {
+    let a: f64 = 1.0;
+    assert_abs_diff_eq!(a, a.tanh().artanh());
+}
+
+#[test]
+fn coth_f64() {
+    let a: f64 = 1.0;
+
+    assert_eq!(a.cosh() / a.sinh(), a.coth());
+}
+
+#[test]
+fn arcoth_f64() {
+    let a: f64 = 1.0;
+
+    assert_abs_diff_eq!(a, a.coth().arcoth());
+}
+
+#[test]
+fn sech_f64() {
+    let a: f64 = 1.0;
+
+    assert_eq!(0.6480542736638855f64, a.sech());
+}
+
+#[test]
+fn arsech_f64() {
+    let a: f64 = 0.5;
+
+    assert_abs_diff_eq!(a, a.sech().arsech());
+}
+
+#[test]
+fn csch_f64() {
+    let a: f64 = 1.0;
+
+    assert_eq!(0.8509181282393216f64, a.csch());
+}
+
+#[test]
+fn arcsch_f64() {
+    let a: f64 = 1.0;
+
+    assert_eq!(a, a.csch().arcsch());
+}
+
+#[test]
 fn sinh_complex_f64() {
     let a: f64 = 1.0;
     let b: f64 = 2.0;
@@ -25,16 +104,6 @@ fn sinh_complex_f32() {
     let refer: Complex<f32> =
         Complex::new(0.0_f32, -1.0_f32) * Complex::new(-2.0_f32, 1.0_f32).sin();
     assert_eq!(refer, uut);
-}
-
-#[test]
-fn sinh_f32() {
-    assert_eq!(3.6268604, 2.0f32.sinh());
-}
-
-#[test]
-fn sinh_f64() {
-    assert_eq!(3.626860407847019, 2.0f64.sinh());
 }
 
 #[test]

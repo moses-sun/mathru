@@ -49,11 +49,7 @@ where
             x[[idx, idx]] = T::one();
 
             for n in idx + 1..eigen_values.len() {
-                let mut sum = T::zero();
-
-                for i in 0..n {
-                    sum += self.matrix[[n, i]] * x[[i, idx]];
-                }
+                let sum = (0..n).fold(T::zero(), |s, i| s + self.matrix[[n, i]] * x[[i, idx]]);
 
                 let divisor = *lambda - self.matrix[[n, n]];
 

@@ -1,4 +1,9 @@
-use mathru::statistics::distrib::{Continuous, T};
+use mathru::{
+    special::gamma::Gamma,
+    statistics::distrib::{Continuous, T},
+};
+
+use mathru::special::beta::beta;
 
 #[test]
 fn pdf0() {
@@ -67,4 +72,55 @@ fn median() {
     let t: T<f64> = T::new(n);
 
     assert_abs_diff_eq!(0.0, t.median(), epsilon = 0.0001);
+}
+
+#[test]
+#[should_panic]
+fn quantile() {
+    let n: f64 = 3.0;
+
+    let t: T<f64> = T::new(n);
+
+    let _ = t.quantile(0.1);
+}
+
+#[test]
+fn mean() {
+    let n: f64 = 3.0;
+
+    let t: T<f64> = T::new(n);
+
+    assert_relative_eq!(0.0, t.mean());
+}
+
+#[test]
+fn entropy() {
+    let n: f64 = 3.0;
+
+    let t: T<f64> = T::new(n);
+
+    let a = (n + 1.0) / 2.0;
+    let b = n / 2.0;
+    assert_relative_eq!(
+        a * (a.digamma() - b.digamma()) + (n.sqrt() * beta(b, 0.5)).ln(),
+        t.entropy()
+    );
+}
+
+#[test]
+fn variance_gt_1() {
+    let n: f64 = 2.0;
+
+    let t: T<f64> = T::new(n);
+
+    assert_relative_eq!(f64::INFINITY, t.variance());
+}
+
+#[test]
+fn variance_gt_2() {
+    let n: f64 = 3.0;
+
+    let t: T<f64> = T::new(n);
+
+    assert_relative_eq!(n / (n - 2.0), t.variance());
 }

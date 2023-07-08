@@ -1,4 +1,4 @@
-use mathru::statistics::distrib::{Continuous, Normal};
+use mathru::statistics::distrib::{Continuous, Distribution, Normal};
 use std::f64::consts::{E, PI};
 
 #[test]
@@ -12,27 +12,22 @@ fn pdf0() {
     assert_relative_eq!(0.3989422804014327, prob);
 }
 
-//Does not work all the time, because the used function random is not mocked.
-// #[test]
-// fn random()
-// {
-//    let mean_1 : f64 = 0.0;
-//    let variance_1: f64 = 1.0;
-//    let distrib_1 : Normal<f64> = Normal::new(mean_1, variance_1);
-//    let mut data: Vec<f64> = Vec::new();
-//
-//    for _i in 0..10000
-//    {
-//        data.push(distrib_1.random());
-//    }
-//
-//    let distrib_2: Normal<f64> = Normal::from_data(&data);
-//
-//    assert!(distrib_2.mean() < mean_1 + 0.01);
-//    assert!(distrib_2.mean() > mean_1 - 0.01);
-//    assert!(distrib_2.variance() < 1.02 * variance_1);
-//    assert!(distrib_2.variance() > 0.98 * variance_1);
-// }
+#[test]
+fn random() {
+    let mu_1: f64 = 0.0;
+    let variance_1: f64 = 1.0;
+    let distrib_1: Normal<f64> = Normal::new(mu_1, variance_1);
+    let mut data: Vec<f64> = Vec::new();
+
+    for _i in 0..10000 {
+        data.push(distrib_1.random());
+    }
+
+    let distrib_2: Normal<f64> = Normal::from_data(&data);
+
+    assert_abs_diff_eq!(mu_1, distrib_2.mean(), epsilon = 0.1);
+    assert_abs_diff_eq!(variance_1, distrib_2.variance(), epsilon = 0.1);
+}
 
 #[test]
 fn cdf0() {
@@ -62,6 +57,24 @@ fn quantile1() {
 }
 
 #[test]
+fn quantile2() {
+    let mean: f64 = 1.0;
+    let variance: f64 = 0.25;
+    let distrib: Normal<f64> = Normal::new(mean, variance);
+
+    assert_relative_eq!(1.8224268134757358, distrib.quantile(0.95));
+}
+
+#[test]
+fn quantile3() {
+    let mean: f64 = 1.0;
+    let variance: f64 = 0.25;
+    let distrib: Normal<f64> = Normal::new(mean, variance);
+
+    assert_relative_eq!(-3.1110411080652174, distrib.quantile(0.0000000000000001));
+}
+
+#[test]
 fn mean() {
     let mean: f64 = 1.0;
     let variance: f64 = 0.5;
@@ -77,6 +90,15 @@ fn median() {
     let distrib: Normal<f64> = Normal::new(mean, variance);
 
     assert_relative_eq!(mean, distrib.median());
+}
+
+#[test]
+fn variance() {
+    let mean: f64 = 1.0;
+    let variance: f64 = 0.5;
+    let distrib: Normal<f64> = Normal::new(mean, variance);
+
+    assert_relative_eq!(variance, distrib.variance());
 }
 
 #[test]
@@ -96,18 +118,3 @@ fn entropy() {
 
     assert_relative_eq!(2.0 * PI * E * variance, distrib.entropy());
 }
-
-//    #[test]
-//    fn from_data()
-//    {
-//        let mean: f64 = 5.0;
-//        let variance: f64 = 10.0;
-//        let num_samples: usize = 100;
-//        let data: Vector<f64> = Normal::new(mean,
-// variance).random_vector(num_samples);
-//
-//        let distrib: Normal = Normal::from_data(&data);
-//
-//        assert!((mean - distrib.mean()).abs() < 0.5);
-//        assert!((variance - distrib.variance()) < 1.0);
-//    }

@@ -37,8 +37,9 @@ where
     /// assert_abs_diff_eq!(l_ref, l, epsilon=0.001);
     /// ```
     pub fn dec_cholesky(&self) -> Result<CholeskyDec<T>, String> {
-        let (m, n): (usize, usize) = self.dim();
+        let (m, n) = self.dim();
         debug_assert_eq!(m, n);
+        debug_assert_ne!(m, 0);
 
         let (_m, n) = self.dim();
         let n_i32: i32 = n as i32;

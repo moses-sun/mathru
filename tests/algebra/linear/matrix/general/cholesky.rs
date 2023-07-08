@@ -89,3 +89,17 @@ fn cholesky_complex_f64() {
 
     assert_relative_eq!(g, g_ref, epsilon = Complex::new(1.0e-10, 1.0e-10));
 }
+
+#[test]
+#[should_panic]
+fn dec_non_square() {
+    let a: General<f64> = matrix![1.0, 2.0];
+    let _ = a.dec_cholesky();
+}
+
+#[test]
+#[should_panic]
+fn dec_empty() {
+    let a: General<f64> = General::new(0, 0, vec![]);
+    let _ = a.dec_cholesky();
+}

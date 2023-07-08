@@ -3,6 +3,17 @@ All notable changes starting with the version 0.6.9 are documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com) and this project adheres to [Semantic Versioning](https://semver.org).
 
+## [0.15.2]
+### Changed
+- Move project from https://gitlab.com/matthiaseiholzer/mathru to  https://gitlab.com/rustmath/mathru
+
+### Added
+- Implement CI task to collect code coverage information    
+- Implement unit tests
+
+### Fixed
+- Bug in 'gamma_ur_inv' and 'error' function
+
 ## [0.15.1]
 ### Changed
 - Implement benchmarks for basic vector and matrix operations
@@ -21,7 +32,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com) and this p
 - Update KaTeX dependency to version 0.16.7
 
 ### Fixed
-- Bug in calculating the determinant of a permuation matrix [Issue #15](https://gitlab.com/matthiaseiholzer/mathru/-/issues/15)
+- Bug in calculating the determinant of a permuation matrix [Issue #15](https://gitlab.com/rustmath/mathru/-/issues/15)
 
 ## [0.14.0] - 2022-10-02
 ### Added
@@ -36,7 +47,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com) and this p
 
 ## [0.13.0] - 2022-06-19
 ### Fixed
-- Fix bug as reported in [Issue #8](https://gitlab.com/matthiaseiholzer/mathru/-/issues/8) and [Issue #12](https://gitlab.com/matthiaseiholzer/mathru/-/issues/12)
+- Fix bug as reported in [Issue #8](https://gitlab.com/rustmath/mathru/-/issues/8) and [Issue #12](https://gitlab.com/rustmath/mathru/-/issues/12)
 ### Changed
 - Code refactoring
 
@@ -68,7 +79,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com) and this p
 
 
 ## [0.10.1]
-- Fixed Bug in LU decomposition [Issue #7](https://gitlab.com/matthiaseiholzer/mathru/-/issues/7)
+- Fixed Bug in LU decomposition [Issue #7](https://gitlab.com/rustmath/mathru/-/issues/7)
 
 ## [0.10.0]
 - Code refactoring

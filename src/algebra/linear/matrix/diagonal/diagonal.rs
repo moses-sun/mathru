@@ -17,7 +17,7 @@ where
     T: Field + Scalar + Zero,
 {
     /// Construct a matrix with vec as its diagonal.
-    pub fn new(vec: &Vec<T>) -> Diagonal<T> {
+    pub fn new(vec: &[T]) -> Diagonal<T> {
         let mut g = General::zero(vec.len(), vec.len());
         for (idx, v) in vec.iter().enumerate() {
             g[[idx, idx]] = *v;

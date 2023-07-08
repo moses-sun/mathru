@@ -49,3 +49,36 @@ fn entropy() {
 
     assert_relative_eq!(1.0 - lambda.ln(), distrib.entropy(), epsilon = 1.0e-10);
 }
+
+#[test]
+fn mean() {
+    let lambda: f64 = 0.5;
+    let distrib: Exponential<f64> = Exponential::new(lambda);
+    let mean: f64 = distrib.mean();
+
+    assert_eq!(1.0 / lambda, mean);
+}
+
+#[test]
+fn variance() {
+    let lambda: f64 = 0.5;
+    let distrib: Exponential<f64> = Exponential::new(lambda);
+    let variance: f64 = distrib.variance();
+
+    assert_eq!(1.0 / (lambda * lambda), variance);
+}
+
+#[test]
+fn random() {
+    let lambda: f64 = 0.5;
+    let distrib_ref: Exponential<f64> = Exponential::new(lambda);
+    let mut data: Vec<f64> = Vec::new();
+
+    for _i in 0..10000 {
+        data.push(distrib_ref.random());
+    }
+
+    let distrib: Exponential<f64> = Exponential::from_data(&data);
+
+    assert_abs_diff_eq!(1.0 / lambda, distrib.mean(), epsilon = 0.1);
+}

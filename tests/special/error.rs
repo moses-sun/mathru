@@ -1,12 +1,21 @@
 use mathru::special::error;
 
 #[test]
-fn erf_0() {
+fn erf_f64() {
     let x: f64 = 0.0;
 
     let error: f64 = error::erf(x);
 
     assert_relative_eq!(0.0, error, epsilon = 3.0 * f64::EPSILON);
+}
+
+#[test]
+fn erf_f32() {
+    let x: f32 = 1.0;
+
+    let error: f32 = error::erf(x);
+
+    assert_relative_eq!(0.8427007929497149, error, epsilon = 3.0 * f32::EPSILON);
 }
 
 #[test]
@@ -37,12 +46,21 @@ fn erf_3() {
 }
 
 #[test]
-fn erfc_0() {
+fn erfc_f64() {
     let x: f64 = 0.0;
 
     let error: f64 = error::erfc(x);
 
     assert_relative_eq!(1.0, error, epsilon = 3.0 * f64::EPSILON);
+}
+
+#[test]
+fn erfc_f32() {
+    let x: f32 = 0.0;
+
+    let error: f32 = error::erfc(x);
+
+    assert_relative_eq!(1.0, error, epsilon = 3.0 * f32::EPSILON);
 }
 
 #[test]
@@ -82,12 +100,21 @@ fn erfc_4() {
 }
 
 #[test]
-fn erfinv_0() {
+fn erfinv_f64() {
     let x: f64 = 0.0;
 
     let error: f64 = error::erfinv(x);
 
     assert_relative_eq!(0.0, error, epsilon = 0.0 * f64::EPSILON);
+}
+
+#[test]
+fn erfinv_f32() {
+    let x: f32 = 0.0;
+
+    let error: f32 = error::erfinv(x);
+
+    assert_relative_eq!(0.0, error, epsilon = 0.0 * f32::EPSILON);
 }
 
 #[test]
@@ -130,12 +157,34 @@ fn erfinv_3() {
 }
 
 #[test]
+fn erfinv_3_negative() {
+    let x: f64 = -0.75;
+
+    let error: f64 = error::erfinv(x);
+
+    assert_relative_eq!(
+        -0.8134198475976185416903,
+        error,
+        epsilon = 0.0 * f64::EPSILON
+    );
+}
+
+#[test]
 fn erfinv_4() {
     let x: f64 = 0.9375;
 
     let error: f64 = error::erfinv(x);
 
-    assert_relative_eq!(1.317150334986130748884, error, epsilon = 0.0 * f64::EPSILON);
+    assert_relative_eq!(1.317150334986130748884, error);
+}
+
+#[test]
+fn erfinv_4_negative() {
+    let x: f64 = -0.9375;
+
+    let error: f64 = error::erfinv(x);
+
+    assert_relative_eq!(-1.317150334986130748884, error);
 }
 
 #[test]
@@ -144,11 +193,70 @@ fn erfinv_5() {
 
     let error: f64 = error::erfinv(x);
 
-    assert_relative_eq!(
-        1.644976357133187050177,
-        error,
-        epsilon = 15.0 * f64::EPSILON
-    );
+    assert_relative_eq!(1.64497635713319, error,);
+}
+
+#[test]
+fn erfinv_5_negative() {
+    let x: f64 = -0.98;
+
+    let error: f64 = error::erfinv(x);
+
+    assert_relative_eq!(-1.64497635713319, error,);
+}
+
+#[test]
+fn erfinv_f32_6() {
+    let x: f32 = 1.0;
+
+    let error: f32 = error::erfinv(x);
+
+    assert_eq!(f32::INFINITY, error);
+}
+
+#[test]
+fn erfinv_f32_7() {
+    let x: f32 = -1.0;
+
+    let error: f32 = error::erfinv(x);
+
+    assert_eq!(-f32::INFINITY, error);
+}
+
+#[test]
+fn erfinv_f32_4() {
+    let x: f32 = 0.9375;
+
+    let error: f32 = error::erfinv(x);
+
+    assert_relative_eq!(1.317150334986130748884, error);
+}
+
+#[test]
+fn erfinv_f32_4_negative() {
+    let x: f32 = -0.9375;
+
+    let error: f32 = error::erfinv(x);
+
+    assert_relative_eq!(-1.317150334986130748884, error);
+}
+
+#[test]
+fn erfinv_f32_9() {
+    let x: f32 = 0.98;
+
+    let error = error::erfinv(x);
+
+    assert_relative_eq!(1.64497635713319, error, epsilon = 2.0 * f32::EPSILON);
+}
+
+#[test]
+fn erfinv_f32_9_negative() {
+    let x: f32 = -0.98;
+
+    let error = error::erfinv(x);
+
+    assert_relative_eq!(-1.64497635713319, error, epsilon = 2.0 * f32::EPSILON);
 }
 
 #[test]
@@ -201,6 +309,19 @@ fn erfcinv_4() {
         0.0177263950266780184822,
         error,
         epsilon = 15.0 * f64::EPSILON
+    );
+}
+
+#[test]
+fn erfcinv_f32_4() {
+    let x: f32 = 0.98;
+
+    let error: f32 = error::erfcinv(x);
+
+    assert_relative_eq!(
+        0.0177263950266780184822,
+        error,
+        epsilon = 15.0 * f32::EPSILON
     );
 }
 

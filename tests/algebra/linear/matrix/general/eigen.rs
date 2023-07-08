@@ -232,7 +232,6 @@ fn eigen_f64_4() {
 
     let (values, vectors): (Diagonal<f64>, General<f64>) = a.dec_eigen().unwrap().pair();
 
-    print!("values: {} vectors: {}", values, vectors);
     assert_relative_eq!(values, value_ref, epsilon = 1.0e-5);
     assert_relative_eq!(
         &a * &vectors,
@@ -257,4 +256,18 @@ fn eigen_f64_5() {
         &vectors * &Into::<General<f64>>::into(values),
         epsilon = 1.0e-5
     );
+}
+
+#[test]
+#[should_panic]
+fn dec_non_square() {
+    let a: General<f64> = matrix![1.0, 2.0];
+    let _ = a.dec_eigen();
+}
+
+#[test]
+#[should_panic]
+fn dec_empty() {
+    let a: General<f64> = General::new(0, 0, vec![]);
+    let _ = a.dec_eigen();
 }

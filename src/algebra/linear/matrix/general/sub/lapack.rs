@@ -174,6 +174,7 @@ where
     /// let b: General<f64> = &a - &-4.0;
     /// ```
     fn sub(self, rhs: &T) -> Self::Output {
+        println!("hier her");
         self.data.iter_mut().for_each(|x: &mut T| *x -= *rhs);
         self
     }

@@ -172,7 +172,7 @@ where
 
     ///
     fn entropy(&self) -> T {
-        let d: T = T::from_f64(2.0) / self.k;
+        let d: T = self.k / T::from_f64(2.0);
         d + (T::from_f64(2.0) * gamma::gamma(d)).ln() + (T::one() - d) * gamma::digamma(d)
     }
 }

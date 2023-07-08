@@ -18,10 +18,6 @@ where
             return false;
         }
 
-        if self.data.len() != other.data.len() {
-            return false;
-        }
-
         for (a, b) in self.iter().zip(other.iter()) {
             if a.abs_diff_ne(b, epsilon) {
                 return false;

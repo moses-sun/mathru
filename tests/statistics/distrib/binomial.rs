@@ -76,3 +76,24 @@ fn cdf2() {
 
     assert_relative_eq!(1.0, prob);
 }
+
+#[test]
+fn mean() {
+    let p: f64 = 0.1;
+    let n: u32 = 2;
+    let distrib: Binomial<f64> = Binomial::new(n, p);
+    let mean: f64 = distrib.mean();
+
+    assert_eq!(n as f64 * p, mean);
+}
+
+#[test]
+fn variance() {
+    let p: f64 = 0.1;
+    let n: u32 = 2;
+    let distrib: Binomial<f64> = Binomial::new(n, p);
+
+    let variance: f64 = distrib.variance();
+
+    assert_eq!(n as f64 * p * (1.0 - p), variance);
+}

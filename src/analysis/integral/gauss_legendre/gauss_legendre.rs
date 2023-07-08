@@ -63,7 +63,7 @@ where
     where
         F: Fn(T) -> T,
     {
-        let sum = self.root_weight.clone().fold(T::zero(), |s, (x_i, a_i)| {
+        let sum = self.root_weight.iter().fold(T::zero(), |s, (x_i, a_i)| {
             let x = (b - a) / T::from_f64(2.0) * x_i + (a + b) / T::from_f64(2.0);
             s + f(x) * a_i
         });

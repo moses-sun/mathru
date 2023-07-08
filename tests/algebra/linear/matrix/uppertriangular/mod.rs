@@ -1,6 +1,9 @@
 mod det;
 mod eigendec;
 mod index;
+mod mul;
+mod partial_eq;
+mod relative_eq;
 mod substitute_backward;
 mod transpose;
 mod uppertriangular;

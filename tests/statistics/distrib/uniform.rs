@@ -89,6 +89,16 @@ fn mean() {
 }
 
 #[test]
+fn median() {
+    let a: f64 = -0.2;
+    let b: f64 = 0.4;
+
+    let distrib: Uniform<f64> = Uniform::new(a, b);
+
+    assert_relative_eq!((a + b) / 2.0, distrib.median());
+}
+
+#[test]
 fn variance() {
     let a: f64 = -0.2;
     let b: f64 = 0.4;

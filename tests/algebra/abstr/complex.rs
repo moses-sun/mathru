@@ -1,4 +1,5 @@
-use mathru::algebra::abstr::cast::FromPrimitive;
+use crate::mathru::algebra::abstr::Sign;
+use mathru::algebra::abstr::cast::{FromPrimitive, NumCast};
 use mathru::algebra::abstr::Complex;
 use mathru::algebra::abstr::{One, Zero};
 
@@ -118,4 +119,161 @@ fn from_f64() {
 
     assert_eq!(real, a.re);
     assert_eq!(imag, a.im)
+}
+
+#[test]
+fn from_u8() {
+    let real = 3;
+    let imag = 0.0f64;
+    let a: Complex<f64> = Complex::from_u8(real);
+
+    assert_eq!(real as f64, a.re);
+    assert_eq!(imag, a.im)
+}
+
+#[test]
+fn from_u16() {
+    let real = 3;
+    let imag = 0.0f64;
+    let a: Complex<f64> = Complex::from_u16(real);
+
+    assert_eq!(real as f64, a.re);
+    assert_eq!(imag, a.im)
+}
+
+#[test]
+fn from_u32() {
+    let real = 3;
+    let imag = 0.0f64;
+    let a: Complex<f64> = Complex::from_u32(real);
+
+    assert_eq!(real as f64, a.re);
+    assert_eq!(imag, a.im)
+}
+
+#[test]
+fn from_u64() {
+    let real = 3;
+    let imag = 0.0f64;
+    let a: Complex<f64> = Complex::from_u64(real);
+
+    assert_eq!(real as f64, a.re);
+    assert_eq!(imag, a.im)
+}
+
+#[test]
+fn from_u128() {
+    let real = 3;
+    let imag = 0.0f64;
+    let a: Complex<f64> = Complex::from_u128(real);
+
+    assert_eq!(real as f64, a.re);
+    assert_eq!(imag, a.im)
+}
+
+#[test]
+fn from_i8() {
+    let real = 3;
+    let imag = 0.0f64;
+    let a: Complex<f64> = Complex::from_i8(real);
+
+    assert_eq!(real as f64, a.re);
+    assert_eq!(imag, a.im)
+}
+
+#[test]
+fn from_i16() {
+    let real = 3;
+    let imag = 0.0f64;
+    let a: Complex<f64> = Complex::from_i16(real);
+
+    assert_eq!(real as f64, a.re);
+    assert_eq!(imag, a.im)
+}
+
+#[test]
+fn from_i32() {
+    let real = 3;
+    let imag = 0.0f64;
+    let a: Complex<f64> = Complex::from_i32(real);
+
+    assert_eq!(real as f64, a.re);
+    assert_eq!(imag, a.im)
+}
+
+#[test]
+fn from_i64() {
+    let real = 3;
+    let imag = 0.0f64;
+    let a: Complex<f64> = Complex::from_i64(real);
+
+    assert_eq!(real as f64, a.re);
+    assert_eq!(imag, a.im)
+}
+
+#[test]
+fn from_i128() {
+    let real = 3;
+    let imag = 0.0f64;
+    let a: Complex<f64> = Complex::from_i128(real);
+
+    assert_eq!(real as f64, a.re);
+    assert_eq!(imag, a.im)
+}
+
+#[test]
+#[should_panic]
+fn sign() {
+    let a: Complex<f64> = Complex::from_i128(-3);
+
+    let _ = a.sign();
+}
+
+#[test]
+#[should_panic]
+fn is_positive() {
+    let a: Complex<f64> = Complex::from_i128(-3);
+
+    let _ = a.is_positive();
+}
+
+#[test]
+#[should_panic]
+fn is_negative() {
+    let a: Complex<f64> = Complex::from_i128(-3);
+
+    let _ = a.is_negative();
+}
+
+#[test]
+fn add_borrow() {
+    let a: Complex<f64> = Complex::new(1.0, -1.0);
+    let b: Complex<f64> = Complex::new(-2.0, 2.0);
+
+    assert_abs_diff_eq!(Complex::new(-1.0, 1.0), &a + &b);
+}
+
+#[test]
+fn from() {
+    let a: Complex<f64> = <Complex<f64> as NumCast>::from(1.0f64);
+    assert_eq!(Complex::one(), a);
+}
+
+#[test]
+fn div_assign() {
+    let a_r = 1.0;
+    let a_i = -1.0;
+    let b_r = -2.0;
+    let b_i = 2.0;
+    let g = b_r * b_r + b_i * b_i;
+
+    let mut a: Complex<f64> = Complex::new(a_r, a_i);
+    let b: Complex<f64> = Complex::new(b_r, b_i);
+
+    a /= b;
+
+    assert_abs_diff_eq!(
+        Complex::new((a_r * b_r + a_i * b_i) / g, (-a_r * b_i + a_i * b_r) / g),
+        a
+    );
 }

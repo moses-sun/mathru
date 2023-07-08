@@ -38,3 +38,16 @@ fn ln() {
 
     assert_eq!(refer, a.ln());
 }
+
+#[test]
+fn e_f64() {
+    assert_eq!(f64::e(), f64::e())
+}
+
+#[test]
+fn e_complex_f64() {
+    assert_eq!(
+        Complex::<f64>::new(f64::e(), 0.0),
+        <Complex<f64> as Exponential>::e()
+    )
+}

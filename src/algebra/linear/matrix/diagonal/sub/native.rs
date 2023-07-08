@@ -153,8 +153,9 @@ where
     fn sub(self, rhs: &'a T) -> Self::Output {
         let (m, n) = self.dim();
         let k = m.min(n);
+
         for i in 0..k {
-            self[[i, i]] -= *rhs
+            self[[i, i]] -= *rhs;
         }
         self
     }

@@ -1,4 +1,7 @@
-use mathru::statistics::distrib::{ChiSquare, Continuous};
+use mathru::{
+    special::gamma::{digamma, Gamma},
+    statistics::distrib::{ChiSquare, Continuous},
+};
 
 #[test]
 fn pdf0() {
@@ -131,4 +134,58 @@ fn quantile_4() {
         distrib.quantile(0.95),
         epsilon = 80.0 * f64::EPSILON
     )
+}
+
+#[test]
+fn mean() {
+    let df: u32 = 10;
+
+    let distrib: ChiSquare<f64> = ChiSquare::new(df);
+    let mean: f64 = distrib.mean();
+
+    assert_eq!(df as f64, mean);
+}
+
+#[test]
+fn variance() {
+    let df: u32 = 10;
+
+    let distrib: ChiSquare<f64> = ChiSquare::new(df);
+    let variance: f64 = distrib.variance();
+
+    assert_eq!((df as f64) * 2.0, variance);
+}
+
+#[test]
+fn median() {
+    let df: u32 = 10;
+
+    let distrib: ChiSquare<f64> = ChiSquare::new(df);
+    let median: f64 = distrib.median();
+    let k = df as f64;
+    assert_abs_diff_eq!(
+        k * (1.0 - 2.0 / (9.0 * k)).powf(3.0),
+        median,
+        epsilon = 0.000000001
+    );
+}
+
+#[test]
+fn entropy() {
+    let df: u32 = 10;
+    let k = df as f64;
+    let distrib: ChiSquare<f64> = ChiSquare::new(df);
+    let entropy: f64 = distrib.entropy();
+    let g = k / 2.0;
+    assert_eq!(g + (2.0 * g.gamma()).ln() + (1.0 - g) * digamma(g), entropy);
+}
+
+#[test]
+fn skewness() {
+    let df: u32 = 10;
+
+    let distrib: ChiSquare<f64> = ChiSquare::new(df);
+    let skewness: f64 = distrib.skewness();
+
+    assert_eq!((8.0f64 / (df as f64)).sqrt(), skewness);
 }

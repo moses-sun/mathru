@@ -32,3 +32,17 @@ fn factorial() {
     let n: u32 = 5;
     assert_eq!(120, combins::factorial(n));
 }
+
+#[test]
+fn perm() {
+    let n: u32 = 5;
+    let r: u32 = 2;
+    assert_eq!(20, combins::perm(n, r));
+}
+
+#[test]
+fn comb() {
+    let n: u32 = 5;
+    let r: u32 = 2;
+    assert_eq!(10, combins::comb(n, r));
+}

@@ -1,5 +1,5 @@
 use crate::mathru::algebra::abstr::Real;
-use mathru::special::gamma;
+use mathru::special::gamma::{self};
 use std::f32::consts::PI as f32_PI;
 use std::f64::consts::PI as f64_PI;
 
@@ -116,6 +116,18 @@ fn gamma_ur0() {
 }
 
 #[test]
+fn gamma_ur_inv0() {
+    let a: f64 = 0.2;
+    let b = 0.001;
+
+    let q = b / gamma::gamma(0.2);
+
+    let gamma: f64 = gamma::gamma_ur_inv(a, q);
+
+    assert_relative_eq!(5.4328892931146555, gamma);
+}
+
+#[test]
 fn gamma_lr0() {
     let x: f64 = 1.5;
     let a: f64 = 1.0;
@@ -123,6 +135,16 @@ fn gamma_lr0() {
     let gamma: f64 = gamma::gamma_lr(a, x);
 
     assert_relative_eq!(gamma::gamma_l(a, x) / gamma::gamma(a), gamma);
+}
+
+#[test]
+fn gamma_lr_inv0() {
+    let x: f64 = 0.3;
+    let a: f64 = 0.5;
+
+    let p: f64 = gamma::gamma_lr(a, x);
+
+    assert_relative_eq!(x, gamma::gamma_lr_inv(a, p));
 }
 
 #[test]
@@ -193,4 +215,13 @@ fn gamma_u0() {
     let gamma: f64 = gamma::gamma_u(a, x);
 
     assert_relative_eq!((-x).exp(), gamma);
+}
+
+#[test]
+fn gamma_ln() {
+    let x: f64 = 1.5;
+
+    let gamma_ln: f64 = gamma::ln_gamma(x);
+
+    assert_relative_eq!(gamma::gamma(x), gamma_ln);
 }

@@ -162,7 +162,12 @@ where
     /// let b = &mut a - &-4.0;
     /// ```
     fn sub(self, rhs: &T) -> Self::Output {
-        let _ = Sub::sub(&self.matrix, rhs);
+        let (m, n) = self.dim();
+        let k = m.min(n);
+
+        for i in 0..k {
+            self[[i, i]] -= *rhs;
+        }
         self
     }
 }

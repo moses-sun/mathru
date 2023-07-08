@@ -86,33 +86,36 @@ test-convert-mint:
   script:
     - cargo test --tests --no-default-features --features "native convert-mint"
   
-# coverage:
-#  stage: report
-#  image: rust:latest
-#  variables:
-#    RUSTFLAGS: "-Cinstrument-coverage"
-#    LLVM_PROFILE_FILE: "coverage-%p-%m.profraw"
-#  script:
-#    - apt-get install -o dir::cache::archives="$APT_CACHE_DIR" -y lcov
-#    - cargo test
-#    # generate html report
-#    - $HOME/.cargo/bin/grcov . --binary-path ./target/debug/ -s . -t html --branch --ignore-not-existing --ignore "*cargo*" -o ./coverage/
-#    # generate cobertura report for gitlab integration
-#    - $HOME/.cargo/bin/grcov . --binary-path ./target/debug/ -s . -t lcov --branch --ignore-not-existing --ignore "*cargo*" -o ./coverage/coverage.lcov
-#    - $HOME/.cargo/bin/grcov . --binary-path ./target/debug/ -s . -t cobertura --branch --ignore-not-existing --ignore "*cargo*" -o ./coverage/coverage.xml
-#    - lcov --summary ./coverage/coverage.lcov
-#  artifacts:
-#    paths:
-#      - public
-#      - 'coverage'
-#    reports:
-#      cobertura: coverage/coverage.xml
+coverage:
+ stage: report
+ image: rust:latest
+ variables:
+   OUTPUT_FOLDER: ./target/coverage
+ script:
+   - rustup component add llvm-tools-preview
+   - rm -rf $OUTPUT_FOLDER
+   - RUSTFLAGS="-Cinstrument-coverage" LLVM_PROFILE_FILE="$OUTPUT_FOLDER/coverage-%p-%m.profraw" CARGO_INCREMENTAL=0 cargo test --tests
+   # generate html report
+   - cargo install grcov
+   - ./cargo/bin/grcov --version
+   - ./cargo/bin/grcov $OUTPUT_FOLDER --binary-path ./target/debug/ -s . -t html --branch --ignore-not-existing --ignore "/*" --ignore "examples/**" --ignore "cargo/**" --ignore "tests/**" -o $OUTPUT_FOLDER/html
+   - ./cargo/bin/grcov $OUTPUT_FOLDER --binary-path ./target/debug/ -s . -t cobertura --branch --ignore-not-existing --ignore "/*" --ignore "examples/**" --ignore "cargo/**" --ignore "tests/**" -o $OUTPUT_FOLDER/cobertura
+   - head $OUTPUT_FOLDER/html/coverage.json
+ coverage: '/\"label\"\:\"coverage\"\,\"message\"\:\"(\d{1,3}.\d{1,2})%"/'
+ artifacts:
+   paths:
+     - ./target/coverage/
+     - ./*.profraw
+   reports:
+    coverage_report:
+      coverage_format: cobertura
+      path: ./target/coverage/cobertura
 
 #pages:
 #  stage: deploy
 #  only:
 #    - main
-#  image: "registry.gitlab.com/matthiaseiholzer/mathru/coverage:latest"
+#  image: "registry.gitlab.com/rustmath/mathru/coverage:latest"
 #  script:
 #    - mkdir -p public/mathru/report
 #    - cp --recursive coverage/ public/mathru/report

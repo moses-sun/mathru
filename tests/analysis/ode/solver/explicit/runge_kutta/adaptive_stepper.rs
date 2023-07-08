@@ -10,6 +10,36 @@ use mathru::{
 };
 
 #[test]
+fn default() {
+    let controller: ProportionalControl<f64> = ProportionalControl::default();
+
+    assert_eq!(
+        ProportionalControl::new(1000, 0.02, 0.8, 0.001, 3.0, 1.0e-6, 1.0e-3),
+        controller
+    );
+}
+
+#[test]
+fn set_abs_tol() {
+    let mut controller: ProportionalControl<f64> = ProportionalControl::default();
+
+    let abs_tol = 2.0e-6;
+    controller.set_abs_tol(abs_tol);
+
+    assert_eq!(abs_tol, *controller.get_abs_tol());
+}
+
+#[test]
+fn set_rel_tol() {
+    let mut controller: ProportionalControl<f64> = ProportionalControl::default();
+
+    let rel_tol = 1.0e-3;
+    controller.set_rel_tol(rel_tol);
+
+    assert_eq!(rel_tol, *controller.get_rel_tol());
+}
+
+#[test]
 fn t_end() {
     let ode = ExplicitOde1::default();
 

@@ -24,6 +24,10 @@ impl Optim<f64> for Rosenbrock {
         return matrix![	-f64::sqrt(2.0), 0.0;
                         -f64::sqrt(2.0) * input[0] * f64::sqrt(200.0), f64::sqrt(200.0)];
     }
+
+    fn hessian(&self, _x: &Vector<f64>) -> General<f64> {
+        unimplemented!()
+    }
 }
 
 #[test]

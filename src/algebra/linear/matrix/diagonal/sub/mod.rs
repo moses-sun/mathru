@@ -1,4 +1,4 @@
 #[cfg(feature = "lapack")]
-mod lapack;
+pub mod lapack;
 #[cfg(feature = "native")]
 pub mod native;

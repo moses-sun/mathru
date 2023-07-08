@@ -108,3 +108,23 @@ fn skewness() {
 
     assert_abs_diff_eq!(0.0, distrib.skewness(), epsilon = 1.0e-10);
 }
+
+#[test]
+#[should_panic]
+fn entropy() {
+    let mu: f64 = PI;
+    let s: f64 = 2.0 * PI;
+    let distrib: RaisedCosine<f64> = RaisedCosine::new(mu, s);
+
+    let _ = distrib.entropy();
+}
+
+#[test]
+#[should_panic]
+fn quantile() {
+    let mu: f64 = PI;
+    let s: f64 = 2.0 * PI;
+    let distrib: RaisedCosine<f64> = RaisedCosine::new(mu, s);
+
+    let _ = distrib.quantile(0.1);
+}

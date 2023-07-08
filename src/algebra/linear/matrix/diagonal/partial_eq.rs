@@ -18,6 +18,15 @@ where
     /// assert_eq!(a ,b);
     /// ```
     fn eq(&self, other: &Self) -> bool {
-        self.matrix.eq(&other.matrix)
+        if self.dim() != other.dim() {
+            return false;
+        }
+
+        for i in 0..self.matrix.m {
+            if self[[i, i]] != other[[i, i]] {
+                return false;
+            }
+        }
+        true
     }
 }

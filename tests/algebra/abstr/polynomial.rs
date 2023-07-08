@@ -2,6 +2,74 @@ use crate::mathru::algebra::abstr::Zero;
 use mathru::algebra::abstr::Polynomial;
 
 #[test]
+fn abs_diff_eq() {
+    let poly1: Polynomial<f64> = Polynomial::from_coef(vec![1.0]);
+
+    let poly2: Polynomial<f64> = Polynomial::from_coef(vec![1.0]);
+
+    assert_abs_diff_eq!(poly1, poly2);
+}
+
+#[test]
+fn relative_eq() {
+    let poly1: Polynomial<f64> = Polynomial::from_coef(vec![1.0]);
+
+    let poly2: Polynomial<f64> = Polynomial::from_coef(vec![1.0]);
+
+    assert_relative_eq!(poly1, poly2);
+}
+
+#[test]
+fn add_own() {
+    let poly1: Polynomial<f64> = Polynomial::from_coef(vec![1.0]);
+
+    let poly2: Polynomial<f64> = Polynomial::from_coef(vec![1.0]);
+
+    let poly_ref: Polynomial<f64> = Polynomial::from_coef(vec![2.0]);
+
+    assert_relative_eq!(poly_ref, poly1 + poly2);
+}
+
+#[test]
+fn add_assign() {
+    let mut poly1: Polynomial<f64> = Polynomial::from_coef(vec![1.0]);
+
+    let poly2: Polynomial<f64> = Polynomial::from_coef(vec![1.0]);
+
+    let poly_ref: Polynomial<f64> = Polynomial::from_coef(vec![2.0]);
+
+    poly1 += poly2;
+
+    assert_relative_eq!(poly_ref, poly1);
+}
+
+#[test]
+fn sub_assign() {
+    let mut poly1: Polynomial<f64> = Polynomial::from_coef(vec![2.0]);
+
+    let poly2: Polynomial<f64> = Polynomial::from_coef(vec![1.0]);
+
+    let poly_ref: Polynomial<f64> = Polynomial::from_coef(vec![1.0]);
+
+    poly1 -= poly2;
+
+    assert_relative_eq!(poly_ref, poly1);
+}
+
+#[test]
+fn mul_assign() {
+    let mut poly1: Polynomial<f64> = Polynomial::from_coef(vec![2.0]);
+
+    let poly2: Polynomial<f64> = Polynomial::from_coef(vec![1.0]);
+
+    let poly_ref: Polynomial<f64> = Polynomial::from_coef(vec![2.0]);
+
+    poly1 *= poly2;
+
+    assert_relative_eq!(poly_ref, poly1);
+}
+
+#[test]
 fn fmt_constant() {
     let poly: Polynomial<f64> = Polynomial::from_coef(vec![1.0]);
 

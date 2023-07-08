@@ -40,8 +40,8 @@ where
     pub fn dec_cholesky(&self) -> Result<CholeskyDec<T>, String> {
         let (m, n) = self.dim();
         debug_assert_eq!(m, n);
+        debug_assert_ne!(m, 0);
 
-        let (m, n) = self.dim();
         let mut l: General<T> = General::zero(m, n);
 
         for i in 0..n {
@@ -86,19 +86,15 @@ where
     /// # Example
     ///
     /// ```
-    /// # #[macro_use]
-    /// # extern crate mathru;
-    /// # fn main()
-    /// # {
     /// use mathru::algebra::linear::matrix::General;
     /// use mathru::algebra::linear::matrix::LowerTriangular;
+    /// use mathru::matrix;
     ///
     /// let a: General<f64> = matrix![   2.0, -1.0, 0.0;
     ///                                -1.0, 2.0, -1.0;
     ///                                 0.0, -1.0,  2.0];
     ///
     /// let l: LowerTriangular<f64> = a.dec_cholesky().unwrap().l();
-    /// # }
     /// ```
     pub fn dec_cholesky(&self) -> Result<CholeskyDec<Complex<T>>, String> {
         let (m, n) = self.dim();
