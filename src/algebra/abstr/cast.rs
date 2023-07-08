@@ -5,19 +5,13 @@
 /// A generic trait for converting a value to a number.
 pub trait ToPrimitive {
     /// Converts the value of `self` to an `i8`.
-    fn to_i8(&self) -> i8 {
-        self.to_i64().to_i8()
-    }
+    fn to_i8(&self) -> i8;
 
     /// Converts the value of `self` to an `i16`.
-    fn to_i16(&self) -> i16 {
-        self.to_i64().to_i16()
-    }
+    fn to_i16(&self) -> i16;
 
     /// Converts the value of `self` to an `i32`.
-    fn to_i32(&self) -> i32 {
-        self.to_i64().to_i32()
-    }
+    fn to_i32(&self) -> i32;
 
     /// Converts the value of `self` to an `i64`.
     fn to_i64(&self) -> i64;
@@ -26,19 +20,13 @@ pub trait ToPrimitive {
     fn to_i128(&self) -> i128;
 
     /// Converts the value of `self` to an `u8`.
-    fn to_u8(&self) -> u8 {
-        self.to_u64().to_u8()
-    }
+    fn to_u8(&self) -> u8;
 
     /// Converts the value of `self` to an `u16`.
-    fn to_u16(&self) -> u16 {
-        self.to_u64().to_u16()
-    }
+    fn to_u16(&self) -> u16;
 
     /// Converts the value of `self` to an `u32`.
-    fn to_u32(&self) -> u32 {
-        self.to_u64().to_u32()
-    }
+    fn to_u32(&self) -> u32;
 
     /// Converts the value of `self` to an `u64`.
     fn to_u64(&self) -> u64;
@@ -47,15 +35,10 @@ pub trait ToPrimitive {
     fn to_u128(&self) -> u128;
 
     /// Converts the value of `self` to an `f32`.
-    fn to_f32(&self) -> f32 {
-        self.to_f64().to_f32()
-    }
+    fn to_f32(&self) -> f32;
 
     /// Converts the value of `self` to an `f64`.
     fn to_f64(&self) -> f64;
-    //	{
-    //		self.to_f64().and_then(|x: f64| x.to_f64())
-    //	}
 }
 
 /// A generic trait for converting a number to a value.

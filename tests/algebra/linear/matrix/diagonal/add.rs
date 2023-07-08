@@ -50,3 +50,42 @@ fn add_borrow_mut() {
 
     assert_eq!(&sum, &mut a + &b);
 }
+
+#[test]
+fn add_own_2() {
+    let a: Diagonal<f64> = matrix![ 1.0, 0.0;
+                                    0.0, 2.0]
+    .into();
+
+    let sum: Diagonal<f64> = matrix![ 5.0, 0.0;
+                                    0.0, 6.0]
+    .into();
+
+    assert_eq!(sum, a + 4.0);
+}
+
+#[test]
+fn add_borrow_2() {
+    let a: Diagonal<f64> = matrix![ 1.0, 0.0;
+                                    0.0, 2.0]
+    .into();
+
+    let sum: Diagonal<f64> = matrix![ 5.0, 0.0;
+                                    0.0, 6.0]
+    .into();
+
+    assert_eq!(sum, &a + &4.0);
+}
+
+#[test]
+fn add_borrow_mut_2() {
+    let mut a: Diagonal<f64> = matrix![ 1.0, 0.0;
+                                        0.0, 2.0]
+    .into();
+
+    let sum: Diagonal<f64> = matrix![ 5.0, 0.0;
+                                    0.0, 6.0]
+    .into();
+
+    assert_eq!(&sum, &mut a + &4.0);
+}

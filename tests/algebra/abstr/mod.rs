@@ -4,7 +4,7 @@
 
 mod abs_diff_eq;
 //mod number;
-//pub mod cast;
+pub mod cast;
 //mod field;
 //mod ring;
 //mod semiring;
@@ -16,8 +16,8 @@ mod semigroup;
 //
 //mod natural;
 //mod integer;
-//mod real;
 mod complex;
+mod real;
 //
 //pub use self::semiring::{Semiring, Zero, One};
 //pub use self::ring::{Ring};

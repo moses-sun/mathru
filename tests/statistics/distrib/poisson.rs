@@ -29,3 +29,19 @@ fn cdf1() {
 
     assert_relative_eq!(0.6159606548330621, prob, epsilon = 1.0e-10);
 }
+
+#[test]
+fn mean() {
+    let gamma: f64 = 5.0;
+    let distrib: Poisson<f64> = Poisson::new(&gamma);
+
+    assert_relative_eq!(gamma, distrib.mean());
+}
+
+#[test]
+fn varianc() {
+    let gamma: f64 = 5.0;
+    let distrib: Poisson<f64> = Poisson::new(&gamma);
+
+    assert_relative_eq!(gamma, distrib.variance());
+}

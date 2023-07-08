@@ -1,3 +1,4 @@
+use crate::mathru::statistics::distrib::Distribution;
 use mathru::statistics::distrib::{Continuous, LogNormal};
 use std::f64::consts::PI;
 
@@ -23,27 +24,6 @@ fn pdf0() {
     assert_relative_eq!(prob, 1.5957691216057308);
 }
 
-//Does not work all the time, because the used function random is not mocked.
-// #[test]
-// fn random()
-// {
-//    let mu_1 : f64 = 0.0;
-//    let variance_1: f64 = 1.0;
-//    let distrib_1 : Normal<f64> = Normal::new(mu_1, variance_1);
-//    let mut data: Vec<f64> = Vec::new();
-//
-//    for _i in 0..10000
-//    {
-//        data.push(distrib_1.random());
-//    }
-//
-//    let distrib_2: Normal<f64> = Normal::from_data(&data);
-//
-//    assert!(distrib_2.mu() < mu_1 + 0.01);
-//    assert!(distrib_2.mu() > mu_1 - 0.01);
-//    assert!(distrib_2.variance() < 1.02 * variance_1);
-//    assert!(distrib_2.variance() > 0.98 * variance_1);
-// }
 #[test]
 fn cdf_negative() {
     let mu: f64 = 0.0;
@@ -127,7 +107,7 @@ fn variance() {
         distrib.variance()
     );
 }
-//
+
 #[test]
 fn skewness() {
     let mu: f64 = 1.0;
@@ -151,18 +131,19 @@ fn entropy() {
         distrib.entropy()
     );
 }
-//
-// //    #[test]
-// //    fn from_data()
-// //    {
-// //        let mu: f64 = 5.0;
-// //        let variance: f64 = 10.0;
-// //        let num_samples: usize = 100;
-// //        let data: Vector<f64> = Normal::new(mu,
-// // variance).random_vector(num_samples);
-// //
-// //        let distrib: Normal = Normal::from_data(&data);
-// //
-// //        assert!((mu - distrib.mu()).abs() < 0.5);
-// //        assert!((variance - distrib.variance()) < 1.0);
-// //    }
+
+#[test]
+#[should_panic]
+fn random() {
+    let mu: f64 = 1.0;
+    let sigma_squared: f64 = 0.5;
+    let distrib: LogNormal<f64> = LogNormal::new(mu, sigma_squared);
+
+    let _ = distrib.random();
+}
+
+#[test]
+#[should_panic]
+fn from_data() {
+    let _: LogNormal<f64> = LogNormal::from_data(&[]);
+}

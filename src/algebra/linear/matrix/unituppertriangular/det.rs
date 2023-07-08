@@ -20,9 +20,6 @@ where
     /// assert_eq!(det, 1.0)
     /// ```
     fn det(&self) -> T {
-        let (m, n) = self.matrix.dim();
-        debug_assert_eq!(m, n);
-
         T::one()
     }
 }

@@ -79,7 +79,7 @@ impl Error for f64 {
 
     /// <https://en.wikipedia.org/wiki/Error_function#Inverse_functions>
     /// Using the rational approximations tabulated in:
-    ///J. M. Blair, C. A. Edwards, and J. H. Johnson,
+    /// J. M. Blair, C. A. Edwards, and J. H. Johnson,
     /// "Rational Chebyshev approximations for the inverse of the error function",
     fn erfinv(self) -> Self {
         let factors_leq075_p: [f64; 7] = [
@@ -177,6 +177,7 @@ impl Error for f64 {
         if !(0.0f64..=2.0f64).contains(&self) {
             panic!("self is > 2.0 or < 0.0");
         }
+
         (1.0 - self).erfinv()
     }
 }
@@ -194,14 +195,14 @@ impl Error for f32 {
     }
 
     fn erfinv(self) -> Self {
-        let factors_leq075_p: [f32; 3] = [-1.309_599_7e1, 0.267_852_25, -9.289_058];
+        let factors_leq075_p: [f32; 3] = [-1.309_599_7e1, 0.267_852_25e2, -9.289_057];
 
         let factors_leq075_q: [f32; 4] = [-1.207_494_3e1, 3.096_061_5e1, -1.714_997_9e1, 0.1e1];
 
         let factors_leg09375_p: [f32; 4] =
             [-1.240_256_5e-1, 1.068_805_9, -1.959_455_6, 4.230_581_2e-1];
 
-        let factors_leg09375_q: [f32; 4] = [8.827_698e-2, 8.900_743e-1, -2.175_703, 0.1e1];
+        let factors_leg09375_q: [f32; 4] = [-8.827_698e-2, 8.900_743e-1, -2.175_703, 0.1e1];
 
         let factors_p: [f32; 6] = [
             1.550_47e-1,
@@ -232,7 +233,7 @@ impl Error for f32 {
 
             self * horner(t, &factors_leg09375_p) / horner(t, &factors_leg09375_q)
         } else {
-            let t: f32 = 1.0 / (-(1.0 - a).ln()).sqrt();
+            let t: f32 = 1.0 / ((-((1.0 - a).ln())).sqrt());
 
             horner(t, &factors_p) / (copysign(t, self) * horner(t, &factors_q))
         }
@@ -326,14 +327,10 @@ fn horner<T>(x: T, c: &[T]) -> T
 where
     T: Real,
 {
-    let last_idx: usize = c.len() - 1;
-    let mut f: T = c[last_idx] * x;
-
-    for i in (1..last_idx).rev() {
-        f = (f + c[i]) * x;
-    }
-
-    f + c[0]
+    c.iter()
+        .rev()
+        .skip(1)
+        .fold(*c.last().unwrap(), |s, c| s * x + *c)
 }
 
 fn copysign<T>(a: T, b: T) -> T

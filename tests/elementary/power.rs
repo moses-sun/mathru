@@ -52,3 +52,24 @@ fn pow2() {
 
     assert_eq!(refer, a.pow(b));
 }
+
+#[test]
+#[should_panic]
+fn pow_integer() {
+    let a = 5;
+    let b = 2;
+
+    let _ = a.pow(b);
+}
+
+#[test]
+#[should_panic]
+fn sqrt_integer() {
+    let _ = 25.sqrt();
+}
+
+#[test]
+#[should_panic]
+fn root_integer() {
+    let _ = 25.root(2);
+}

@@ -114,6 +114,16 @@ fn cdf2() {
 }
 
 #[test]
+#[should_panic]
+fn quantile() {
+    let p: f64 = 2.0_f64;
+    let q: f64 = 5.0_f64;
+
+    let distrib: Beta<f64> = Beta::new(p, q);
+    let _ = distrib.quantile(0.1);
+}
+
+#[test]
 fn mean() {
     let p: f64 = 2.0_f64;
     let q: f64 = 5.0_f64;
@@ -147,4 +157,24 @@ fn skewness() {
         (2.0 * (q - p) * (p + q + 1.0).sqrt()) / ((p + q + 2.0) * (p * q).sqrt()),
         distrib.skewness()
     );
+}
+
+#[test]
+#[should_panic]
+fn median() {
+    let p: f64 = 2.0_f64;
+    let q: f64 = 5.0_f64;
+
+    let distrib: Beta<f64> = Beta::new(p, q);
+    let _ = distrib.median();
+}
+
+#[test]
+#[should_panic]
+fn entropy() {
+    let p: f64 = 2.0_f64;
+    let q: f64 = 5.0_f64;
+
+    let distrib: Beta<f64> = Beta::new(p, q);
+    let _ = distrib.entropy();
 }

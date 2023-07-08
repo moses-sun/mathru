@@ -18,13 +18,12 @@ pub fn binom(n: u32, k: u32) -> u32 {
     (factorial(n) / (factorial(k) * factorial(n - k))) as u32
 }
 
-pub fn perm(_n: u32, _r: u32) -> u32 {
-    //	let n_fact : u32 = n.factorial();
-    //	let r_fact : u32 = r_factorial();
-    //	let diff_fact : u32 = (n - r).factorial();
-    unimplemented!()
+pub fn perm(n: u32, r: u32) -> u32 {
+    let n_fact: u64 = factorial(n);
+    (n_fact / factorial(n - r)) as u32
 }
 
-pub fn comb<'a>(_n: &'a u32, _r: &'a u32) -> u32 {
-    unimplemented!()
+pub fn comb<'a>(n: u32, r: u32) -> u32 {
+    let p = perm(n, r);
+    p / (factorial(r) as u32)
 }

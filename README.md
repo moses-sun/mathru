@@ -2,44 +2,44 @@
 
 [![crate](https://img.shields.io/crates/v/mathru.svg)](https://crates.io/crates/mathru)
 [![documentation](https://docs.rs/mathru/badge.svg)](https://docs.rs/mathru)
-![minimum rustc 1.64.0](https://img.shields.io/badge/rustc-1.64.0-green.svg)
+![minimum rustc 1.64.0](https://img.shields.io/badge/rustc-1.70.0-green.svg)
 ![maintenance](https://img.shields.io/badge/maintenance-actively--developed-brightgreen.svg)
-[![pipeline status](https://gitlab.com/matthiaseiholzer/mathru/badges/main/pipeline.svg)](https://gitlab.com/matthiaseiholzer/mathru/-/commits/main)
+[![pipeline status](https://gitlab.com/rustmath/mathru/badges/main/pipeline.svg)](https://gitlab.com/rustmath/mathru/-/commits/main)
 ------------
 Mathru is a numeric library containing algorithms for linear algebra, analysis ,statistics and optimization written in pure Rust with optional BLAS/LAPACK as backend.
 
 ## Features
 The following features are implemented in this create:
-* [Algebra](https://matthiaseiholzer.gitlab.io/mathru/documentation/algebra/)
-    * [Abstract](https://matthiaseiholzer.gitlab.io/mathru/documentation/algebra/abstract/)
-        * [Polynomial](https://matthiaseiholzer.gitlab.io/mathru/documentation/algebra/abstract/polynomial/)
+* [Algebra](https://rustmath.gitlab.io/mathru/documentation/algebra/)
+    * [Abstract](https://rustmath.gitlab.io/mathru/documentation/algebra/abstract/)
+        * [Polynomial](https://rustmath.gitlab.io/mathru/documentation/algebra/abstract/polynomial/)
             * Legendre polynomial
             * Chebyshev polynomial first & second kind
             * Bernstein polynomial
             * Bessel polynomial
-    * [Linear algebra](https://matthiaseiholzer.gitlab.io/mathru/documentation/algebra/linear/)
-        * [Vector](https://matthiaseiholzer.gitlab.io/mathru/documentation/algebra/linear/vector/)
-        * [Matrix](https://matthiaseiholzer.gitlab.io/mathru/documentation/algebra/linear/matrix/)
+    * [Linear algebra](https://rustmath.gitlab.io/mathru/documentation/algebra/linear/)
+        * [Vector](https://rustmath.gitlab.io/mathru/documentation/algebra/linear/vector/)
+        * [Matrix](https://rustmath.gitlab.io/mathru/documentation/algebra/linear/matrix/)
             * Basic matrix operations(+,-,*)
             * Transposition (In-place)
-            * [LU decomposition](https://matthiaseiholzer.gitlab.io/mathru/documentation/algebra/linear/matrix/#lu-with-partial-pivoting)
-            * [QR decomposition](https://matthiaseiholzer.gitlab.io/mathru/documentation/algebra/linear/matrix/#qr)
-            * [Hessenberg decomposition](https://matthiaseiholzer.gitlab.io/mathru/documentation/algebra/linear/matrix/#hessenberg)
-            * [Cholesky decomposition](https://matthiaseiholzer.gitlab.io/mathru/documentation/algebra/linear/matrix/#cholesky)
+            * [LU decomposition](https://rustmath.gitlab.io/mathru/documentation/algebra/linear/matrix/#lu-with-partial-pivoting)
+            * [QR decomposition](https://rustmath.gitlab.io/mathru/documentation/algebra/linear/matrix/#qr)
+            * [Hessenberg decomposition](https://rustmath.gitlab.io/mathru/documentation/algebra/linear/matrix/#hessenberg)
+            * [Cholesky decomposition](https://rustmath.gitlab.io/mathru/documentation/algebra/linear/matrix/#cholesky)
             * Eigen decomposition
             * Singular value decomposition
             * Inverse
             * Pseudo inverse
             * Determinant
             * Trace
-            * [Solve linear system](https://matthiaseiholzer.gitlab.io/mathru/documentation/algebra/linear/matrix/#linear-system-resolution)
+            * [Solve linear system](https://rustmath.gitlab.io/mathru/documentation/algebra/linear/matrix/#linear-system-resolution)
 
 * Analysis
     * Integration
         * Newton-Cotes
         * Gauss-Legendre
-    * [Ordinary differential equation (ODE)](https://matthiaseiholzer.gitlab.io/mathru/documentation/analysis/differentialeq/)
-        * [Explicit methods](https://matthiaseiholzer.gitlab.io/mathru/documentation/analysis/differentialeq/ode/explicit/)
+    * [Ordinary differential equation (ODE)](https://rustmath.gitlab.io/mathru/documentation/analysis/differentialeq/)
+        * [Explicit methods](https://rustmath.gitlab.io/mathru/documentation/analysis/differentialeq/ode/explicit/)
             * Euler method
             * Heun's 2nd order method
             * Midpoint method
@@ -54,20 +54,20 @@ The following features are implemented in this create:
             * Bogacki-Shampine
             * Adams-Bashforth
         * Automatic step size control with starting step size
-        * [Implicit methods](https://matthiaseiholzer.gitlab.io/mathru/documentation/analysis/differentialeq/ode/implicit)
+        * [Implicit methods](https://rustmath.gitlab.io/mathru/documentation/analysis/differentialeq/ode/implicit)
             * Implicit Euler
             * Backward differentiation formula (BDF)
     * Interpolation
         * Cubic spline
 
-* [Optimization](https://matthiaseiholzer.gitlab.io/mathru/documentation/optimization)
+* [Optimization](https://rustmath.gitlab.io/mathru/documentation/optimization)
     * Gauss-Newton algorithm
     * Gradient descent
     * Newton method
     * Levenberg-Marquardt algorithm
     * Conjugate gradient method
 
-* [Statistics](https://matthiaseiholzer.gitlab.io/mathru/documentation/statistics)
+* [Statistics](https://rustmath.gitlab.io/mathru/documentation/statistics)
     * Probability distribution
         * Bernoulli
         * Beta
@@ -75,16 +75,16 @@ The following features are implemented in this create:
         * Exponential
         * Gamma
         * Chi-squared
-        * [Normal](https://matthiaseiholzer.gitlab.io/mathru/documentation/statistics/distribution/normal/)
+        * [Normal](https://rustmath.gitlab.io/mathru/documentation/statistics/distribution/normal/)
         * Log-Normal
         * Poisson
         * Raised cosine
         * Student-t
         * Uniform
-    * [Test](https://matthiaseiholzer.gitlab.io/mathru/documentation/statistics/test/)
+    * [Test](https://rustmath.gitlab.io/mathru/documentation/statistics/test/)
         * Chi-squared
         * G
-        * [Student-t](https://matthiaseiholzer.gitlab.io/mathru/documentation/statistics/test/t_test/)
+        * [Student-t](https://rustmath.gitlab.io/mathru/documentation/statistics/test/t_test/)
 
 * Elementary functions
     * trigonometric functions
@@ -93,8 +93,8 @@ The following features are implemented in this create:
     * power functions
     * trigonometric functions
 
-* [Special functions](https://matthiaseiholzer.gitlab.io/mathru/documentation/special)
-    * [gamma functions](https://matthiaseiholzer.gitlab.io/mathru/documentation/special/gamma/)
+* [Special functions](https://rustmath.gitlab.io/mathru/documentation/special)
+    * [gamma functions](https://rustmath.gitlab.io/mathru/documentation/special/gamma/)
         * gamma function
         * log-gamma function
         * digamma function
@@ -104,11 +104,11 @@ The following features are implemented in this create:
         * lower incomplete gamma function
         * lower regularized incomplete gamma function
         * inverse lower regularized incomplete gamma function
-    * [beta functions](https://matthiaseiholzer.gitlab.io/mathru/documentation/special/beta/)
+    * [beta functions](https://rustmath.gitlab.io/mathru/documentation/special/beta/)
         * beta function
         * incomplete beta function
         * incomplete regularized beta function
-    * [error functions](https://matthiaseiholzer.gitlab.io/mathru/documentation/special/error/)
+    * [error functions](https://rustmath.gitlab.io/mathru/documentation/special/error/)
         * error function
         * complementary error function
         * inverse error function
@@ -197,11 +197,11 @@ fn main()
 
 ### Further examples
 
-For further examples, see [project page](https://matthiaseiholzer.gitlab.io/mathru)
+For further examples, see [project page](https://rustmath.gitlab.io/mathru)
 
 ## Documentation
 
-See [project page](https://matthiaseiholzer.gitlab.io/mathru) for more information and examples.
+See [project page](https://rustmath.gitlab.io/mathru) for more information and examples.
 The API is documented on [docs.rs](https://docs.rs/mathru).
 
 ## License

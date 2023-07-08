@@ -1,5 +1,5 @@
 mod closedfixedintervaliterator;
-mod newton_cotes_impl;
+mod newton_cotes;
 
 pub use closedfixedintervaliterator::ClosedFixedIntervalIterator;
-pub use newton_cotes_impl::NewtonCotes;
+pub use newton_cotes::NewtonCotes;

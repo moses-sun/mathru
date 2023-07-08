@@ -120,8 +120,9 @@ where
     ///                                 0.0, -7.0].into();
     /// let b: Diagonal<f64> = a + -4.0;
     /// ```
-    fn add(self, rhs: T) -> Self::Output {
-        Add::add(self.matrix, rhs).into()
+    fn add(mut self, rhs: T) -> Self::Output {
+        let _ = (&mut self).add(&rhs);
+        self
     }
 }
 
@@ -175,7 +176,11 @@ where
     /// let b = &mut a + &-4.0;
     /// ```
     fn add(self, rhs: &T) -> Self::Output {
-        let _ = Add::add(&self.matrix, rhs);
+        let (m, n) = self.dim();
+        let k = m.min(n);
+        for i in 0..k {
+            self[[i, i]] += *rhs
+        }
         self
     }
 }

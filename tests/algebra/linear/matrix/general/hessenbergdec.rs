@@ -157,3 +157,17 @@ fn dec_f64_6_by_6() {
 
     assert_relative_eq!(h, h_ref, epsilon = 0.001);
 }
+
+#[test]
+#[should_panic]
+fn dec_non_square() {
+    let a: General<f64> = matrix![1.0, 2.0];
+    let _ = a.dec_hessenberg();
+}
+
+#[test]
+#[should_panic]
+fn dec_empty() {
+    let a: General<f64> = General::new(0, 0, vec![]);
+    let _ = a.dec_hessenberg();
+}

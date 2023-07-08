@@ -164,7 +164,7 @@ fn solve_vector_complex_f64() {
 
 /**
 * Many thanks to Lukas Prediger @lumip
-* https://gitlab.com/matthiaseiholzer/mathru/-/issues/7
+* https://gitlab.com/rustmath/mathru/-/issues/7
 */
 #[test]
 fn negative_pivot_in_lu_decomposition() {

@@ -175,7 +175,7 @@ where
         let a: K = (self.n + K::one()) / K::from_f64(2.0);
         let b: K = self.n / K::from_f64(2.0);
 
-        (a * (gamma::gamma(a) - gamma::gamma(b)))
-            + (self.n.sqrt() * beta::beta(a, K::from_f64(0.5))).ln()
+        (a * (gamma::digamma(a) - gamma::digamma(b)))
+            + (self.n.sqrt() * beta::beta(b, K::from_f64(0.5))).ln()
     }
 }

@@ -14,7 +14,7 @@ use std::default::Default;
 /// Nonstiff Problems
 /// E. Hairer, S. P. Nørsett, G. Wanner
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
-#[derive(Clone, Copy, Debug)]
+#[derive(Eq, PartialEq, Clone, Copy, Debug)]
 pub struct ProportionalControl<T> {
     /// Step size
     n_max: u32,
@@ -41,8 +41,8 @@ where
             T::from_f64(0.8),
             T::from_f64(0.001),
             T::from_f64(3.0),
-            T::from_f64(10e-6),
-            T::from_f64(10e-3),
+            T::from_f64(1.0e-6),
+            T::from_f64(1.0e-3),
         )
     }
 }

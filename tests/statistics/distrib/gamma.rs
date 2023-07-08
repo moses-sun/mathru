@@ -1,4 +1,7 @@
-use mathru::statistics::distrib::{Continuous, Gamma};
+use mathru::{
+    special::gamma::{digamma, Gamma as g},
+    statistics::distrib::{Continuous, Gamma},
+};
 use std::f64;
 
 #[test]
@@ -100,4 +103,60 @@ fn skewness() {
     let distrib: Gamma<f64> = Gamma::new(alpha, beta);
 
     assert_eq!(distrib.skewness(), 2.0 / alpha.sqrt());
+}
+
+#[test]
+#[should_panic]
+fn quantile() {
+    let alpha: f64 = 2.0_f64;
+    let beta: f64 = 5.0_f64;
+
+    let distrib: Gamma<f64> = Gamma::new(alpha, beta);
+    let _ = distrib.quantile(0.1);
+}
+
+#[test]
+fn mean() {
+    let alpha: f64 = 2.0_f64;
+    let beta: f64 = 5.0_f64;
+
+    let distrib: Gamma<f64> = Gamma::new(alpha, beta);
+
+    let mean: f64 = distrib.mean();
+
+    assert_eq!(alpha / beta, mean);
+}
+
+#[test]
+fn variance() {
+    let alpha: f64 = 2.0_f64;
+    let beta: f64 = 5.0_f64;
+
+    let distrib: Gamma<f64> = Gamma::new(alpha, beta);
+    let variance: f64 = distrib.variance();
+
+    assert_eq!(alpha / (beta * beta), variance);
+}
+
+#[test]
+#[should_panic]
+fn median() {
+    let alpha: f64 = 2.0_f64;
+    let beta: f64 = 5.0_f64;
+
+    let distrib: Gamma<f64> = Gamma::new(alpha, beta);
+    let _ = distrib.median();
+}
+
+#[test]
+fn entropy() {
+    let alpha: f64 = 2.0_f64;
+    let beta: f64 = 5.0_f64;
+
+    let distrib: Gamma<f64> = Gamma::new(alpha, beta);
+    let entropy: f64 = distrib.entropy();
+    assert_eq!(
+        alpha - beta.ln() + alpha.gamma().ln() + (1.0 - alpha) * digamma(alpha),
+        entropy
+    );
 }

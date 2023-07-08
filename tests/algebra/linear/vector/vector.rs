@@ -223,3 +223,33 @@ fn into_iter() {
     let last = iter.next().unwrap();
     assert_eq!(last, -4.0f64);
 }
+
+#[test]
+fn one() {
+    let v: Vector<f64> = Vector::one(3);
+    let v_ref = vector![1.0; 1.0; 1.0];
+
+    assert_eq!(v_ref, v);
+}
+
+#[test]
+fn eucl_norm() {
+    let v: Vector<f64> = Vector::one(3);
+    let norm = v.eucl_norm();
+
+    assert_abs_diff_eq!(3.0f64.sqrt(), norm);
+}
+
+#[test]
+fn row_random() {
+    let v: Vector<f64> = Vector::new_row_random(3);
+
+    assert_eq!((1, 3), v.dim());
+}
+
+#[test]
+fn row_column() {
+    let v: Vector<f64> = Vector::new_column_random(3);
+
+    assert_eq!((3, 1), v.dim());
+}

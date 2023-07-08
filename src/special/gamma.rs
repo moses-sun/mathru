@@ -196,11 +196,13 @@ pub trait Gamma {
     ///
     /// ```
     /// use mathru::special::gamma;
+    /// use mathru::assert_abs_diff_eq;
     ///
     /// let a: f64 = 0.5_f64;
     /// let x: f64 = 0.3_f64;
     /// let q = gamma::gamma_ur(a, x);
     /// let x_s: f64 = gamma::gamma_ur_inv(a, q);
+    /// assert_abs_diff_eq!(x, x_s);
     /// ```
     fn gamma_ur_inv(self, p: Self) -> Self;
 
@@ -222,11 +224,13 @@ pub trait Gamma {
     ///
     /// ```
     /// use mathru::special::gamma;
+    /// use mathru::assert_abs_diff_eq;
     ///
     /// let a: f64 = 0.5_f64;
     /// let x: f64 = 0.3_f64;
     /// let p = gamma::gamma_lr(a, x);
     /// let x_s: f64 = gamma::gamma_lr_inv(a, p);
+    /// assert_abs_diff_eq!(x, x_s);
     /// ```
     fn gamma_lr_inv(self, p: Self) -> Self;
 }
@@ -581,7 +585,7 @@ macro_rules! impl_gamma {
             }
 
             fn gamma_lr_inv(self, q: Self) -> Self {
-                1.0 - self.gamma_ur_inv(q)
+                self.gamma_ur_inv(1.0 - q)
             }
         }
     };

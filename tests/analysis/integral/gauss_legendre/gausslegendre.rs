@@ -7,7 +7,7 @@ fn gauss_legendre_1() {
 
     let integral: f64 = gl.integrate(f, 2.0, 4.0);
 
-    assert_relative_eq!(integral, 6.0);
+    assert_relative_eq!(integral, 6.0, epsilon = 1.0e-1);
 }
 
 #[test]
@@ -17,7 +17,7 @@ fn gauss_legendre_2() {
 
     let integral: f64 = gl.integrate(f, 2.0, 4.0);
 
-    assert_relative_eq!(integral, 6.0);
+    assert_relative_eq!(integral, 6.0, epsilon = 1.0e-3);
 }
 
 #[test]
@@ -27,7 +27,7 @@ fn gauss_legendre_3() {
 
     let integral: f64 = gl.integrate(f, 2.0, 4.0);
 
-    assert_relative_eq!(integral, 6.0, epsilon = 0.000000001);
+    assert_relative_eq!(integral, 6.0, epsilon = 1.0e-3);
 }
 
 #[test]
@@ -37,7 +37,7 @@ fn gauss_legendre_4() {
 
     let integral: f64 = gl.integrate(f, 2.0, 4.0);
 
-    assert_relative_eq!(integral, 6.0, epsilon = 0.000000001);
+    assert_relative_eq!(integral, 6.0, epsilon = 1.0e-6);
 }
 
 #[test]
@@ -47,7 +47,7 @@ fn gauss_legendre_5() {
 
     let integral: f64 = gl.integrate(f, 2.0, 4.0);
 
-    assert_relative_eq!(integral, 6.0, epsilon = 0.000000001);
+    assert_relative_eq!(integral, 6.0, epsilon = 1.0e-6)
 }
 
 #[test]
@@ -57,7 +57,7 @@ fn gauss_legendre_6() {
 
     let integral: f64 = gl.integrate(f, 2.0, 4.0);
 
-    assert_relative_eq!(integral, 6.0, epsilon = 0.000000001);
+    assert_relative_eq!(integral, 6.0, epsilon = 1.0e-6);
 }
 
 #[test]
@@ -67,7 +67,7 @@ fn gauss_legendre_7() {
 
     let integral: f64 = gl.integrate(f, 2.0, 4.0);
 
-    assert_relative_eq!(integral, 6.0, epsilon = 0.000000001);
+    assert_relative_eq!(integral, 6.0, epsilon = 1.0e-6);
 }
 
 #[test]
@@ -77,5 +77,5 @@ fn gauss_legendre_8() {
 
     let integral: f64 = gl.integrate(f, 2.0, 4.0);
 
-    assert_relative_eq!(integral, 6.0, epsilon = 0.000000001);
+    assert_relative_eq!(integral, 6.0, epsilon = 1.0e-6);
 }

@@ -58,6 +58,10 @@ impl Optim<f64> for Example {
         let jacobian: General<f64> = (residual.transpose() * jacobian_f * -2.0).into();
         return jacobian;
     }
+
+    fn hessian(&self, _x: &Vector<f64>) -> General<f64> {
+        unimplemented!()
+    }
 }
 
 fn main() {

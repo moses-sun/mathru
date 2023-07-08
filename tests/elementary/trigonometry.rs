@@ -44,6 +44,69 @@ fn sin_f64() {
 }
 
 #[test]
+fn arsin_f64() {
+    let a = f64::pi() / 2.0;
+
+    assert_eq!(a, a.sin().arcsin());
+}
+
+#[test]
+fn cos_f64() {
+    let uut: f64 = (f64::pi()).cos();
+
+    assert_eq!(-1.0, uut);
+}
+
+#[test]
+fn arccos_f64() {
+    let a = f64::pi() / 2.0;
+
+    assert_eq!(a, a.cos().arccos());
+}
+
+#[test]
+fn cot_f64() {
+    let a = 0.5f64;
+
+    assert_eq!(1.0 / a.tan(), a.cot());
+}
+
+#[test]
+fn arccot_f64() {
+    let a = 0.5f64;
+
+    assert_eq!(a, a.cot().arccot());
+}
+
+#[test]
+fn sec_f64() {
+    let a = 0.5f64;
+
+    assert_eq!(1.0 / a.cos(), a.sec());
+}
+
+#[test]
+fn arcsec_f64() {
+    let a = 0.5f64;
+
+    assert_abs_diff_eq!(a, a.sec().arcsec());
+}
+
+#[test]
+fn csc_f64() {
+    let a = 2.0f64;
+
+    assert_abs_diff_eq!(1.0 / a.sin(), a.csc());
+}
+
+#[test]
+fn arccsc_f64() {
+    let a = 0.5f64;
+
+    assert_abs_diff_eq!(a, a.csc().arccsc());
+}
+
+#[test]
 fn cos() {
     let a: f64 = 1.0;
     let b: f64 = 2.0;
@@ -162,4 +225,11 @@ fn arccsc() {
     let refer: Complex<f64> = (Complex::one() / a).arcsin();
 
     assert_eq!(refer, a.arccsc());
+}
+
+#[test]
+fn pi() {
+    let c: Complex<f64> = Complex::pi();
+    let c_ref = Complex::new(f64::pi(), 0.0);
+    assert_eq!(c_ref, c);
 }

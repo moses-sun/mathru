@@ -28,6 +28,10 @@ impl Optim<f64> for LinearEquation {
     fn jacobian(&self, _input: &Vector<f64>) -> General<f64> {
         return self.a.clone();
     }
+
+    fn hessian(&self, _x: &Vector<f64>) -> General<f64> {
+        unimplemented!()
+    }
 }
 
 pub struct Rosenbrock {}
@@ -86,5 +90,9 @@ impl Optim<f64> for QuadraticFunction {
         jacobian[[0, 1]] = input[1] * quadratic;
 
         return jacobian;
+    }
+
+    fn hessian(&self, _x: &Vector<f64>) -> General<f64> {
+        unimplemented!()
     }
 }

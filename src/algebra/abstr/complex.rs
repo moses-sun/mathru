@@ -155,19 +155,6 @@ where
     }
 }
 
-// #[cfg(feature = "native")]
-// impl<T> Scalar for Complex<T>
-//     where T: Real
-// {
-// }
-
-// #[cfg(feature = "lapack")]
-// impl<T> Scalar for Complex<T>
-//     where T: Real,
-//         Complex<T>: Lapack + Blas
-// {
-// }
-
 /// Compares to complex numbers
 impl<T> PartialEq for Complex<T>
 where
@@ -234,7 +221,7 @@ where
 
 impl<T> AddAssign for Complex<T>
 where
-    T: Real, /* AddAssign */
+    T: Real,
 {
     fn add_assign(&mut self, other: Self) {
         self.re += other.re;
@@ -422,20 +409,20 @@ impl<T> FromPrimitive for Complex<T>
 where
     T: Real,
 {
-    /// Convert an `i64` to return an optional value of this type. If the
-    /// type cannot be represented by this value, the `None` is returned.
-    fn from_i64(_n: i64) -> Self {
-        unimplemented!();
+    fn from_i64(n: i64) -> Self {
+        Complex {
+            re: cast::cast(n),
+            im: T::zero(),
+        }
     }
 
-    /// Convert an `i128` to return an optional value of this type. If the
-    /// type cannot be represented by this value, the `None` is returned.
-    fn from_i128(_n: i128) -> Self {
-        unimplemented!();
+    fn from_i128(n: i128) -> Self {
+        Complex {
+            re: cast::cast(n),
+            im: T::zero(),
+        }
     }
 
-    /// Convert an `u64` to return an optional value of this type. If the
-    /// type cannot be represented by this value, the `None` is returned.
     fn from_u64(n: u64) -> Self {
         Complex {
             re: cast::cast(n),
@@ -443,8 +430,6 @@ where
         }
     }
 
-    /// Convert an `u128` to return an optional value of this type. If the
-    /// type cannot be represented by this value, the `None` is returned.
     fn from_u128(n: u128) -> Self {
         Complex {
             re: cast::cast(n),
@@ -452,8 +437,6 @@ where
         }
     }
 
-    /// Convert a `f64` to return an optional value of this type. If the
-    /// type cannot be represented by this value, the `None` is returned.
     fn from_f64(n: f64) -> Self {
         Complex {
             re: cast::cast(n),
@@ -467,8 +450,6 @@ impl<T> NumCast for Complex<T>
 where
     T: Real,
 {
-    /// Creates a number from another value that can be converted into
-    /// a primitive via the `ToPrimitive` trait.
     fn from<K: ToPrimitive>(n: K) -> Self {
         Complex {
             re: cast::cast(n.to_f64()),
