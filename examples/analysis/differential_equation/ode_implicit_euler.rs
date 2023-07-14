@@ -61,7 +61,9 @@ fn main() {
     let problem = ImplicitInitialValueProblemBuilder::<f64, Euler>::new(
         &implicit_euler,
         x_start,
-        vector![1.0; 0.0; 0.9],
+        vector![1.0; 
+                0.0; 
+                0.9],
     )
     .t_end(x_end)
     .build();

@@ -86,8 +86,10 @@ where
     ///
     /// let mut a: Diagonal<f64> = matrix![1.0, 0.0;
     ///                                    0.0, -7.0].into();
+    ///
     /// let b: Diagonal<f64> = matrix![1.0, 0.0;
     ///                                0.0, 2.0].into();
+    ///
     /// let sum: Diagonal<f64> = matrix![2.0, 0.0;
     ///                                  0.0, -5.0].into();
     ///
@@ -118,6 +120,7 @@ where
     ///
     /// let a: Diagonal<f64> = matrix![ 1.0, 0.0;
     ///                                 0.0, -7.0].into();
+    ///
     /// let b: Diagonal<f64> = a + -4.0;
     /// ```
     fn add(mut self, rhs: T) -> Self::Output {
@@ -144,6 +147,7 @@ where
     ///
     /// let a: Diagonal<f64> = matrix![1.0, 0.0;
     ///                                0.0, -7.0].into();
+    ///
     /// let b: Diagonal<f64> = &a + &-4.0;
     ///
     /// let sum: Diagonal<f64> = matrix![-3.0, 0.0;

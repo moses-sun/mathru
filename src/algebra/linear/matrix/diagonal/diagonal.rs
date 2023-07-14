@@ -17,6 +17,20 @@ where
     T: Field + Scalar + Zero,
 {
     /// Construct a matrix with vec as its diagonal.
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// use mathru::algebra::linear::matrix::{General, Diagonal};
+    /// use mathru::matrix;
+    ///
+    /// let d: Diagonal<f64> = Diagonal::new(&[1.0, 2.0]);
+    ///
+    /// let d_ref: Diagonal<f64> = matrix![1.0, 0.0;
+    ///                                    0.0, 2.0].into();
+    ///
+    /// assert_eq!(d, d_ref);
+    /// ```
     pub fn new(vec: &[T]) -> Diagonal<T> {
         let mut g = General::zero(vec.len(), vec.len());
         for (idx, v) in vec.iter().enumerate() {

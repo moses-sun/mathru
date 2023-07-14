@@ -32,5 +32,7 @@ pub mod matrix;
 pub mod blas;
 #[cfg(feature = "lapack")]
 pub mod lapack;
+
 #[cfg(feature = "native")]
+#[doc(hidden)]
 pub mod matrixmultiply;

@@ -189,14 +189,15 @@ where
     ///
     /// ```
     /// use mathru::algebra::linear::matrix::General;
+    /// use mathru::matrix;
     ///
     /// let mut a: General<f64> = General::new(2, 2, vec![1.0, 0.0, 3.0, -7.0]);
     /// let b = &mut a + &-4.0;
-    /// assert_eq!(matrix![-3.0, -4.0;
-    ///                    -1.0, -11.0]);
+    ///
+    /// assert_eq!(matrix![-3.0f64, -1.0;
+    ///                    -4.0, -11.0], *b);
     /// ```
     fn add(self, rhs: &T) -> Self::Output {
-        print!("HIer liegt der Hund begraben");
         self.data.iter_mut().for_each(|x: &mut T| *x += *rhs);
         self
     }

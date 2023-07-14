@@ -26,29 +26,19 @@ where
     ///
     /// # Panics
     ///
-    /// Panics if n < 1 || n > 9
-    ///
     /// # Examples
     /// ```
-    /// # #[macro_use]
-    /// # extern crate mathru;
-    /// # fn main()
-    /// # {
     /// use mathru::analysis::integral::gauss_legendre::GaussLegendre;
+    /// use mathru::assert_relative_eq;
     ///
     /// let gl: GaussLegendre<f64> = GaussLegendre::new(1);
     /// let f: fn(f64) -> f64 = | x | {x};
     ///
-    /// let integral: f64 = gl.integrate(f, 2.0, 4.0);
+    /// let integral: f64 = gl.integrate(&f, 2.0, 4.0);
     ///
     /// assert_relative_eq!(integral, 6.0)
-    /// # }
     /// ```
     pub fn new(n: u8) -> GaussLegendre<T> {
-        if !(1..=9).contains(&n) {
-            panic!("n is not within the limits");
-        }
-
         GaussLegendre {
             root_weight: RootWeight::new(n),
         }
@@ -59,7 +49,7 @@ where
     /// # Arguments
     /// * a: lower bound of the definite integral
     /// * b: upper bound of the definite integral
-    pub fn integrate<F>(&self, f: F, a: T, b: T) -> T
+    pub fn integrate<F>(&self, f: &F, a: T, b: T) -> T
     where
         F: Fn(T) -> T,
     {
