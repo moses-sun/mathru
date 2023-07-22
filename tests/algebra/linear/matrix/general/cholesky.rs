@@ -1,5 +1,6 @@
 use crate::mathru::algebra::abstr::Zero;
 use mathru::algebra::abstr::Complex;
+use mathru::algebra::linear::matrix::CholeskyDecomposition;
 use mathru::algebra::linear::matrix::{General, LowerTriangular, UpperTriangular};
 
 #[test]

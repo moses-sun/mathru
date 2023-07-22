@@ -1,6 +1,5 @@
 use crate::algebra::abstr::{Field, Scalar};
-use crate::algebra::linear::matrix::Determinant;
-use crate::algebra::linear::matrix::General;
+use crate::algebra::linear::matrix::{Determinant, General, LUDecomposition};
 
 impl<T> Determinant<T> for General<T>
 where

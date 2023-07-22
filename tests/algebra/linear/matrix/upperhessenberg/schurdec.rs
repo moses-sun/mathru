@@ -1,5 +1,4 @@
-use mathru::algebra::linear::matrix::General;
-use mathru::algebra::linear::matrix::UpperHessenberg;
+use mathru::algebra::linear::matrix::{General, SchurDecomposition, UpperHessenberg};
 
 #[test]
 fn schurdec() {

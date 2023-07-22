@@ -14,6 +14,10 @@ use crate::algebra::{
 use serde::{Deserialize, Serialize};
 use std::clone::Clone;
 
+pub trait LUDecomposition<T> {
+    fn dec_lu(&self) -> Result<LUDec<T>, ()>;
+}
+
 /// Result of a LU decomposition
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[derive(Debug, Clone)]

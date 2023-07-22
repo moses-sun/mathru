@@ -22,7 +22,7 @@ impl<T> Index<[usize; 2]> for General<T> {
             index[1]
         );
 
-        &self.data[index[1] * self.m + index[0]]
+        unsafe { &self.data.get_unchecked(index[1] * self.m + index[0]) }
     }
 }
 
@@ -45,6 +45,6 @@ impl<T> IndexMut<[usize; 2]> for General<T> {
             index[1]
         );
 
-        &mut self.data[index[1] * self.m + index[0]]
+        unsafe { self.data.get_unchecked_mut(index[1] * self.m + index[0]) }
     }
 }

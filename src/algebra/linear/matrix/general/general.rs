@@ -12,12 +12,14 @@ use super::super::{
 };
 use crate::algebra::abstr::Zero;
 use crate::algebra::linear::matrix::substitute::{SubstituteBackward, SubstituteForward};
-use crate::algebra::linear::matrix::UpperTriangular;
 use crate::{
     algebra::{
         abstr::AbsDiffEq,
         abstr::{Addition, Field, Identity, Multiplication, Scalar},
-        linear::{matrix::Transpose, vector::Vector},
+        linear::{
+            matrix::{QRDecomposition, Transpose, UpperTriangular},
+            vector::Vector,
+        },
     },
     elementary::Power,
 };

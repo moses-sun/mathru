@@ -1,12 +1,12 @@
 use crate::{
     algebra::{
         abstr::{Field, Scalar},
-        linear::matrix::{General, HessenbergDec, UpperHessenberg},
+        linear::matrix::{General, HessenbergDec, HessenbergDecomposition, UpperHessenberg},
     },
     elementary::Power,
 };
 
-impl<T> General<T>
+impl<T> HessenbergDecomposition<T> for General<T>
 where
     T: Field + Scalar + Power,
 {
@@ -32,7 +32,7 @@ where
     /// let a: General<f64> = General::new(3, 3, vec![1.0, 5.0, 3.0, 1.0, 0.0, -7.0, 3.0, 8.0, 9.0]);
     /// let (q, h): (General<f64>, UpperHessenberg<f64>) = a.dec_hessenberg().qh();
     /// ```
-    pub fn dec_hessenberg(&self) -> HessenbergDec<T> {
+    fn dec_hessenberg(&self) -> HessenbergDec<T> {
         let (m, n): (usize, usize) = self.dim();
         debug_assert_eq!(
             m, n,
@@ -107,7 +107,12 @@ where
 
         HessenbergDec::new(General::new(m, n, q), UpperHessenberg::new(h))
     }
+}
 
+impl<T> General<T>
+where
+    T: Field + Scalar + Power,
+{
     fn h(mut self) -> Self {
         let (m, _n) = self.dim();
         for i in 2..m {

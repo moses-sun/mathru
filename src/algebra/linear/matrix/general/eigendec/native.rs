@@ -2,7 +2,8 @@ use crate::algebra::abstr::{AbsDiffEq, Field, RelativeEq, Scalar};
 use crate::algebra::linear::matrix::Diagonal;
 use crate::algebra::linear::{
     matrix::{
-        EigenDec, EigenDecomposition, General, HessenbergDecomposition, Solve, UpperHessenberg,
+        EigenDec, EigenDecomposition, General, HessenbergDecomposition, SchurDecomposition, Solve,
+        UpperHessenberg,
     },
     vector::Vector,
 };

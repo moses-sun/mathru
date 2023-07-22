@@ -20,11 +20,12 @@ criterion_main!(
     // algebra::linear::vector::r#macro::bench_macro,
     // algebra::linear::vector::index::bench_index,
     // algebra::abstr::from::bench_from,
-    algebra::linear::matrix::general::add_borrow::bench_general_add_borrow_general,
-    algebra::linear::matrix::general::add_assign::bench_general_add_assign_general,
-    algebra::linear::matrix::general::add_own::bench_general_add_own_general,
-    algebra::linear::matrix::general::sub_borrow::bench_general_sub_borrow_general,
-    algebra::linear::matrix::general::sub_assign::bench_general_sub_assign_general,
-    algebra::linear::matrix::general::sub_own::bench_general_sub_own_general,
-    algebra::linear::matrix::diagonal::add_assign::bench_diagonal_add_assign_diagonal
+    algebra::linear::matrix::general::choleskydec::bench_cholesky,
+    // algebra::linear::matrix::general::add_borrow::bench_general_add_borrow_general,
+    // algebra::linear::matrix::general::add_assign::bench_general_add_assign_general,
+    // algebra::linear::matrix::general::add_own::bench_general_add_own_general,
+    // algebra::linear::matrix::general::sub_borrow::bench_general_sub_borrow_general,
+    // algebra::linear::matrix::general::sub_assign::bench_general_sub_assign_general,
+    // algebra::linear::matrix::general::sub_own::bench_general_sub_own_general,
+    // algebra::linear::matrix::diagonal::add_assign::bench_diagonal_add_assign_diagonal
 );

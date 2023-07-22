@@ -13,3 +13,4 @@ mod relative_eq;
 mod sub;
 mod sub_assign;
 pub use diagonal::Diagonal;
+mod choleskydec;

@@ -1,5 +1,5 @@
 use mathru::algebra::abstr::Complex;
-use mathru::algebra::linear::matrix::{General, UpperTriangular};
+use mathru::algebra::linear::matrix::{General, QRDecomposition, UpperTriangular};
 
 #[cfg(feature = "native")]
 #[test]
