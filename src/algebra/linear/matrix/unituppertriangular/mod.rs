@@ -1,7 +1,11 @@
+mod abs_diff_eq;
 mod det;
 mod eigendec;
 mod from;
 mod index;
+mod mul;
+mod partial_eq;
+mod relative_eq;
 mod substitute_backward;
 mod transpose;
 mod unituppertriangular;

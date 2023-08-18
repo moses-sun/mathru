@@ -1,4 +1,4 @@
-mod absdiff_eq;
+mod abs_diff_eq;
 mod add;
 mod add_assign;
 mod choleskydec;

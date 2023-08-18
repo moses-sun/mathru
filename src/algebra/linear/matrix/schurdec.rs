@@ -3,6 +3,10 @@ use crate::algebra::linear::matrix::{General, UpperTriangular};
 use serde::{Deserialize, Serialize};
 use std::clone::Clone;
 
+pub trait SchurDecomposition<T> {
+    fn dec_schur(&self) -> Result<SchurDec<T>, ()>;
+}
+
 /// Result of Schur decomposition
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[derive(Debug, Clone)]

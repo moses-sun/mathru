@@ -1,11 +1,11 @@
 use crate::algebra::abstr::Zero;
-use crate::algebra::linear::matrix::{UnitLowerTriangular, UpperTriangular};
+use crate::algebra::linear::matrix::{LUDecomposition, UnitLowerTriangular, UpperTriangular};
 use crate::algebra::{
     abstr::{Field, Scalar},
     linear::matrix::{General, LUDec},
 };
 
-impl<T> General<T>
+impl<T> LUDecomposition<T> for General<T>
 where
     T: Field + Scalar,
 {
@@ -19,12 +19,12 @@ where
     /// # Example
     ///
     /// ```
-    /// use mathru::algebra::linear::matrix::{General, UnitLowerTriangular, UpperTriangular};
+    /// use mathru::algebra::linear::matrix::{General, UnitLowerTriangular, UpperTriangular, LUDecomposition};
     /// let a: General<f64> = General::new(2, 2, vec![1.0, -2.0, 3.0, -7.0]);
     ///
     /// let (l, u, p): (UnitLowerTriangular<f64>, UpperTriangular<f64>, General<f64>) = a.dec_lu().unwrap().lup();
     /// ```
-    pub fn dec_lu(&self) -> Result<LUDec<T>, ()> {
+    fn dec_lu(&self) -> Result<LUDec<T>, ()> {
         let (m, n): (usize, usize) = self.dim();
         debug_assert_eq!(m, n);
 
@@ -59,7 +59,12 @@ where
 
         Ok(LUDec::new(l, u, p))
     }
+}
 
+impl<T> General<T>
+where
+    T: Field + Scalar,
+{
     fn l(mut mat: General<T>) -> UnitLowerTriangular<T> {
         let (m, n): (usize, usize) = mat.dim();
 

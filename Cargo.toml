@@ -35,6 +35,7 @@ debug = true
 [profile.release]
 opt-level = 3
 debug = false
+overflow-checks = false   
 lto = true
 
 [profile.test]
@@ -43,6 +44,7 @@ debug = true
 
 [profile.bench]
 opt-level = 3
+overflow-checks = false
 debug = false
 
 [dependencies]

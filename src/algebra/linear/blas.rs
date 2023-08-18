@@ -2,7 +2,7 @@ use crate::algebra::abstr::{Blas, Complex};
 use blas_sys as ffi;
 
 macro_rules! blas_impl (
-    ($T: ty, $xgemm: path, $xtrsm: path, $xscal: path, $xaxpy: path)
+    ($T: ty, $xgemm: path, $xtrsm: path, $xscal: path, $xaxpy: path, $xtrmm: path)
     => (
         impl Blas for $T
        	{
@@ -83,23 +83,57 @@ macro_rules! blas_impl (
                     )
                 }
 			}
+
+			fn xtrmm(
+				side: char,
+				uplo: char,
+				transa: char,
+				diag: char,
+				m: i32,
+				n: i32,
+				alpha: Self,
+				a: &[Self],
+				lda: i32,
+				b: &mut [Self],
+				ldb: i32,
+			) 	{
+				unsafe {
+					$xtrmm(&(side as i8), &(uplo as i8), &(transa as i8), &(diag as i8), &m, &n, &alpha as *const _ as *const _, a.as_ptr() as *const _, &lda, b.as_mut_ptr() as * mut _, &ldb);
+				}
+			}
 		}
 	)
 );
 
-blas_impl!(f32, ffi::sgemm_, ffi::strsm_, ffi::sscal_, ffi::saxpy_);
-blas_impl!(f64, ffi::dgemm_, ffi::dtrsm_, ffi::dscal_, ffi::daxpy_);
+blas_impl!(
+    f32,
+    ffi::sgemm_,
+    ffi::strsm_,
+    ffi::sscal_,
+    ffi::saxpy_,
+    ffi::strmm_
+);
+blas_impl!(
+    f64,
+    ffi::dgemm_,
+    ffi::dtrsm_,
+    ffi::dscal_,
+    ffi::daxpy_,
+    ffi::dtrmm_
+);
 blas_impl!(
     Complex<f32>,
     ffi::cgemm_,
     ffi::ctrsm_,
     ffi::cscal_,
-    ffi::caxpy_
+    ffi::caxpy_,
+    ffi::ctrmm_
 );
 blas_impl!(
     Complex<f64>,
     ffi::zgemm_,
     ffi::ztrsm_,
     ffi::zscal_,
-    ffi::zaxpy_
+    ffi::zaxpy_,
+    ffi::ztrmm_
 );

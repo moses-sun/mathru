@@ -3,7 +3,11 @@ use crate::algebra::linear::matrix::{General, UpperTriangular};
 use serde::{Deserialize, Serialize};
 use std::clone::Clone;
 
-/// Reulst of QR decomposition
+pub trait QRDecomposition<T> {
+    fn dec_qr(&self) -> Result<QRDec<T>, ()>;
+}
+
+/// Result of QR decomposition
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[derive(Debug, Clone)]
 pub struct QRDec<T> {

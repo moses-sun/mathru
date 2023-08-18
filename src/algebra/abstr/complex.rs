@@ -566,7 +566,7 @@ where
     }
 }
 
-impl<T> RelativeEq for Complex<T>
+impl<T> RelativeEq<Complex<T>> for Complex<T>
 where
     T: Real,
 {

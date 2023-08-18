@@ -253,4 +253,18 @@ pub trait Blas: Sized + Zero {
     fn xscal(n: i32, a: Self, x: &mut [Self], inc: i32);
 
     fn xaxpy(n: i32, a: Self, x: &[Self], incx: i32, y: &mut [Self], incy: i32);
+
+    fn xtrmm(
+        side: char,
+        uplo: char,
+        transa: char,
+        diag: char,
+        m: i32,
+        n: i32,
+        alpha: Self,
+        a: &[Self],
+        lda: i32,
+        b: &mut [Self],
+        ldb: i32,
+    );
 }

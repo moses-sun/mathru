@@ -1,11 +1,12 @@
 use crate::algebra::abstr::Zero;
 use crate::algebra::abstr::{Complex, Real, Scalar};
+use crate::algebra::linear::matrix::choleskydec::CholeskyDecomposition;
 use crate::{
     algebra::linear::matrix::{CholeskyDec, General, LowerTriangular},
     elementary::Power,
 };
 
-impl<T> General<T>
+impl<T> CholeskyDecomposition<T> for General<T>
 where
     T: Real,
 {
@@ -22,30 +23,30 @@ where
     /// # Example
     ///
     /// ```
-    /// use mathru::algebra::linear::matrix::{General, LowerTriangular};
+    /// use mathru::algebra::linear::matrix::{General, LowerTriangular, CholeskyDecomposition};
     /// use mathru::{matrix, assert_abs_diff_eq};
     ///
-    /// let a: General<f64> = matrix![   2.0, -1.0, 0.0;
-    ///                                -1.0, 2.0, -1.0;
-    ///                                 0.0, -1.0,  2.0];
+    /// let a: General<f64> = matrix![2.0, -1.0, 0.0;
+    ///                               -1.0, 2.0, -1.0;
+    ///                               0.0, -1.0, 2.0];
     ///
     /// let l: LowerTriangular<f64> = a.dec_cholesky().unwrap().l();
     ///
-    /// let l_ref: LowerTriangular<f64> = matrix![  1.4142, 0.0, 0.0;
-    ///                                             -0.7071, 1.2247, 0.0;
-    ///                                             0.0, -0.8165, 1.1547].into();
+    /// let l_ref: LowerTriangular<f64> = matrix![1.4142, 0.0, 0.0;
+    ///                                           -0.7071, 1.2247, 0.0;
+    ///                                           0.0, -0.8165, 1.1547].into();
     ///
     /// assert_abs_diff_eq!(l_ref, l, epsilon=0.001);
     /// ```
-    pub fn dec_cholesky(&self) -> Result<CholeskyDec<T>, String> {
+    fn dec_cholesky(&self) -> Result<CholeskyDec<T>, String> {
         let (m, n) = self.dim();
         debug_assert_eq!(m, n);
         debug_assert_ne!(m, 0);
 
         let mut l: General<T> = General::zero(m, n);
 
-        for i in 0..n {
-            for j in 0..i + 1 {
+        for j in 0..n {
+            for i in j..n {
                 let mut sum = T::zero();
                 for k in 0..j {
                     sum += l[[i, k]] * l[[j, k]];
@@ -67,7 +68,7 @@ where
     }
 }
 
-impl<T> General<Complex<T>>
+impl<T> CholeskyDecomposition<Complex<T>> for General<Complex<T>>
 where
     T: Real,
     Complex<T>: Scalar,
@@ -86,25 +87,24 @@ where
     /// # Example
     ///
     /// ```
-    /// use mathru::algebra::linear::matrix::General;
-    /// use mathru::algebra::linear::matrix::LowerTriangular;
+    /// use mathru::algebra::linear::matrix::{General, LowerTriangular, CholeskyDecomposition};
     /// use mathru::matrix;
     ///
-    /// let a: General<f64> = matrix![   2.0, -1.0, 0.0;
-    ///                                -1.0, 2.0, -1.0;
-    ///                                 0.0, -1.0,  2.0];
+    /// let a: General<f64> = matrix![2.0, -1.0, 0.0;
+    ///                               -1.0, 2.0, -1.0;
+    ///                               0.0, -1.0, 2.0];
     ///
     /// let l: LowerTriangular<f64> = a.dec_cholesky().unwrap().l();
     /// ```
-    pub fn dec_cholesky(&self) -> Result<CholeskyDec<Complex<T>>, String> {
+    fn dec_cholesky(&self) -> Result<CholeskyDec<Complex<T>>, String> {
         let (m, n) = self.dim();
         debug_assert_eq!(m, n);
 
         let (m, n) = self.dim();
         let mut l: General<Complex<T>> = General::zero(m, n);
 
-        for i in 0..n {
-            for j in 0..i + 1 {
+        for j in 0..n {
+            for i in j..n {
                 let mut sum = Complex::<T>::zero();
                 for k in 0..j {
                     sum += l[[i, k]] * l[[j, k]].conj();

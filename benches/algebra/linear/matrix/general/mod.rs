@@ -7,3 +7,4 @@ pub mod sub_assign;
 pub mod sub_borrow;
 pub mod sub_own;
 pub use matrix::matrix;
+pub mod choleskydec;

@@ -1,5 +1,5 @@
 use crate::algebra::abstr::AbsDiffEq;
-use crate::algebra::linear::matrix::UpperHessenberg;
+use crate::algebra::linear::matrix::{SchurDecomposition, UpperHessenberg};
 use crate::algebra::linear::vector::Vector;
 use crate::matrix;
 use crate::{
@@ -10,7 +10,7 @@ use crate::{
     elementary::Power,
 };
 
-impl<T> UpperHessenberg<T>
+impl<T> SchurDecomposition<T> for UpperHessenberg<T>
 where
     T: Field + Scalar + Power + AbsDiffEq<Epsilon = T>,
 {
@@ -25,7 +25,7 @@ where
     ///
     /// # Example
     ///
-    pub fn dec_schur(&self) -> Result<SchurDec<T>, ()> {
+    fn dec_schur(&self) -> Result<SchurDec<T>, ()> {
         let (q, u): (General<T>, UpperTriangular<T>) = if self.matrix.m > 2 {
             let h = self.clone();
             h.francis()
@@ -51,7 +51,12 @@ where
 
         Result::Ok(SchurDec::new(q, u))
     }
+}
 
+impl<T> UpperHessenberg<T>
+where
+    T: Field + Scalar + Power + AbsDiffEq<Epsilon = T>,
+{
     //https://people.inf.ethz.ch/arbenz/ewp/Lnotes/chapter4.pdf
     fn francis(mut self) -> (General<T>, UpperTriangular<T>) {
         let epsilon: T = T::default_epsilon();

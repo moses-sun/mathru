@@ -63,28 +63,28 @@ test-openblas:
   needs: ["fmt"]
   image: rust:latest
   script:
-    - cargo test --tests --no-default-features --features openblas
+    - cargo test --no-default-features --features openblas
 
 test-netlib:
   stage: unit-test
   needs: ["fmt"]
   image: rust:latest
   script:
-    - cargo test --tests --no-default-features --features netlib
+    - cargo test --no-default-features --features netlib
 
 test-intelmkl:
   stage: unit-test
   needs: ["fmt"]
   image: rust:latest
   script:
-    - cargo test --tests --no-default-features --features intel-mkl
+    - cargo test --no-default-features --features intel-mkl
 
 test-convert-mint:
   stage: unit-test
   needs: ["fmt"]
   image: rust:latest
   script:
-    - cargo test --tests --no-default-features --features "native convert-mint"
+    - cargo test --no-default-features --features "native convert-mint"
   
 coverage:
  stage: report

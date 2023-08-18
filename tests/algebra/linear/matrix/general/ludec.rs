@@ -1,6 +1,6 @@
 use crate::mathru::algebra::abstr::Zero;
 use mathru::algebra::abstr::Complex;
-use mathru::algebra::linear::matrix::Transpose;
+use mathru::algebra::linear::matrix::{LUDecomposition, Transpose};
 use mathru::algebra::linear::{
     matrix::{
         General, Inverse, LUDec, Solve, SubstituteBackward, SubstituteForward, UnitLowerTriangular,

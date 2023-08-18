@@ -7,7 +7,7 @@
 //! Here is an example on how to compute the Cholesky decomposition of a real
 //! valued matrix:
 //! ```
-//! use mathru::algebra::linear::matrix::{General, LowerTriangular};
+//! use mathru::algebra::linear::matrix::{General, LowerTriangular, CholeskyDecomposition};
 //! use mathru::matrix;
 //!
 //! let a: General<f64> = matrix![   2.0, -1.0, 0.0;
@@ -15,11 +15,14 @@
 //!                                 0.0, -1.0,  2.0];
 //! let l: LowerTriangular<f64> = a.dec_cholesky().unwrap().l();
 //! ```
-
 use super::LowerTriangular;
 #[cfg(feature = "serde")]
 use serde::{Deserialize, Serialize};
 use std::clone::Clone;
+
+pub trait CholeskyDecomposition<T> {
+    fn dec_cholesky(&self) -> Result<CholeskyDec<T>, String>;
+}
 
 /// Result of a Cholesky decomposition
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]

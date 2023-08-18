@@ -1,6 +1,6 @@
 use crate::algebra::{
     abstr::{AbsDiffEq, Field, Scalar},
-    linear::matrix::{General, Inverse, LUDec},
+    linear::matrix::{General, Inverse, LUDec, LUDecomposition},
 };
 
 impl<T> Inverse<T> for General<T>

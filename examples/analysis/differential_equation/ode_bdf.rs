@@ -14,7 +14,9 @@ fn main() {
     // Create an ODE instance
     let ode = Euler::default();
 
-    let problem = ImplicitInitialValueProblemBuilder::new(&ode, 0.0f64, vector![1.0; 0.0; 0.9])
+    let problem = ImplicitInitialValueProblemBuilder::new(&ode, 0.0f64, vector![1.0; 
+                                                                                0.0; 
+                                                                                0.9])
         .t_end(x_end)
         .build();
 

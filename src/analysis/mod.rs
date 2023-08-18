@@ -8,6 +8,7 @@ mod jacobian;
 mod newton_raphson;
 
 pub mod differential_equation;
+pub mod fourier;
 pub mod integral;
 pub mod interpolation;
 

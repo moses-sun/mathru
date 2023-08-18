@@ -1,12 +1,12 @@
 use crate::{
     algebra::{
         abstr::{Field, Scalar, Zero},
-        linear::matrix::{General, QRDec, UpperTriangular},
+        linear::matrix::{General, QRDec, QRDecomposition, UpperTriangular},
     },
     elementary::Power,
 };
 
-impl<T> General<T>
+impl<T> QRDecomposition<T> for General<T>
 where
     T: Field + Scalar + Power,
 {
@@ -23,13 +23,13 @@ where
     /// # Example
     ///
     /// ```
-    /// use mathru::algebra::linear::matrix::{General, UpperTriangular};
+    /// use mathru::algebra::linear::matrix::{General, UpperTriangular, QRDecomposition};
     ///
     /// let a: General<f64> = General::new(2, 2, vec![1.0, -2.0, 3.0, -7.0]);
     ///
     /// let (q, r): (General<f64>, UpperTriangular<f64>) = a.dec_qr().unwrap().qr();
     /// ```
-    pub fn dec_qr(&self) -> Result<QRDec<T>, ()> {
+    fn dec_qr(&self) -> Result<QRDec<T>, ()> {
         let (m, n) = self.dim();
         debug_assert!(m >= n);
 
@@ -114,7 +114,12 @@ where
 
         Ok(QRDec::new(q, r))
     }
+}
 
+impl<T> General<T>
+where
+    T: Field + Scalar + Power,
+{
     fn r(mut self) -> UpperTriangular<T> {
         for i in 1..self.m {
             for k in 0..(i.min(self.n)) {

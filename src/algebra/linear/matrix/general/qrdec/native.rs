@@ -2,12 +2,12 @@ use crate::algebra::abstr::AbsDiffEq;
 use crate::{
     algebra::{
         abstr::{Field, Scalar},
-        linear::matrix::{General, QRDec, Transpose, UpperTriangular},
+        linear::matrix::{General, QRDec, QRDecomposition, Transpose, UpperTriangular},
     },
     elementary::Power,
 };
 
-impl<T> General<T>
+impl<T> QRDecomposition<T> for General<T>
 where
     T: Field + Scalar + Power + AbsDiffEq,
 {
@@ -24,13 +24,13 @@ where
     /// # Example
     ///
     /// ```
-    /// use mathru::algebra::linear::matrix::{General, UpperTriangular};
+    /// use mathru::algebra::linear::matrix::{General, UpperTriangular, QRDecomposition};
     ///
     /// let a: General<f64> = General::new(2, 2, vec![1.0, -2.0, 3.0, -7.0]);
     ///
     /// let (q, r): (General<f64>, UpperTriangular<f64>) = a.dec_qr().unwrap().qr();
     /// ```
-    pub fn dec_qr(&self) -> Result<QRDec<T>, ()> {
+    fn dec_qr(&self) -> Result<QRDec<T>, ()> {
         let (m, n) = self.dim();
         debug_assert!(m >= n);
 

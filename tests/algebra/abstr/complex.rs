@@ -1,6 +1,6 @@
 use crate::mathru::algebra::abstr::Sign;
 use mathru::algebra::abstr::cast::{FromPrimitive, NumCast};
-use mathru::algebra::abstr::Complex;
+use mathru::algebra::abstr::{AbsDiffEq, Complex};
 use mathru::algebra::abstr::{One, Zero};
 
 #[test]
@@ -276,4 +276,26 @@ fn div_assign() {
         Complex::new((a_r * b_r + a_i * b_i) / g, (-a_r * b_i + a_i * b_r) / g),
         a
     );
+}
+
+#[test]
+fn abs_diff_eq_smaller() {
+    let a: Complex<f64> = Complex::zero();
+    let tol = <Complex<f64> as AbsDiffEq>::default_epsilon();
+    assert_abs_diff_eq!(a, a - tol);
+}
+
+#[test]
+fn abs_diff_eq_bigger() {
+    let a: Complex<f64> = Complex::zero();
+    let tol = <Complex<f64> as AbsDiffEq>::default_epsilon();
+    assert_abs_diff_eq!(a, a + tol);
+}
+
+#[test]
+fn abs_diff_eq() {
+    let a: Complex<f64> = Complex::new(-3.5, 0.0);
+    let b: Complex<f64> = Complex::new(-3.5, -7.347880794884119e-16);
+    let tol = Complex::new(f64::EPSILON, 4.0 * f64::EPSILON);
+    assert_abs_diff_eq!(a, b, epsilon = tol);
 }

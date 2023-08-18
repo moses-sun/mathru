@@ -1,9 +1,9 @@
 use crate::algebra::{
     abstr::{Field, Scalar},
-    linear::matrix::{CholeskyDec, General, LowerTriangular},
+    linear::matrix::{CholeskyDec, CholeskyDecomposition, General, LowerTriangular},
 };
 
-impl<T> General<T>
+impl<T> CholeskyDecomposition<T> for General<T>
 where
     T: Field + Scalar,
 {
@@ -21,7 +21,7 @@ where
     /// # Example
     ///
     /// ```
-    /// use mathru::algebra::linear::matrix::{General, LowerTriangular};
+    /// use mathru::algebra::linear::matrix::{General, LowerTriangular, CholeskyDecomposition};
     /// use mathru::{matrix, assert_abs_diff_eq};
     ///
     /// let a: General<f64> = matrix![2.0, -1.0, 0.0;
@@ -36,7 +36,7 @@ where
     ///
     /// assert_abs_diff_eq!(l_ref, l, epsilon=0.001);
     /// ```
-    pub fn dec_cholesky(&self) -> Result<CholeskyDec<T>, String> {
+    fn dec_cholesky(&self) -> Result<CholeskyDec<T>, String> {
         let (m, n) = self.dim();
         debug_assert_eq!(m, n);
         debug_assert_ne!(m, 0);

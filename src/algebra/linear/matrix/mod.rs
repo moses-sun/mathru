@@ -15,18 +15,18 @@ mod hessenbergdec;
 pub use hessenbergdec::{HessenbergDec, HessenbergDecomposition};
 
 mod ludec;
-pub use ludec::LUDec;
+pub use ludec::{LUDec, LUDecomposition};
 
 mod qrdec;
-pub use qrdec::QRDec;
+pub use qrdec::{QRDec, QRDecomposition};
 
 mod schurdec;
-pub use schurdec::SchurDec;
+pub use schurdec::{SchurDec, SchurDecomposition};
 
 mod inverse;
 
 mod choleskydec;
-pub use choleskydec::CholeskyDec;
+pub use choleskydec::{CholeskyDec, CholeskyDecomposition};
 
 mod det;
 pub use det::Determinant;

@@ -65,11 +65,11 @@ fn mul_vector_borrow() {
                                           0.0, 4.0]
     .into();
 
-    let v: Vector<f32> = vector![   2.0;
-                                    4.0];
+    let v: Vector<f32> = vector![2.0;
+                                 4.0];
 
-    let prod_ref: Vector<f32> = vector![    10.0;
-                                            16.0];
+    let prod_ref: Vector<f32> = vector![10.0;
+                                        16.0];
 
     assert_relative_eq!(prod_ref, &m * &v);
 }

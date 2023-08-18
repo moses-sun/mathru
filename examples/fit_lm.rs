@@ -78,7 +78,9 @@ fn main() {
     let mut x_vec: Vec<f64> = Vec::with_capacity(num_samples);
 
     // True function parameters
-    let beta: Vector<f64> = vector![0.5; 5.0; -1.0];
+    let beta: Vector<f64> = vector![0.5;
+                                    5.0; 
+                                    -1.0];
 
     for i in 0..num_samples {
         let t_i: f64 = (t_1 - t_0) / (num_samples as f64) * (i as f64);
@@ -96,7 +98,10 @@ fn main() {
     let optim: LevenbergMarquardt<f64> = LevenbergMarquardt::new(100, 0.3, 0.95);
 
     // Fit parameter
-    let beta_0: Vector<f64> = vector![-1.5; 1.0; -2.0];
+    let beta_0: Vector<f64> = vector![ -1.5; 
+                                        1.0; 
+                                        -2.0];
+
     let beta_opt: Vector<f64> = optim.minimize(&example_function, &beta_0).unwrap().arg();
 
     //Create chart

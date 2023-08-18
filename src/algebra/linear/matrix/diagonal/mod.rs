@@ -1,4 +1,4 @@
-mod absdiff_eq;
+mod abs_diff_eq;
 mod add;
 mod add_assign;
 mod det;
@@ -13,3 +13,4 @@ mod relative_eq;
 mod sub;
 mod sub_assign;
 pub use diagonal::Diagonal;
+mod choleskydec;

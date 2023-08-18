@@ -3,7 +3,7 @@ use crate::algebra::{
     linear::{matrix::General, vector::vector::Vector},
 };
 
-use crate::algebra::linear::matrix::Solve;
+use crate::algebra::linear::matrix::{LUDecomposition, Solve};
 
 impl<T> Solve<Vector<T>> for General<T>
 where
